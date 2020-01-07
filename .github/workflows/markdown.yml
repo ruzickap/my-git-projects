@@ -6,14 +6,12 @@ on:
     paths:
       - '**.md'
       - .github/workflows/markdown.yml
-      - .markdownlint.yml
   push:
     branches:
       - master
     paths:
       - '**.md'
       - .github/workflows/markdown.yml
-      - .markdownlint.yml
 
 jobs:
   markdownlint-check:
@@ -25,7 +23,6 @@ jobs:
         uses: nosborn/github-action-markdown-cli@v1.1.1
         with:
           files: .
-          config_file: .markdownlint.yml
 
   markdown-link-check:
     runs-on: ubuntu-18.04
