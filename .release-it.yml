@@ -1,0 +1,20 @@
+---
+git:
+  beforeChangelogCommand: auto-changelog
+  changelog: npx auto-changelog --stdout --commit-limit false --unreleased --ignore-commit-pattern "^CHANGELOG" --template https://raw.githubusercontent.com/ruzickap/my-git-projects/master/auto-changelog/changelog.hbs
+  commit: false
+  requireCleanWorkingDir: false
+  requireCommits: true
+  tagName: v${version}
+github:
+  releaseName: v${version}
+  release: true
+hooks:
+  after:release: |
+    npx auto-changelog --commit-limit false --ignore-commit-pattern "^CHANGELOG" --template https://raw.githubusercontent.com/ruzickap/my-git-projects/master/auto-changelog/keepachangelog.hbs ;
+    git add CHANGELOG.md ;
+    git commit -m "CHANGELOG file update
+
+    CHANGELOG file update
+    " ;
+    git push
