@@ -3,3 +3,48 @@
 
 # release-it configuration file
 .release-it.yml
+
+# Generated files by Hugo
+public/
+resources/_gen/
+
+# Ansible vault password file
+*vault*
+
+# Kubernetes kubeconfig file
+kubeconfig.conf
+kubeconfig*.conf
+
+# README.sh script
+README.sh
+
+# Vuepress Pages
+docs/.vuepress/dist
+
+# tmp directory
+tmp/
+
+# demo-magic.sh script
+demo-magic.sh
+
+# Terraform files
+.terraform
+*.tfstate*
+crash.log
+
+# Packer cache objects
+packer_cache/
+
+# Packer built boxes
+*.box
+
+# Packer build directories
+*-qemu/
+*-virtualbox-iso/
+
+# Ansible vault file
+vault_training-lab.txt
+
+# Python byte-compiled / optimized files
+*__pycache__/
+*.py[cod]
