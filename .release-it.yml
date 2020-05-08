@@ -1,7 +1,7 @@
 ---
 git:
   beforeChangelogCommand: auto-changelog
-  changelog: npx auto-changelog --stdout --commit-limit false --unreleased --ignore-commit-pattern "^CHANGELOG" --template https://raw.githubusercontent.com/release-it/release-it/master/conf/changelog-compact.hbs
+  changelog: npx auto-changelog --stdout --commit-limit 50 --unreleased --ignore-commit-pattern "^CHANGELOG" --template https://raw.githubusercontent.com/release-it/release-it/master/conf/changelog-compact.hbs
   commit: false
   requireCleanWorkingDir: false
   requireCommits: true
