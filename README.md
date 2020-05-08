@@ -40,6 +40,37 @@ List of my GitHub projects
 
 ### [Packer templates](https://github.com/ruzickap/packer-templates)
 
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/packer-templates.svg)](https://github.com/ruzickap/packer-templates/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/packer-templates.svg)](https://github.com/ruzickap/packer-templates/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/packer-templates.svg?style=social)](https://github.com/ruzickap/packer-templates/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/packer-templates.svg?style=social)](https://github.com/ruzickap/packer-templates/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/packer-templates.svg?style=social)](https://github.com/ruzickap/packer-templates)
+
+* CI/CD status:
+
+  ![GitHub Actions status - ansible-lint](https://github.com/ruzickap/packer-templates/workflows/ansible-lint/badge.svg)
+  ![GitHub Actions status - build](https://github.com/ruzickap/packer-templates/workflows/build/badge.svg)
+  ![GitHub Actions status - markdown](https://github.com/ruzickap/packer-templates/workflows/markdown/badge.svg)
+  ![GitHub Actions status - packer-templates](https://github.com/ruzickap/packer-templates/workflows/packer-templates/badge.svg)
+  ![GitHub Actions status - periodic-markdown-links-check](https://github.com/ruzickap/packer-templates/workflows/periodic-markdown-links-check/badge.svg)
+  ![GitHub Actions status - remote_build_server](https://github.com/ruzickap/packer-templates/workflows/remote_build_server/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/packer-templates/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/packer-templates/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/packer-templates.svg)](https://github.com/ruzickap/packer-templates/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/packer-templates.svg)](https://github.com/ruzickap/packer-templates/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/packer-templates.svg)](https://github.com/ruzickap/packer-templates/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/packer-templates.svg)](https://github.com/ruzickap/packer-templates/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/packer-templates/latest)](https://github.com/ruzickap/packer-templates/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/packer-templates.svg)](https://github.com/ruzickap/packer-templates/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/packer-templates.svg)](https://github.com/ruzickap/packer-templates)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/packer-templates/total.svg)](https://github.com/ruzickap/packer-templates/releases/latest)
+
 ---
 
 ## Git / GitHub notes
