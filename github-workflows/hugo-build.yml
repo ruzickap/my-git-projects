@@ -1,0 +1,45 @@
+name: hugo-build
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches:
+      - master
+
+jobs:
+  hugo-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: 'latest'
+
+      - name: Build
+        run: |
+          hugo --gc
+          cp LICENSE README.md public/
+          echo "${{ github.event.repository.name }}" > public/CNAME
+
+      - name: Check broken links
+        env:
+          EXCLUDE: |
+            linkedin.com
+        run: |
+          export INPUT_URL="https://${{ github.event.repository.name }}"
+          export INPUT_PAGES_PATH="public"
+          export INPUT_CMD_PARAMS="--verbose --buffer-size=8192 --concurrency=10 --skip-tls-verification --exclude=($( echo ${EXCLUDE} | tr ' ' '|' ))"
+          wget -qO- https://raw.githubusercontent.com/ruzickap/action-my-broken-link-checker/v1/entrypoint.sh | bash
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          force_orphan: true
