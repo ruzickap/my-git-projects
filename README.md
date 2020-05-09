@@ -71,6 +71,126 @@ List of my GitHub projects
   [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/packer-templates.svg)](https://github.com/ruzickap/packer-templates)
   [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/packer-templates/total.svg)](https://github.com/ruzickap/packer-templates/releases/latest)
 
+### [Ansible role my_common_defaults](https://github.com/ruzickap/ansible-role-my_common_defaults)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/ansible-role-my_common_defaults.svg)](https://github.com/ruzickap/ansible-role-my_common_defaults/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/ansible-role-my_common_defaults.svg)](https://github.com/ruzickap/ansible-role-my_common_defaults/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/ansible-role-my_common_defaults.svg?style=social)](https://github.com/ruzickap/ansible-role-my_common_defaults/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/ansible-role-my_common_defaults.svg?style=social)](https://github.com/ruzickap/ansible-role-my_common_defaults/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/ansible-role-my_common_defaults.svg?style=social)](https://github.com/ruzickap/ansible-role-my_common_defaults)
+
+* CI/CD status:
+
+  ![GitHub Actions status - ansible-lint](https://github.com/ruzickap/ansible-role-my_common_defaults/workflows/ansible-lint/badge.svg)
+  ![GitHub Actions status - markdown](https://github.com/ruzickap/ansible-role-my_common_defaults/workflows/markdown/badge.svg)
+  ![GitHub Actions status - molecule](https://github.com/ruzickap/ansible-role-my_common_defaults/workflows/molecule/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/ansible-role-my_common_defaults/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/ansible-role-my_common_defaults/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/ansible-role-my_common_defaults.svg)](https://github.com/ruzickap/ansible-role-my_common_defaults/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/ansible-role-my_common_defaults.svg)](https://github.com/ruzickap/ansible-role-my_common_defaults/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/ansible-role-my_common_defaults.svg)](https://github.com/ruzickap/ansible-role-my_common_defaults/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/ansible-role-my_common_defaults.svg)](https://github.com/ruzickap/ansible-role-my_common_defaults/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/ansible-role-my_common_defaults/latest)](https://github.com/ruzickap/ansible-role-my_common_defaults/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/ansible-role-my_common_defaults.svg)](https://github.com/ruzickap/ansible-role-my_common_defaults/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/ansible-role-my_common_defaults.svg)](https://github.com/ruzickap/ansible-role-my_common_defaults)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/ansible-role-my_common_defaults/total.svg)](https://github.com/ruzickap/ansible-role-my_common_defaults/releases/latest)
+
+### [Ansible role proxy_settings](https://github.com/ruzickap/ansible-role-proxy)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/ansible-role-proxy_settings.svg)](https://github.com/ruzickap/ansible-role-proxy_settings/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/ansible-role-proxy_settings.svg)](https://github.com/ruzickap/ansible-role-proxy_settings/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/ansible-role-proxy_settings.svg?style=social)](https://github.com/ruzickap/ansible-role-proxy_settings/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/ansible-role-proxy_settings.svg?style=social)](https://github.com/ruzickap/ansible-role-proxy_settings/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/ansible-role-proxy_settings.svg?style=social)](https://github.com/ruzickap/ansible-role-proxy_settings)
+
+* CI/CD status:
+
+  ![GitHub Actions status - ansible-lint](https://github.com/ruzickap/ansible-role-proxy_settings/workflows/ansible-lint/badge.svg)
+  ![GitHub Actions status - markdown](https://github.com/ruzickap/ansible-role-proxy_settings/workflows/markdown/badge.svg)
+  ![GitHub Actions status - molecule](https://github.com/ruzickap/ansible-role-proxy_settings/workflows/molecule/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/ansible-role-proxy_settings/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/ansible-role-proxy_settings/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/ansible-role-proxy_settings.svg)](https://github.com/ruzickap/ansible-role-proxy_settings/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/ansible-role-proxy_settings.svg)](https://github.com/ruzickap/ansible-role-proxy_settings/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/ansible-role-proxy_settings.svg)](https://github.com/ruzickap/ansible-role-proxy_settings/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/ansible-role-proxy_settings.svg)](https://github.com/ruzickap/ansible-role-proxy_settings/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/ansible-role-proxy_settings/latest)](https://github.com/ruzickap/ansible-role-proxy_settings/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/ansible-role-proxy_settings.svg)](https://github.com/ruzickap/ansible-role-proxy_settings/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/ansible-role-proxy_settings.svg)](https://github.com/ruzickap/ansible-role-proxy_settings)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/ansible-role-proxy_settings/total.svg)](https://github.com/ruzickap/ansible-role-proxy_settings/releases/latest)
+
+### [Ansible role virtio-win](https://github.com/ruzickap/ansible-role-virtio-win)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/ansible-role-virtio-win.svg)](https://github.com/ruzickap/ansible-role-virtio-win/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/ansible-role-virtio-win.svg)](https://github.com/ruzickap/ansible-role-virtio-win/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/ansible-role-virtio-win.svg?style=social)](https://github.com/ruzickap/ansible-role-virtio-win/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/ansible-role-virtio-win.svg?style=social)](https://github.com/ruzickap/ansible-role-virtio-win/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/ansible-role-virtio-win.svg?style=social)](https://github.com/ruzickap/ansible-role-virtio-win)
+
+* CI/CD status:
+
+  ![GitHub Actions status - ansible-lint](https://github.com/ruzickap/ansible-role-virtio-win/workflows/ansible-lint/badge.svg)
+  ![GitHub Actions status - markdown](https://github.com/ruzickap/ansible-role-virtio-win/workflows/markdown/badge.svg)
+  ![GitHub Actions status - molecule](https://github.com/ruzickap/ansible-role-virtio-win/workflows/molecule/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/ansible-role-virtio-win/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/ansible-role-virtio-win/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/ansible-role-virtio-win.svg)](https://github.com/ruzickap/ansible-role-virtio-win/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/ansible-role-virtio-win.svg)](https://github.com/ruzickap/ansible-role-virtio-win/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/ansible-role-virtio-win.svg)](https://github.com/ruzickap/ansible-role-virtio-win/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/ansible-role-virtio-win.svg)](https://github.com/ruzickap/ansible-role-virtio-win/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/ansible-role-virtio-win/latest)](https://github.com/ruzickap/ansible-role-virtio-win/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/ansible-role-virtio-win.svg)](https://github.com/ruzickap/ansible-role-virtio-win/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/ansible-role-virtio-win.svg)](https://github.com/ruzickap/ansible-role-virtio-win)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/ansible-role-virtio-win/total.svg)](https://github.com/ruzickap/ansible-role-virtio-win/releases/latest)
+
+### [Ansible role vmwaretools](https://github.com/ruzickap/ansible-role-vmwaretools)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/ansible-role-vmwaretools.svg)](https://github.com/ruzickap/ansible-role-vmwaretools/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/ansible-role-vmwaretools.svg)](https://github.com/ruzickap/ansible-role-vmwaretools/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/ansible-role-vmwaretools.svg?style=social)](https://github.com/ruzickap/ansible-role-vmwaretools/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/ansible-role-vmwaretools.svg?style=social)](https://github.com/ruzickap/ansible-role-vmwaretools/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/ansible-role-vmwaretools.svg?style=social)](https://github.com/ruzickap/ansible-role-vmwaretools)
+
+* CI/CD status:
+
+  ![GitHub Actions status - ansible-lint](https://github.com/ruzickap/ansible-role-vmwaretools/workflows/ansible-lint/badge.svg)
+  ![GitHub Actions status - markdown](https://github.com/ruzickap/ansible-role-vmwaretools/workflows/markdown/badge.svg)
+  ![GitHub Actions status - molecule](https://github.com/ruzickap/ansible-role-vmwaretools/workflows/molecule/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/ansible-role-vmwaretools/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/ansible-role-vmwaretools/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/ansible-role-vmwaretools.svg)](https://github.com/ruzickap/ansible-role-vmwaretools/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/ansible-role-vmwaretools.svg)](https://github.com/ruzickap/ansible-role-vmwaretools/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/ansible-role-vmwaretools.svg)](https://github.com/ruzickap/ansible-role-vmwaretools/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/ansible-role-vmwaretools.svg)](https://github.com/ruzickap/ansible-role-vmwaretools/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/ansible-role-vmwaretools/latest)](https://github.com/ruzickap/ansible-role-vmwaretools/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/ansible-role-vmwaretools.svg)](https://github.com/ruzickap/ansible-role-vmwaretools/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/ansible-role-vmwaretools.svg)](https://github.com/ruzickap/ansible-role-vmwaretools)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/ansible-role-vmwaretools/total.svg)](https://github.com/ruzickap/ansible-role-vmwaretools/releases/latest)
+
 ---
 
 ## Git / GitHub notes
