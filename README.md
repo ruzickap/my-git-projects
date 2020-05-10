@@ -71,6 +71,34 @@ List of my GitHub projects
   [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/packer-templates.svg)](https://github.com/ruzickap/packer-templates)
   [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/packer-templates/total.svg)](https://github.com/ruzickap/packer-templates/releases/latest)
 
+### [Packer-Virt-Sysprep](https://github.com/ruzickap/packer-virt-sysprep)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/packer-virt-sysprep.svg)](https://github.com/ruzickap/packer-virt-sysprep/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/packer-virt-sysprep.svg)](https://github.com/ruzickap/packer-virt-sysprep/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/packer-virt-sysprep.svg?style=social)](https://github.com/ruzickap/packer-virt-sysprep/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/packer-virt-sysprep.svg?style=social)](https://github.com/ruzickap/packer-virt-sysprep/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/packer-virt-sysprep.svg?style=social)](https://github.com/ruzickap/packer-virt-sysprep)
+
+* CI/CD status:
+
+  ![GitHub Actions status - markdown](https://github.com/ruzickap/packer-virt-sysprep/workflows/markdown/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/packer-virt-sysprep/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/packer-virt-sysprep/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/packer-virt-sysprep.svg)](https://github.com/ruzickap/packer-virt-sysprep/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/packer-virt-sysprep.svg)](https://github.com/ruzickap/packer-virt-sysprep/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/packer-virt-sysprep.svg)](https://github.com/ruzickap/packer-virt-sysprep/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/packer-virt-sysprep.svg)](https://github.com/ruzickap/packer-virt-sysprep/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/packer-virt-sysprep/latest)](https://github.com/ruzickap/packer-virt-sysprep/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/packer-virt-sysprep.svg)](https://github.com/ruzickap/packer-virt-sysprep/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/packer-virt-sysprep.svg)](https://github.com/ruzickap/packer-virt-sysprep)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/packer-virt-sysprep/total.svg)](https://github.com/ruzickap/packer-virt-sysprep/releases/latest)
+
 ### [Darktable Video Tutorials with screenshots](https://github.com/ruzickap/darktable_video_tutorials_list)
 
 [![GitHub release](https://img.shields.io/github/v/release/ruzickap/darktable_video_tutorials_list.svg)](https://github.com/ruzickap/darktable_video_tutorials_list/releases/latest)
@@ -100,6 +128,33 @@ List of my GitHub projects
   [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/darktable_video_tutorials_list.svg)](https://github.com/ruzickap/darktable_video_tutorials_list/commits/)
   [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/darktable_video_tutorials_list.svg)](https://github.com/ruzickap/darktable_video_tutorials_list)
   [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/darktable_video_tutorials_list/total.svg)](https://github.com/ruzickap/darktable_video_tutorials_list/releases/latest)
+
+### [USB Stick for TV testing](https://github.com/ruzickap/test_usb_stick_for_tv)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/test_usb_stick_for_tv.svg)](https://github.com/ruzickap/test_usb_stick_for_tv/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/test_usb_stick_for_tv.svg)](https://github.com/ruzickap/test_usb_stick_for_tv/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/test_usb_stick_for_tv.svg?style=social)](https://github.com/ruzickap/test_usb_stick_for_tv/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/test_usb_stick_for_tv.svg?style=social)](https://github.com/ruzickap/test_usb_stick_for_tv/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/test_usb_stick_for_tv.svg?style=social)](https://github.com/ruzickap/test_usb_stick_for_tv)
+
+* CI/CD status:
+
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/test_usb_stick_for_tv/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/test_usb_stick_for_tv/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/test_usb_stick_for_tv.svg)](https://github.com/ruzickap/test_usb_stick_for_tv/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/test_usb_stick_for_tv.svg)](https://github.com/ruzickap/test_usb_stick_for_tv/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/test_usb_stick_for_tv.svg)](https://github.com/ruzickap/test_usb_stick_for_tv/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/test_usb_stick_for_tv.svg)](https://github.com/ruzickap/test_usb_stick_for_tv/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/test_usb_stick_for_tv/latest)](https://github.com/ruzickap/test_usb_stick_for_tv/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/test_usb_stick_for_tv.svg)](https://github.com/ruzickap/test_usb_stick_for_tv/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/test_usb_stick_for_tv.svg)](https://github.com/ruzickap/test_usb_stick_for_tv)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/test_usb_stick_for_tv/total.svg)](https://github.com/ruzickap/test_usb_stick_for_tv/releases/latest)
 
 ### [Ansible role my_common_defaults](https://github.com/ruzickap/ansible-role-my_common_defaults)
 
@@ -279,6 +334,8 @@ List of my GitHub projects
 
 ### [awsug.cz](https://github.com/awsugcz/awsug.cz)
 
+[https://awsug.cz](https://awsug.cz)
+
 [![GitHub release](https://img.shields.io/github/v/release/awsugcz/awsug.cz.svg)](https://github.com/awsugcz/awsug.cz/releases/latest)
 [![GitHub license](https://img.shields.io/github/license/awsugcz/awsug.cz.svg)](https://github.com/awsugcz/awsug.cz/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/awsugcz/awsug.cz.svg?style=social)](https://github.com/awsugcz/awsug.cz/stargazers)
@@ -305,6 +362,68 @@ List of my GitHub projects
   [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/awsugcz/awsug.cz.svg)](https://github.com/awsugcz/awsug.cz/commits/)
   [![GitHub repo size](https://img.shields.io/github/repo-size/awsugcz/awsug.cz.svg)](https://github.com/awsugcz/awsug.cz)
   [![GitHub download latest release](https://img.shields.io/github/downloads/awsugcz/awsug.cz/total.svg)](https://github.com/awsugcz/awsug.cz/releases/latest)
+
+### [petr.ruzicka.dev](https://github.com/ruzickap/petr.ruzicka.dev)
+
+[https://petr.ruzicka.dev](https://petr.ruzicka.dev)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/petr.ruzicka.dev.svg)](https://github.com/ruzickap/petr.ruzicka.dev/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/petr.ruzicka.dev.svg)](https://github.com/ruzickap/petr.ruzicka.dev/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/petr.ruzicka.dev.svg?style=social)](https://github.com/ruzickap/petr.ruzicka.dev/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/petr.ruzicka.dev.svg?style=social)](https://github.com/ruzickap/petr.ruzicka.dev/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/petr.ruzicka.dev.svg?style=social)](https://github.com/ruzickap/petr.ruzicka.dev)
+
+* CI/CD status:
+
+  ![GitHub Actions status - hugo-build](https://github.com/ruzickap/petr.ruzicka.dev/workflows/hugo-build/badge.svg)
+  ![GitHub Actions status - markdown](https://github.com/ruzickap/petr.ruzicka.dev/workflows/markdown/badge.svg)
+  ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/petr.ruzicka.dev/workflows/periodic-broken-link-checks/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/petr.ruzicka.dev/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/petr.ruzicka.dev.svg)](https://github.com/ruzickap/petr.ruzicka.dev/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/petr.ruzicka.dev.svg)](https://github.com/ruzickap/petr.ruzicka.dev/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/petr.ruzicka.dev.svg)](https://github.com/ruzickap/petr.ruzicka.dev/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/petr.ruzicka.dev.svg)](https://github.com/ruzickap/petr.ruzicka.dev/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/petr.ruzicka.dev/latest)](https://github.com/ruzickap/petr.ruzicka.dev/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/petr.ruzicka.dev.svg)](https://github.com/ruzickap/petr.ruzicka.dev/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/petr.ruzicka.dev.svg)](https://github.com/ruzickap/petr.ruzicka.dev)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/petr.ruzicka.dev/total.svg)](https://github.com/ruzickap/petr.ruzicka.dev/releases/latest)
+
+### [xvx.cz](https://github.com/ruzickap/xvx.cz)
+
+[https://xvx.cz](https://xvx.cz)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/xvx.cz.svg)](https://github.com/ruzickap/xvx.cz/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/xvx.cz.svg)](https://github.com/ruzickap/xvx.cz/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/xvx.cz.svg?style=social)](https://github.com/ruzickap/xvx.cz/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/xvx.cz.svg?style=social)](https://github.com/ruzickap/xvx.cz/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/xvx.cz.svg?style=social)](https://github.com/ruzickap/xvx.cz)
+
+* CI/CD status:
+
+  ![GitHub Actions status - hugo-build](https://github.com/ruzickap/xvx.cz/workflows/hugo-build/badge.svg)
+  ![GitHub Actions status - markdown](https://github.com/ruzickap/xvx.cz/workflows/markdown/badge.svg)
+  ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/xvx.cz/workflows/periodic-broken-link-checks/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/xvx.cz/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/xvx.cz.svg)](https://github.com/ruzickap/xvx.cz/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/xvx.cz.svg)](https://github.com/ruzickap/xvx.cz/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/xvx.cz.svg)](https://github.com/ruzickap/xvx.cz/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/xvx.cz.svg)](https://github.com/ruzickap/xvx.cz/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/xvx.cz/latest)](https://github.com/ruzickap/xvx.cz/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/xvx.cz.svg)](https://github.com/ruzickap/xvx.cz/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/xvx.cz.svg)](https://github.com/ruzickap/xvx.cz)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/xvx.cz/total.svg)](https://github.com/ruzickap/xvx.cz/releases/latest)
 
 ### [Cheatsheet - Atom](https://github.com/ruzickap/cheatsheet-atom)
 
