@@ -1,0 +1,174 @@
+##########################################################################################
+#                                                                                        #
+#                       Pre-commit configuration file                                    #
+#                                                                                        #
+##########################################################################################
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.5.0
+    hooks:
+      - id: check-added-large-files
+        name: Check for added large files
+        description: Prevent giant files from being committed
+        entry: check-added-large-files
+        language: python
+
+      - id: check-json
+        name: Check JSON
+        description: This hook checks json files for parseable syntax.
+        entry: check-json
+        language: python
+        types: [json]
+
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+        description: Check for files that contain merge conflict strings.
+        entry: check-merge-conflict
+        language: python
+        types: [text]
+
+      - id: check-symlinks
+        name: Check for broken symlinks
+        description: Checks for symlinks which do not point to anything.
+        entry: check-symlinks
+        language: python
+        types: [symlink]
+
+      - id: check-toml
+        name: Check Toml
+        description: This hook checks toml files for parseable syntax.
+        entry: check-toml
+        language: python
+        types: [toml]
+
+      - id: check-xml
+        name: Check Xml
+        description: This hook checks xml files for parseable syntax.
+        entry: check-xml
+        language: python
+        types: [xml]
+
+      - id: check-yaml
+        name: Check Yaml
+        description: This hook checks yaml files for parseable syntax.
+        entry: check-yaml
+        language: python
+        types: [yaml]
+        # Skip Helm Charts
+        exclude: ^.*charts/.*/templates/.*\.yaml$
+        args: [
+          '--allow-multiple-documents'
+        ]
+
+      - id: detect-aws-credentials
+        name: Detect AWS Credentials
+        description: Detects *your* aws credentials from the aws cli credentials file
+        entry: detect-aws-credentials
+        language: python
+        types: [text]
+
+      - id: detect-private-key
+        name: Detect Private Key
+        description: Detects the presence of private keys
+        entry: detect-private-key
+        language: python
+        types: [text]
+
+      - id: end-of-file-fixer
+        name: Fix End of Files
+        description: Ensures that a file is either empty, or ends with one newline.
+        entry: end-of-file-fixer
+        language: python
+        types: [text]
+        stages: [commit, push, manual]
+        exclude_types: [svg]
+
+      - id: no-commit-to-branch
+        name: Don't commit to branch
+        entry: no-commit-to-branch
+        language: python
+        args: ['--branch', 'master']
+        pass_filenames: false
+        always_run: true
+
+      - id: pretty-format-json
+        name: Pretty format JSON
+        description: This hook sets a standard for formatting JSON files.
+        entry: pretty-format-json
+        language: python
+        types: [json]
+        exclude: ^package-lock.json$|^package.json$
+        args: [
+          '--autofix',
+          '--no-sort-keys'
+        ]
+
+      - id: trailing-whitespace
+        name: Trim Trailing Whitespace
+        description: This hook trims trailing whitespace.
+        entry: trailing-whitespace-fixer
+        language: python
+        types: [text]
+        stages: [commit, push, manual]
+
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.13.1
+    hooks:
+      - id: gitlint
+        name: gitlint
+        language: python
+        entry: gitlint
+        args: [
+          '--ignore', 'body-is-missing',
+          '--msg-filename'
+        ]
+        stages: [commit-msg]
+
+  - repo: https://github.com/jumanjihouse/pre-commit-hooks
+    rev: 2.0.2
+    hooks:
+      - id: script-must-have-extension
+      - id: shellcheck
+
+  - repo: https://github.com/motet-a/jinjalint
+    rev: ''
+    hooks:
+      - id: jinjalint
+        types: [file]
+        files: \.(j2|jinja|jinja2)$
+
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.30.0
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_docs
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.23.0
+    hooks:
+      - id: markdownlint
+        name: markdownlint
+        description: "Checks the style of Markdown/Commonmark files."
+        entry: markdownlint
+        language: node
+        types: [markdown]
+        exclude: ^CHANGELOG.md$
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.23.0
+    hooks:
+      - id: yamllint
+        name: yamllint
+        description: A linter for YAML files.
+        entry: yamllint
+        args: [
+          '--format', 'parsable',
+          '--strict',
+          '-d', '{ extends: relaxed, rules: { line-length: disable }}'
+        ]
+        language: python
+        types: [file, yaml]
+
+# ln -s ~/git/my-git-projects/.pre-commit-config.yaml .pre-commit-config.yaml
+# pre-commit install && pre-commit install --hook-type commit-msg
