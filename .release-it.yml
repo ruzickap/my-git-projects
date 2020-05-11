@@ -1,4 +1,5 @@
 ---
+npm: false
 git:
   beforeChangelogCommand: auto-changelog
   changelog: npx auto-changelog --stdout --append-git-log '--invert-grep --grep=dependabot-preview' --commit-limit false --sort-commits date-desc --unreleased --ignore-commit-pattern "^CHANGELOG|^Merge pull request.*/dependabot/" --template https://raw.githubusercontent.com/release-it/release-it/master/conf/changelog-compact.hbs
