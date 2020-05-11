@@ -425,6 +425,347 @@ List of my GitHub projects
   [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/xvx.cz.svg)](https://github.com/ruzickap/xvx.cz)
   [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/xvx.cz/total.svg)](https://github.com/ruzickap/xvx.cz/releases/latest)
 
+### [k8s-flagger-istio-flux](https://github.com/ruzickap/k8s-flagger-istio-flux)
+
+[https://ruzickap.github.io/k8s-flagger-istio-flux/](https://ruzickap.github.io/k8s-flagger-istio-flux/)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/k8s-flagger-istio-flux.svg)](https://github.com/ruzickap/k8s-flagger-istio-flux/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/k8s-flagger-istio-flux.svg)](https://github.com/ruzickap/k8s-flagger-istio-flux/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/k8s-flagger-istio-flux.svg?style=social)](https://github.com/ruzickap/k8s-flagger-istio-flux/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/k8s-flagger-istio-flux.svg?style=social)](https://github.com/ruzickap/k8s-flagger-istio-flux/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/k8s-flagger-istio-flux.svg?style=social)](https://github.com/ruzickap/k8s-flagger-istio-flux)
+
+* CI/CD status:
+
+  ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/k8s-flagger-istio-flux/workflows/periodic-broken-link-checks/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/k8s-flagger-istio-flux/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - terraform](https://github.com/ruzickap/k8s-flagger-istio-flux/workflows/terraform/badge.svg)
+  ![GitHub Actions status - vuepress-build-check-deploy](https://github.com/ruzickap/k8s-flagger-istio-flux/workflows/vuepress-build-check-deploy/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/k8s-flagger-istio-flux/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/k8s-flagger-istio-flux.svg)](https://github.com/ruzickap/k8s-flagger-istio-flux/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/k8s-flagger-istio-flux.svg)](https://github.com/ruzickap/k8s-flagger-istio-flux/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/k8s-flagger-istio-flux.svg)](https://github.com/ruzickap/k8s-flagger-istio-flux/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/k8s-flagger-istio-flux.svg)](https://github.com/ruzickap/k8s-flagger-istio-flux/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/k8s-flagger-istio-flux/latest)](https://github.com/ruzickap/k8s-flagger-istio-flux/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/k8s-flagger-istio-flux.svg)](https://github.com/ruzickap/k8s-flagger-istio-flux/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/k8s-flagger-istio-flux.svg)](https://github.com/ruzickap/k8s-flagger-istio-flux)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/k8s-flagger-istio-flux/total.svg)](https://github.com/ruzickap/k8s-flagger-istio-flux/releases/latest)
+
+### [k8s-flux-istio-gitlab-harbor](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor)
+
+[https://ruzickap.github.io/k8s-flux-istio-gitlab-harbor/](https://ruzickap.github.io/k8s-flux-istio-gitlab-harbor/)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/k8s-flux-istio-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/k8s-flux-istio-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/k8s-flux-istio-gitlab-harbor.svg?style=social)](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/k8s-flux-istio-gitlab-harbor.svg?style=social)](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/k8s-flux-istio-gitlab-harbor.svg?style=social)](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor)
+
+* CI/CD status:
+
+  ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/workflows/periodic-broken-link-checks/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - vuepress-build-check-deploy](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/workflows/vuepress-build-check-deploy/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/k8s-flux-istio-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/k8s-flux-istio-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/k8s-flux-istio-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/k8s-flux-istio-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/k8s-flux-istio-gitlab-harbor/latest)](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/k8s-flux-istio-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/k8s-flux-istio-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/k8s-flux-istio-gitlab-harbor/total.svg)](https://github.com/ruzickap/k8s-flux-istio-gitlab-harbor/releases/latest)
+
+### [k8s-harbor](https://github.com/ruzickap/k8s-harbor)
+
+[https://ruzickap.github.io/k8s-harbor/](https://ruzickap.github.io/k8s-harbor/)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/k8s-harbor.svg)](https://github.com/ruzickap/k8s-harbor/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/k8s-harbor.svg)](https://github.com/ruzickap/k8s-harbor/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/k8s-harbor.svg?style=social)](https://github.com/ruzickap/k8s-harbor/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/k8s-harbor.svg?style=social)](https://github.com/ruzickap/k8s-harbor/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/k8s-harbor.svg?style=social)](https://github.com/ruzickap/k8s-harbor)
+
+* CI/CD status:
+
+  ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/k8s-harbor/workflows/periodic-broken-link-checks/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/k8s-harbor/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - vuepress-build-check-deploy](https://github.com/ruzickap/k8s-harbor/workflows/vuepress-build-check-deploy/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/k8s-harbor/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/k8s-harbor.svg)](https://github.com/ruzickap/k8s-harbor/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/k8s-harbor.svg)](https://github.com/ruzickap/k8s-harbor/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/k8s-harbor.svg)](https://github.com/ruzickap/k8s-harbor/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/k8s-harbor.svg)](https://github.com/ruzickap/k8s-harbor/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/k8s-harbor/latest)](https://github.com/ruzickap/k8s-harbor/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/k8s-harbor.svg)](https://github.com/ruzickap/k8s-harbor/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/k8s-harbor.svg)](https://github.com/ruzickap/k8s-harbor)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/k8s-harbor/total.svg)](https://github.com/ruzickap/k8s-harbor/releases/latest)
+
+### [k8s-harbor-presentation](https://github.com/ruzickap/k8s-harbor-presentation)
+
+[https://ruzickap.github.io/k8s-harbor-presentation/](https://ruzickap.github.io/k8s-harbor-presentation/)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/k8s-harbor-presentation.svg)](https://github.com/ruzickap/k8s-harbor-presentation/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/k8s-harbor-presentation.svg)](https://github.com/ruzickap/k8s-harbor-presentation/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/k8s-harbor-presentation.svg?style=social)](https://github.com/ruzickap/k8s-harbor-presentation/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/k8s-harbor-presentation.svg?style=social)](https://github.com/ruzickap/k8s-harbor-presentation/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/k8s-harbor-presentation.svg?style=social)](https://github.com/ruzickap/k8s-harbor-presentation)
+
+* CI/CD status:
+
+  ![GitHub Actions status - markdown](https://github.com/ruzickap/k8s-harbor-presentation/workflows/markdown/badge.svg)
+  ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/k8s-harbor-presentation/workflows/periodic-broken-link-checks/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/k8s-harbor-presentation/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/k8s-harbor-presentation.svg)](https://github.com/ruzickap/k8s-harbor-presentation/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/k8s-harbor-presentation.svg)](https://github.com/ruzickap/k8s-harbor-presentation/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/k8s-harbor-presentation.svg)](https://github.com/ruzickap/k8s-harbor-presentation/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/k8s-harbor-presentation.svg)](https://github.com/ruzickap/k8s-harbor-presentation/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/k8s-harbor-presentation/latest)](https://github.com/ruzickap/k8s-harbor-presentation/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/k8s-harbor-presentation.svg)](https://github.com/ruzickap/k8s-harbor-presentation/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/k8s-harbor-presentation.svg)](https://github.com/ruzickap/k8s-harbor-presentation)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/k8s-harbor-presentation/total.svg)](https://github.com/ruzickap/k8s-harbor-presentation/releases/latest)
+
+### [k8s-istio-demo](https://github.com/ruzickap/k8s-istio-demo)
+
+[https://ruzickap.github.io/k8s-istio-demo/](https://ruzickap.github.io/k8s-istio-demo/)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/k8s-istio-demo.svg)](https://github.com/ruzickap/k8s-istio-demo/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/k8s-istio-demo.svg)](https://github.com/ruzickap/k8s-istio-demo/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/k8s-istio-demo.svg?style=social)](https://github.com/ruzickap/k8s-istio-demo/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/k8s-istio-demo.svg?style=social)](https://github.com/ruzickap/k8s-istio-demo/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/k8s-istio-demo.svg?style=social)](https://github.com/ruzickap/k8s-istio-demo)
+
+* CI/CD status:
+
+  ![GitHub Actions status - checks](https://github.com/ruzickap/k8s-istio-demo/workflows/checks/badge.svg)
+  ![GitHub Actions status - terraform](https://github.com/ruzickap/k8s-istio-demo/workflows/terraform/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/k8s-istio-demo/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/k8s-istio-demo.svg)](https://github.com/ruzickap/k8s-istio-demo/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/k8s-istio-demo.svg)](https://github.com/ruzickap/k8s-istio-demo/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/k8s-istio-demo.svg)](https://github.com/ruzickap/k8s-istio-demo/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/k8s-istio-demo.svg)](https://github.com/ruzickap/k8s-istio-demo/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/k8s-istio-demo/latest)](https://github.com/ruzickap/k8s-istio-demo/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/k8s-istio-demo.svg)](https://github.com/ruzickap/k8s-istio-demo/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/k8s-istio-demo.svg)](https://github.com/ruzickap/k8s-istio-demo)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/k8s-istio-demo/total.svg)](https://github.com/ruzickap/k8s-istio-demo/releases/latest)
+
+### [k8s-istio-webinar](https://github.com/ruzickap/k8s-istio-webinar)
+
+[https://ruzickap.github.io/k8s-istio-webinar/](https://ruzickap.github.io/k8s-istio-webinar/)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/k8s-istio-webinar.svg)](https://github.com/ruzickap/k8s-istio-webinar/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/k8s-istio-webinar.svg)](https://github.com/ruzickap/k8s-istio-webinar/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/k8s-istio-webinar.svg?style=social)](https://github.com/ruzickap/k8s-istio-webinar/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/k8s-istio-webinar.svg?style=social)](https://github.com/ruzickap/k8s-istio-webinar/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/k8s-istio-webinar.svg?style=social)](https://github.com/ruzickap/k8s-istio-webinar)
+
+* CI/CD status:
+
+  ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/k8s-istio-webinar/workflows/periodic-broken-link-checks/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/k8s-istio-webinar/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - vuepress-build-check-deploy](https://github.com/ruzickap/k8s-istio-webinar/workflows/vuepress-build-check-deploy/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/k8s-istio-webinar/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/k8s-istio-webinar.svg)](https://github.com/ruzickap/k8s-istio-webinar/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/k8s-istio-webinar.svg)](https://github.com/ruzickap/k8s-istio-webinar/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/k8s-istio-webinar.svg)](https://github.com/ruzickap/k8s-istio-webinar/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/k8s-istio-webinar.svg)](https://github.com/ruzickap/k8s-istio-webinar/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/k8s-istio-webinar/latest)](https://github.com/ruzickap/k8s-istio-webinar/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/k8s-istio-webinar.svg)](https://github.com/ruzickap/k8s-istio-webinar/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/k8s-istio-webinar.svg)](https://github.com/ruzickap/k8s-istio-webinar)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/k8s-istio-webinar/total.svg)](https://github.com/ruzickap/k8s-istio-webinar/releases/latest)
+
+### [k8s-istio-workshop](https://github.com/ruzickap/k8s-istio-workshop)
+
+[https://ruzickap.github.io/k8s-istio-workshop/](https://ruzickap.github.io/k8s-istio-workshop/)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/k8s-istio-workshop.svg)](https://github.com/ruzickap/k8s-istio-workshop/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/k8s-istio-workshop.svg)](https://github.com/ruzickap/k8s-istio-workshop/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/k8s-istio-workshop.svg?style=social)](https://github.com/ruzickap/k8s-istio-workshop/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/k8s-istio-workshop.svg?style=social)](https://github.com/ruzickap/k8s-istio-workshop/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/k8s-istio-workshop.svg?style=social)](https://github.com/ruzickap/k8s-istio-workshop)
+
+* CI/CD status:
+
+  ![GitHub Actions status - build-test](https://github.com/ruzickap/k8s-istio-workshop/workflows/build-test/badge.svg)
+  ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/k8s-istio-workshop/workflows/periodic-broken-link-checks/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/k8s-istio-workshop/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/k8s-istio-workshop.svg)](https://github.com/ruzickap/k8s-istio-workshop/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/k8s-istio-workshop.svg)](https://github.com/ruzickap/k8s-istio-workshop/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/k8s-istio-workshop.svg)](https://github.com/ruzickap/k8s-istio-workshop/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/k8s-istio-workshop.svg)](https://github.com/ruzickap/k8s-istio-workshop/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/k8s-istio-workshop/latest)](https://github.com/ruzickap/k8s-istio-workshop/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/k8s-istio-workshop.svg)](https://github.com/ruzickap/k8s-istio-workshop/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/k8s-istio-workshop.svg)](https://github.com/ruzickap/k8s-istio-workshop)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/k8s-istio-workshop/total.svg)](https://github.com/ruzickap/k8s-istio-workshop/releases/latest)
+
+### [k8s-jenkins-x](https://github.com/ruzickap/k8s-jenkins-x)
+
+[https://ruzickap.github.io/k8s-jenkins-x/](https://ruzickap.github.io/k8s-jenkins-x/)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/k8s-jenkins-x.svg)](https://github.com/ruzickap/k8s-jenkins-x/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/k8s-jenkins-x.svg)](https://github.com/ruzickap/k8s-jenkins-x/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/k8s-jenkins-x.svg?style=social)](https://github.com/ruzickap/k8s-jenkins-x/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/k8s-jenkins-x.svg?style=social)](https://github.com/ruzickap/k8s-jenkins-x/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/k8s-jenkins-x.svg?style=social)](https://github.com/ruzickap/k8s-jenkins-x)
+
+* CI/CD status:
+
+  ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/k8s-jenkins-x/workflows/periodic-broken-link-checks/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/k8s-jenkins-x/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - vuepress-build-check-deploy](https://github.com/ruzickap/k8s-jenkins-x/workflows/vuepress-build-check-deploy/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/k8s-jenkins-x/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/k8s-jenkins-x.svg)](https://github.com/ruzickap/k8s-jenkins-x/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/k8s-jenkins-x.svg)](https://github.com/ruzickap/k8s-jenkins-x/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/k8s-jenkins-x.svg)](https://github.com/ruzickap/k8s-jenkins-x/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/k8s-jenkins-x.svg)](https://github.com/ruzickap/k8s-jenkins-x/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/k8s-jenkins-x/latest)](https://github.com/ruzickap/k8s-jenkins-x/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/k8s-jenkins-x.svg)](https://github.com/ruzickap/k8s-jenkins-x/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/k8s-jenkins-x.svg)](https://github.com/ruzickap/k8s-jenkins-x)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/k8s-jenkins-x/total.svg)](https://github.com/ruzickap/k8s-jenkins-x/releases/latest)
+
+### [k8s-knative-gitlab-harbor](https://github.com/ruzickap/k8s-knative-gitlab-harbor)
+
+[https://ruzickap.github.io/k8s-knative-gitlab-harbor/](https://ruzickap.github.io/k8s-knative-gitlab-harbor/)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/k8s-knative-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-knative-gitlab-harbor/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/k8s-knative-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-knative-gitlab-harbor/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/k8s-knative-gitlab-harbor.svg?style=social)](https://github.com/ruzickap/k8s-knative-gitlab-harbor/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/k8s-knative-gitlab-harbor.svg?style=social)](https://github.com/ruzickap/k8s-knative-gitlab-harbor/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/k8s-knative-gitlab-harbor.svg?style=social)](https://github.com/ruzickap/k8s-knative-gitlab-harbor)
+
+* CI/CD status:
+
+  ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/k8s-knative-gitlab-harbor/workflows/periodic-broken-link-checks/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/k8s-knative-gitlab-harbor/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - vuepress-build-check-deploy](https://github.com/ruzickap/k8s-knative-gitlab-harbor/workflows/vuepress-build-check-deploy/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/k8s-knative-gitlab-harbor/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/k8s-knative-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-knative-gitlab-harbor/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/k8s-knative-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-knative-gitlab-harbor/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/k8s-knative-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-knative-gitlab-harbor/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/k8s-knative-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-knative-gitlab-harbor/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/k8s-knative-gitlab-harbor/latest)](https://github.com/ruzickap/k8s-knative-gitlab-harbor/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/k8s-knative-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-knative-gitlab-harbor/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/k8s-knative-gitlab-harbor.svg)](https://github.com/ruzickap/k8s-knative-gitlab-harbor)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/k8s-knative-gitlab-harbor/total.svg)](https://github.com/ruzickap/k8s-knative-gitlab-harbor/releases/latest)
+
+### [k8s-postgresql](https://github.com/ruzickap/k8s-postgresql)
+
+[https://ruzickap.github.io/k8s-postgresql/](https://ruzickap.github.io/k8s-postgresql/)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/k8s-postgresql.svg)](https://github.com/ruzickap/k8s-postgresql/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/k8s-postgresql.svg)](https://github.com/ruzickap/k8s-postgresql/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/k8s-postgresql.svg?style=social)](https://github.com/ruzickap/k8s-postgresql/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/k8s-postgresql.svg?style=social)](https://github.com/ruzickap/k8s-postgresql/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/k8s-postgresql.svg?style=social)](https://github.com/ruzickap/k8s-postgresql)
+
+* CI/CD status:
+
+  ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/k8s-postgresql/workflows/periodic-broken-link-checks/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/k8s-postgresql/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - terraform](https://github.com/ruzickap/k8s-postgresql/workflows/terraform/badge.svg)
+  ![GitHub Actions status - vuepress-build-check-deploy](https://github.com/ruzickap/k8s-postgresql/workflows/vuepress-build-check-deploy/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/k8s-postgresql/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/k8s-postgresql.svg)](https://github.com/ruzickap/k8s-postgresql/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/k8s-postgresql.svg)](https://github.com/ruzickap/k8s-postgresql/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/k8s-postgresql.svg)](https://github.com/ruzickap/k8s-postgresql/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/k8s-postgresql.svg)](https://github.com/ruzickap/k8s-postgresql/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/k8s-postgresql/latest)](https://github.com/ruzickap/k8s-postgresql/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/k8s-postgresql.svg)](https://github.com/ruzickap/k8s-postgresql/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/k8s-postgresql.svg)](https://github.com/ruzickap/k8s-postgresql)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/k8s-postgresql/total.svg)](https://github.com/ruzickap/k8s-postgresql/releases/latest)
+
+### [k8s-sockshop](https://github.com/ruzickap/k8s-sockshop)
+
+[https://ruzickap.github.io/k8s-sockshop/](https://ruzickap.github.io/k8s-sockshop/)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/k8s-sockshop.svg)](https://github.com/ruzickap/k8s-sockshop/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/k8s-sockshop.svg)](https://github.com/ruzickap/k8s-sockshop/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/k8s-sockshop.svg?style=social)](https://github.com/ruzickap/k8s-sockshop/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/k8s-sockshop.svg?style=social)](https://github.com/ruzickap/k8s-sockshop/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/k8s-sockshop.svg?style=social)](https://github.com/ruzickap/k8s-sockshop)
+
+* CI/CD status:
+
+  ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/k8s-sockshop/workflows/periodic-broken-link-checks/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/k8s-sockshop/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - terraform](https://github.com/ruzickap/k8s-sockshop/workflows/terraform/badge.svg)
+  ![GitHub Actions status - vuepress-build-check-deploy](https://github.com/ruzickap/k8s-sockshop/workflows/vuepress-build-check-deploy/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/k8s-sockshop/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/k8s-sockshop.svg)](https://github.com/ruzickap/k8s-sockshop/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/k8s-sockshop.svg)](https://github.com/ruzickap/k8s-sockshop/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/k8s-sockshop.svg)](https://github.com/ruzickap/k8s-sockshop/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/k8s-sockshop.svg)](https://github.com/ruzickap/k8s-sockshop/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/k8s-sockshop/latest)](https://github.com/ruzickap/k8s-sockshop/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/k8s-sockshop.svg)](https://github.com/ruzickap/k8s-sockshop/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/k8s-sockshop.svg)](https://github.com/ruzickap/k8s-sockshop)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/k8s-sockshop/total.svg)](https://github.com/ruzickap/k8s-sockshop/releases/latest)
+
 ### [Cheatsheet - Atom](https://github.com/ruzickap/cheatsheet-atom)
 
 [![GitHub release](https://img.shields.io/github/v/release/ruzickap/cheatsheet-atom.svg)](https://github.com/ruzickap/cheatsheet-atom/releases/latest)
