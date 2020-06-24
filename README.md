@@ -887,3 +887,32 @@ Check: [https://codewithhugo.com/fix-git-failed-to-push-updates-were-rejected/](
 ```bash
 git submodule update --init --recursive
 ```
+
+#### Update GitHub Action with tag @1
+
+Check tags:
+
+```bash
+git for-each-ref --format="%(refname:short) %(subject)" refs/tags
+```
+
+Output:
+
+```bash
+v1 Release v1.0.1
+v1.0.0 Release 1.0.0
+v1.0.1 Release 1.0.1
+```
+
+Delete `v1` tag:
+
+```bash
+git push --delete origin v1
+git tag -d v1
+```
+
+Create release:
+
+```bash
+release-it
+```
