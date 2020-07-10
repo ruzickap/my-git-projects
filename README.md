@@ -276,6 +276,36 @@ List of my GitHub projects
   [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/ansible-role-vmwaretools.svg)](https://github.com/ruzickap/ansible-role-vmwaretools)
   [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/ansible-role-vmwaretools/total.svg)](https://github.com/ruzickap/ansible-role-vmwaretools/releases/latest)
 
+### [Ansible - My Workstation](https://github.com/ruzickap/ansible-my_workstation)
+
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/ansible-my_workstation.svg)](https://github.com/ruzickap/ansible-my_workstation/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/ansible-my_workstation.svg)](https://github.com/ruzickap/ansible-my_workstation/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/ansible-my_workstation.svg?style=social)](https://github.com/ruzickap/ansible-my_workstation/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/ansible-my_workstation.svg?style=social)](https://github.com/ruzickap/ansible-my_workstation/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/ansible-my_workstation.svg?style=social)](https://github.com/ruzickap/ansible-my_workstation)
+
+* CI/CD status:
+
+  ![GitHub Actions status - ansible-lint](https://github.com/ruzickap/ansible-my_workstation/workflows/ansible-lint/badge.svg)
+  ![GitHub Actions status - fedora](https://github.com/ruzickap/ansible-my_workstation/workflows/fedora/badge.svg)
+  ![GitHub Actions status - macos](https://github.com/ruzickap/ansible-my_workstation/workflows/macos/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/ansible-my_workstation/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/ansible-my_workstation/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/ansible-my_workstation.svg)](https://github.com/ruzickap/ansible-my_workstation/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/ansible-my_workstation.svg)](https://github.com/ruzickap/ansible-my_workstation/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/ansible-my_workstation.svg)](https://github.com/ruzickap/ansible-my_workstation/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/ansible-my_workstation.svg)](https://github.com/ruzickap/ansible-my_workstation/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/ansible-my_workstation/latest)](https://github.com/ruzickap/ansible-my_workstation/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/ansible-my_workstation.svg)](https://github.com/ruzickap/ansible-my_workstation/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/ansible-my_workstation.svg)](https://github.com/ruzickap/ansible-my_workstation)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/ansible-my_workstation/total.svg)](https://github.com/ruzickap/ansible-my_workstation/releases/latest)
+
 ### [Ansible - OpenWRT](https://github.com/ruzickap/ansible-openwrt)
 
 [![GitHub release](https://img.shields.io/github/v/release/ruzickap/ansible-openwrt.svg)](https://github.com/ruzickap/ansible-openwrt/releases/latest)
@@ -551,7 +581,7 @@ List of my GitHub projects
 
 ### [k8s-istio-demo](https://github.com/ruzickap/k8s-istio-demo)
 
-[https://ruzickap.github.io/k8s-istio-demo/](https://ruzickap.github.io/k8s-istio-demo/)
+[https://ruzickap.gitbook.io/k8s-istio-demo/](https://ruzickap.gitbook.io/k8s-istio-demo/)
 
 [![GitHub release](https://img.shields.io/github/v/release/ruzickap/k8s-istio-demo.svg)](https://github.com/ruzickap/k8s-istio-demo/releases/latest)
 [![GitHub license](https://img.shields.io/github/license/ruzickap/k8s-istio-demo.svg)](https://github.com/ruzickap/k8s-istio-demo/blob/master/LICENSE)
@@ -915,4 +945,19 @@ Create release:
 
 ```bash
 release-it
+```
+
+#### Amending older commit message
+
+[https://help.github.com/en/github/committing-changes-to-your-project/changing-a-commit-message#amending-older-or-multiple-commit-messages](https://help.github.com/en/github/committing-changes-to-your-project/changing-a-commit-message#amending-older-or-multiple-commit-messages)
+
+```bash
+git log
+git rebase -i 'd0efb718512fe78475056c5370884ca53f5df82b^'
+
+reword d0efb71 test commit
+
+my new commit
+
+git push --force
 ```
