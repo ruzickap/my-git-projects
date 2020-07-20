@@ -39,9 +39,43 @@ List of my GitHub projects
   [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/action-my-broken-link-checker.svg)](https://github.com/ruzickap/action-my-broken-link-checker)
   [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/action-my-broken-link-checker/total.svg)](https://github.com/ruzickap/action-my-broken-link-checker/releases/latest)
 
+### [GitHub Actions: My Markdown Link Checker ✔](https://github.com/ruzickap/action-my-markdown-link-checker)
+
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-My%20Markdown%20Link%20Checker-blue.svg?colorA=24292e&colorB=0366d6&style=flat&longCache=true&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAM6wAADOsB5dZE0gAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAERSURBVCiRhZG/SsMxFEZPfsVJ61jbxaF0cRQRcRJ9hlYn30IHN/+9iquDCOIsblIrOjqKgy5aKoJQj4O3EEtbPwhJbr6Te28CmdSKeqzeqr0YbfVIrTBKakvtOl5dtTkK+v4HfA9PEyBFCY9AGVgCBLaBp1jPAyfAJ/AAdIEG0dNAiyP7+K1qIfMdonZic6+WJoBJvQlvuwDqcXadUuqPA1NKAlexbRTAIMvMOCjTbMwl1LtI/6KWJ5Q6rT6Ht1MA58AX8Apcqqt5r2qhrgAXQC3CZ6i1+KMd9TRu3MvA3aH/fFPnBodb6oe6HM8+lYHrGdRXW8M9bMZtPXUji69lmf5Cmamq7quNLFZXD9Rq7v0Bpc1o/tp0fisAAAAASUVORK5CYII=)](https://github.com/marketplace/actions/my-markdown-link-checker)
+[![GitHub release](https://img.shields.io/github/v/release/ruzickap/action-my-markdown-link-checker.svg)](https://github.com/ruzickap/action-my-markdown-link-checker/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/ruzickap/action-my-markdown-link-checker.svg)](https://github.com/ruzickap/action-my-markdown-link-checker/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ruzickap/action-my-markdown-link-checker.svg?style=social)](https://github.com/ruzickap/action-my-markdown-link-checker/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ruzickap/action-my-markdown-link-checker.svg?style=social)](https://github.com/ruzickap/action-my-markdown-link-checker/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/ruzickap/action-my-markdown-link-checker.svg?style=social)](https://github.com/ruzickap/action-my-markdown-link-checker)
+
+* CI/CD status:
+
+  [![Docker Hub Build Status](https://img.shields.io/docker/cloud/build/peru/my-markdown-link-checker.svg)](https://hub.docker.com/r/peru/my-markdown-link-checker)
+  ![GitHub Actions status - commands](https://github.com/ruzickap/action-my-markdown-link-checker/workflows/commands/badge.svg)
+  ![GitHub Actions status - docker-image](https://github.com/ruzickap/action-my-markdown-link-checker/workflows/docker-image/badge.svg)
+  ![GitHub Actions status - linter](https://github.com/ruzickap/action-my-markdown-link-checker/workflows/Lint%20Code%20Base/badge.svg)
+  ![GitHub Actions status - markdown](https://github.com/ruzickap/action-my-markdown-link-checker/workflows/markdown/badge.svg)
+  ![GitHub Actions status - shellcheck](https://github.com/ruzickap/action-my-markdown-link-checker/workflows/shellcheck/badge.svg)
+  ![GitHub Actions status - tests](https://github.com/ruzickap/action-my-markdown-link-checker/workflows/tests/badge.svg)
+  ![GitHub Actions status - yamllint](https://github.com/ruzickap/action-my-markdown-link-checker/workflows/yamllint/badge.svg)
+
+* Issue tracking:
+
+  [![GitHub issues](https://img.shields.io/github/issues/ruzickap/action-my-markdown-link-checker.svg)](https://github.com/ruzickap/action-my-markdown-link-checker/issues)
+  [![GitHub pull requests](https://img.shields.io/github/issues-pr/ruzickap/action-my-markdown-link-checker.svg)](https://github.com/ruzickap/action-my-markdown-link-checker/pulls)
+
+* Repository:
+
+  [![GitHub release date](https://img.shields.io/github/release-date/ruzickap/action-my-markdown-link-checker.svg)](https://github.com/ruzickap/action-my-markdown-link-checker/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/ruzickap/action-my-markdown-link-checker.svg)](https://github.com/ruzickap/action-my-markdown-link-checker/commits/)
+  [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ruzickap/action-my-markdown-link-checker/latest)](https://github.com/ruzickap/action-my-markdown-link-checker/commits/)
+  [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ruzickap/action-my-markdown-link-checker.svg)](https://github.com/ruzickap/action-my-markdown-link-checker/commits/)
+  [![GitHub repo size](https://img.shields.io/github/repo-size/ruzickap/action-my-markdown-link-checker.svg)](https://github.com/ruzickap/action-my-markdown-link-checker)
+  [![GitHub download latest release](https://img.shields.io/github/downloads/ruzickap/action-my-markdown-link-checker/total.svg)](https://github.com/ruzickap/action-my-markdown-link-checker/releases/latest)
+
 ### [GitHub Actions: My Markdown Linter ✔](https://github.com/ruzickap/action-my-markdown-linter)
 
-[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-My%20Markdown%20Linter-blue.svg?colorA=24292e&colorB=0366d6&style=flat&longCache=true&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAM6wAADOsB5dZE0gAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAERSURBVCiRhZG/SsMxFEZPfsVJ61jbxaF0cRQRcRJ9hlYn30IHN/+9iquDCOIsblIrOjqKgy5aKoJQj4O3EEtbPwhJbr6Te28CmdSKeqzeqr0YbfVIrTBKakvtOl5dtTkK+v4HfA9PEyBFCY9AGVgCBLaBp1jPAyfAJ/AAdIEG0dNAiyP7+K1qIfMdonZic6+WJoBJvQlvuwDqcXadUuqPA1NKAlexbRTAIMvMOCjTbMwl1LtI/6KWJ5Q6rT6Ht1MA58AX8Apcqqt5r2qhrgAXQC3CZ6i1+KMd9TRu3MvA3aH/fFPnBodb6oe6HM8+lYHrGdRXW8M9bMZtPXUji69lmf5Cmamq7quNLFZXD9Rq7v0Bpc1o/tp0fisAAAAASUVORK5CYII=)](https://github.com/marketplace/actions/my-broken-link-checker)
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-My%20Markdown%20Linter-blue.svg?colorA=24292e&colorB=0366d6&style=flat&longCache=true&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAM6wAADOsB5dZE0gAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAERSURBVCiRhZG/SsMxFEZPfsVJ61jbxaF0cRQRcRJ9hlYn30IHN/+9iquDCOIsblIrOjqKgy5aKoJQj4O3EEtbPwhJbr6Te28CmdSKeqzeqr0YbfVIrTBKakvtOl5dtTkK+v4HfA9PEyBFCY9AGVgCBLaBp1jPAyfAJ/AAdIEG0dNAiyP7+K1qIfMdonZic6+WJoBJvQlvuwDqcXadUuqPA1NKAlexbRTAIMvMOCjTbMwl1LtI/6KWJ5Q6rT6Ht1MA58AX8Apcqqt5r2qhrgAXQC3CZ6i1+KMd9TRu3MvA3aH/fFPnBodb6oe6HM8+lYHrGdRXW8M9bMZtPXUji69lmf5Cmamq7quNLFZXD9Rq7v0Bpc1o/tp0fisAAAAASUVORK5CYII=)](https://github.com/marketplace/actions/my-markdown-linter)
 [![GitHub release](https://img.shields.io/github/v/release/ruzickap/action-my-markdown-linter.svg)](https://github.com/ruzickap/action-my-markdown-linter/releases/latest)
 [![GitHub license](https://img.shields.io/github/license/ruzickap/action-my-markdown-linter.svg)](https://github.com/ruzickap/action-my-markdown-linter/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/ruzickap/action-my-markdown-linter.svg?style=social)](https://github.com/ruzickap/action-my-markdown-linter/stargazers)
@@ -511,7 +545,6 @@ List of my GitHub projects
 
 * CI/CD status:
 
-  ![GitHub Actions status - linter](https://github.com/ruzickap/k8s-flagger-istio-flux/workflows/Lint%20Code%20Base/badge.svg)
   ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/k8s-flagger-istio-flux/workflows/periodic-broken-link-checks/badge.svg)
   ![GitHub Actions status - shellcheck](https://github.com/ruzickap/k8s-flagger-istio-flux/workflows/shellcheck/badge.svg)
   ![GitHub Actions status - terraform](https://github.com/ruzickap/k8s-flagger-istio-flux/workflows/terraform/badge.svg)
@@ -794,7 +827,6 @@ List of my GitHub projects
 
 * CI/CD status:
 
-  ![GitHub Actions status - linter](https://github.com/ruzickap/k8s-postgresql/workflows/Lint%20Code%20Base/badge.svg)
   ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/k8s-postgresql/workflows/periodic-broken-link-checks/badge.svg)
   ![GitHub Actions status - shellcheck](https://github.com/ruzickap/k8s-postgresql/workflows/shellcheck/badge.svg)
   ![GitHub Actions status - terraform](https://github.com/ruzickap/k8s-postgresql/workflows/terraform/badge.svg)
@@ -827,7 +859,6 @@ List of my GitHub projects
 
 * CI/CD status:
 
-  ![GitHub Actions status - linter](https://github.com/ruzickap/k8s-sockshop/workflows/Lint%20Code%20Base/badge.svg)
   ![GitHub Actions status - periodic-broken-link-checks](https://github.com/ruzickap/k8s-sockshop/workflows/periodic-broken-link-checks/badge.svg)
   ![GitHub Actions status - shellcheck](https://github.com/ruzickap/k8s-sockshop/workflows/shellcheck/badge.svg)
   ![GitHub Actions status - terraform](https://github.com/ruzickap/k8s-sockshop/workflows/terraform/badge.svg)
