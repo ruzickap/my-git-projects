@@ -1,0 +1,35 @@
+name: github-actions-packages-notification
+
+# This github action only serves for monitoring of new versions by
+# .github/dependabot-github-actions.yml
+
+on:
+  repository_dispatch:
+
+jobs:
+  markdownlint-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v1
+      - uses: actions/github-script@v2
+      - uses: actions/setup-node@v1
+      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-release-asset@v1
+      - uses: ansible/ansible-lint-action@master
+      - uses: avto-dev/markdown-lint@v1
+      - uses: azohra/shell-linter@latest
+      - uses: burdzwastaken/hadolint-action@master
+      - uses: docker://github/super-linter
+      - uses: docker://peru/my-markdown-linter
+      - uses: hashicorp/setup-terraform@v1
+      - uses: hashicorp/terraform-github-actions@v0.8.0
+      - uses: haya14busa/action-update-semver@v1
+      - uses: ibiqlik/action-yamllint@v1
+      - uses: karancode/yamllint-github-action@master
+      - uses: peaceiris/actions-gh-pages@v3
+      - uses: peaceiris/actions-hugo@v2
+      - uses: ruzickap/action-my-markdown-link-checker@v1
+      - uses: ruzickap/action-my-markdown-linter@v1
+
+# find ~/git/ -maxdepth 4 -path "*/.github/workflows/*.yml" -type f -exec awk -F' uses: ' '/^\s*uses: \w/ || /^\s*- uses: \w/ { print "      - uses: " $2 }' {} \; | sort | uniq
