@@ -1,8 +1,7 @@
 ---
 npm: false
 git:
-  beforeChangelogCommand: auto-changelog
-  changelog: npx auto-changelog --stdout --append-git-log '--invert-grep --grep=dependabot-preview' --commit-limit false --sort-commits date-desc --unreleased --ignore-commit-pattern "^CHANGELOG|^Merge pull request.*/dependabot/" --template https://raw.githubusercontent.com/release-it/release-it/master/conf/changelog-compact.hbs
+  changelog: npx auto-changelog --stdout --append-git-log '--invert-grep --grep=dependabot' --unreleased --commit-limit false --sort-commits date-desc --ignore-commit-pattern "^CHANGELOG|^Merge pull request.*/dependabot/" --template https://raw.githubusercontent.com/release-it/release-it/master/conf/changelog-compact.hbs
   commit: false
   requireCleanWorkingDir: false
   requireCommits: true
@@ -12,9 +11,8 @@ github:
   release: true
 hooks:
   after:release: |
-    npx auto-changelog --append-git-log '--invert-grep --grep=dependabot-preview' --commit-limit false --sort-commits date-desc --unreleased --ignore-commit-pattern "^CHANGELOG|^Merge pull request.*/dependabot/" --template https://raw.githubusercontent.com/release-it/release-it/master/conf/keepachangelog.hbs ;
+    npx auto-changelog --append-git-log '--invert-grep --grep=dependabot' --commit-limit false --sort-commits date-desc --ignore-commit-pattern "^CHANGELOG|^Merge pull request.*/dependabot/" --template https://raw.githubusercontent.com/release-it/release-it/master/conf/keepachangelog.hbs ;
     git checkout -b "update_changelog"
     git add CHANGELOG.md ;
     git commit -m "CHANGELOG file update" ;
-    git push
     gh pr create --web --fill
