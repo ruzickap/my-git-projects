@@ -1,5 +1,27 @@
 # Changelog
 
+## [v0.1.0](https://github.com/ruzickap/my-git-projects/compare/v0.0.1...v0.1.0) (2020-09-17)
+
+- Update README file (rename tag, squash) [`#23`](https://github.com/ruzickap/my-git-projects/pull/23)
+- Update revisions in pre-commit-config.yaml [`#22`](https://github.com/ruzickap/my-git-projects/pull/22)
+- Use super-linter defaults for "uses:" [`#21`](https://github.com/ruzickap/my-git-projects/pull/21)
+- Improve CHANGELOG generation using release-it [`#20`](https://github.com/ruzickap/my-git-projects/pull/20)
+- Update README, add README helper script [`#19`](https://github.com/ruzickap/my-git-projects/pull/19)
+- Add github-actions-packages-notification.yml contains all GH actions [`#18`](https://github.com/ruzickap/my-git-projects/pull/18)
+- Add action-my-markdown-link-checker [`#17`](https://github.com/ruzickap/my-git-projects/pull/17)
+- Add Markdown GH Action file [`#16`](https://github.com/ruzickap/my-git-projects/pull/16)
+- Replace markdown linter [`#15`](https://github.com/ruzickap/my-git-projects/pull/15)
+- Add action-my-markdown-linter [`#14`](https://github.com/ruzickap/my-git-projects/pull/14)
+- Add linter (super-linter) for many projects [`#13`](https://github.com/ruzickap/my-git-projects/pull/13)
+- Use latest super-linter [`#12`](https://github.com/ruzickap/my-git-projects/pull/12)
+- Add Ansible - My Workstation [`#11`](https://github.com/ruzickap/my-git-projects/pull/11)
+- Add steps describing GitHub Action update [`#10`](https://github.com/ruzickap/my-git-projects/pull/10)
+- Add super-linter [`#9`](https://github.com/ruzickap/my-git-projects/pull/9)
+- Use shell-linter in latest version [`#5`](https://github.com/ruzickap/my-git-projects/pull/5)
+- Add projects hosting web pages on ruzickap.github.io [`#4`](https://github.com/ruzickap/my-git-projects/pull/4)
+- Ignore npm inside release-it configuration [`#3`](https://github.com/ruzickap/my-git-projects/pull/3)
+- CHANGELOG file update [`#2`](https://github.com/ruzickap/my-git-projects/pull/2)
+
 ## v0.0.1 (2020-05-10)
 
 - Add initial version of .pre-commit-config.yaml [`c538eff`](https://github.com/ruzickap/my-git-projects/commit/c538effc3c81f4c2416d97d725eca6c36f1f14e2)
@@ -7,7 +29,6 @@
 - Add more projects to README [`e324cd2`](https://github.com/ruzickap/my-git-projects/commit/e324cd2362d951bf9eba3670655345199dd1fa21)
 - Remove markdown-link-check because of GitHub checks in their limits [`933dbd0`](https://github.com/ruzickap/my-git-projects/commit/933dbd0568707bda97c0479a767e7cf59eacd488)
 - Add more projects to README [`7ef7031`](https://github.com/ruzickap/my-git-projects/commit/7ef7031e2822b7e460d8312ef7d7059d1ba331a9)
-- Add dependabot [`5e32693`](https://github.com/ruzickap/my-git-projects/commit/5e32693f096948e5eb014e6427a6029509539519)
 - Add Ansible roles to README [`7c7e59f`](https://github.com/ruzickap/my-git-projects/commit/7c7e59f8d06d6172aa40f97bfed7c84798d744d1)
 - Put back yamllint.yml instead of symlink [`5053253`](https://github.com/ruzickap/my-git-projects/commit/5053253a3c2dca49ca9d8b7bebe488a6ad079588)
 - Add GitHub templates [`dc1a032`](https://github.com/ruzickap/my-git-projects/commit/dc1a0324bbd91b20d860dde46cbcdebecbfc0c16)
