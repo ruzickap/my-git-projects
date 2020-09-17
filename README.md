@@ -994,9 +994,24 @@ git pull -r
 git branch -D my_new_branch
 ```
 
+### Squash 2 last commits
+
+```bash
+git rebase -i HEAD~2
+f
+git push -f
+```
+
 ### Merge changes from master to my local branch
 
 Check: [https://codewithhugo.com/fix-git-failed-to-push-updates-were-rejected/](https://codewithhugo.com/fix-git-failed-to-push-updates-were-rejected/))
+
+```bash
+git fetch
+git rebase master
+git mergetool
+git rebase --continue
+```
 
 ### Update git submodules
 
@@ -1004,7 +1019,7 @@ Check: [https://codewithhugo.com/fix-git-failed-to-push-updates-were-rejected/](
 git submodule update --init --recursive
 ```
 
-#### Update GitHub Action with tag @1
+### Update GitHub Action with tag @1
 
 Check tags:
 
@@ -1032,7 +1047,7 @@ Create release:
 release-it
 ```
 
-#### Amending older commit message
+### Amending older commit message
 
 [https://help.github.com/en/github/committing-changes-to-your-project/changing-a-commit-message#amending-older-or-multiple-commit-messages](https://help.github.com/en/github/committing-changes-to-your-project/changing-a-commit-message#amending-older-or-multiple-commit-messages)
 
@@ -1045,4 +1060,15 @@ reword d0efb71 test commit
 my new commit
 
 git push --force
+```
+
+### Rename tag
+
+[https://stackoverflow.com/questions/1028649/how-do-you-rename-a-git-tag](https://stackoverflow.com/questions/1028649/how-do-you-rename-a-git-tag)
+
+```bash
+git tag -a new old^{}
+git tag -d old
+git push origin :refs/tags/old
+git push --tags
 ```
