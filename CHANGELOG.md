@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.1.1](https://github.com/ruzickap/my-git-projects/compare/v0.1.0...v0.1.1) (2020-09-17)
+
+- Fix release-it because of gh change requiring "git push" first [`#26`](https://github.com/ruzickap/my-git-projects/pull/26)
+- Exclude CHANGELOG form tests [`#25`](https://github.com/ruzickap/my-git-projects/pull/25)
+- CHANGELOG file update [`#24`](https://github.com/ruzickap/my-git-projects/pull/24)
+
 ## [v0.1.0](https://github.com/ruzickap/my-git-projects/compare/v0.0.1...v0.1.0) (2020-09-17)
 
 - Update README file (rename tag, squash) [`#23`](https://github.com/ruzickap/my-git-projects/pull/23)
