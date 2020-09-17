@@ -21,6 +21,9 @@ jobs:
 
       - name: Markdown Lint
         uses: ruzickap/action-my-markdown-linter@v1
+        with:
+          exclude: |
+            CHANGELOG.md
 
   markdown-link-check:
     runs-on: ubuntu-latest
