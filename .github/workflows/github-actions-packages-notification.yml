@@ -20,13 +20,11 @@ jobs:
       - uses: avto-dev/markdown-lint@v1
       - uses: azohra/shell-linter@latest
       - uses: burdzwastaken/hadolint-action@master
-      - uses: docker://github/super-linter
-      - uses: docker://peru/my-markdown-linter
+      - uses: github/super-linter@v3
       - uses: hashicorp/setup-terraform@v1
       - uses: hashicorp/terraform-github-actions@v0.8.0
       - uses: haya14busa/action-update-semver@v1
       - uses: ibiqlik/action-yamllint@v1
-      - uses: karancode/yamllint-github-action@master
       - uses: peaceiris/actions-gh-pages@v3
       - uses: peaceiris/actions-hugo@v2
       - uses: ruzickap/action-my-markdown-link-checker@v1
