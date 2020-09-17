@@ -15,4 +15,5 @@ hooks:
     git checkout -b "update_changelog"
     git add CHANGELOG.md ;
     git commit -m "CHANGELOG file update" ;
+    git push ;
     gh pr create --web --fill
