@@ -1,0 +1,45 @@
+name: pre-commit-config
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - '.pre-commit-config.yaml'
+      - .github/workflows/pre-commit-config.yml
+  push:
+    branches:
+      - master
+    paths:
+      - '.pre-commit-config.yaml'
+      - .github/workflows/pre-commit-config.yml
+
+jobs:
+  pre-commit-config-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install pre-commit
+        run: |
+          sudo apt install -y git python3-pip python3-setuptools python3-wheel shellcheck
+          sudo -H pip3 install pre-commit
+
+      - name: Check if all plugins in .pre-commit-config.yaml are in latest version
+        run: |
+          PRE_COMMIT_AUTOUPDATE=$(pre-commit autoupdate || true)
+          echo "${PRE_COMMIT_AUTOUPDATE}"
+          if [[ "${PRE_COMMIT_AUTOUPDATE}" =~ "updating.*->" ]]; then
+            echo "Plugins in .pre-commit-config.yaml are not in latest version !"
+            exit 1
+          fi
+
+      - name: Run pre-commit tests
+        run: |
+          pre-commit run -a
+
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: pre-commit/action@v2.0.0
