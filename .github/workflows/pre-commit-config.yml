@@ -13,6 +13,9 @@ on:
       - '.pre-commit-config.yaml'
       - .github/workflows/pre-commit-config.yml
 
+env:
+  SKIP: no-commit-to-branch
+
 jobs:
   pre-commit-config-test:
     runs-on: ubuntu-latest
@@ -34,8 +37,6 @@ jobs:
           fi
 
       - name: Run pre-commit tests
-        env:
-          SKIP: no-commit-to-branch
         run: |
           pre-commit run -a
 
