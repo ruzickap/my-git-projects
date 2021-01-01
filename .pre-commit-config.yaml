@@ -6,7 +6,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.3.0
+    rev: v3.4.0
     hooks:
       - id: check-added-large-files
         name: Check for added large files
@@ -115,7 +115,7 @@ repos:
         stages: [commit, push, manual]
 
   - repo: https://github.com/jorisroovers/gitlint
-    rev: v0.14.0
+    rev: v0.15.0
     hooks:
       - id: gitlint
         name: gitlint
@@ -141,13 +141,13 @@ repos:
         files: \.(j2|jinja|jinja2)$
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.43.0
+    rev: v1.45.0
     hooks:
       - id: terraform_fmt
       - id: terraform_docs
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.24.0
+    rev: v0.26.0
     hooks:
       - id: markdownlint
         name: markdownlint
