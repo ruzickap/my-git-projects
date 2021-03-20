@@ -127,27 +127,26 @@ repos:
         ]
         stages: [commit-msg]
 
-  - repo: https://github.com/jumanjihouse/pre-commit-hooks
-    rev: 2.1.4
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.7.1.1
     hooks:
-      - id: script-must-have-extension
       - id: shellcheck
 
   - repo: https://github.com/motet-a/jinjalint
-    rev: ''
+    rev: "01e0a4d8f1ee775aee00eb9d715eff2b4cc49e4d"
     hooks:
       - id: jinjalint
         types: [file]
         files: \.(j2|jinja|jinja2)$
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.45.0
+    rev: v1.48.0
     hooks:
       - id: terraform_fmt
       - id: terraform_docs
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.26.0
+    rev: v0.27.1
     hooks:
       - id: markdownlint
         name: markdownlint
@@ -158,7 +157,7 @@ repos:
         exclude: ^CHANGELOG.md$
 
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.25.0
+    rev: v1.26.0
     hooks:
       - id: yamllint
         name: yamllint
