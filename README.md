@@ -1047,7 +1047,7 @@ Create release:
 release-it
 ```
 
-### Amending older commit message
+### Amend older commit message
 
 [https://help.github.com/en/github/committing-changes-to-your-project/changing-a-commit-message#amending-older-or-multiple-commit-messages](https://help.github.com/en/github/committing-changes-to-your-project/changing-a-commit-message#amending-older-or-multiple-commit-messages)
 
