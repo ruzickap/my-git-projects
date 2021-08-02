@@ -17,7 +17,7 @@ jobs:
       - uses: avto-dev/markdown-lint@v1
       - uses: azohra/shell-linter@v0.4.0
       - uses: burdzwastaken/hadolint-action@master
-      - uses: github/super-linter@v3
+      - uses: docker://ghcr.io/github/super-linter:slim-v4
       - uses: hashicorp/setup-terraform@v1
       - uses: hashicorp/terraform-github-actions@v0.8.0
       - uses: haya14busa/action-update-semver@v1
