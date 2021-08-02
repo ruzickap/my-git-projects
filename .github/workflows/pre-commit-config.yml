@@ -31,7 +31,7 @@ jobs:
         run: |
           PRE_COMMIT_AUTOUPDATE=$(pre-commit autoupdate || true)
           echo "${PRE_COMMIT_AUTOUPDATE}"
-          if [[ "${PRE_COMMIT_AUTOUPDATE}" =~ "updating.*->" ]]; then
+          if [[ "${PRE_COMMIT_AUTOUPDATE}" =~ updating.*-\> ]]; then
             echo "Plugins in .pre-commit-config.yaml are not in latest version !"
             exit 1
           fi
