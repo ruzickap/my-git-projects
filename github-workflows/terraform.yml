@@ -8,7 +8,7 @@ on:
       - terraform/**
   push:
     branches:
-      - master
+      - main
     paths:
       - .github/workflows/terraform.yml
       - terraform/**

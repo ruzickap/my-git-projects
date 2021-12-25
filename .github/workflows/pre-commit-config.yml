@@ -8,7 +8,7 @@ on:
       - .github/workflows/pre-commit-config.yml
   push:
     branches:
-      - master
+      - main
     paths:
       - '.pre-commit-config.yaml'
       - .github/workflows/pre-commit-config.yml
