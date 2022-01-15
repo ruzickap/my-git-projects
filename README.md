@@ -126,6 +126,13 @@ Create release:
 release-it
 ```
 
+or
+
+```bash
+git tag v3.0.6
+git push --tags
+```
+
 ### Amend older commit message
 
 [https://help.github.com/en/github/committing-changes-to-your-project/changing-a-commit-message#amending-older-or-multiple-commit-messages](https://help.github.com/en/github/committing-changes-to-your-project/changing-a-commit-message#amending-older-or-multiple-commit-messages)
@@ -151,7 +158,3 @@ git tag -d old
 git push origin :refs/tags/old
 git push --tags
 ```
-
-### Create new page based on GitHub Pages
-
-Comment `- name: Check broken links`
