@@ -10,21 +10,30 @@ jobs:
   markdownlint-check:
     runs-on: ubuntu-latest
     steps:
+      - uses: accurics/terrascan-action@v1
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-      - uses: softprops/action-gh-release@v1
       - uses: ansible/ansible-lint-action@master
-      - uses: avto-dev/markdown-lint@v1
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-2
       - uses: azohra/shell-linter@v0.6.0
       - uses: burdzwastaken/hadolint-action@master
+      - uses: checkmarx/kics-action@v1.4
       - uses: docker://ghcr.io/github/super-linter:slim-v4
+      - uses: github/codeql-action/upload-sarif@v1
+      - uses: github/super-linter/slim@v4
       - uses: hashicorp/setup-terraform@v1
-      - uses: hashicorp/terraform-github-actions@v0.8.0
       - uses: haya14busa/action-update-semver@v1
       - uses: ibiqlik/action-yamllint@v3
+      - uses: jontze/action-mdbook@v1.1.0
       - uses: peaceiris/actions-gh-pages@v3
       - uses: peaceiris/actions-hugo@v2
+      - uses: pre-commit/action@v2.0.6
+      - uses: ruzickap/action-my-broken-link-checker@v2
       - uses: ruzickap/action-my-markdown-link-checker@v1
       - uses: ruzickap/action-my-markdown-linter@v1
+      - uses: softprops/action-gh-release@v1
+      - uses: tfsec/tfsec-sarif-action@v0.0.6
 
 # find ~/git/ -maxdepth 4 -path "*/.github/workflows/*.yml" -type f -exec awk -F' uses: ' '/^\s*uses: \w/ || /^\s*- uses: \w/ { print "      - uses: " $2 }' {} \; | sort | uniq
