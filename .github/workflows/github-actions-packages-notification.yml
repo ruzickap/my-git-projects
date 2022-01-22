@@ -15,7 +15,7 @@ jobs:
       - uses: softprops/action-gh-release@v1
       - uses: ansible/ansible-lint-action@master
       - uses: avto-dev/markdown-lint@v1
-      - uses: azohra/shell-linter@v0.4.0
+      - uses: azohra/shell-linter@v0.6.0
       - uses: burdzwastaken/hadolint-action@master
       - uses: docker://ghcr.io/github/super-linter:slim-v4
       - uses: hashicorp/setup-terraform@v1
