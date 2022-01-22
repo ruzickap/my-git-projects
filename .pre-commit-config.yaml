@@ -57,8 +57,10 @@ repos:
         types: [yaml]
         # Skip Helm Charts
         exclude: ^.*charts/.*/templates/.*\.yaml$
+        # https://stackoverflow.com/questions/59413979/how-exclude-ref-tag-from-check-yaml-git-hook
         args: [
-          '--allow-multiple-documents'
+          '--allow-multiple-documents',
+          '--unsafe'
         ]
 
       - id: detect-aws-credentials
@@ -90,7 +92,7 @@ repos:
         name: Don't commit to branch
         entry: no-commit-to-branch
         language: python
-        args: ['--branch', 'main']
+        args: ['--branch', 'main', '--branch', 'master']
         pass_filenames: false
         always_run: true
 
@@ -113,6 +115,7 @@ repos:
         language: python
         types: [text]
         stages: [commit, push, manual]
+        args: ['--markdown-linebreak-ext=md']
 
   - repo: https://github.com/jorisroovers/gitlint
     rev: v0.17.0
@@ -142,8 +145,19 @@ repos:
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.62.3
     hooks:
+      - id: checkov
+        args: [
+          "--skip-check", "CKV_GIT_1",
+        ]
       - id: terraform_fmt
-      - id: terraform_docs
+      - id: terraform_tflint
+      - id: terraform_tfsec
+        args:
+          - --args=--exclude github-repositories-private
+      - id: terraform_validate
+      # - id: terrascan
+      #   args:
+      #     - --args=--severity=high
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.30.0

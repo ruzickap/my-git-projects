@@ -29,4 +29,6 @@ resource "github_repository" "repository" {
   delete_branch_on_merge = true
   auto_init              = true
   license_template       = "apache-2.0"
+  visibility             = "public"
+  vulnerability_alerts   = "true"
 }

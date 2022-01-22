@@ -1,7 +1,6 @@
 ---
 npm: false
 git:
-  changelog: auto-changelog --stdout --append-git-log '--invert-grep --grep=dependabot' --unreleased --commit-limit false --sort-commits date-desc --ignore-commit-pattern "^CHANGELOG|^Merge pull request.*/dependabot/" --template https://raw.githubusercontent.com/release-it/release-it/master/conf/changelog-compact.hbs
   commit: false
   requireCleanWorkingDir: false
   requireCommits: true
@@ -9,8 +8,7 @@ git:
 github:
   releaseName: v${version}
   release: true
-  # This parameter can not be enabled because of bug: https://github.com/release-it/release-it/issues/855
-  # autoGenerate: true
+  autoGenerate: true
 hooks:
   before:version:bump: |
     test -d .git || ( echo "Run in top level directory" && exit 1 ) && \
@@ -18,7 +16,7 @@ hooks:
     git checkout -b "update-changelog" && \
     git add CHANGELOG.md && \
     git commit -m "CHANGELOG file update" && \
-    git push && git fetch --tags && \
+    git push && \
     gh pr merge --rebase "$(gh pr create --fill | grep '^https://github.com/')" && \
     git checkout $(git remote show origin | sed -n '/HEAD branch/s/.*: //p') && \
     git pull -r && \
