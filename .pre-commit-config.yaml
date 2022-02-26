@@ -131,7 +131,7 @@ repos:
         stages: [commit-msg]
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.8.0.3
+    rev: v0.8.0.4
     hooks:
       - id: shellcheck
 
@@ -143,24 +143,21 @@ repos:
         files: \.(j2|jinja|jinja2)$
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.62.3
+    rev: v1.64.0
     hooks:
       - id: checkov
-        args: [
-          "--skip-check", "CKV_GIT_1",
-        ]
       - id: terraform_fmt
       - id: terraform_tflint
       - id: terraform_tfsec
         args:
           - --args=--exclude github-repositories-private
-      - id: terraform_validate
+      # - id: terraform_validate
       # - id: terrascan
       #   args:
       #     - --args=--severity=high
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.30.0
+    rev: v0.31.1
     hooks:
       - id: markdownlint
         name: markdownlint

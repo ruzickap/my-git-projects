@@ -34,7 +34,7 @@ jobs:
         run: |
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
-          curl -sL "$(curl -Ls https://api.github.com/repos/aquasecurity/tfsec/releases/latest | awk -F \" '/"https:\/\/.+?-linux-amd64"/ { print $4 }')" -o tfsec
+          curl -sL "$(curl -Ls https://api.github.com/repos/aquasecurity/tfsec/releases/latest | awk -F \" '/"https:\/\/.+?tfsec-linux-amd64"/ { print $4 }')" -o tfsec
           mv tfsec /usr/local/bin/
           chmod a+x /usr/local/bin/tfsec
 
