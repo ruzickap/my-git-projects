@@ -19,9 +19,6 @@ env:
 jobs:
   pre-commit-config-test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash --noprofile --norc -euxo pipefail {0}
     steps:
       - uses: actions/checkout@v2
 
