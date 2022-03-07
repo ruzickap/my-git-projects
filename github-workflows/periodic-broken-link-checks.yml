@@ -31,4 +31,4 @@ jobs:
         uses: ruzickap/action-my-broken-link-checker@v2
         with:
           url: ${{ steps.gh_pages_url.outputs.result }}
-          cmd_params: '--exclude=(mylabs.dev|https://github.com/.*/edit/) --max-connections-per-host=5 --color=always --rate-limit=5 --timeout=20 --header="User-Agent:curl/7.54.0"'
+          cmd_params: '--exclude=(mylabs.dev|https://github.com/.*/edit/) --max-connections-per-host=5 --color=always --rate-limit=5 --header="User-Agent:curl/7.54.0"'
