@@ -34,6 +34,6 @@ jobs:
       - uses: ruzickap/action-my-markdown-link-checker@v1
       - uses: ruzickap/action-my-markdown-linter@v1
       - uses: softprops/action-gh-release@v1
-      - uses: tfsec/tfsec-sarif-action@v0.0.6
+      - uses: tfsec/tfsec-sarif-action@v0.1.0
 
 # find ~/git/ -maxdepth 4 -path "*/.github/workflows/*.yml" -type f -exec awk -F' uses: ' '/^\s*uses: \w/ || /^\s*- uses: \w/ { print "      - uses: " $2 }' {} \; | sort | uniq
