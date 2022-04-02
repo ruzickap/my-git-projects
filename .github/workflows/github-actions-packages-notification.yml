@@ -13,7 +13,7 @@ jobs:
       - uses: accurics/terrascan-action@v1
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.0.0
-      - uses: ansible/ansible-lint-action@master
+      - uses: ansible/ansible-lint-action@v6.0.2
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: us-east-2

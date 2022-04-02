@@ -19,9 +19,9 @@ provider "github" {}
 ################################################################################
 
 resource "github_repository" "repository" {
-  name                   = "test-repo"
-  description            = "🤖 This repo was auto-generated with Terraform 🤖"
-  topics                 = ["blog", "database", "reports", "plugin"]
+  name                   = "raw-photo-tools-container"
+  description            = "Repository for building container to help manage RAW photos"
+  topics                 = ["container", "dockerfile", "darktable-cli", "exiftool", "raw", "photo", "tools", "manage"]
   homepage_url           = "https://petr.ruzicka.dev"
   has_wiki               = false
   has_projects           = false
