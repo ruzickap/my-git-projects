@@ -9,8 +9,8 @@ GitHub’s official command-line tool (`gh`): [https://cli.github.com/](https://
 ### Contribution
 
 ```bash
-GITHUB_REPO_TO_CONTRIBUTE="https://github.com/MidnightCommander/mc"
-BRANCH_NAME="improve_open_image"
+GITHUB_REPO_TO_CONTRIBUTE="https://github.com/aws-samples/aws-eks-accelerator-for-terraform"
+BRANCH_NAME="add_output_parameters"
 
 # fork and clone GitHub repository
 gh repo fork --clone --remote ${GITHUB_REPO_TO_CONTRIBUTE}

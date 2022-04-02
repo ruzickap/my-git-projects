@@ -143,14 +143,14 @@ repos:
         files: \.(j2|jinja|jinja2)$
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.64.0
+    rev: v1.64.1
     hooks:
       - id: checkov
       - id: terraform_fmt
       - id: terraform_tflint
       - id: terraform_tfsec
         args:
-          - --args=--exclude github-repositories-private
+          - --args=--exclude-downloaded-modules --exclude=github-repositories-private
       # - id: terraform_validate
       # - id: terrascan
       #   args:
