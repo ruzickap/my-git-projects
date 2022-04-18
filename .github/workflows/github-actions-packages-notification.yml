@@ -23,7 +23,7 @@ jobs:
       - uses: docker://ghcr.io/github/super-linter:slim-v4
       - uses: github/codeql-action/upload-sarif@v1
       - uses: github/super-linter/slim@v4
-      - uses: hashicorp/setup-terraform@v1
+      - uses: hashicorp/setup-terraform@v2
       - uses: haya14busa/action-update-semver@v1
       - uses: ibiqlik/action-yamllint@v3
       - uses: jontze/action-mdbook@v1.1.0
