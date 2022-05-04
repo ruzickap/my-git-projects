@@ -6,7 +6,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.1.0
+    rev: v4.2.0
     hooks:
       - id: check-added-large-files
         name: Check for added large files
@@ -56,7 +56,7 @@ repos:
         language: python
         types: [yaml]
         # Skip Helm Charts
-        exclude: ^.*charts/.*/templates/.*\.yaml$
+        exclude: ^.*/templates/.*\.yaml$
         # https://stackoverflow.com/questions/59413979/how-exclude-ref-tag-from-check-yaml-git-hook
         args: [
           '--allow-multiple-documents',
@@ -143,14 +143,14 @@ repos:
         files: \.(j2|jinja|jinja2)$
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.64.1
+    rev: v1.71.0
     hooks:
-      - id: checkov
+      - id: terraform_checkov
       - id: terraform_fmt
       - id: terraform_tflint
-      - id: terraform_tfsec
-        args:
-          - --args=--exclude-downloaded-modules --exclude=github-repositories-private
+#      - id: terraform_tfsec
+#        args:
+#          - --args=--exclude-downloaded-modules --exclude=github-repositories-private
       # - id: terraform_validate
       # - id: terrascan
       #   args:
@@ -174,6 +174,8 @@ repos:
         name: yamllint
         description: A linter for YAML files.
         entry: yamllint
+        # Skip Helm Charts
+        exclude: ^.*/templates/.*\.yaml$
         args: [
           '--format', 'parsable',
           '--strict',
