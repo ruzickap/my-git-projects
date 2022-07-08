@@ -24,18 +24,20 @@ jobs:
 
       - name: Install pre-commit
         run: |
+          set -euxo pipefail
           sudo apt install -y git python3-pip python3-setuptools python3-wheel shellcheck
           sudo -H pip3 install checkov pre-commit
 
       - name: Install pre-commit dependecies
         run: |
-          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+          set -euxo pipefail
+          curl -Ls https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
           curl -sL "$(curl -Ls https://api.github.com/repos/aquasecurity/tfsec/releases/latest | awk -F \" '/"https:\/\/.+?tfsec-linux-amd64"/ { print $4 }')" -o tfsec
           mv tfsec /usr/local/bin/
           chmod a+x /usr/local/bin/tfsec
 
-          curl -sL "$(curl -s https://api.github.com/repos/accurics/terrascan/releases/latest | grep -o -E "https://.+?_Linux_x86_64.tar.gz")" > terrascan.tar.gz
+          curl -sL "$(curl -Ls https://api.github.com/repos/accurics/terrascan/releases/latest | grep -o -E "https://.+?_Linux_x86_64.tar.gz")" > terrascan.tar.gz
           tar -xf terrascan.tar.gz -C /usr/local/bin/ terrascan
 
           terrascan version
@@ -44,6 +46,7 @@ jobs:
 
       - name: Check if all plugins in .pre-commit-config.yaml are in latest version
         run: |
+          set -euxo pipefail
           PRE_COMMIT_AUTOUPDATE=$(pre-commit autoupdate || true)
           echo "${PRE_COMMIT_AUTOUPDATE}"
           if [[ "${PRE_COMMIT_AUTOUPDATE}" =~ updating.*-\> ]]; then
@@ -53,6 +56,7 @@ jobs:
 
       - name: Run pre-commit tests
         run: |
+          set -euxo pipefail
           pre-commit run -a
 
       - uses: pre-commit/action@v2.0.3
