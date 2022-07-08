@@ -19,7 +19,15 @@
       "matchUpdateTypes": ["minor","patch"],
       "addLabels": ["flux","github-releases"],
       "automerge": true,
-    }
+    },
+    {
+      "matchPackageNames": ["renovatebot/github-action"],
+      "matchUpdateTypes": ["minor"],
+      "automergeType": "branch",
+      "automerge": true,
+      "ignoreTests": true,
+      "schedule": ["on Sunday"],
+    },
   ],
   "prBodyTemplate": "{{{header}}}{{{table}}}{{{notes}}}{{{changelogs}}}{{{controls}}}",
   "repositories": ["ruzickap/my-git-projects"],
