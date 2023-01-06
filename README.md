@@ -4,7 +4,7 @@ My projects on GitHub: [https://ruzickap.github.io](https://ruzickap.github.io)
 
 ## Git / GitHub notes
 
-GitHub’s official command-line tool (`gh`): [https://cli.github.com/](https://cli.github.com/)
+GitHub's official command-line tool (`gh`): [https://cli.github.com/](https://cli.github.com/)
 
 ### Contribution
 
@@ -131,6 +131,12 @@ or
 ```bash
 git tag v3.0.6
 git push --tags
+```
+
+### Delete tag
+
+```bash
+git push origin :refs/tags/<my-tag-name>
 ```
 
 ### Amend older commit message
