@@ -1,24 +1,34 @@
 name: pre-commit-config
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [opened, synchronize]
     paths:
-      - '.pre-commit-config.yaml'
+      - .pre-commit-config.yaml
       - .github/workflows/pre-commit-config.yml
   push:
     branches:
       - main
     paths:
-      - '.pre-commit-config.yaml'
+      - .pre-commit-config.yaml
       - .github/workflows/pre-commit-config.yml
 
 env:
-  SKIP: no-commit-to-branch
+  AWS_DEFAULT_REGION: eu-central-1
+  AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+  SKIP: no-commit-to-branch,terraform_trivy,terraform_validate
+
+permissions: read-all
 
 jobs:
   pre-commit-config-test:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v3
 
@@ -28,21 +38,29 @@ jobs:
           sudo apt install -y git python3-pip python3-setuptools python3-wheel shellcheck
           sudo -H pip3 install checkov pre-commit
 
+      - name: Configure AWS credentials (needed for "detect-aws-credentials")
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+
       - name: Install pre-commit dependecies
         run: |
           set -euxo pipefail
           curl -Ls https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
-          curl -sL "$(curl -Ls https://api.github.com/repos/aquasecurity/tfsec/releases/latest | awk -F \" '/"https:\/\/.+?tfsec-linux-amd64"/ { print $4 }')" -o tfsec
-          mv tfsec /usr/local/bin/
-          chmod a+x /usr/local/bin/tfsec
-
-          curl -sL "$(curl -Ls https://api.github.com/repos/accurics/terrascan/releases/latest | grep -o -E "https://.+?_Linux_x86_64.tar.gz")" > terrascan.tar.gz
+          gh release download --repo accurics/terrascan --pattern "*Linux_x86_64.tar.gz" --output terrascan.tar.gz
           tar -xf terrascan.tar.gz -C /usr/local/bin/ terrascan
 
+          gh release download --repo aquasecurity/trivy --pattern "*Linux-64bit.tar.gz" --output trivy.tar.gz
+          tar -xf trivy.tar.gz -C /usr/local/bin/ trivy
+
+          gh release download --repo minamijoyo/tfupdate  --pattern "*linux_amd64.tar.gz" --output tfupdate.tar.gz
+          tar -xf tfupdate.tar.gz -C /usr/local/bin/ tfupdate
+
+          trivy version
           terrascan version
-          tfsec --version
-          terrascan version
+          tfupdate --version
 
       - name: Check if all plugins in .pre-commit-config.yaml are in latest version
         run: |
