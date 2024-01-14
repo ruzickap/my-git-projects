@@ -4,13 +4,13 @@ on:
   pull_request:
     types: [opened, synchronize]
     paths:
-      - '**.md'
+      - "**.md"
       - .github/workflows/markdown.yml
   push:
     branches:
       - main
     paths:
-      - '**.md'
+      - "**.md"
       - .github/workflows/markdown.yml
 
 jobs:

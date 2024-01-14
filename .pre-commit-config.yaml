@@ -4,197 +4,246 @@
 #                                                                                        #
 ##########################################################################################
 ---
+fail_fast: true
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: check-added-large-files
-        name: Check for added large files
-        description: Prevent giant files from being committed
-        entry: check-added-large-files
-        language: python
+        # name: Check for added large files
+        # description: Prevent giant files from being committed
+        # entry: check-added-large-files
+        # language: python
 
       - id: check-json
-        name: Check JSON
-        description: This hook checks json files for parseable syntax.
-        entry: check-json
-        language: python
-        types: [json]
+        # name: Check JSON
+        # description: This hook checks json files for parseable syntax.
+        # entry: check-json
+        # language: python
+        # types: [json]
 
       - id: check-merge-conflict
-        name: Check for merge conflicts
-        description: Check for files that contain merge conflict strings.
-        entry: check-merge-conflict
-        language: python
-        types: [text]
+        # name: Check for merge conflicts
+        # description: Check for files that contain merge conflict strings.
+        # entry: check-merge-conflict
+        # language: python
+        # types: [text]
 
       - id: check-symlinks
-        name: Check for broken symlinks
-        description: Checks for symlinks which do not point to anything.
-        entry: check-symlinks
-        language: python
-        types: [symlink]
+        # name: Check for broken symlinks
+        # description: Checks for symlinks which do not point to anything.
+        # entry: check-symlinks
+        # language: python
+        # types: [symlink]
 
       - id: check-toml
-        name: Check Toml
-        description: This hook checks toml files for parseable syntax.
-        entry: check-toml
-        language: python
-        types: [toml]
+        # name: Check Toml
+        # description: This hook checks toml files for parseable syntax.
+        # entry: check-toml
+        # language: python
+        # types: [toml]
 
       - id: check-xml
-        name: Check Xml
-        description: This hook checks xml files for parseable syntax.
-        entry: check-xml
-        language: python
-        types: [xml]
+        # name: Check Xml
+        # description: This hook checks xml files for parseable syntax.
+        # entry: check-xml
+        # language: python
+        # types: [xml]
 
       - id: check-yaml
-        name: Check Yaml
-        description: This hook checks yaml files for parseable syntax.
-        entry: check-yaml
-        language: python
-        types: [yaml]
+        # name: Check Yaml
+        # description: This hook checks yaml files for parseable syntax.
+        # entry: check-yaml
+        # language: python
+        # types: [yaml]
         # Skip Helm Charts
         exclude: ^.*/templates/.*\.yaml$
         # https://stackoverflow.com/questions/59413979/how-exclude-ref-tag-from-check-yaml-git-hook
-        args: [
-          '--allow-multiple-documents',
-          '--unsafe'
-        ]
+        args:
+          - --allow-multiple-documents
+          - --unsafe
 
       - id: detect-aws-credentials
-        name: Detect AWS Credentials
-        description: Detects *your* aws credentials from the aws cli credentials file
-        entry: detect-aws-credentials
-        language: python
-        types: [text]
-        args:
-          - --allow-missing-credentials
+        # name: Detect AWS Credentials
+        # description: Detects *your* aws credentials from the aws cli credentials file
+        # entry: detect-aws-credentials
+        # language: python
+        # types: [text]
+        # args:
+        #   - --allow-missing-credentials
 
-      - id: detect-private-key
-        name: Detect Private Key
-        description: Detects the presence of private keys
-        entry: detect-private-key
-        language: python
-        types: [text]
+      # - id: detect-private-key
+      #   name: Detect Private Key
+      #   description: Detects the presence of private keys
+      #   entry: detect-private-key
+      #   language: python
+      #   types: [text]
 
       - id: end-of-file-fixer
-        name: Fix End of Files
-        description: Ensures that a file is either empty, or ends with one newline.
-        entry: end-of-file-fixer
-        language: python
-        types: [text]
-        stages: [commit, push, manual]
+        # name: Fix End of Files
+        # description: Ensures that a file is either empty, or ends with one newline.
+        # entry: end-of-file-fixer
+        # language: python
+        # types: [text]
+        # stages: [commit, push, manual]
         exclude_types: [svg]
 
       - id: no-commit-to-branch
-        name: Don't commit to branch
-        entry: no-commit-to-branch
-        language: python
-        args: ['--branch', 'main', '--branch', 'master']
+        # name: Don't commit to branch
+        # entry: no-commit-to-branch
+        # language: python
+        args:
+          - --branch=main
+          - --branch=master
         pass_filenames: false
         always_run: true
 
-      - id: pretty-format-json
-        name: Pretty format JSON
-        description: This hook sets a standard for formatting JSON files.
-        entry: pretty-format-json
-        language: python
-        types: [json]
-        exclude: ^package-lock.json$|^package.json$
-        args: [
-          '--autofix',
-          '--no-sort-keys'
-        ]
-
+      # - id: pretty-format-json
+      #   name: Pretty format JSON
+      #   description: This hook sets a standard for formatting JSON files.
+      #   entry: pretty-format-json
+      #   language: python
+      #   types: [json]
+      #   exclude: ^package-lock.json$|^package.json$
+      #   args: [
+      #     '--autofix',
+      #     '--no-sort-keys'
+      #   ]
       - id: trailing-whitespace
-        name: Trim Trailing Whitespace
-        description: This hook trims trailing whitespace.
-        entry: trailing-whitespace-fixer
-        language: python
-        types: [text]
-        stages: [commit, push, manual]
-        args: ['--markdown-linebreak-ext=md']
+        # name: Trim Trailing Whitespace
+        # description: This hook trims trailing whitespace.
+        # entry: trailing-whitespace-fixer
+        # language: python
+        # types: [text]
+        # stages: [commit, push, manual]
+        # args: ['--markdown-linebreak-ext=md']
 
-  - repo: https://github.com/jorisroovers/gitlint
-    rev: v0.18.0
-    hooks:
-      - id: gitlint
-        name: gitlint
-        language: python
-        entry: gitlint
-        args: [--contrib=contrib-title-conventional-commits, --ignore=body-is-missing, --msg-filename]
-        stages: [commit-msg]
+      - id: mixed-line-ending
+      - id: check-executables-have-shebangs
+      - id: check-case-conflict
+      - id: check-vcs-permalinks
+
+  # - repo: https://github.com/jorisroovers/gitlint
+  #   rev: v0.19.1
+  #   hooks:
+  #     - id: gitlint
+  #       name: gitlint
+  #       language: python
+  #       entry: gitlint
+  #       args: [--contrib=contrib-title-conventional-commits, --ignore=body-is-missing, --msg-filename]
+  #       stages: [commit-msg]
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.9.0.2
+    rev: v0.9.0.6
     hooks:
       - id: shellcheck
 
-  - repo: https://github.com/motet-a/jinjalint
-    rev: "01e0a4d8f1ee775aee00eb9d715eff2b4cc49e4d"
-    hooks:
-      - id: jinjalint
-        types: [file]
-        files: \.(j2|jinja|jinja2)$
-
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.77.0
+    rev: v1.86.0
     hooks:
-      - id: terraform_checkov
+      # - id: terraform_checkov
+      #   args:
+      #     - --args=--config-file __GIT_WORKING_DIR__/.checkov.yml
       - id: terraform_fmt
       - id: terraform_tflint
-#      - id: terraform_tfsec
-#        args:
-#          - --args=--exclude-downloaded-modules --exclude=github-repositories-private
-      # - id: terraform_validate
+      - id: terraform_trivy
+      - id: terraform_validate
       # - id: terrascan
       #   args:
       #     - --args=--severity=high
+      #     - --args=--verbose
+      - id: tfupdate
+        # name: Autoupdate Terraform versions
+        args:
+          - --args=terraform
+          - --args=--version "~> 1.5"
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.32.2
+    rev: v0.38.0
     hooks:
       - id: markdownlint
-        name: markdownlint
-        description: "Checks the style of Markdown/Commonmark files."
-        entry: markdownlint
-        language: node
-        types: [markdown]
+        # name: markdownlint
+        # description: "Checks the style of Markdown/Commonmark files."
+        # entry: markdownlint
+        # language: node
+        # types: [markdown]
         exclude: ^CHANGELOG.md$
+        args:
+          - --config=.markdownlint.yml
 
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.28.0
+    rev: v1.33.0
     hooks:
       - id: yamllint
-        name: yamllint
-        description: A linter for YAML files.
-        entry: yamllint
+        # name: yamllint
+        # description: A linter for YAML files.
+        # entry: yamllint
         # Skip Helm Charts
         exclude: ^.*/templates/.*\.yaml$
-        args: [
-          '--format', 'parsable',
-          '--strict',
-          '-d', '{ extends: relaxed, rules: { line-length: disable }}'
-        ]
-        language: python
-        types: [file, yaml]
+        args:
+          - --format=parsable
+          - --strict
+          - -d
+          - >
+            {
+              extends: relaxed,
+              rules: {
+                line-length: disable
+              }
+            }
+        # language: python
+        # types: [file, yaml]
 
   - repo: https://github.com/sirosen/texthooks
-    rev: 0.4.0
+    rev: 0.6.3
     hooks:
+      - id: alphabetize-codeowners
       - id: fix-smartquotes
 
-#  - repo: https://github.com/scop/pre-commit-shfmt
-#    rev: v3.5.1-1
-#    hooks:
-#      - id: shfmt
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.1
+    hooks:
+      - id: gitleaks
 
-#  - repo: https://github.com/pre-commit/mirrors-prettier
-#    rev: v2.6.2
-#    hooks:
-#      - id: prettier
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.7.0-4
+    hooks:
+      - id: shfmt
+        args:
+          - --indent=2
+          - --space-redirects
 
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        additional_dependencies:
+          - prettier@4.0.0-alpha.8
+          - prettier-plugin-sh
+          - prettier-plugin-toml
+        # Excluding some files from "ruzickap.github.io" repository
+        args:
+          - --cache-location=/tmp/.prettier-cache
+        exclude: |
+          (?x)(
+              \.md|
+              ^_config\.yml|
+              ^_data/contact\.yml
+          )$
+
+  - repo: https://github.com/oxsecurity/megalinter
+    rev: v7.7.0
+    hooks:
+      - id: megalinter-incremental
+        stages:
+          - commit
+        require_serial: true
+        entry: bash -c 'if [[ -f .mega-linter.yml ]] && docker info &>/dev/null; then npx -- mega-linter-runner --containername megalinter-incremental --remove-container --fix --env APPLY_FIXES=all --env LOG_LEVEL=warning --env VALIDATE_ALL_CODEBASE=false --filesonly ; fi'
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v3.13.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
 # ln -s ~/git/my-git-projects/.pre-commit-config.yaml .pre-commit-config.yaml
 # pre-commit install && pre-commit install --hook-type commit-msg

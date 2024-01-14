@@ -1,0 +1,45 @@
+name: aws-cloudformation-gh-action
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - cloudformation/gh-action-iam-role-oidc.yaml
+      - .github/workflows/aws-cloudformation-gh-action.yml
+
+env:
+  AWS_DEFAULT_REGION: eu-central-1
+  AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+
+permissions: read-all
+
+jobs:
+  aws-cloudformation-gh-action:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+
+      - name: 💡 Creates and OIDC provider and role for use with GitHub Actions
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: github-action-iam-role-oidc
+          template: ./cloudformation/gh-action-iam-role-oidc.yaml
+          no-fail-on-empty-changeset: 1
+          capabilities: CAPABILITY_NAMED_IAM
+          parameter-overrides: >-
+            SubjectClaimFilters="repo:ruzickap/my-git-projects:*,repo:ruzickap/ruzickap.github.io:*,repo:McK-Internal/ruzickap:*"
+          tags: '[
+            {"Key": "Owner", "Value": "petr.ruzicka@gmail.com"},
+            {"Key": "Environment", "Value": "dev"},
+            {"Key": "Source", "Value": "${{ github.server_url }}/${{ github.repository }}/blob/main/cloudformation/gh-action-iam-role-oidc.yaml"}
+            ]'

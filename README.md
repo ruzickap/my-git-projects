@@ -2,6 +2,8 @@
 
 My projects on GitHub: [https://ruzickap.github.io](https://ruzickap.github.io)
 
+<https://profile-summary-for-github.com/user/ruzickap>
+
 ## Git / GitHub notes
 
 GitHub's official command-line tool (`gh`): [https://cli.github.com/](https://cli.github.com/)
@@ -9,18 +11,18 @@ GitHub's official command-line tool (`gh`): [https://cli.github.com/](https://cl
 ### Contribution
 
 ```bash
-GITHUB_REPO_TO_CONTRIBUTE="https://github.com/aws-samples/aws-eks-accelerator-for-terraform"
-BRANCH_NAME="add_output_parameters"
+GITHUB_REPO_TO_CONTRIBUTE="https://github.com/oxsecurity/megalinter"
+BRANCH_NAME="improve-tflint-docs"
 
 # fork and clone GitHub repository
 gh repo fork --clone --remote ${GITHUB_REPO_TO_CONTRIBUTE}
-cd $(basename "${GITHUB_REPO_TO_CONTRIBUTE}")
+cd "$(basename \"${GITHUB_REPO_TO_CONTRIBUTE}\")" || exit
 
 # create new branch
 git checkout -b "${BRANCH_NAME}"
 
-# do the changes
-... <do the changes> ... git add ... && git commit -m "done with feature"
+# Do the changes
+git add my_changed_file && git commit -m "done with feature"
 
 # push the changes to your new remote (https://github.com/cli/cli/issues/546)
 git push origin "${BRANCH_NAME}"
@@ -39,18 +41,18 @@ git branch -D "${BRANCH_NAME}"
 ```bash
 # clone GitHub repository
 git clone git@github.com:ruzickap/packer-templates.git
-cd packer-templates
+cd packer-templates || exit
 
 # create new branch
 git checkout -b "my_new_branch"
 
 # do the changes
-... <do the changes> ... git add ... && git commit -m "done with feature"
+git add my_changed_file && git commit -m "done with feature"
 
 # open a pull request for the topic branch you've just pushed
 gh pr create --web --fill
 
--> Squash and Merge
+# Squash and Merge
 
 # once PR is merged then remove the branch
 git checkout main
@@ -78,7 +80,7 @@ git checkout feature/improve_documentation
 git rebase main
 git status
 vim docs/test.rst
-...
+# do the changes
 git add docs/test.rst
 git rebase --continue
 git push -f ruzickap feature/improve_documentation
@@ -87,9 +89,9 @@ git push -f ruzickap feature/improve_documentation
 ### Squash 2 last commits
 
 ```bash
-git add <some_file>
+git add some_file
 git commit -m 'Squash this' && git rebase -i HEAD~2 && git push -f
-<in your editor put "f" in front of the commit you want to squash>
+# in your editor put "f" in front of the commit you want to squash
 ```
 
 ### Update git submodules
@@ -108,7 +110,7 @@ git for-each-ref --format="%(refname:short) | %(subject)" refs/tags | column -t
 
 Output:
 
-```bash
+```console
 v1      |  Release  v1.0.0
 v1.0.0  |  Release  1.0.0
 ```
@@ -136,7 +138,8 @@ git push --tags
 ### Delete tag
 
 ```bash
-git push origin :refs/tags/<my-tag-name>
+git push origin :refs/tags/my-tag-name
+git tag -d my-tag-name
 ```
 
 ### Amend older commit message
@@ -163,4 +166,25 @@ git tag -a new old^{}
 git tag -d old
 git push origin :refs/tags/old
 git push --tags
+```
+
+### Sample commit
+
+```bash
+git status
+git add .github/workflows/commitlint.yml .github/workflows/stale.yml
+git checkout -b stale
+git commit -m "feat(gh_actions): replace stale + add commitlint"
+git push
+gh pr create --web --fill
+
+git checkout main
+git branch -D stale
+git pull -r
+```
+
+### List all GitHub actions in my repos
+
+```bash
+find ~/git/ -maxdepth 4 -path "*/.github/workflows/*.yml" -type f -exec awk -F' uses: ' '/^\s*uses: \w/ || /^\s*- uses: \w/ { print "      - uses: " $2 }' {} \; | sort | uniq
 ```
