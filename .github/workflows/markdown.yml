@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
 
       - name: Markdown Lint
-        uses: ruzickap/action-my-markdown-linter@919d3735df9bbc094d206521a774133ec8f3c4ca # v1
+        uses: ruzickap/action-my-markdown-linter@befc7350469f96b27db57948a046d20e1884a28f # v1.0.10
         with:
           exclude: |
             CHANGELOG.md
