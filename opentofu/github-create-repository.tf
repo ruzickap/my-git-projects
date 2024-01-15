@@ -31,6 +31,25 @@ variable "my_renovate_github_private_key" {
 }
 
 ################################################################################
+# Variables
+################################################################################
+
+locals {
+  github_repository_default_files = [
+    ".github/CODEOWNERS",
+    ".github/ISSUE_TEMPLATE/bug_report.md",
+    ".github/ISSUE_TEMPLATE/config.yml",
+    ".github/ISSUE_TEMPLATE/proposal.md",
+    ".github/renovate.json5",
+    ".github/workflows/mega-linter.yml",
+    ".github/workflows/release-please.yml",
+    ".github/workflows/renovate.yml",
+    ".github/workflows/semantic-pull-request.yml",
+    ".github/workflows/stale.yml",
+  ]
+}
+
+################################################################################
 # GitHub Repository
 ################################################################################
 
@@ -46,7 +65,7 @@ resource "github_repository" "repository" {
   homepage_url           = "https://petr.ruzicka.dev"
   license_template       = "apache-2.0"
   name                   = "k8s-tf-gitops"
-  topics                 = ["opentofu", "eks", "aks", "argocd", "multicluster", "multitenant", "k8s", "gitops", "multicloud", "github actions"]
+  topics                 = ["opentofu", "eks", "aks", "argocd", "multicluster", "multitenant", "k8s", "gitops", "multicloud", "github-actions"]
   visibility             = "public"
   vulnerability_alerts   = true
   security_and_analysis {
@@ -57,16 +76,13 @@ resource "github_repository" "repository" {
       status = "enabled"
     }
   }
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "github_branch_protection" "repository" {
-  repository_id = github_repository.repository.node_id
-
-  pattern          = github_repository.repository.default_branch
-  allows_deletions = true
+  repository_id          = github_repository.repository.node_id
+  pattern                = "main"
+  require_signed_commits = true
+  allows_deletions       = true
 
   required_pull_request_reviews {
     required_approving_review_count = 0
@@ -86,18 +102,14 @@ resource "github_actions_secret" "my_renovate_github_private_key" {
   plaintext_value = var.my_renovate_github_private_key
 }
 
-# resource "github_repository_file" "github-files" {
-#   for_each            = fileset(path.module, "files/**")
-#   repository          = github_repository.gha-test.name
-#   file                = each.value
-#   content             = file("${path.module}/${each.value}")
-#   commit_message      = "refactor(files): Manage ${each.value} by OpenTofu"
-#   overwrite_on_create = true
-#   lifecycle {
-#     ignore_changes  = all
-#     prevent_destroy = true
-#   }
-# }
+resource "github_repository_file" "github-files" {
+  # for_each   = local.github_repository_default_files
+  # for_each   = { for file in local.github_repository_default_files : file.name => file}
+  for_each   = toset(local.github_repository_default_files)
+  file       = each.value
+  repository = github_repository.repository.name
+  content    = file("../${each.value}")
+}
 
 ################################################################################
 # Outputs

@@ -16,9 +16,6 @@
     "renovate/{{updateType}}",
   ],
   packageRules: [
-    // {
-    //   matchUpdateTypes: ["minor", "patch"],
-    // },
     {
       matchUpdateTypes: ["major"],
       automerge: false,
