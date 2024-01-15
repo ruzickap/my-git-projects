@@ -37,7 +37,7 @@
     },
   ],
   prBodyTemplate: "{{{table}}}{{{notes}}}{{{changelogs}}}",
-  // rebaseWhen: "behind-base-branch",
+  rebaseWhen: "behind-base-branch",
   regexManagers: [
     {
       extractVersionTemplate: "{{#if extractVersion}}{{{extractVersion}}}{{else}}^v?(?<version>.+)${{/if}}",
