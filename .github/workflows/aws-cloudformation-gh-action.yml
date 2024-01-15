@@ -30,7 +30,7 @@ jobs:
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
       - name: 💡 Creates and OIDC provider and role for use with GitHub Actions
-        uses: aws-actions/aws-cloudformation-github-deploy@023f4ef60d0103d690f31a504cfda9f4f2d66265 # v1
+        uses: aws-actions/aws-cloudformation-github-deploy@a4dc90cda3c9eb7c34b2b5eda5594d06384d80a6 # v1.0.4
         with:
           name: github-action-iam-role-oidc
           template: ./cloudformation/gh-action-iam-role-oidc.yaml
