@@ -2,11 +2,6 @@ name: pre-commit-config
 
 on:
   workflow_dispatch:
-  pull_request:
-    types: [opened, synchronize]
-    paths:
-      - .pre-commit-config.yaml
-      - .github/workflows/pre-commit-config.yml
   push:
     branches-ignore:
       - main
@@ -17,7 +12,7 @@ on:
 env:
   AWS_DEFAULT_REGION: eu-central-1
   AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-  SKIP: no-commit-to-branch,terraform_trivy,terraform_validate
+  SKIP: no-commit-to-branch,terraform_validate
 
 permissions: read-all
 

@@ -1,0 +1,8 @@
+# pre-commit config file
+.pre-commit-config.yaml
+
+# Ansible vault password file
+vault-*.password
+
+# Lychee cache
+.lycheecache
