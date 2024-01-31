@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.2.0](https://github.com/ruzickap/my-git-projects/compare/v0.1.1...v0.2.0) (2024-01-31)
+
+
+### Features
+
+* **all:** improve gha, cloudformation, README, pre-commit, opentofu ([#87](https://github.com/ruzickap/my-git-projects/issues/87)) ([c2328ac](https://github.com/ruzickap/my-git-projects/commit/c2328ac31e50c9a0cb876158857f88077972e8c8))
+* **gh_actions:** replace stale + add commitlint ([#85](https://github.com/ruzickap/my-git-projects/issues/85)) ([5144cbd](https://github.com/ruzickap/my-git-projects/commit/5144cbd68e99ef34747c6107fb177f76e928dbb7))
+* **gh_actions:** replace stale + add commitlint ([#86](https://github.com/ruzickap/my-git-projects/issues/86)) ([7a26049](https://github.com/ruzickap/my-git-projects/commit/7a2604988af71f1e7171660c438719c4c1ec6286))
+* **gh-actions:** add lint-pr-title ([#83](https://github.com/ruzickap/my-git-projects/issues/83)) ([3334ddb](https://github.com/ruzickap/my-git-projects/commit/3334ddb9653c8ea48aad3d3ab643c4d205c766fc))
+* **gha:** improve stale configuration + keep defaults ([#100](https://github.com/ruzickap/my-git-projects/issues/100)) ([a161735](https://github.com/ruzickap/my-git-projects/commit/a161735b1e979269605d57cedec195bda5e7d411))
+* **gha:** unify GHA - renovate, megalinter, markdown, and others ([#104](https://github.com/ruzickap/my-git-projects/issues/104)) ([8c3e0aa](https://github.com/ruzickap/my-git-projects/commit/8c3e0aabf931e6059ef4a8310ae4b33486f28e2b))
+* **renovate:** enable rebaseWhen=behind-base-branch ([#97](https://github.com/ruzickap/my-git-projects/issues/97)) ([141db11](https://github.com/ruzickap/my-git-projects/commit/141db113a435a5259081b1cafd6bc3f1db085897))
+* **renovate:** improve renovate config ([#92](https://github.com/ruzickap/my-git-projects/issues/92)) ([f7fc347](https://github.com/ruzickap/my-git-projects/commit/f7fc34717f6b26c3e433a0c3a6594ddcec93cc64))
+
+
+### Bug Fixes
+
+* **gha:** do not run gha pre-commit on main branch ([#98](https://github.com/ruzickap/my-git-projects/issues/98)) ([edcda56](https://github.com/ruzickap/my-git-projects/commit/edcda56ff78309d936aa201189bbac72f8936d0b))
+* **renovate:** schedule typo ([#84](https://github.com/ruzickap/my-git-projects/issues/84)) ([b55f7f4](https://github.com/ruzickap/my-git-projects/commit/b55f7f406bddab3cda884a8cffac71619b4e7b36))
+* **tf:** fix opentofu code, improve gha and renovate ([#99](https://github.com/ruzickap/my-git-projects/issues/99)) ([ecbc979](https://github.com/ruzickap/my-git-projects/commit/ecbc979fd6f24348a77b92e8d7a65ab1dfea3f9c))
+
 ## [v0.1.1](https://github.com/ruzickap/my-git-projects/compare/v0.1.0...v0.1.1) (2020-09-17)
 
 - Fix release-it because of gh change requiring "git push" first [`#26`](https://github.com/ruzickap/my-git-projects/pull/26)
