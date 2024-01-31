@@ -1,17 +1,15 @@
-name: markdown
+name: markdown-check
 
 on:
-  pull_request:
-    types: [opened, synchronize]
-    paths:
-      - "**.md"
-      - .github/workflows/markdown.yml
   push:
-    branches:
+    branches-ignore:
       - main
     paths:
       - "**.md"
-      - .github/workflows/markdown.yml
+      - .github/workflows/markdown-check.yml
+      - .markdownlint.yml
+
+permissions: read-all
 
 jobs:
   markdownlint-check:
@@ -23,6 +21,7 @@ jobs:
         uses: ruzickap/action-my-markdown-linter@919d3735df9bbc094d206521a774133ec8f3c4ca # v1.1.0
         with:
           exclude: |
+            tests/
             CHANGELOG.md
 
   markdown-link-check:
@@ -34,4 +33,5 @@ jobs:
         uses: ruzickap/action-my-markdown-link-checker@e7e8635735a15a86b081f8255022bcc251cc9003 # v1.2.0
         with:
           exclude: |
+            tests/
             CHANGELOG.md

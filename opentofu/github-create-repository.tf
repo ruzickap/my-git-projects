@@ -53,7 +53,10 @@ locals {
 # GitHub Repository
 ################################################################################
 
+# trivy:ignore:AVD-GIT-0001
 resource "github_repository" "repository" {
+  # checkov:skip=CKV_GIT_1:Ensure GitHub repository is Private
+  # checkov:skip=CKV2_GIT_1:Ensure each Repository has branch protection associated
   allow_merge_commit     = false
   allow_update_branch    = true
   auto_init              = true
@@ -78,17 +81,18 @@ resource "github_repository" "repository" {
   }
 }
 
-resource "github_branch_protection" "repository" {
-  repository_id          = github_repository.repository.node_id
-  pattern                = "main"
-  require_signed_commits = true
-  allows_deletions       = true
+# # This is not working with Renovate automerge - PR is always created...
+# resource "github_branch_protection" "repository" {
+#   repository_id          = github_repository.repository.node_id
+#   pattern                = "main"
+#   require_signed_commits = true
+#   allows_deletions       = true
 
-  required_pull_request_reviews {
-    required_approving_review_count = 0
-    dismiss_stale_reviews           = true
-  }
-}
+#   required_pull_request_reviews {
+#     required_approving_review_count = 0
+#     dismiss_stale_reviews           = true
+#   }
+# }
 
 resource "github_actions_secret" "my_renovate_github_app_id" {
   repository      = github_repository.repository.id

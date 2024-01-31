@@ -147,7 +147,8 @@ repos:
       - id: terraform_fmt
       - id: terraform_tflint
       - id: terraform_trivy
-      - id: terraform_validate
+      # Disabled due to AWS credentials requrements
+      # - id: terraform_validate
       # - id: terrascan
       #   args:
       #     - --args=--severity=high
@@ -159,7 +160,7 @@ repos:
           - --args=--version "~> 1.5"
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.38.0
+    rev: v0.39.0
     hooks:
       - id: markdownlint
         # name: markdownlint
@@ -195,7 +196,7 @@ repos:
         # types: [file, yaml]
 
   - repo: https://github.com/sirosen/texthooks
-    rev: 0.6.3
+    rev: 0.6.4
     hooks:
       - id: alphabetize-codeowners
       - id: fix-smartquotes
@@ -232,7 +233,7 @@ repos:
           )$
 
   - repo: https://github.com/oxsecurity/megalinter
-    rev: v7.7.0
+    rev: v7.8.0
     hooks:
       - id: megalinter-incremental
         stages:
