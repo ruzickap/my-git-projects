@@ -1,4 +1,5 @@
-name: Semantic Pull Request
+---
+name: semantic-pull-request
 
 on:
   pull_request_target:

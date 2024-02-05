@@ -1,5 +1,5 @@
 ---
-name: Renovate
+name: renovate
 
 on:
   workflow_dispatch:
@@ -20,7 +20,7 @@ on:
       - main
       - "!renovate/*"
   schedule:
-    - cron: "0 0,2,4 * * *"
+    - cron: "0 0,2,4 * * 0"
 
 env:
   # https://docs.renovatebot.com/troubleshooting/#log-debug-levels
