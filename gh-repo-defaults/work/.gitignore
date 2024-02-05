@@ -1,0 +1,10 @@
+# pre-commit configuration file
+.pre-commit-config.yaml
+
+# Terraform files
+.terraform*
+*.tfstate*
+crash.log
+
+# Lychee cache
+.lycheecache

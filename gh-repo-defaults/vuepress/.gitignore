@@ -1,0 +1,20 @@
+# pre-commit configuration file
+.pre-commit-config.yaml
+
+# Kubernetes kubeconfig file
+kubeconfig*.conf*
+
+# Vuepress Pages
+docs/.vuepress/dist
+
+# tmp directory
+tmp/
+
+# Node modules
+node_modules/
+
+# README.sh script
+README.sh
+
+# demo-magic.sh script
+demo-magic.sh
