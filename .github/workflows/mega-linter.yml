@@ -10,8 +10,7 @@ on:
 permissions: read-all
 
 jobs:
-  build:
-    name: MegaLinter
+  mega-linter:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
