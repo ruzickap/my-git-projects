@@ -173,7 +173,7 @@ repos:
           - --config=.markdownlint.yml
 
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.33.0
+    rev: v1.34.0
     hooks:
       - id: yamllint
         # name: yamllint
@@ -202,7 +202,7 @@ repos:
       - id: fix-smartquotes
 
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.18.1
+    rev: v8.18.2
     hooks:
       - id: gitleaks
 
@@ -232,17 +232,17 @@ repos:
               ^_data/contact\.yml
           )$
 
-  - repo: https://github.com/oxsecurity/megalinter
-    rev: v7.8.0
-    hooks:
-      - id: megalinter-incremental
-        stages:
-          - commit
-        require_serial: true
-        entry: bash -c 'if [[ -f .mega-linter.yml ]] && docker info &>/dev/null; then npx -- mega-linter-runner --containername megalinter-incremental --remove-container --fix --env APPLY_FIXES=all --env LOG_LEVEL=warning --env VALIDATE_ALL_CODEBASE=false --filesonly ; fi'
+  # - repo: https://github.com/oxsecurity/megalinter
+  #   rev: v7.8.0
+  #   hooks:
+  #     - id: megalinter-incremental
+  #       stages:
+  #         - commit
+  #       require_serial: true
+  #       entry: bash -c 'if [[ -f .mega-linter.yml ]] && docker info &>/dev/null; then npx -- mega-linter-runner --containername megalinter-incremental --remove-container --fix --env APPLY_FIXES=all --env LOG_LEVEL=warning --env VALIDATE_ALL_CODEBASE=false --filesonly; fi'
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.13.0
+    rev: v3.14.1
     hooks:
       - id: commitizen
         stages: [commit-msg]
