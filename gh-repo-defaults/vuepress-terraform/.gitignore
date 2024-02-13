@@ -21,3 +21,8 @@ README.sh
 
 # tmp directory
 tmp/
+
+# Terraform files
+.terraform*
+*.tfstate*
+crash.log
