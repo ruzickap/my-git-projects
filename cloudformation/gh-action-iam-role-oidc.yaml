@@ -60,6 +60,12 @@ Resources:
             Condition:
               StringLike:
                 token.actions.githubusercontent.com:sub: !Ref SubjectClaimFilters
+          - Sid: AllowUsersToAssumeRole
+            Effect: Allow
+            Principal:
+              AWS: !GetAtt User.Arn
+            Action:
+              - "sts:AssumeRole"
       Description: Service Role for use in GitHub Actions
       RoleName: GitHubOidcFederatedRole
       MaxSessionDuration: 36000

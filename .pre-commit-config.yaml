@@ -45,20 +45,19 @@ repos:
 
       - id: check-xml
         # name: Check Xml
-        # description: This hook checks xml files for parseable syntax.
+        # description: This hook checks xml files for parsable syntax.
         # entry: check-xml
         # language: python
         # types: [xml]
 
       - id: check-yaml
         # name: Check Yaml
-        # description: This hook checks yaml files for parseable syntax.
+        # description: This hook checks yaml files for parsable syntax.
         # entry: check-yaml
         # language: python
         # types: [yaml]
         # Skip Helm Charts
         exclude: ^.*/templates/.*\.yaml$
-        # https://stackoverflow.com/questions/59413979/how-exclude-ref-tag-from-check-yaml-git-hook
         args:
           - --allow-multiple-documents
           - --unsafe
@@ -139,7 +138,7 @@ repos:
       - id: shellcheck
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.86.0
+    rev: v1.86.1
     hooks:
       # - id: terraform_checkov
       #   args:
@@ -173,7 +172,7 @@ repos:
           - --config=.markdownlint.yml
 
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.34.0
+    rev: v1.35.1
     hooks:
       - id: yamllint
         # name: yamllint
@@ -207,7 +206,7 @@ repos:
       - id: gitleaks
 
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.7.0-4
+    rev: v3.8.0-1
     hooks:
       - id: shfmt
         args:
@@ -242,7 +241,7 @@ repos:
   #       entry: bash -c 'if [[ -f .mega-linter.yml ]] && docker info &>/dev/null; then npx -- mega-linter-runner --containername megalinter-incremental --remove-container --fix --env APPLY_FIXES=all --env LOG_LEVEL=warning --env VALIDATE_ALL_CODEBASE=false --filesonly; fi'
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.14.1
+    rev: v3.15.0
     hooks:
       - id: commitizen
         stages: [commit-msg]
