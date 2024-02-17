@@ -159,8 +159,6 @@ git push --force
 
 ### Rename tag
 
-[https://stackoverflow.com/questions/1028649/how-do-you-rename-a-git-tag](https://stackoverflow.com/questions/1028649/how-do-you-rename-a-git-tag)
-
 ```bash
 git tag -a new old^{}
 git tag -d old

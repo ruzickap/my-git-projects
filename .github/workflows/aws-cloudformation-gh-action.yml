@@ -2,10 +2,6 @@ name: aws-cloudformation-gh-action
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - cloudformation/gh-action-iam-role-oidc.yaml
-      - .github/workflows/aws-cloudformation-gh-action.yml
 
 env:
   AWS_DEFAULT_REGION: eu-central-1
