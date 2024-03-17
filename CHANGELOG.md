@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.3.0](https://github.com/ruzickap/my-git-projects/compare/v0.2.0...v0.3.0) (2024-03-17)
+
+
+### Features
+
+* **cf:** allow user to assume role ([#117](https://github.com/ruzickap/my-git-projects/issues/117)) ([a0b80ba](https://github.com/ruzickap/my-git-projects/commit/a0b80bae0f33e17b790ad541e2fd183f92c324a1))
+* **gha:** add gh-repo-defaults (hugo, work, vuepress) ([#105](https://github.com/ruzickap/my-git-projects/issues/105)) ([52d7455](https://github.com/ruzickap/my-git-projects/commit/52d74554940b1f82043b92e9a5c60cc70d71b47e))
+* **gha:** add vuepress-terraform to the github defaults ([#115](https://github.com/ruzickap/my-git-projects/issues/115)) ([029a312](https://github.com/ruzickap/my-git-projects/commit/029a3128952c487065f165e5ddadf3087438a3ec))
+* **gh:** add default GitHub repo files ([#107](https://github.com/ruzickap/my-git-projects/issues/107)) ([2a260c6](https://github.com/ruzickap/my-git-projects/commit/2a260c64aab58b2d74453aa7ddc9be8c4f0a4d1c))
+* **gh:** add default GitHub repo files ([#116](https://github.com/ruzickap/my-git-projects/issues/116)) ([478cd60](https://github.com/ruzickap/my-git-projects/commit/478cd60f9310395a8dcad0361162d7711242a412))
+* **gh:** add default GitHub repo files ([#118](https://github.com/ruzickap/my-git-projects/issues/118)) ([9a59d75](https://github.com/ruzickap/my-git-projects/commit/9a59d751982aaa7cc8c9ce636aa21e2c1d37a725))
+* **gha:** update gha, add defaults + configs ([#108](https://github.com/ruzickap/my-git-projects/issues/108)) ([fc34bc5](https://github.com/ruzickap/my-git-projects/commit/fc34bc5ea82e9a25d204105fd449f8742e239dc4))
+
+
+### Bug Fixes
+
+* **v8r:** fix linting issue with .checkov.yml ([#114](https://github.com/ruzickap/my-git-projects/issues/114)) ([5126420](https://github.com/ruzickap/my-git-projects/commit/512642048469107d85a90ffa4159a300da054a64))
+
 ## [0.2.0](https://github.com/ruzickap/my-git-projects/compare/v0.1.1...v0.2.0) (2024-01-31)
 
 
