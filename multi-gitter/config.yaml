@@ -1,0 +1,82 @@
+# What should happen if the branch already exist.
+# Available values:
+#   skip: Skip making any changes to the existing branch and do not create a new pull request.
+#   replace: Replace the existing content of the branch by force pushing any new changes, then reuse any existing pull request, or create a new one if none exist.
+conflict-strategy: replace
+
+# The title of the PR. Will default to the first line of the commit message if none is set.
+pr-title: "feat(gh): add default github repo files"
+
+# Run without pushing changes or creating pull requests.
+dry-run: false
+
+# Take manual decision before committing any change. Requires git to be installed.
+interactive: true
+
+# Labels to be added to any created pull request.
+labels:
+  - multi-gitter
+
+# The type of merge that should be done (GitHub). Multiple types can be used as backup strategies if the first one is not allowed.
+merge-type:
+  - squash
+
+# The platform that is used. Available values: github, gitlab, gitea, bitbucket_server.
+platform: github
+
+# The name, including owner of a GitHub repository in the format "ownerName/repoName".
+repo:
+  ## action
+  - ruzickap/action-my-broken-link-checker
+  - ruzickap/action-my-markdown-link-checker
+  - ruzickap/action-my-markdown-linter
+  ## ansible
+  - ruzickap/ansible-my_workstation
+  - ruzickap/ansible-openwrt
+  - ruzickap/ansible-raspbian
+  - ruzickap/packer-templates
+  ## latex
+  - ruzickap/cheatsheet-atom
+  - ruzickap/cheatsheet-macos
+  - ruzickap/cheatsheet-systemd
+  - ruzickap/cv
+  ## hugo
+  - ruzickap/petr.ruzicka.dev
+  - ruzickap/xvx.cz
+  ## vuepress
+  - ruzickap/k8s-eks-bottlerocket-fargate
+  - ruzickap/k8s-eks-flux
+  - ruzickap/k8s-fargate-eks
+  - ruzickap/k8s-flux-istio-gitlab-harbor
+  - ruzickap/k8s-harbor
+  - ruzickap/k8s-istio-webinar
+  - ruzickap/k8s-jenkins-x
+  - ruzickap/k8s-knative-gitlab-harbor
+  ## vuepress - terraform
+  - ruzickap/k8s-flagger-istio-flux
+  - ruzickap/k8s-istio-workshop
+  - ruzickap/k8s-postgresql
+  - ruzickap/k8s-sockshop
+  ## ansible-role
+  - ruzickap/ansible-role-my_common_defaults
+  - ruzickap/ansible-role-proxy_settings
+  - ruzickap/ansible-role-virtio-win
+  - ruzickap/ansible-role-vmwaretools
+  ## default
+  - ruzickap/blog-test.ruzicka.dev
+  - ruzickap/container-build
+  - ruzickap/darktable_video_tutorials_list
+  - ruzickap/gha-test
+  - ruzickap/k8s-eks-rancher
+  - ruzickap/k8s-harbor-presentation
+  - ruzickap/k8s-istio-demo
+  - ruzickap/k8s-tf-eks-gitops
+  - ruzickap/malware-cryptominer-container
+  - ruzickap/my-git-projects
+  - ruzickap/myteam-adr
+  - ruzickap/packer-virt-sysprep
+  - ruzickap/popular-containers-vulnerability-checks
+  - ruzickap/raw-photo-tools-container
+  - ruzickap/ruzickap
+  - ruzickap/ruzickap.github.io
+  - ruzickap/test_usb_stick_for_tv
