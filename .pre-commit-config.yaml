@@ -7,7 +7,7 @@
 fail_fast: true
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: check-added-large-files
         # name: Check for added large files
@@ -133,12 +133,12 @@ repos:
   #       stages: [commit-msg]
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.9.0.6
+    rev: v0.10.0.1
     hooks:
       - id: shellcheck
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.86.1
+    rev: v1.89.1
     hooks:
       # - id: terraform_checkov
       #   args:
@@ -195,7 +195,7 @@ repos:
         # types: [file, yaml]
 
   - repo: https://github.com/sirosen/texthooks
-    rev: 0.6.4
+    rev: 0.6.6
     hooks:
       - id: alphabetize-codeowners
       - id: fix-smartquotes
@@ -241,7 +241,7 @@ repos:
   #       entry: bash -c 'if [[ -f .mega-linter.yml ]] && docker info &>/dev/null; then npx -- mega-linter-runner --containername megalinter-incremental --remove-container --fix --env APPLY_FIXES=all --env LOG_LEVEL=warning --env VALIDATE_ALL_CODEBASE=false --filesonly; fi'
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.15.0
+    rev: v3.24.0
     hooks:
       - id: commitizen
         stages: [commit-msg]
