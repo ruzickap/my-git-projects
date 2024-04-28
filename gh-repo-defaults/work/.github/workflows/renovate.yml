@@ -38,18 +38,17 @@ env:
   # Workflow updates only works with PATs or GH App
   # https://github.com/orgs/community/discussions/35410
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: read-all
 
 jobs:
   renovate:
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
+    permissions: write-all
     steps:
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
 
       - name: 💡 Self-hosted Renovate
         uses: renovatebot/github-action@89bd050bafa5a15de5d9383e3129edf210422004 # v40.1.5
