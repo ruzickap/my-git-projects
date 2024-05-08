@@ -4,7 +4,7 @@ echo -e "\n***************************************************\n* ${REPOSITORY}\
 
 set -x
 
-rclone copyto --verbose --size-only --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/my-defaults/" .
+rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/my-defaults/" .
 
 case "${REPOSITORY}" in
   ## action
@@ -15,7 +15,7 @@ case "${REPOSITORY}" in
   ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/action-*)
     echo -e "\n*** action | ${REPOSITORY}\n"
-    rclone copyto --verbose --size-only --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/action/" .
+    rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/action/" .
     ;;&
 
   ## ansible
@@ -27,7 +27,7 @@ case "${REPOSITORY}" in
   ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/packer-templates | ruzickap/ansible-*)
     echo -e "\n*** ansible | ${REPOSITORY}\n"
-    rclone copyto --verbose --size-only --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/ansible/" .
+    rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/ansible/" .
     ;;&
   ruzickap/packer-templates)
     echo -e "\n*** ansible-ch | ${REPOSITORY}\n"
@@ -43,7 +43,7 @@ case "${REPOSITORY}" in
   ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/cheatsheet-* | ruzickap/cv)
     echo -e "\n*** latex | ${REPOSITORY}\n"
-    rclone copyto --verbose --size-only --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/latex/" .
+    rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/latex/" .
     ;;&
   ruzickap/cv)
     echo -e "\n*** latex-ch | ${REPOSITORY}\n"
@@ -57,7 +57,7 @@ case "${REPOSITORY}" in
   ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
     echo -e "\n*** hugo | ${REPOSITORY}\n"
-    rclone copyto --verbose --size-only --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/hugo/" .
+    rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/hugo/" .
     ;;&
 
   ## vuepress
@@ -72,7 +72,7 @@ case "${REPOSITORY}" in
   ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/k8s-eks-bottlerocket-fargate | ruzickap/k8s-fargate-eks | ruzickap/k8s-flux-istio-gitlab-harbor | ruzickap/k8s-harbor | ruzickap/k8s-istio-webinar | ruzickap/k8s-jenkins-x | ruzickap/k8s-knative-gitlab-harbor)
     echo -e "\n*** vuepress | ${REPOSITORY}\n"
-    rclone copyto --verbose --size-only --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/vuepress/" .
+    rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/vuepress/" .
     ;;&
   ruzickap/k8s-fargate-eks)
     echo -e "\n*** vuepress-ch | ${REPOSITORY}\n"
@@ -96,7 +96,7 @@ case "${REPOSITORY}" in
   ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/k8s-sockshop | ruzickap/k8s-postgresql | ruzickap/k8s-istio-workshop | ruzickap/k8s-flagger-istio-flux)
     echo -e "\n*** vuepress-terraform | ${REPOSITORY}\n"
-    rclone copyto --verbose --size-only --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/vuepress-terraform/" .
+    rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/vuepress-terraform/" .
     ;;&
   ruzickap/k8s-postgresql)
     echo -e "\n*** vuepress-terraform-ch | ${REPOSITORY}\n"
@@ -112,7 +112,7 @@ case "${REPOSITORY}" in
   ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/ansible-role-my_common_defaults | ruzickap/ansible-role-proxy_settings | ruzickap/ansible-role-virtio-win | ruzickap/ansible-role-vmwaretools)
     echo -e "\n*** ansible-role | ${REPOSITORY}\n"
-    rclone copyto --verbose --size-only --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/ansible-role/" .
+    rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/ansible-role/" .
     ;;&
   ruzickap/ansible-role-my_common_defaults)
     echo -e "\n*** ansible-role-ch | ${REPOSITORY}\n"
