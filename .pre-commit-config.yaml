@@ -159,7 +159,7 @@ repos:
           - --args=--version "~> 1.5"
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.39.0
+    rev: v0.40.0
     hooks:
       - id: markdownlint
         # name: markdownlint
@@ -241,7 +241,7 @@ repos:
   #       entry: bash -c 'if [[ -f .mega-linter.yml ]] && docker info &>/dev/null; then npx -- mega-linter-runner --containername megalinter-incremental --remove-container --fix --env APPLY_FIXES=all --env LOG_LEVEL=warning --env VALIDATE_ALL_CODEBASE=false --filesonly; fi'
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.24.0
+    rev: v3.25.0
     hooks:
       - id: commitizen
         stages: [commit-msg]
