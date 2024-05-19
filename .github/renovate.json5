@@ -34,6 +34,9 @@
     },
   ],
   prBodyTemplate: "{{{table}}}{{{notes}}}{{{changelogs}}}",
+  "pre-commit": {
+    enabled: true,
+  },
   rebaseWhen: "behind-base-branch",
   regexManagers: [
     {
