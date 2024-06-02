@@ -147,7 +147,7 @@ case "${REPOSITORY}" in
   ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/blog-test.ruzicka.dev)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout .markdownlint.yml
+    git checkout .markdownlint.yml .mega-linter.yml
     ;;
   ruzickap/container-build)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
