@@ -31,7 +31,7 @@ jobs:
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
 
       - name: Check broken links
-        uses: ruzickap/action-my-broken-link-checker@bec36cf5736d969f1c5191b9fd2052df87675012 # v2.6.0
+        uses: ruzickap/action-my-broken-link-checker@6c356a0c80f7f0a2a12f105850ef8efd24c6da63 # v2.7.0
         with:
           url: ${{ steps.pages.outputs.base_url }}
           pages_path: public
