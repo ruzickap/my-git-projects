@@ -22,13 +22,17 @@ case "${REPOSITORY}" in
   ## ---------------------------------------------------------------------------------------------------------------------
   # ruzickap/ansible-my_workstation
   # ruzickap/ansible-openwrt
-  # ruzickap/ansible-raspbian
+  # ruzickap/ansible-raspberry-pi-os
   # ruzickap/packer-templates
   ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/packer-templates | ruzickap/ansible-*)
     echo -e "\n*** ansible | ${REPOSITORY}\n"
     rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/ansible/" .
     ;;&
+  ruzickap/ansible-raspberry-pi-os)
+    echo -e "\n*** ansible | ${REPOSITORY}\n"
+    git checkout lychee.toml ansible/.ansible-lint
+    ;;
   ruzickap/packer-templates)
     echo -e "\n*** ansible-ch | ${REPOSITORY}\n"
     git checkout .gitignore
@@ -58,49 +62,6 @@ case "${REPOSITORY}" in
   ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
     echo -e "\n*** hugo | ${REPOSITORY}\n"
     rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/hugo/" .
-    ;;&
-
-  ## vuepress
-  ## ---------------------------------------------------------------------------------------------------------------------
-  # ruzickap/k8s-eks-bottlerocket-fargate
-  # ruzickap/k8s-fargate-eks
-  # ruzickap/k8s-flux-istio-gitlab-harbor
-  # ruzickap/k8s-harbor
-  # ruzickap/k8s-istio-webinar
-  # ruzickap/k8s-jenkins-x
-  # ruzickap/k8s-knative-gitlab-harbor
-  ## ---------------------------------------------------------------------------------------------------------------------
-  ruzickap/k8s-eks-bottlerocket-fargate | ruzickap/k8s-fargate-eks | ruzickap/k8s-flux-istio-gitlab-harbor | ruzickap/k8s-harbor | ruzickap/k8s-istio-webinar | ruzickap/k8s-jenkins-x | ruzickap/k8s-knative-gitlab-harbor)
-    echo -e "\n*** vuepress | ${REPOSITORY}\n"
-    rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/vuepress/" .
-    ;;&
-  ruzickap/k8s-fargate-eks)
-    echo -e "\n*** vuepress-ch | ${REPOSITORY}\n"
-    rm -v .mlc_config.json .lycheeignore
-    ;;
-  ruzickap/k8s-flux-istio-gitlab-harbor | ruzickap/k8s-knative-gitlab-harbor)
-    echo -e "\n*** vuepress-ch | ${REPOSITORY}\n"
-    git checkout .github/workflows/vuepress-build.yml .mlc_config.json .lycheeignore
-    ;;
-  ruzickap/k8s-jenkins-x)
-    echo -e "\n*** vuepress-ch | ${REPOSITORY}\n"
-    git checkout .github/workflows/vuepress-build.yml .lycheeignore .mlc_config.json .trivyignore.yaml .checkov.yml
-    ;;
-
-  ## vuepress-terraform
-  ## ---------------------------------------------------------------------------------------------------------------------
-  # ruzickap/k8s-flagger-istio-flux
-  # ruzickap/k8s-istio-workshop
-  # ruzickap/k8s-postgresql
-  # ruzickap/k8s-sockshop
-  ## ---------------------------------------------------------------------------------------------------------------------
-  ruzickap/k8s-sockshop | ruzickap/k8s-postgresql | ruzickap/k8s-istio-workshop | ruzickap/k8s-flagger-istio-flux)
-    echo -e "\n*** vuepress-terraform | ${REPOSITORY}\n"
-    rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/vuepress-terraform/" .
-    ;;&
-  ruzickap/k8s-postgresql)
-    echo -e "\n*** vuepress-terraform-ch | ${REPOSITORY}\n"
-    git checkout .checkov.yml
     ;;
 
   ## ansible-role
@@ -127,44 +88,23 @@ case "${REPOSITORY}" in
 
   ## default
   ## ---------------------------------------------------------------------------------------------------------------------
-  # ruzickap/blog-test.ruzicka.dev
   # ruzickap/container-build
-  # ruzickap/darktable_video_tutorials_list
   # ruzickap/gha-test
-  # ruzickap/k8s-eks-flux - is using VuePress 2 - needs different defaults then old VuePress 1.x
-  # ruzickap/k8s-eks-rancher
-  # ruzickap/k8s-harbor-presentation
   # ruzickap/k8s-istio-demo
-  # ruzickap/k8s-tf-eks-gitops
   # ruzickap/malware-cryptominer-container
   # ruzickap/my-git-projects
-  # ruzickap/myteam-adr
-  # ruzickap/packer-virt-sysprep
-  # ruzickap/popular-containers-vulnerability-checks
   # ruzickap/raw-photo-tools-container
   # ruzickap/ruzickap
   # ruzickap/test_usb_stick_for_tv
   ## ---------------------------------------------------------------------------------------------------------------------
-  ruzickap/blog-test.ruzicka.dev)
-    echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout .markdownlint.yml .mega-linter.yml
-    ;;
   ruzickap/container-build)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
     rm .github/workflows/release-please.yml
     git checkout .github/renovate.json5
     ;;
-  ruzickap/k8s-harbor-presentation)
-    echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout .github/renovate.json5
-    ;;
   ruzickap/k8s-istio-demo)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
     git checkout .github/workflows/links.yml
-    ;;
-  ruzickap/k8s-tf-eks-gitops)
-    echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout .checkov.yml .markdownlint.yml .github/renovate.json5 .mega-linter.yml
     ;;
   ruzickap/malware-cryptominer-container | ruzickap/raw-photo-tools-container)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
@@ -177,9 +117,5 @@ case "${REPOSITORY}" in
   ruzickap/ruzickap.github.io)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
     git checkout .github/renovate.json5 lychee.toml .markdownlint.yml
-    ;;
-  ruzickap/myteam-adr)
-    echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout .markdownlint.yml
     ;;
 esac
