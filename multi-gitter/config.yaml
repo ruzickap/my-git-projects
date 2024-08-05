@@ -43,39 +43,17 @@ repo:
   ## hugo
   - ruzickap/petr.ruzicka.dev
   - ruzickap/xvx.cz
-  ## vuepress
-  - ruzickap/k8s-eks-bottlerocket-fargate
-  - ruzickap/k8s-eks-flux
-  - ruzickap/k8s-fargate-eks
-  - ruzickap/k8s-flux-istio-gitlab-harbor
-  - ruzickap/k8s-harbor
-  - ruzickap/k8s-istio-webinar
-  - ruzickap/k8s-jenkins-x
-  - ruzickap/k8s-knative-gitlab-harbor
-  ## vuepress - terraform
-  - ruzickap/k8s-flagger-istio-flux
-  - ruzickap/k8s-istio-workshop
-  - ruzickap/k8s-postgresql
-  - ruzickap/k8s-sockshop
   ## ansible-role
   - ruzickap/ansible-role-my_common_defaults
   - ruzickap/ansible-role-proxy_settings
   - ruzickap/ansible-role-virtio-win
   - ruzickap/ansible-role-vmwaretools
   ## default
-  - ruzickap/blog-test.ruzicka.dev
   - ruzickap/container-build
-  - ruzickap/darktable_video_tutorials_list
   - ruzickap/gha-test
-  - ruzickap/k8s-eks-rancher
-  - ruzickap/k8s-harbor-presentation
   - ruzickap/k8s-istio-demo
-  - ruzickap/k8s-tf-eks-gitops
   - ruzickap/malware-cryptominer-container
   - ruzickap/my-git-projects
-  - ruzickap/myteam-adr
-  - ruzickap/packer-virt-sysprep
-  - ruzickap/popular-containers-vulnerability-checks
   - ruzickap/raw-photo-tools-container
   - ruzickap/ruzickap
   - ruzickap/ruzickap.github.io
