@@ -26,6 +26,8 @@ exclude = [
   # returns 403 when accessed from GitHub Action
   'stackoverflow\.com',
   'stackexchange\.com',
+  # quite often returns error like: Failed: Network error: Too Many Requests
+  'https://www.linkedin.com',
   # Ignore all URLs with '$' - BASH variable in URL
   '\$',
   # Ignore all URLs with '{ ... }' - BASH / Ansible variable in URL

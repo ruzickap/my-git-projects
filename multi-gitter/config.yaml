@@ -51,7 +51,6 @@ repo:
   ## default
   - ruzickap/container-build
   - ruzickap/gha-test
-  - ruzickap/k8s-istio-demo
   - ruzickap/malware-cryptominer-container
   - ruzickap/my-git-projects
   - ruzickap/raw-photo-tools-container
