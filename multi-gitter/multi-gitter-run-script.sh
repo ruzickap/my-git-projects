@@ -90,7 +90,6 @@ case "${REPOSITORY}" in
   ## ---------------------------------------------------------------------------------------------------------------------
   # ruzickap/container-build
   # ruzickap/gha-test
-  # ruzickap/k8s-istio-demo
   # ruzickap/malware-cryptominer-container
   # ruzickap/my-git-projects
   # ruzickap/raw-photo-tools-container
@@ -101,10 +100,6 @@ case "${REPOSITORY}" in
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
     rm .github/workflows/release-please.yml
     git checkout .github/renovate.json5
-    ;;
-  ruzickap/k8s-istio-demo)
-    echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout .github/workflows/links.yml
     ;;
   ruzickap/malware-cryptominer-container | ruzickap/raw-photo-tools-container)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
