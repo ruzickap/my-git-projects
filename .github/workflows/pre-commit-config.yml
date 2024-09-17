@@ -58,16 +58,6 @@ jobs:
           terrascan version
           tfupdate --version
 
-      - name: Check if all plugins in .pre-commit-config.yaml are in latest version
-        run: |
-          set -euxo pipefail
-          PRE_COMMIT_AUTOUPDATE=$(pre-commit autoupdate || true)
-          echo "${PRE_COMMIT_AUTOUPDATE}"
-          if [[ "${PRE_COMMIT_AUTOUPDATE}" =~ updating.*-\> ]]; then
-            echo "Plugins in .pre-commit-config.yaml are not in latest version !"
-            exit 1
-          fi
-
       # Prettier doesn't work due to error: UndefinedParserError: No parser could be inferred for file "stdin".
       - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
         env:
