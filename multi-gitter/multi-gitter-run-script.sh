@@ -69,9 +69,8 @@ case "${REPOSITORY}" in
   # ruzickap/ansible-role-my_common_defaults
   # ruzickap/ansible-role-proxy_settings
   # ruzickap/ansible-role-virtio-win
-  # ruzickap/ansible-role-vmwaretools
   ## ---------------------------------------------------------------------------------------------------------------------
-  ruzickap/ansible-role-my_common_defaults | ruzickap/ansible-role-proxy_settings | ruzickap/ansible-role-virtio-win | ruzickap/ansible-role-vmwaretools)
+  ruzickap/ansible-role-my_common_defaults | ruzickap/ansible-role-proxy_settings | ruzickap/ansible-role-virtio-win)
     echo -e "\n*** ansible-role | ${REPOSITORY}\n"
     rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/ansible-role/" .
     ;;&
@@ -79,11 +78,6 @@ case "${REPOSITORY}" in
     echo -e "\n*** ansible-role-ch | ${REPOSITORY}\n"
     rm .github/workflows/release-ansible-galaxy.yml
     git checkout .github/workflows/molecule.yml
-    ;;
-  ruzickap/ansible-role-vmwaretools)
-    echo -e "\n*** ansible-role-ch | ${REPOSITORY}\n"
-    git checkout .checkov.yml
-    rm ansible/.ansible-lint
     ;;
 
   ## default

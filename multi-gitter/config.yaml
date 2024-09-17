@@ -47,7 +47,6 @@ repo:
   - ruzickap/ansible-role-my_common_defaults
   - ruzickap/ansible-role-proxy_settings
   - ruzickap/ansible-role-virtio-win
-  - ruzickap/ansible-role-vmwaretools
   ## default
   - ruzickap/container-build
   - ruzickap/gha-test

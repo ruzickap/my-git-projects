@@ -6,10 +6,10 @@ on:
     inputs:
       dryRun:
         type: boolean
-        description: "Dry-Run"
+        description: Dry-Run
       logLevel:
         type: choice
-        description: "Log-Level"
+        description: Log-Level
         default: debug
         options:
           - info
@@ -20,11 +20,11 @@ on:
       - main
       - "!renovate/*"
   schedule:
-    - cron: "0 0-3 * * 1"
+    - cron: 0 0-3 * * 1
 
 env:
   # https://docs.renovatebot.com/troubleshooting/#log-debug-levels
-  LOG_LEVEL: "${{ inputs.logLevel || 'debug' }}"
+  LOG_LEVEL: ${{ inputs.logLevel || 'debug' }}
   # https://docs.renovatebot.com/self-hosted-configuration/#repositories
   RENOVATE_REPOSITORIES: ${{ github.repository }}
   # https://docs.renovatebot.com/self-hosted-configuration/#username
@@ -33,7 +33,7 @@ env:
   RENOVATE_PLATFORM_COMMIT: "true"
   # https://docs.renovatebot.com/self-hosted-configuration/#dryrun
   # Run renovate in dry-run mode if executed in branches other than main - prevents versions in PRs/branches from being updated
-  RENOVATE_DRY_RUN: "${{ inputs.dryRun || ( github.head_ref || github.ref_name ) != 'main' || false }}"
+  RENOVATE_DRY_RUN: ${{ inputs.dryRun || ( github.head_ref || github.ref_name ) != 'main' || false }}
   RENOVATE_TOKEN: ${{ github.token }}
   # Workflow updates only works with PATs or GH App
   # https://github.com/orgs/community/discussions/35410
