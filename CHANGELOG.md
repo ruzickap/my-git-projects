@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.0](https://github.com/ruzickap/my-git-projects/compare/v0.3.0...v0.4.0) (2024-11-01)
+
+
+### Features
+
+* ignore linkedin, update gha + pre-commit ([#144](https://github.com/ruzickap/my-git-projects/issues/144)) ([185169c](https://github.com/ruzickap/my-git-projects/commit/185169cb494eb78196e4ac42cdf8e96da10f6ebb))
+* improve yaml formatting, remove ansible-role-vmwaretools ([#149](https://github.com/ruzickap/my-git-projects/issues/149)) ([64e53b6](https://github.com/ruzickap/my-git-projects/commit/64e53b69482fc5ccf4ba229746a65cb3eae084af))
+
 ## [0.3.0](https://github.com/ruzickap/my-git-projects/compare/v0.2.0...v0.3.0) (2024-08-05)
 
 
