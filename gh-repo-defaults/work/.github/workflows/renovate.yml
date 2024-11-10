@@ -23,20 +23,22 @@ on:
     - cron: 0 0-3 * * 1
 
 env:
+  # keep-sorted start
   # https://docs.renovatebot.com/troubleshooting/#log-debug-levels
   LOG_LEVEL: ${{ inputs.logLevel || 'debug' }}
-  # https://docs.renovatebot.com/self-hosted-configuration/#repositories
-  RENOVATE_REPOSITORIES: ${{ github.repository }}
-  # https://docs.renovatebot.com/self-hosted-configuration/#username
-  RENOVATE_USERNAME: ${{ github.repository_owner }}
-  # https://docs.renovatebot.com/configuration-options/#platformcommit
-  RENOVATE_PLATFORM_COMMIT: "true"
   # https://docs.renovatebot.com/self-hosted-configuration/#dryrun
   # Run renovate in dry-run mode if executed in branches other than main - prevents versions in PRs/branches from being updated
   RENOVATE_DRY_RUN: ${{ inputs.dryRun || ( github.head_ref || github.ref_name ) != 'main' || false }}
+  # https://docs.renovatebot.com/configuration-options/#platformcommit
+  RENOVATE_PLATFORM_COMMIT: "true"
+  # https://docs.renovatebot.com/self-hosted-configuration/#repositories
+  RENOVATE_REPOSITORIES: ${{ github.repository }}
   RENOVATE_TOKEN: ${{ github.token }}
+  # https://docs.renovatebot.com/self-hosted-configuration/#username
+  RENOVATE_USERNAME: ${{ github.repository_owner }}
   # Workflow updates only works with PATs or GH App
   # https://github.com/orgs/community/discussions/35410
+  # keep-sorted end
 
 permissions: read-all
 
@@ -51,4 +53,4 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: 💡 Self-hosted Renovate
-        uses: renovatebot/github-action@a1ed1d0adddfdf138192d1fbe3150a80094dee6a # v40.3.1
+        uses: renovatebot/github-action@7743ec9e19ceeb61a3862c5d4131e6710195af11 # v40.3.3
