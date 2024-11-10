@@ -246,6 +246,11 @@ repos:
   #       require_serial: true
   #       entry: bash -c 'if [[ -f .mega-linter.yml ]] && docker info &>/dev/null; then npx -- mega-linter-runner --containername megalinter-incremental --remove-container --fix --env APPLY_FIXES=all --env LOG_LEVEL=warning --env VALIDATE_ALL_CODEBASE=false --filesonly; fi'
 
+  - repo: https://github.com/google/keep-sorted
+    rev: v0.5.1
+    hooks:
+      - id: keep-sorted
+
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.30.0
     hooks:

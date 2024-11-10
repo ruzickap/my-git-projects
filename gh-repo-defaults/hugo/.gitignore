@@ -1,6 +1,9 @@
+# keep-sorted start newline_separated=yes
 # pre-commit configuration file
 .pre-commit-config.yaml
 
 # Generated files by Hugo
 public/
+
 resources/_gen/
+# keep-sorted end
