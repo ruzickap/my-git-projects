@@ -212,30 +212,30 @@ repos:
       - id: gitleaks
 
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.9.0-1
+    rev: v3.10.0-1
     hooks:
       - id: shfmt
         args:
           - --indent=2
           - --space-redirects
 
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
-    hooks:
-      - id: prettier
-        additional_dependencies:
-          - prettier@4.0.0-alpha.9
-          - prettier-plugin-sh
-          - prettier-plugin-toml
-        # Excluding some files from "ruzickap.github.io" repository
-        args:
-          - --cache-location=/tmp/.prettier-cache
-        exclude: |
-          (?x)(
-              \.md|
-              ^_config\.yml|
-              ^_data/contact\.yml
-          )$
+  # - repo: https://github.com/pre-commit/mirrors-prettier
+  #   rev: v4.0.0-alpha.10
+  #   hooks:
+  #     - id: prettier
+  #       additional_dependencies:
+  #         - prettier@4.0.0-alpha.10
+  #         - prettier-plugin-sh
+  #         - prettier-plugin-toml
+  #       # Excluding some files from "ruzickap.github.io" repository
+  #       args:
+  #         - --cache-location=/tmp/.prettier-cache
+  #       exclude: |
+  #         (?x)(
+  #             \.md|
+  #             ^_config\.yml|
+  #             ^_data/contact\.yml
+  #         )$
 
   # - repo: https://github.com/oxsecurity/megalinter
   #   rev: v7.8.0
