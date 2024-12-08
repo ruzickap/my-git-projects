@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.4.0](https://github.com/ruzickap/my-git-projects/compare/v0.3.0...v0.4.0) (2024-12-08)
+
+
+### Features
+
+* add keep-sorted and improve molecule ([#153](https://github.com/ruzickap/my-git-projects/issues/153)) ([5920e51](https://github.com/ruzickap/my-git-projects/commit/5920e51237d3382ef5269d4129f3d2f47e33a2ec))
+* **gh:** add default github repo files ([#156](https://github.com/ruzickap/my-git-projects/issues/156)) ([114a246](https://github.com/ruzickap/my-git-projects/commit/114a246a3b84dd9d5ff3a30a5d4398f543ac18cd))
+* ignore linkedin, update gha + pre-commit ([#144](https://github.com/ruzickap/my-git-projects/issues/144)) ([185169c](https://github.com/ruzickap/my-git-projects/commit/185169cb494eb78196e4ac42cdf8e96da10f6ebb))
+* improve yaml formatting, remove ansible-role-vmwaretools ([#149](https://github.com/ruzickap/my-git-projects/issues/149)) ([64e53b6](https://github.com/ruzickap/my-git-projects/commit/64e53b69482fc5ccf4ba229746a65cb3eae084af))
+* remove old unused files ([#155](https://github.com/ruzickap/my-git-projects/issues/155)) ([42f92ba](https://github.com/ruzickap/my-git-projects/commit/42f92ba347a253e5be6d911ce0b755bee8f8428a))
+
 ## [0.3.0](https://github.com/ruzickap/my-git-projects/compare/v0.2.0...v0.3.0) (2024-08-05)
 
 
