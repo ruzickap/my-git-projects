@@ -33,7 +33,7 @@ jobs:
           no-fail-on-empty-changeset: 1
           capabilities: CAPABILITY_NAMED_IAM
           parameter-overrides: >-
-            SubjectClaimFilters="repo:ruzickap/my-git-projects:*,repo:ruzickap/ruzickap.github.io:*,repo:McK-Internal/ruzickap:*"
+            SubjectClaimFilters="repo:ruzickap/my-git-projects:*,repo:ruzickap/ruzickap.github.io:*,repo:McK-Internal/ruzickap:*,repo:ruzickap/gha-test:*,repo:ruzickap/malware-cryptominer-container:*"
           tags: '[
             {"Key": "Owner", "Value": "petr.ruzicka@gmail.com"},
             {"Key": "Environment", "Value": "dev"},
