@@ -34,6 +34,7 @@ jobs:
 
       - name: Install pre-commit
         run: |
+          sudo apt -qy uninstall python3-typing-extensions
           sudo -H pip3 install checkov pre-commit
 
       - name: Configure AWS credentials (needed for "detect-aws-credentials")
