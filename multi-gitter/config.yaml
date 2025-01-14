@@ -48,11 +48,9 @@ repo:
   - ruzickap/ansible-role-proxy_settings
   - ruzickap/ansible-role-virtio-win
   ## default
-  - ruzickap/container-build
   - ruzickap/gha-test
   - ruzickap/malware-cryptominer-container
   - ruzickap/my-git-projects
-  - ruzickap/raw-photo-tools-container
   - ruzickap/ruzickap
   - ruzickap/ruzickap.github.io
   - ruzickap/test_usb_stick_for_tv

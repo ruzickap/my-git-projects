@@ -15,6 +15,10 @@ env:
   AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
   SKIP: no-commit-to-branch,terraform_validate
 
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
 permissions: read-all
 
 jobs:
@@ -30,8 +34,6 @@ jobs:
 
       - name: Install pre-commit
         run: |
-          set -euxo pipefail
-          sudo apt install -y git python3-pip python3-setuptools python3-wheel shellcheck
           sudo -H pip3 install checkov pre-commit
 
       - name: Configure AWS credentials (needed for "detect-aws-credentials")
@@ -42,7 +44,6 @@ jobs:
 
       - name: Install pre-commit dependecies
         run: |
-          set -euxo pipefail
           curl -Ls https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
           gh release download --repo accurics/terrascan --pattern "*Linux_x86_64.tar.gz" --output terrascan.tar.gz

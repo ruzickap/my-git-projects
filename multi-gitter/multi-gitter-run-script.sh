@@ -82,20 +82,13 @@ case "${REPOSITORY}" in
 
   ## default
   ## ---------------------------------------------------------------------------------------------------------------------
-  # ruzickap/container-build
   # ruzickap/gha-test
   # ruzickap/malware-cryptominer-container
   # ruzickap/my-git-projects
-  # ruzickap/raw-photo-tools-container
   # ruzickap/ruzickap
   # ruzickap/test_usb_stick_for_tv
   ## ---------------------------------------------------------------------------------------------------------------------
-  ruzickap/container-build)
-    echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    rm .github/workflows/release-please.yml
-    git checkout .github/renovate.json5
-    ;;
-  ruzickap/malware-cryptominer-container | ruzickap/raw-photo-tools-container)
+  ruzickap/malware-cryptominer-container)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
     rm .github/workflows/release-please.yml
     ;;
