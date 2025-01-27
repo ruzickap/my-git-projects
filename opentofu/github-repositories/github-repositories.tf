@@ -9,6 +9,8 @@ import {
 }
 
 resource "github_repository" "this" {
+  #checkov:skip=CKV_GIT_1:Ensure GitHub repository is Private
+  #checkov:skip=CKV2_GIT_1:Ensure each Repository has branch protection associated
   for_each               = merge(local.github_repositories_existing, local.github_repositories)
   allow_merge_commit     = false
   allow_update_branch    = true
@@ -22,7 +24,7 @@ resource "github_repository" "this" {
   homepage_url           = try(each.value.homepage_url, "")
   license_template       = "apache-2.0"
   name                   = each.value.name
-  visibility             = try(each.value.visibility, "public")
+  visibility             = try(each.value.visibility, "public") #trivy:ignore:AVD-GIT-0001
   vulnerability_alerts   = true
 
   dynamic "pages" {
