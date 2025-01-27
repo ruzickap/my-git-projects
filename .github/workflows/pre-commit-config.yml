@@ -12,7 +12,7 @@ on:
 
 env:
   AWS_DEFAULT_REGION: eu-central-1
-  AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+  AWS_ROLE_TO_ASSUME: ${{ secrets.RUZICKA_SBX01_AWS_ROLE_TO_ASSUME }}
   SKIP: no-commit-to-branch,terraform_validate
 
 defaults:
@@ -44,20 +44,14 @@ jobs:
 
       - name: Install pre-commit dependecies
         run: |
-          curl -Ls https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-
-          gh release download --repo accurics/terrascan --pattern "*Linux_x86_64.tar.gz" --output terrascan.tar.gz
-          tar -xf terrascan.tar.gz -C /usr/local/bin/ terrascan
-
-          gh release download --repo aquasecurity/trivy --pattern "*Linux-64bit.tar.gz" --output trivy.tar.gz
-          tar -xf trivy.tar.gz -C /usr/local/bin/ trivy
-
-          gh release download --repo minamijoyo/tfupdate  --pattern "*linux_amd64.tar.gz" --output tfupdate.tar.gz
-          tar -xf tfupdate.tar.gz -C /usr/local/bin/ tfupdate
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          echo "/home/linuxbrew/.linuxbrew/bin" >> "${GITHUB_PATH}"
+          brew install opentofu terrascan tflint tfupdate trivy
 
           trivy version
           terrascan version
           tfupdate --version
+          tofu -version
 
       # Prettier doesn't work due to error: UndefinedParserError: No parser could be inferred for file "stdin".
       - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
