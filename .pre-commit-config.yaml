@@ -10,6 +10,7 @@ repos:
     rev: v5.0.0
     hooks:
       - id: check-added-large-files
+        args: ["--maxkb=600"]
         # name: Check for added large files
         # description: Prevent giant files from being committed
         # entry: check-added-large-files

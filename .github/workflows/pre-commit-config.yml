@@ -12,7 +12,7 @@ on:
 
 env:
   AWS_DEFAULT_REGION: eu-central-1
-  AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+  AWS_ROLE_TO_ASSUME: ${{ secrets.RUZICKA_SBX01_AWS_ROLE_TO_ASSUME }}
   SKIP: no-commit-to-branch,terraform_validate
 
 defaults:

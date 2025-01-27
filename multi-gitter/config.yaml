@@ -48,6 +48,7 @@ repo:
   - ruzickap/ansible-role-proxy_settings
   - ruzickap/ansible-role-virtio-win
   ## default
+  - ruzickap/cks_notes
   - ruzickap/gha-test
   - ruzickap/malware-cryptominer-container
   - ruzickap/my-git-projects
