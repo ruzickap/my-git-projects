@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket                      = "ruzickap-my-git-projects-opentofu-state-file"
-    key                         = "ruzickap-my-git-projects-opentofu-state-file.tfstate"
+    key                         = "ruzickap-my-git-projects-opentofu-github-repositories.tfstate"
     region                      = "us-east-1"
     skip_credentials_validation = true
   }
