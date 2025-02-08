@@ -47,7 +47,7 @@ locals {
     "action_my_markdown_linter" = {
       name        = "action-my-markdown-linter"
       description = "Style checking and linting for Markdown files"
-      topics      = ["github-action", "github-actions", "lint", "linter", "linting", "linters", "markdown"]
+      topics      = ["github-action", "github-actions", "lint", "linter", "linting", "linters", "markdown", "public"]
     }
     "ansible_my_workstation" = {
       name        = "ansible-my_workstation"
