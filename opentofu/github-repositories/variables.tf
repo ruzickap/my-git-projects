@@ -28,5 +28,4 @@ variable "opentofu_encryption_passphrase" {
   sensitive   = true
   type        = string
 }
-
 # keep-sorted end

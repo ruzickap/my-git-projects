@@ -46,6 +46,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_STORAGE_AWS_SECRET_ACCESS_KEY }}
   TF_CLI_ARGS_apply: "-auto-approve"
   TF_CLI_ARGS_destroy: "-auto-approve"
+  TF_CLI_ARGS_plan: "-lock=false"
   TF_INPUT: "false"
   TF_IN_AUTOMATION: "true"
   TF_VAR_my_renovate_github_app_id: ${{ secrets.MY_RENOVATE_GITHUB_APP_ID }}
