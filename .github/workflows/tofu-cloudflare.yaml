@@ -98,7 +98,7 @@ jobs:
             fi
 
             # Run after PR is merged
-            if [[ "${GITHUB_EVENT_NAME}" = "push" && "${GITHUB_REF_NAME}" = "${GITHUB_EVENT_REPOSITORY_DEFAULT_BRANCH}" ]]; then
+            if [[ ( "${GITHUB_EVENT_NAME}" = "push" || "${GITHUB_EVENT_NAME}" = "schedule" ) && "${GITHUB_REF_NAME}" = "${GITHUB_EVENT_REPOSITORY_DEFAULT_BRANCH}" ]]; then
               echo "TOFU_COMMAND=apply" | tee -a "${GITHUB_ENV}"
             fi
 
