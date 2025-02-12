@@ -34,10 +34,9 @@ resource "cloudflare_dns_record" "cname_www_mylabs_dev" {
 
 resource "cloudflare_dns_record" "mx1_mylabs_dev" {
   zone_id  = cloudflare_zone.mylabs_dev.id
-  comment  = "Used by CloudFlare Email Routing"
-  content  = "route3.mx.cloudflare.net"
+  content  = "route1.mx.cloudflare.net"
   name     = "@"
-  priority = 48
+  priority = 6
   proxied  = false
   ttl      = 1
   type     = "MX"
@@ -56,9 +55,10 @@ resource "cloudflare_dns_record" "mx2_mylabs_dev" {
 
 resource "cloudflare_dns_record" "mx3_mylabs_dev" {
   zone_id  = cloudflare_zone.mylabs_dev.id
-  content  = "route1.mx.cloudflare.net"
+  comment  = "Used by CloudFlare Email Routing"
+  content  = "route3.mx.cloudflare.net"
   name     = "@"
-  priority = 6
+  priority = 48
   proxied  = false
   ttl      = 1
   type     = "MX"
