@@ -1,11 +1,11 @@
 ---
-name: tofu-cloudflare
+name: tofu-github-repositories
 
 # Use-cases:
-# * Nevel label PR with more then two "tofu" labels because of concurrency: https://github.com/orgs/community/discussions/41518
-# * When there is a new commit pushed to the branch with changes in `opentofu/cloudflare` directory - run `tofu plan`
-# * When PR is merged with changes in `opentofu/cloudflare` directory - run `tofu apply`
-# * When PR is labeled by `tofu-plan/apply/destroy` with changes in `opentofu/cloudflare` directory - run `tofu plan/apply/destroy`
+# * Never label PR with more than two "tofu" labels because of concurrency: https://github.com/orgs/community/discussions/41518
+# * When there is a new commit pushed to the branch with changes in `opentofu/github-repositories` directory - run `tofu plan`
+# * When PR is merged with changes in `opentofu/github-repositories` directory - run `tofu apply`
+# * When PR is labeled by `tofu-plan/apply/destroy` with changes in `opentofu/github-repositories` directory - run `tofu plan/apply/destroy`
 # * When scheduled - run `tofu apply`
 # * When manually called using workflow_dispatch - run `tofu plan/apply/destroy`
 
@@ -27,13 +27,13 @@ on:
     branches:
       - "**"
     paths:
-      - opentofu/cloudflare/**
+      - opentofu/github-repositories/**
   pull_request:
     types: [labeled]
     paths:
-      - opentofu/cloudflare/**
+      - opentofu/github-repositories/**
   schedule:
-    - cron: 1 2 * * 3
+    - cron: 0 1 * * 2
 
 permissions: read-all
 
@@ -44,27 +44,29 @@ env:
   AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
   AWS_S3_ENDPOINT: ${{ secrets.CLOUDFLARE_R2_STORAGE_AWS_ENDPOINT_URL_S3 }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_STORAGE_AWS_SECRET_ACCESS_KEY }}
-  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
   TF_CLI_ARGS_apply: "-auto-approve"
   TF_CLI_ARGS_destroy: "-auto-approve"
   TF_CLI_ARGS_plan: "-lock=false"
   TF_INPUT: "false"
   TF_IN_AUTOMATION: "true"
-  TF_VAR_cloudflare_account_id: ${{ secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}
+  TF_VAR_my_renovate_github_app_id: ${{ secrets.MY_RENOVATE_GITHUB_APP_ID }}
+  TF_VAR_my_renovate_github_private_key: ${{ secrets.MY_RENOVATE_GITHUB_PRIVATE_KEY }}
+  TF_VAR_my_slack_bot_token: ${{ secrets.MY_SLACK_BOT_TOKEN }}
+  TF_VAR_my_slack_channel_id: ${{ secrets.MY_SLACK_CHANNEL_ID }}
   TF_VAR_opentofu_encryption_passphrase: ${{ secrets.TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE }}
-  TOFU_WORKING_DIRECTORY: opentofu/cloudflare
+  TOFU_WORKING_DIRECTORY: opentofu/github-repositories
   # keep-sorted end
 
-# Use concurrency to prevent running tofu-cloudflare simultaneously
+# Use concurrency to prevent running tofu-github-repositories simultaneously
 concurrency:
-  group: tofu-cloudflare
+  group: tofu-github-repositories
 
 defaults:
   run:
     shell: bash -euxo pipefail {0}
 
 jobs:
-  tofu-cloudflare:
+  tofu-github-repositories:
     # If the action is triggered by a pull request event then run it only for labels `tofu-plan/apply/destroy`
     runs-on: ubuntu-latest
     permissions:
@@ -87,11 +89,11 @@ jobs:
         env:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           PR_LABEL: ${{ github.event.label.name }}
-          INPUTS_COMMAND: ${{ inputs.tofu_command }}
+          INPUTS_TOFU_COMMAND: ${{ inputs.tofu_command }}
           GITHUB_EVENT_REPOSITORY_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           # If inputs.tofu_command form workflow_dispatch is set - use it as tofu_command
-          if [[ -z "${INPUTS_COMMAND}" ]]; then
+          if [[ -z "${INPUTS_TOFU_COMMAND}" ]]; then
 
             if [[ "${GITHUB_EVENT_NAME}" = "push" ]]; then
               echo "TOFU_COMMAND=plan" | tee -a "${GITHUB_ENV}"
@@ -115,7 +117,7 @@ jobs:
                 ;;
             esac
           else
-            echo "TOFU_COMMAND=${INPUTS_COMMAND}" | tee -a "${GITHUB_ENV}"
+            echo "TOFU_COMMAND=${INPUTS_TOFU_COMMAND}" | tee -a "${GITHUB_ENV}"
           fi
 
       - name: Setup OpenTofu
