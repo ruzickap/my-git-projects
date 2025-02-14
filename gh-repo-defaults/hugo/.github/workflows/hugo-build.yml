@@ -5,14 +5,15 @@ on:
   workflow_dispatch:
   push:
 
-permissions:
-  contents: write
+permissions: read-all
 
 jobs:
   hugo-build:
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
