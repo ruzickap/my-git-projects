@@ -68,7 +68,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       actions: read # Required to identify workflow run
-      checks: write # Required to add status summary
       contents: read # Required to checkout repository
       # kics-scan ignore-line
       id-token: write # Required to identify workflow run
@@ -103,13 +102,16 @@ jobs:
 
             case "${PR_LABEL}" in
               tofu-apply)
+                echo "*** tofu-apply"
                 echo "TOFU_COMMAND=apply" | tee -a "${GITHUB_ENV}"
                 ;;
               # Disable destroy
               # tofu-destroy)
+              #   echo "*** tofu-destroy"
               #   echo "TOFU_COMMAND=destroy" | tee -a "${GITHUB_ENV}"
               #   ;;
               tofu-plan)
+                echo "*** tofu-plan"
                 echo "TOFU_COMMAND=plan" | tee -a "${GITHUB_ENV}"
                 ;;
             esac
@@ -133,7 +135,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_OPENTOFU_GITHUB_REPOSITORIES }}
         run: |
           tofu -chdir="${TOFU_WORKING_DIRECTORY}" init
-          tofu -chdir="${TOFU_WORKING_DIRECTORY}" "${TOFU_COMMAND}" | ruby -pe 'print Time.now.strftime("[%Y-%m-%d %H:%M:%S] ")'
+          tofu -chdir="${TOFU_WORKING_DIRECTORY}" "${TOFU_COMMAND}"
 
       - name: Remove label
         if: ${{ github.event.label.name != '' && env.TOFU_COMMAND != '' }}
