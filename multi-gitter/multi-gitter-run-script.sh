@@ -90,7 +90,7 @@ case "${REPOSITORY}" in
   ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/malware-cryptominer-container)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    rm .github/workflows/release-please.yml
+    git checkout .github/renovate.json5 lychee.toml
     ;;
   ruzickap/my-git-projects)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
