@@ -50,6 +50,7 @@ repo:
   ## default
   - ruzickap/cks_notes
   - ruzickap/gha-test
+  - ruzickap/k8s_multicluster_gitops
   - ruzickap/malware-cryptominer-container
   - ruzickap/my-git-projects
   - ruzickap/ruzickap
