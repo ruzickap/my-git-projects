@@ -93,13 +93,13 @@ import {
 }
 
 resource "github_repository_topics" "this" {
-  for_each   = local.github_repositories_existing
+  for_each   = merge(local.github_repositories_existing, local.github_repositories)
   repository = each.value.name
   topics     = try(each.value.topics, [])
 }
 
 resource "github_repository_ruleset" "main" {
-  for_each    = { for k, v in local.github_repositories_existing : k => v if try(v.visibility != "private", true) }
+  for_each    = { for k, v in merge(local.github_repositories_existing, local.github_repositories) : k => v if try(v.visibility != "private", true) }
   name        = "main"
   repository  = each.value.name
   target      = "branch"
