@@ -74,7 +74,7 @@ jobs:
       pull-requests: write # Required to add comment and label
 
     steps:
-      - name: debug
+      - name: Debug
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
