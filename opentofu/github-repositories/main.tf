@@ -33,7 +33,7 @@ locals {
     "k8s_multicluster_gitops" = {
       name        = "k8s-multicluster-gitops"
       description = "Infrastructure as Code for provisioning multiple Kubernetes clusters, managed using GitOps with ArgoCD"
-      topics      = ["aks", "argocd", "eks", "gitops", "infrastructure-as-code", "k8s", "k8s-gitops", "kind", "kubernetes", "multi-cluster", "public", "terraform", "vcluster"]
+      topics      = ["aks", "argocd", "eks", "gitops", "infrastructure-as-code", "k8s", "k8s-gitops", "kind", "kubernetes", "multi-cluster", "terraform", "vcluster"]
     }
   }
   #trivy:ignore:avd-git-0001 Repository is public
@@ -126,7 +126,7 @@ locals {
     "my_git_projects" = {
       name        = "my-git-projects"
       description = "My GitHub projects"
-      topics      = ["github", "projects", "public", "templates"]
+      topics      = ["github", "projects", "templates"]
     }
     "old_stuff" = {
       name        = "old_stuff"
@@ -155,7 +155,7 @@ locals {
     "ruzickap" = {
       name        = "ruzickap"
       description = "GitHub profile repository"
-      topics      = ["github", "profile", "public"]
+      topics      = ["github", "profile"]
     }
     "ruzickap_github_io" = {
       name            = "ruzickap.github.io"
@@ -186,7 +186,7 @@ locals {
     "test_usb_stick_for_tv" = {
       name        = "test_usb_stick_for_tv"
       description = "This script will store testing videos/music/pictures to your USB Stick which can be used for testing TVs"
-      topics      = ["android-tv", "public", "test", "testing", "testing-tools", "testing-tvs", "tv", "usb"]
+      topics      = ["android-tv", "test", "testing", "testing-tools", "testing-tvs", "tv", "usb"]
     }
     "xvx_cz" = {
       name         = "xvx.cz"
