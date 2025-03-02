@@ -121,7 +121,7 @@ jobs:
             timestamp: "${{ env.SLACK_TIMESTAMP }}"
             name: ${{ env.EMOJI }}
 
-      - name: Update the original message with success
+      - name: Update the original message with status Merged ✅
         if: ${{ github.event.pull_request.merged && steps.slack-timestamp.outputs.github_event_pull_request_html_url == 'true' }}
         uses: slackapi/slack-github-action@485a9d42d3a73031f12ec201c457e2162c45d02d # v2.0.0
         with:
@@ -137,3 +137,20 @@ jobs:
                   - title: "Status"
                     short: true
                     value: "Merged ✅"
+
+      - name: Update the original message with status Closed ❎
+        if: ${{ github.event.pull_request.merged == false && steps.slack-timestamp.outputs.github_event_pull_request_html_url == 'true' }}
+        uses: slackapi/slack-github-action@485a9d42d3a73031f12ec201c457e2162c45d02d # v2.0.0
+        with:
+          method: chat.update
+          token: ${{ secrets.MY_SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ secrets.MY_SLACK_CHANNEL_ID }}
+            ts: "${{ env.SLACK_TIMESTAMP }}"
+            text: "❎ *${{ github.event.pull_request.user.login }}*: <${{ github.event.repository.html_url }}|${{ github.repository }}> - <${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}> (+${{ github.event.pull_request.additions }}, -${{ github.event.pull_request.deletions }})"
+            attachments:
+              - color: "fa7015"
+                fields:
+                  - title: "Status"
+                    short: true
+                    value: "Closed ❎"
