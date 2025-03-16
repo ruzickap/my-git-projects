@@ -11,7 +11,7 @@ import {
 resource "github_repository" "this" {
   #checkov:skip=CKV_GIT_1:Ensure GitHub repository is Private
   #checkov:skip=CKV2_GIT_1:Ensure each Repository has branch protection associated
-  for_each               = merge(local.github_repositories_existing, local.github_repositories)
+  for_each               = local.all_github_repositories
   allow_merge_commit     = false
   allow_update_branch    = true
   auto_init              = true
@@ -59,27 +59,26 @@ resource "github_repository" "this" {
 }
 
 # keep-sorted start block=yes
-
 resource "github_actions_secret" "my_renovate_github_app_id" {
-  for_each        = github_repository.this
+  for_each        = local.all_github_repositories
   repository      = each.value.name
   secret_name     = "MY_RENOVATE_GITHUB_APP_ID"
   plaintext_value = var.my_renovate_github_app_id
 }
 resource "github_actions_secret" "my_renovate_github_private_key" {
-  for_each        = github_repository.this
+  for_each        = local.all_github_repositories
   repository      = each.value.name
   secret_name     = "MY_RENOVATE_GITHUB_PRIVATE_KEY"
   plaintext_value = var.my_renovate_github_private_key
 }
 resource "github_actions_secret" "my_slack_bot_token" {
-  for_each        = github_repository.this
+  for_each        = local.all_github_repositories
   repository      = each.value.name
   secret_name     = "MY_SLACK_BOT_TOKEN"
   plaintext_value = var.my_slack_bot_token
 }
 resource "github_actions_secret" "my_slack_channel_id" {
-  for_each        = github_repository.this
+  for_each        = local.all_github_repositories
   repository      = each.value.name
   secret_name     = "MY_SLACK_CHANNEL_ID"
   plaintext_value = var.my_slack_channel_id
@@ -93,13 +92,13 @@ import {
 }
 
 resource "github_repository_topics" "this" {
-  for_each   = merge(local.github_repositories_existing, local.github_repositories)
+  for_each   = local.all_github_repositories
   repository = each.value.name
   topics     = try(each.value.topics, [])
 }
 
 resource "github_repository_ruleset" "main" {
-  for_each    = { for k, v in merge(local.github_repositories_existing, local.github_repositories) : k => v if try(v.visibility != "private", true) }
+  for_each    = { for k, v in local.all_github_repositories : k => v if try(v.visibility != "private", true) }
   name        = "main"
   repository  = each.value.name
   target      = "branch"

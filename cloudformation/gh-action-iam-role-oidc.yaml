@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 
-# aws cloudformation deploy --region=eu-central-1 --capabilities CAPABILITY_NAMED_IAM --stack-name "github-action-iam-role-oidc" --template-file "gh-action-iam-role-oidc.yaml"
+# aws cloudformation deploy --region=eu-central-1 --capabilities CAPABILITY_NAMED_IAM --stack-name "github-action-iam-role-oidc" --template-file "gh-action-iam-role-oidc.yaml" --parameter-overrides "SubjectClaimFilters=repo:ruzickap/my-git-projects:*,repo:ruzickap/ruzickap.github.io:*,repo:ruzickap/gha-test:*,repo:ruzickap/malware-cryptominer-container:*,repo:ruzickap/k8s-multicluster-gitops:*"
 
 Description: >
   Creates and OIDC provider and role for use with GitHub Actions.

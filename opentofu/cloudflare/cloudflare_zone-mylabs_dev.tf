@@ -12,6 +12,9 @@ resource "cloudflare_zone" "mylabs_dev" {
 }
 
 # keep-sorted start block=yes newline_separated=yes
+###############################################
+# CNAME
+###############################################
 resource "cloudflare_dns_record" "cname_mylabs_dev" {
   zone_id = cloudflare_zone.mylabs_dev.id
   comment = "Personal page (https://github.com/ruzickap/petr.ruzicka.dev)"
@@ -32,6 +35,9 @@ resource "cloudflare_dns_record" "cname_www_mylabs_dev" {
   type    = "CNAME"
 }
 
+###############################################
+# MX records
+###############################################
 resource "cloudflare_dns_record" "mx1_mylabs_dev" {
   zone_id  = cloudflare_zone.mylabs_dev.id
   content  = "route1.mx.cloudflare.net"
@@ -64,11 +70,37 @@ resource "cloudflare_dns_record" "mx3_mylabs_dev" {
   type     = "MX"
 }
 
+###############################################
+# aws.mylabs.dev
+###############################################
+resource "cloudflare_dns_record" "ns1_aws_mylabs_dev" {
+  zone_id = cloudflare_zone.mylabs_dev.id
+  comment = "AWS Route 53 domain delegation to ruzicka-sbx01"
+  content = "ns-227.awsdns-28.com"
+  name    = "aws"
+  proxied = false
+  ttl     = 1
+  type    = "NS"
+}
+
+###############################################
+# k8s.mylabs.dev
+###############################################
 resource "cloudflare_dns_record" "ns1_k8s_mylabs_dev" {
   zone_id = cloudflare_zone.mylabs_dev.id
   comment = "AWS Route 53 domain delegation to ruzicka-sbx01"
   content = "ns-302.awsdns-37.com"
   name    = "k8s"
+  proxied = false
+  ttl     = 1
+  type    = "NS"
+}
+
+resource "cloudflare_dns_record" "ns2_aws_mylabs_dev" {
+  zone_id = cloudflare_zone.mylabs_dev.id
+  comment = "AWS Route 53 domain delegation to ruzicka-sbx01"
+  content = "ns-1722.awsdns-23.co.uk"
+  name    = "aws"
   proxied = false
   ttl     = 1
   type    = "NS"
@@ -84,11 +116,31 @@ resource "cloudflare_dns_record" "ns2_k8s_mylabs_dev" {
   type    = "NS"
 }
 
+resource "cloudflare_dns_record" "ns3_aws_mylabs_dev" {
+  zone_id = cloudflare_zone.mylabs_dev.id
+  comment = "AWS Route 53 domain delegation to ruzicka-sbx01"
+  content = "ns-528.awsdns-02.net"
+  name    = "aws"
+  proxied = false
+  ttl     = 1
+  type    = "NS"
+}
+
 resource "cloudflare_dns_record" "ns3_k8s_mylabs_dev" {
   zone_id = cloudflare_zone.mylabs_dev.id
   comment = "AWS Route 53 domain delegation to ruzicka-sbx01"
   content = "ns-1154.awsdns-16.org"
   name    = "k8s"
+  proxied = false
+  ttl     = 1
+  type    = "NS"
+}
+
+resource "cloudflare_dns_record" "ns4_aws_mylabs_dev" {
+  zone_id = cloudflare_zone.mylabs_dev.id
+  comment = "AWS Route 53 domain delegation to ruzicka-sbx01"
+  content = "ns-1522.awsdns-62.org"
+  name    = "aws"
   proxied = false
   ttl     = 1
   type    = "NS"
@@ -104,16 +156,9 @@ resource "cloudflare_dns_record" "ns4_k8s_mylabs_dev" {
   type    = "NS"
 }
 
-resource "cloudflare_dns_record" "ns5_k8s_mylabs_dev" {
-  zone_id = cloudflare_zone.mylabs_dev.id
-  comment = "AWS Route 53 domain delegation to ruzicka-sbx01"
-  content = "ns-78.awsdns-09.com"
-  name    = "k8s"
-  proxied = false
-  ttl     = 1
-  type    = "NS"
-}
-
+###############################################
+# SPF + DKIM
+###############################################
 resource "cloudflare_dns_record" "spf_txt_mylabs_dev" {
   zone_id = cloudflare_zone.mylabs_dev.id
   content = "\"v=spf1 include:_spf.mx.cloudflare.net ~all\""
