@@ -22,7 +22,7 @@ repos:
         # entry: check-json
         # language: python
         # types: [json]
-        exclude: .*/devcontainer\.json$
+        exclude: .*/devcontainer\.json$|settings\.json$
 
       - id: check-merge-conflict
         # name: Check for merge conflicts
