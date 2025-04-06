@@ -161,7 +161,7 @@ repos:
           - --args=--version "~> 1.9"
 
   - repo: https://github.com/terraform-docs/terraform-docs
-    rev: "v0.19.0"
+    rev: "v0.20.0"
     hooks:
       - id: terraform-docs-go
         # args: ["ARGS", "TO PASS", "INCLUDING PATH"]  # e.g. ["--output-file", "README.md", "./mymodule/path"]
