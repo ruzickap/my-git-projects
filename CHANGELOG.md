@@ -1,5 +1,36 @@
 # Changelog
 
+## [0.4.0](https://github.com/ruzickap/my-git-projects/compare/v0.3.0...v0.4.0) (2025-05-04)
+
+
+### Features
+
+* add cloudflare_zone-ruzicka_dev ([#167](https://github.com/ruzickap/my-git-projects/issues/167)) ([d9bad23](https://github.com/ruzickap/my-git-projects/commit/d9bad23ee94f262d05c194ed112e48fb68e18d0e))
+* add env variables to pr-slack-notification ([#175](https://github.com/ruzickap/my-git-projects/issues/175)) ([1df8f04](https://github.com/ruzickap/my-git-projects/commit/1df8f04b2430fc1ab3403a27346bbe2bcd7bf664))
+* add gha-test and malware-cryptominer-container repos ([#158](https://github.com/ruzickap/my-git-projects/issues/158)) ([b535680](https://github.com/ruzickap/my-git-projects/commit/b535680632085956743f387a0f7079243aa7d213))
+* add k8s-multicluster-gitops ([#171](https://github.com/ruzickap/my-git-projects/issues/171)) ([f64c088](https://github.com/ruzickap/my-git-projects/commit/f64c088d9ce9ff57c30cd02528219528e281b394))
+* add keep-sorted and improve molecule ([#153](https://github.com/ruzickap/my-git-projects/issues/153)) ([5920e51](https://github.com/ruzickap/my-git-projects/commit/5920e51237d3382ef5269d4129f3d2f47e33a2ec))
+* add mise ([#165](https://github.com/ruzickap/my-git-projects/issues/165)) ([e70144d](https://github.com/ruzickap/my-git-projects/commit/e70144d332e49ae16230dcc0f7f0ee9e6f430536))
+* add opentofu code for git repositories ([#160](https://github.com/ruzickap/my-git-projects/issues/160)) ([311835c](https://github.com/ruzickap/my-git-projects/commit/311835cd97fad3c4927a9dcb7262936b307a9d90))
+* add SECURITY.md, scorecards + pr-slack-notification ([#161](https://github.com/ruzickap/my-git-projects/issues/161)) ([6ba75b7](https://github.com/ruzickap/my-git-projects/commit/6ba75b7d0b704e6d0e0492cd58636e968b93d5e8))
+* add tofu-cloudflare ([#166](https://github.com/ruzickap/my-git-projects/issues/166)) ([cf9eb72](https://github.com/ruzickap/my-git-projects/commit/cf9eb720b9f2cef6acb47258d0ec2df32ba266f7))
+* add tofu-github-repositories and latex devcontainer ([#163](https://github.com/ruzickap/my-git-projects/issues/163)) ([31561a1](https://github.com/ruzickap/my-git-projects/commit/31561a1bad3c268f5202d91483f62f6f82b81cc7))
+* **gh:** add default github repo files ([#156](https://github.com/ruzickap/my-git-projects/issues/156)) ([114a246](https://github.com/ruzickap/my-git-projects/commit/114a246a3b84dd9d5ff3a30a5d4398f543ac18cd))
+* **gh:** add default github repo files ([#182](https://github.com/ruzickap/my-git-projects/issues/182)) ([964d628](https://github.com/ruzickap/my-git-projects/commit/964d628b15b9547a79022b247169c01bc7e2da71))
+* ignore linkedin, update gha + pre-commit ([#144](https://github.com/ruzickap/my-git-projects/issues/144)) ([185169c](https://github.com/ruzickap/my-git-projects/commit/185169cb494eb78196e4ac42cdf8e96da10f6ebb))
+* improve gha and tofu code ([#177](https://github.com/ruzickap/my-git-projects/issues/177)) ([81dedb2](https://github.com/ruzickap/my-git-projects/commit/81dedb29d09c99960f0642eb9e66e1c09d87be60))
+* improve pr-slack-notification, mega-linter and lychee ([#173](https://github.com/ruzickap/my-git-projects/issues/173)) ([e6f38ab](https://github.com/ruzickap/my-git-projects/commit/e6f38ab0581e0677da490cb62a41896dd23298dc))
+* improve tofu github actions ([#169](https://github.com/ruzickap/my-git-projects/issues/169)) ([34acaa9](https://github.com/ruzickap/my-git-projects/commit/34acaa94b521f2f449ea02c68acf51a134cbe90a))
+* improve yaml formatting, remove ansible-role-vmwaretools ([#149](https://github.com/ruzickap/my-git-projects/issues/149)) ([64e53b6](https://github.com/ruzickap/my-git-projects/commit/64e53b69482fc5ccf4ba229746a65cb3eae084af))
+* remove old unused files ([#155](https://github.com/ruzickap/my-git-projects/issues/155)) ([42f92ba](https://github.com/ruzickap/my-git-projects/commit/42f92ba347a253e5be6d911ce0b755bee8f8428a))
+* update gha, improve tofu ([#170](https://github.com/ruzickap/my-git-projects/issues/170)) ([2938837](https://github.com/ruzickap/my-git-projects/commit/293883717abc3233875a1d2ee71dcb8b49d0c5e4))
+
+
+### Bug Fixes
+
+* add merge local.github_repositories to resources ([#172](https://github.com/ruzickap/my-git-projects/issues/172)) ([7029f09](https://github.com/ruzickap/my-git-projects/commit/7029f09477252070eaf65d99673e53fc554bc6bb))
+* add schedule to if condition ([#168](https://github.com/ruzickap/my-git-projects/issues/168)) ([f12b6a0](https://github.com/ruzickap/my-git-projects/commit/f12b6a0de025aba1e51940faa16b3aa134d16326))
+
 ## [0.3.0](https://github.com/ruzickap/my-git-projects/compare/v0.2.0...v0.3.0) (2024-08-05)
 
 
