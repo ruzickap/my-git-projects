@@ -33,7 +33,8 @@ jobs:
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew install mdq
           echo '#!/usr/bin/env bash' > README.sh
-          mdq '```/^bash$|^shell$|^sh$/' --br -o plain $(find . -type f -name "*.md") >> README.sh
+          readarray -d '' MD_FILES < <(find . -type f -name "*.md" -print0)
+          mdq '```/^bash$|^shell$|^sh$/' --br -o plain "${MD_FILES[@]}" >> README.sh || true
           chmod a+x README.sh
 
       - name: 💡 MegaLinter
