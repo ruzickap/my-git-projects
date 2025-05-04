@@ -52,6 +52,7 @@ case "${REPOSITORY}" in
   ruzickap/cv)
     echo -e "\n*** latex-ch | ${REPOSITORY}\n"
     git checkout run.sh
+    rm .github/workflows/codeql-actions.yml
     ;;
 
   ## hugo
@@ -90,7 +91,7 @@ case "${REPOSITORY}" in
   ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/malware-cryptominer-container)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout .github/renovate.json5 lychee.toml
+    git checkout .checkov.yml .github/workflows/release-please.yml .github/renovate.json5 lychee.toml
     ;;
   ruzickap/my-git-projects)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
@@ -98,6 +99,10 @@ case "${REPOSITORY}" in
     ;;
   ruzickap/ruzickap.github.io)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout .github/renovate.json5 lychee.toml .markdownlint.yml
+    git checkout .github/renovate.json5 .github/workflows/mega-linter.yml lychee.toml .markdownlint.yml .mega-linter.yml
+    ;;
+  ruzickap/k8s-multicluster-gitops)
+    echo -e "\n*** default-ch | ${REPOSITORY}\n"
+    git checkout lychee.toml
     ;;
 esac

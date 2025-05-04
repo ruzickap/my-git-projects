@@ -176,4 +176,20 @@ resource "cloudflare_dns_record" "txt_cf2024_1_domainkey_mylabs_dev" {
   ttl     = 1
   type    = "TXT"
 }
+
+###############################################
+# Page Rules
+###############################################
+# resource "cloudflare_page_rule" "example_page_rule" {
+#   zone_id  = cloudflare_zone.mylabs_dev.id
+#   target   = "mylabs2.dev/*"
+#   priority = 1
+#   status   = "active"
+#   actions = {
+#     forwarding_url = {
+#       url         = "https://petr.ruzicka.dev/"
+#       status_code = 302
+#     }
+#   }
+# }
 # keep-sorted end

@@ -5,7 +5,7 @@
 conflict-strategy: replace
 
 # The title of the PR. Will default to the first line of the commit message if none is set.
-pr-title: "feat(gh): add default github repo files"
+pr-title: "feat: add default github repo files"
 
 # Run without pushing changes or creating pull requests.
 dry-run: false
@@ -24,35 +24,14 @@ merge-type:
 # The platform that is used. Available values: github, gitlab, gitea, bitbucket_server.
 platform: github
 
-# The name, including owner of a GitHub repository in the format "ownerName/repoName".
+# All repositories owned by that user will be used.
+user: ruzickap
+
+skip-repo:
+  - ruzickap/ruzickovabozena.xvx.cz
+  - ruzickap/old_stuff
+  - ruzickap/renovate-test
+
+# Private repositories needs to be specified explicitly.
 repo:
-  ## action
-  - ruzickap/action-my-broken-link-checker
-  - ruzickap/action-my-markdown-link-checker
-  - ruzickap/action-my-markdown-linter
-  ## ansible
-  - ruzickap/ansible-my_workstation
-  - ruzickap/ansible-openwrt
-  - ruzickap/ansible-raspbian
-  - ruzickap/packer-templates
-  ## latex
-  - ruzickap/cheatsheet-atom
-  - ruzickap/cheatsheet-macos
-  - ruzickap/cheatsheet-systemd
   - ruzickap/cv
-  ## hugo
-  - ruzickap/petr.ruzicka.dev
-  - ruzickap/xvx.cz
-  ## ansible-role
-  - ruzickap/ansible-role-my_common_defaults
-  - ruzickap/ansible-role-proxy_settings
-  - ruzickap/ansible-role-virtio-win
-  ## default
-  - ruzickap/cks_notes
-  - ruzickap/gha-test
-  - ruzickap/k8s_multicluster_gitops
-  - ruzickap/malware-cryptominer-container
-  - ruzickap/my-git-projects
-  - ruzickap/ruzickap
-  - ruzickap/ruzickap.github.io
-  - ruzickap/test_usb_stick_for_tv
