@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.0](https://github.com/ruzickap/my-git-projects/compare/v0.4.0...v0.5.0) (2025-05-06)
+
+
+### Features
+
+* remove ansible-role definitions, improve lychee config ([#186](https://github.com/ruzickap/my-git-projects/issues/186)) ([c92cf0b](https://github.com/ruzickap/my-git-projects/commit/c92cf0b83449776a9b1ccac317e453e36ace1014))
+* remove packer-templates from ansible case in run script ([#188](https://github.com/ruzickap/my-git-projects/issues/188)) ([b6aa4c6](https://github.com/ruzickap/my-git-projects/commit/b6aa4c675e6162ff7405d8370c9b1304ac3abdb1))
+
 ## [0.4.0](https://github.com/ruzickap/my-git-projects/compare/v0.3.0...v0.4.0) (2025-05-04)
 
 
