@@ -23,19 +23,14 @@ case "${REPOSITORY}" in
   # ruzickap/ansible-my_workstation
   # ruzickap/ansible-openwrt
   # ruzickap/ansible-raspberry-pi-os
-  # ruzickap/packer-templates
   ## ---------------------------------------------------------------------------------------------------------------------
-  ruzickap/packer-templates | ruzickap/ansible-*)
+  ruzickap/ansible-*)
     echo -e "\n*** ansible | ${REPOSITORY}\n"
     rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/ansible/" .
     ;;&
   ruzickap/ansible-raspberry-pi-os)
     echo -e "\n*** ansible | ${REPOSITORY}\n"
     git checkout lychee.toml ansible/.ansible-lint
-    ;;
-  ruzickap/packer-templates)
-    echo -e "\n*** ansible-ch | ${REPOSITORY}\n"
-    git checkout .gitignore
     ;;
 
   ## latex
