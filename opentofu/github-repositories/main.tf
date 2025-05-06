@@ -152,13 +152,6 @@ locals {
       topics                 = ["bash", "perl", "old", "scripts"]
       github_actions_secrets = local.default_github_actions_secrets
     }
-    "packer_templates" = {
-      name                   = "packer-templates"
-      description            = "Scripts and Templates used for generating Vagrant images"
-      has_discussions        = true
-      topics                 = ["ansible", "driver", "libvirt", "linux", "packer-template", "packer-templates", "packer", "public", "qemu", "templates", "vagrant", "vagrant-plugins", "vagrant", "virtio", "virtualbox", "windows"]
-      github_actions_secrets = local.default_github_actions_secrets
-    }
     "petr_ruzicka_dev" = {
       name         = "petr.ruzicka.dev"
       description  = "Personal page"
