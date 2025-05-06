@@ -95,25 +95,6 @@ locals {
       topics                 = ["ansible", "grafana", "kodi", "node-exporter", "public", "prometheus", "raspberry-pi", "raspberry-pi-os", "rpi"]
       github_actions_secrets = local.default_github_actions_secrets
     }
-    "ansible_role_my_common_defaults" = {
-      name                   = "ansible-role-my_common_defaults"
-      description            = "My Ansible role which sets some \"favorite\" defaults on the server (CentOS / Ubuntu / Windows)"
-      topics                 = ["ansible", "ansible-role", "centos", "debian", "public", "redhat", "ubuntu", "windows"]
-      github_actions_secrets = local.default_github_actions_secrets
-    }
-    "ansible_role_proxy_settings" = {
-      name                   = "ansible-role-proxy_settings"
-      description            = "Ansible role for configuring proxy settings for Linux based systems"
-      homepage_url           = "https://galaxy.ansible.com/ruzickap/proxy_settings/"
-      topics                 = ["ansible", "ansible-role", "debian", "proxy", "proxy-settings", "public", "redhat", "ubuntu"]
-      github_actions_secrets = local.default_github_actions_secrets
-    }
-    "ansible_role_virtio_win" = {
-      name                   = "ansible-role-virtio-win"
-      description            = "Ansible role which installs VirtIO Drivers and SPICE Guest Tools for Windows"
-      topics                 = ["ansible", "ansible-role", "public", "spice-guest", "virtio", "virtio-drivers", "windows"]
-      github_actions_secrets = local.default_github_actions_secrets
-    }
     "cheatsheet_atom" = {
       name                   = "cheatsheet-atom"
       description            = "Atom Keyboard Shortcuts Cheatsheet"
