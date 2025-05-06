@@ -1,9 +1,0 @@
-# keep-sorted start newline_separated=yes
-*.py[cod]
-
-# Python byte-compiled / optimized files
-*__pycache__/
-
-# pre-commit config file
-.pre-commit-config.yaml
-# keep-sorted end
