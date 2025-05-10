@@ -1,5 +1,24 @@
+# keep-sorted start block=yes newline_separated=yes
 variable "cloudflare_account_id" {
   description = "Cloudflare Account ID"
+  sensitive   = true
+  type        = string
+}
+
+variable "cloudflare_zero_trust_access_identity_provider_google_oauth_client_id" {
+  description = "Cloudflare Zero Trust Access Identity Provider - Google OAuth Client ID"
+  sensitive   = true
+  type        = string
+}
+
+variable "cloudflare_zero_trust_access_identity_provider_google_oauth_client_secret" {
+  description = "Cloudflare Zero Trust Access Identity Provider - Google OAuth Client Secret"
+  sensitive   = true
+  type        = string
+}
+
+variable "cloudflare_zero_trust_tunnel_cloudflared_tunnel_secret" {
+  description = "Cloudflare Zero Trust Tunnel Cloudflared Tunnel Secret"
   sensitive   = true
   type        = string
 }
@@ -9,3 +28,4 @@ variable "opentofu_encryption_passphrase" {
   sensitive   = true
   type        = string
 }
+# keep-sorted end
