@@ -134,6 +134,7 @@ jobs:
         run: |
           set -euxo pipefail
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          echo "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" >> "${GITHUB_ENV}"
           brew install tfcmt
 
       - name: 💡 Run tofu "${{ env.TOFU_COMMAND }}"
