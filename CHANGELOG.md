@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.0](https://github.com/ruzickap/my-git-projects/compare/v0.5.0...v0.6.0) (2025-05-10)
+
+
+### Features
+
+* add Cloudflare Zero Trust variables and resources ([#191](https://github.com/ruzickap/my-git-projects/issues/191)) ([8fb89ee](https://github.com/ruzickap/my-git-projects/commit/8fb89eed6564ea4f7469fb64f63b46509bdd7235))
+* install tfcmt and update DNS record names for clarity ([#189](https://github.com/ruzickap/my-git-projects/issues/189)) ([aeaace7](https://github.com/ruzickap/my-git-projects/commit/aeaace71950920a468700b0d79e8b2d5c9d9556a))
+
 ## [0.5.0](https://github.com/ruzickap/my-git-projects/compare/v0.4.0...v0.5.0) (2025-05-06)
 
 
