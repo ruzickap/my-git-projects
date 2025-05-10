@@ -134,8 +134,11 @@ jobs:
           TOFU_WORKING_DIRECTORY: ${{ env.TOFU_WORKING_DIRECTORY }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_OPENTOFU_GITHUB_REPOSITORIES }}
         run: |
+          set -euxo pipefail
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          brew install tfcmt
           tofu -chdir="${TOFU_WORKING_DIRECTORY}" init
-          tofu -chdir="${TOFU_WORKING_DIRECTORY}" "${TOFU_COMMAND}"
+          tfcmt "${TOFU_COMMAND}" -- tofu -chdir="${TOFU_WORKING_DIRECTORY}" "${TOFU_COMMAND}"
 
       - name: Remove label
         if: ${{ github.event.label.name != '' && env.TOFU_COMMAND != '' }}
