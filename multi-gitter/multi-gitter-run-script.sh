@@ -47,7 +47,7 @@ case "${REPOSITORY}" in
   ruzickap/cv)
     echo -e "\n*** latex-ch | ${REPOSITORY}\n"
     git checkout run.sh
-    rm .github/workflows/codeql-actions.yml
+    rm .github/workflows/{codeql-actions.yml,scorecards.yml}
     ;;
 
   ## hugo
