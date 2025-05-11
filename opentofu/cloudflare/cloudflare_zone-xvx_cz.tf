@@ -240,6 +240,16 @@ resource "cloudflare_dns_record" "cname_transmission_xvx_cz" {
   type    = "CNAME"
 }
 
+resource "cloudflare_dns_record" "cname_uzg_01_2_xvx_cz" {
+  zone_id = cloudflare_zone.xvx_cz.id
+  comment = "Cloudflare tunnel record for the UZG 01 2 in RPi in my home network"
+  content = "${cloudflare_zero_trust_tunnel_cloudflared.gate.id}.cfargotunnel.com"
+  name    = "uzg-01-2.${cloudflare_zone.xvx_cz.name}"
+  proxied = true
+  ttl     = 1
+  type    = "CNAME"
+}
+
 resource "cloudflare_dns_record" "cname_uzg_01_xvx_cz" {
   zone_id = cloudflare_zone.xvx_cz.id
   comment = "Cloudflare tunnel record for the UZG [192.168.1.3] in my home network"
