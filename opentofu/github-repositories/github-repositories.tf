@@ -136,11 +136,5 @@ resource "github_repository_ruleset" "main" {
       required_approving_review_count   = 2
       required_review_thread_resolution = true
     }
-    # required_status_checks {
-    #   strict_required_status_checks_policy = true
-    #   required_check {
-    #     context = "mega-linter"
-    #   }
-    # }
   }
 }
