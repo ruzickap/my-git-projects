@@ -1,6 +1,6 @@
 resource "cloudflare_zone" "xvx_cz" {
   account = {
-    id = "b39266dd4dcec1a04068ba36d36bd250"
+    id = var.cloudflare_account_id
   }
   name = "xvx.cz"
   type = "full"
