@@ -9,6 +9,10 @@ resource "cloudflare_zone" "ruzicka_dev" {
   }
   name = "ruzicka.dev"
   type = "full"
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # keep-sorted start block=yes newline_separated=yes

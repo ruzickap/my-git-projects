@@ -9,6 +9,10 @@ resource "cloudflare_zone" "mylabs_dev" {
   }
   name = "mylabs.dev"
   type = "full"
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # keep-sorted start block=yes newline_separated=yes

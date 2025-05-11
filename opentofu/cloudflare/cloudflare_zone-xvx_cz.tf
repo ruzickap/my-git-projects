@@ -4,6 +4,10 @@ resource "cloudflare_zone" "xvx_cz" {
   }
   name = "xvx.cz"
   type = "full"
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # keep-sorted start block=yes newline_separated=yes
