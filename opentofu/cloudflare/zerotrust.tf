@@ -60,11 +60,11 @@ resource "cloudflare_zero_trust_access_policy" "uptimerobot_direct_access" {
   }]
 }
 
-resource "cloudflare_zero_trust_access_application" "msr_2" {
+resource "cloudflare_zero_trust_access_application" "uzg-01" {
   account_id = var.cloudflare_account_id
 
-  name   = "msr-2-2"
-  domain = "msr-2-2.mylabs.dev"
+  name   = "uzg-01-2"
+  domain = "uzg-01-2.xvx.cz"
 
   type = "self_hosted"
   policies = [
@@ -77,11 +77,12 @@ resource "cloudflare_zero_trust_access_application" "msr_2" {
       precedence = 2
     },
   ]
-  logo_url = "https://raw.githubusercontent.com/ApolloAutomation/docs/7c110c74481441d464acffb3785c5e6c75230944/docs/assets/favicon.png"
-  tags     = ["iot", "wifi"]
+  logo_url = "https://avatars.githubusercontent.com/u/5508130?v=4.png"
+  tags     = ["iot", "lan"]
 }
 
 # Needs: Cloudflare Tunnel
+# https://developers.cloudflare.com/api/resources/zero_trust/subresources/tunnels/
 resource "cloudflare_zero_trust_tunnel_cloudflared" "gate" {
   account_id    = var.cloudflare_account_id
   name          = "gate-2"
@@ -89,8 +90,6 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "gate" {
   tunnel_secret = var.cloudflare_zero_trust_tunnel_cloudflared_tunnel_secret
 }
 
-# Needs: Cloudflare Tunnel
-# https://developers.cloudflare.com/api/resources/zero_trust/subresources/tunnels/
 resource "cloudflare_zero_trust_tunnel_cloudflared_config" "gate" {
   account_id = var.cloudflare_account_id
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.gate.id
@@ -98,8 +97,16 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "gate" {
   config = {
     ingress = [
       {
-        hostname = "gate-2.mylabs.dev"
-        service  = "tcp://localhost:6379"
+        hostname = "gate-2.xvx.cz"
+        service  = "http://127.0.0.1"
+      },
+      {
+        hostname = "gate-ssh-2.xvx.cz"
+        service  = "ssh://127.0.0.1:22"
+      },
+      {
+        hostname = "uzg-01-2.xvx.cz"
+        service  = "http://192.168.1.3"
       },
       {
         service = "http_status:404"
