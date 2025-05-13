@@ -1,7 +1,7 @@
 locals {
   uptimerobot_ips_url = "https://uptimerobot.com/inc/files/ips/IPv4andIPv6.txt"
   uptimerobot_ips     = [for item in distinct(compact(split("\n", data.http.my_file.response_body))) : { "value" = item, "description" = "Dallas-USA" }]
-  tags                = ["iot", "lan", "wifi"]
+  tags                = ["container", "iot", "lan", "router", "rpi", "wan", "wifi"]
   allowed_emails = [
     {
       email = {
@@ -9,6 +9,101 @@ locals {
       }
     }
   ]
+  cloudflare_zero_trust_tunnels_applications = {
+    "gate-2" = {
+      tunnel_secret = var.cloudflare_zero_trust_tunnel_cloudflared_tunnel_secret
+      applications = {
+        # keep-sorted start block=yes
+        "gate-2" = {
+          logo_url = "https://raw.githubusercontent.com/openwrt/branding/master/logo/openwrt_logo_blue_and_dark_blue.png"
+          service  = "http://127.0.0.1"
+          tags     = ["lan", "router", "wan"]
+        }
+        "gate-ssh-2" = {
+          service = "ssh://127.0.0.1:22"
+          tags    = ["lan", "router", "ssh", "wan"]
+        }
+        "msr-2-2" = {
+          logo_url = "https://raw.githubusercontent.com/ApolloAutomation/docs/7c110c74481441d464acffb3785c5e6c75230944/docs/assets/favicon.png"
+          service  = "http://192.168.1.4"
+          tags     = ["iot", "wifi"]
+        }
+        "transmission-2" = {
+          logo_url = "https://raw.githubusercontent.com/transmission/transmission-icons/2ede5e3fa6a3cc1bd21c68c629b43221a91c314b/Transmission.png"
+          service  = "http://127.0.0.1:9091"
+          tags     = ["router"]
+        }
+        "uzg-01-2" = {
+          logo_url = "https://avatars.githubusercontent.com/u/5508130?v=4.png"
+          service  = "http://192.168.1.3"
+          tags     = ["iot", "lan"]
+        }
+        # keep-sorted end
+      }
+    },
+    "raspi-2" = {
+      tunnel_secret = var.cloudflare_zero_trust_tunnel_cloudflared_tunnel_secret
+      applications = {
+        # keep-sorted start block=yes
+        "alloy-rpi-2" = {
+          logo_url = "https://raw.githubusercontent.com/grafana/alloy/9b878da08fec0467a88637fd26e5be6da2037574/internal/web/ui/src/images/logo.svg"
+          service  = "http://localhost:12345"
+          tags     = ["rpi", "wifi"]
+        }
+        "cadvisor-rpi-2" = {
+          logo_url = "https://raw.githubusercontent.com/walkxcode/dashboard-icons/50c4b5ee2b207708a16726b5ff87a9ab0438ea17/png/cadvisor.png"
+          service  = "http://localhost:8085"
+          tags     = ["rpi", "wifi"]
+        }
+        "esphome-rpi-2" = {
+          logo_url = "https://raw.githubusercontent.com/grafana/alloy/9b878da08fec0467a88637fd26e5be6da2037574/internal/web/ui/src/images/logo.svg"
+          service  = "http://localhost:6052"
+          tags     = ["container", "iot", "rpi", "wifi"]
+        }
+        "grafana-rpi-2" = {
+          logo_url = "https://raw.githubusercontent.com/walkxcode/dashboard-icons/59fb4c9e102455073d6068b6533d4c77aed724fc/svg/grafana.svg"
+          service  = "http://localhost:3001"
+          tags     = ["rpi", "wifi"]
+        }
+        "hass-rpi-2" = {
+          logo_url = "https://upload.wikimedia.org/wikipedia/commons/6/6e/Home_Assistant_Logo.svg"
+          policies = [
+            {
+              id         = cloudflare_zero_trust_access_policy.allow_all.id
+              precedence = 1
+            }
+          ]
+          service = "http://localhost:8123"
+          tags    = ["container", "iot", "rpi", "wifi"]
+        }
+        "kodi-rpi-2" = {
+          logo_url = "https://upload.wikimedia.org/wikipedia/commons/0/00/Kodi-top-bottom.svg"
+          service  = "http://localhost:8080"
+          tags     = ["rpi", "wifi"]
+        }
+        "prometheus-rpi-2" = {
+          logo_url = "https://raw.githubusercontent.com/cncf/artwork/c33a8386bce4eabc36e1d4972e0996db4630037b/projects/prometheus/icon/color/prometheus-icon-color.svg"
+          service  = "http://localhost:9090"
+          tags     = ["rpi", "wifi"]
+        }
+        "rpi-2" = {
+          logo_url = "https://upload.wikimedia.org/wikipedia/en/c/cb/Raspberry_Pi_Logo.svg"
+          service  = "http://127.0.0.1:3000"
+          tags     = ["container", "rpi", "wifi"]
+        }
+        "rpi-ssh-2" = {
+          service = "ssh://127.0.0.1:22"
+          tags    = ["rpi", "ssh", "wifi"]
+        }
+        "zigbee2mqtt-rpi-2" = {
+          logo_url = "https://raw.githubusercontent.com/Koenkk/zigbee2mqtt/9c505fd75f503a91a61244d6f0efa0e37d81a7b0/images/logo_vector.svg"
+          service  = "http://localhost:8082"
+          tags     = ["container", "iot", "rpi", "wifi"]
+        }
+        # keep-sorted end
+      }
+    }
+  }
 }
 
 data "http" "my_file" {
@@ -60,57 +155,81 @@ resource "cloudflare_zero_trust_access_policy" "uptimerobot_direct_access" {
   }]
 }
 
-resource "cloudflare_zero_trust_access_application" "uzg-01" {
+resource "cloudflare_zero_trust_access_policy" "allow_all" {
   account_id = var.cloudflare_account_id
-
-  name   = "uzg-01-2"
-  domain = "uzg-01-2.xvx.cz"
-
-  type = "self_hosted"
-  policies = [
-    {
-      id         = cloudflare_zero_trust_access_policy.uptimerobot_direct_access.id
-      precedence = 1
-    },
-    {
-      id         = cloudflare_zero_trust_access_policy.google_sso_access.id
-      precedence = 2
-    },
-  ]
-  logo_url = "https://avatars.githubusercontent.com/u/5508130?v=4.png"
-  tags     = ["iot", "lan"]
+  name       = "Allow All - 2"
+  decision   = "bypass"
+  include    = [{ everyone = {} }]
 }
 
+###############################################
+# Cloudflare Tunnels
+###############################################
 # Needs: Cloudflare Tunnel
 # https://developers.cloudflare.com/api/resources/zero_trust/subresources/tunnels/
-resource "cloudflare_zero_trust_tunnel_cloudflared" "gate" {
+
+# Create cloudflare_zero_trust_tunnel_cloudflared resources for each tunnel in the map
+resource "cloudflare_zero_trust_tunnel_cloudflared" "tunnels" {
+  for_each      = local.cloudflare_zero_trust_tunnels_applications
   account_id    = var.cloudflare_account_id
-  name          = "gate-2"
+  name          = each.key
   config_src    = "cloudflare"
-  tunnel_secret = var.cloudflare_zero_trust_tunnel_cloudflared_tunnel_secret
+  tunnel_secret = each.value.tunnel_secret
 }
 
-resource "cloudflare_zero_trust_tunnel_cloudflared_config" "gate" {
+resource "cloudflare_zero_trust_tunnel_cloudflared_config" "configs" {
+  for_each   = local.cloudflare_zero_trust_tunnels_applications
   account_id = var.cloudflare_account_id
-  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.gate.id
+  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.tunnels[each.key].id
   source     = "cloudflare"
   config = {
-    ingress = [
+    ingress = concat(
+      [
+        for app_name, app in each.value.applications : {
+          hostname = "${app_name}.${cloudflare_zone.xvx_cz.name}"
+          service  = app.service
+        }
+      ],
+      [
+        {
+          service = "http_status:404"
+        }
+      ]
+    )
+  }
+}
+
+resource "cloudflare_zero_trust_access_application" "applications" {
+  for_each = {
+    for app_name, app in merge(
+      local.cloudflare_zero_trust_tunnels_applications["gate-2"].applications,
+      local.cloudflare_zero_trust_tunnels_applications["raspi-2"].applications
+    ) :
+    app_name => app
+    if !startswith(app.service, "ssh://")
+  }
+  account_id = var.cloudflare_account_id
+
+  name         = each.key
+  domain       = "${each.key}.${cloudflare_zone.xvx_cz.name}"
+  type         = "self_hosted"
+  allowed_idps = [cloudflare_zero_trust_access_identity_provider.google_oauth.id]
+
+  logo_url = each.value.logo_url
+  tags     = each.value.tags
+
+  # Use policies from the app if defined, otherwise default to Google SSO and UptimeRobot
+  policies = try(
+    each.value.policies,
+    [
       {
-        hostname = "gate-2.xvx.cz"
-        service  = "http://127.0.0.1"
+        id         = cloudflare_zero_trust_access_policy.uptimerobot_direct_access.id
+        precedence = 1
       },
       {
-        hostname = "gate-ssh-2.xvx.cz"
-        service  = "ssh://127.0.0.1:22"
-      },
-      {
-        hostname = "uzg-01-2.xvx.cz"
-        service  = "http://192.168.1.3"
-      },
-      {
-        service = "http_status:404"
+        id         = cloudflare_zero_trust_access_policy.google_sso_access.id
+        precedence = 2
       }
     ]
-  }
+  )
 }
