@@ -41,16 +41,6 @@ resource "cloudflare_dns_record" "a_stats_xvx_cz" {
   type    = "A"
 }
 
-resource "cloudflare_dns_record" "cname_alloy_rpi_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the Grafana Alloy in RPi in my home network"
-  content = "df0d63bc-54e4-437c-bf09-1acf4581f63d.cfargotunnel.com"
-  name    = "alloy-rpi.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-}
-
 resource "cloudflare_dns_record" "cname_byt_xvx_cz" {
   zone_id = cloudflare_zone.xvx_cz.id
   comment = "Redirection for https://bytvujezdech1.blogspot.com"
@@ -61,81 +51,11 @@ resource "cloudflare_dns_record" "cname_byt_xvx_cz" {
   type    = "CNAME"
 }
 
-resource "cloudflare_dns_record" "cname_cadvisor_rpi_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the cAdvisor in RPi in my home network"
-  content = "df0d63bc-54e4-437c-bf09-1acf4581f63d.cfargotunnel.com"
-  name    = "cadvisor-rpi.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-}
-
 resource "cloudflare_dns_record" "cname_cestovani_xvx_cz" {
   zone_id = cloudflare_zone.xvx_cz.id
   content = "ghs.google.com"
   name    = "cestovani.${cloudflare_zone.xvx_cz.name}"
   proxied = false
-  ttl     = 1
-  type    = "CNAME"
-}
-
-resource "cloudflare_dns_record" "cname_esphome_rpi_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the ESPHome in RPi in my home network"
-  content = "df0d63bc-54e4-437c-bf09-1acf4581f63d.cfargotunnel.com"
-  name    = "esphome-rpi.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-}
-
-resource "cloudflare_dns_record" "cname_gate_ssh_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the Gate/Router external ssh access"
-  content = "99a92618-18a3-456b-820f-02edd263d2a6.cfargotunnel.com"
-  name    = "gate-ssh.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-}
-
-resource "cloudflare_dns_record" "cname_gate_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the Gate/Router in my home network"
-  content = "99a92618-18a3-456b-820f-02edd263d2a6.cfargotunnel.com"
-  name    = "gate.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-}
-
-resource "cloudflare_dns_record" "cname_grafana_rpi_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the Grafana in RPi in my home network"
-  content = "df0d63bc-54e4-437c-bf09-1acf4581f63d.cfargotunnel.com"
-  name    = "grafana-rpi.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-}
-
-resource "cloudflare_dns_record" "cname_hass_rpi_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the Home Assistant in RPi in my home network"
-  content = "df0d63bc-54e4-437c-bf09-1acf4581f63d.cfargotunnel.com"
-  name    = "hass-rpi.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-}
-
-resource "cloudflare_dns_record" "cname_kodi_rpi_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the Kodi in RPi in my home network"
-  content = "df0d63bc-54e4-437c-bf09-1acf4581f63d.cfargotunnel.com"
-  name    = "kodi-rpi.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
   ttl     = 1
   type    = "CNAME"
 }
@@ -160,52 +80,12 @@ resource "cloudflare_dns_record" "cname_linux_xvx_cz" {
   type    = "CNAME"
 }
 
-resource "cloudflare_dns_record" "cname_msr_2_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the MSR-2 [192.168.1.4] in my home network"
-  content = "99a92618-18a3-456b-820f-02edd263d2a6.cfargotunnel.com"
-  name    = "msr-2.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-}
-
 resource "cloudflare_dns_record" "cname_petr_xvx_cz" {
   zone_id = cloudflare_zone.xvx_cz.id
   comment = "Redirection for GitHub Pages: https://github.com/ruzickap/petr.xvx.cz | https://petr.ruzicka.dev/"
   content = "ruzickap.github.io"
   name    = "petr.${cloudflare_zone.xvx_cz.name}"
   proxied = false
-  ttl     = 1
-  type    = "CNAME"
-}
-
-resource "cloudflare_dns_record" "cname_prometheus_rpi_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the Prometheus in RPi in my home network"
-  content = "df0d63bc-54e4-437c-bf09-1acf4581f63d.cfargotunnel.com"
-  name    = "prometheus-rpi.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-}
-
-resource "cloudflare_dns_record" "cname_rpi_ssh_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the RPi external ssh access"
-  content = "df0d63bc-54e4-437c-bf09-1acf4581f63d.cfargotunnel.com"
-  name    = "rpi-ssh.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-}
-
-resource "cloudflare_dns_record" "cname_rpi_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the RPi in my home network"
-  content = "df0d63bc-54e4-437c-bf09-1acf4581f63d.cfargotunnel.com"
-  name    = "rpi.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
   ttl     = 1
   type    = "CNAME"
 }
@@ -226,26 +106,6 @@ resource "cloudflare_dns_record" "cname_svatba_xvx_cz" {
   content = "ruzickap.github.io"
   name    = "svatba.${cloudflare_zone.xvx_cz.name}"
   proxied = false
-  ttl     = 1
-  type    = "CNAME"
-}
-
-resource "cloudflare_dns_record" "cname_transmission_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the Transmission in OpenWrt in my home network"
-  content = "99a92618-18a3-456b-820f-02edd263d2a6.cfargotunnel.com"
-  name    = "transmission.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-}
-
-resource "cloudflare_dns_record" "cname_uzg_01_xvx_cz" {
-  zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the UZG [192.168.1.3] in my home network"
-  content = "99a92618-18a3-456b-820f-02edd263d2a6.cfargotunnel.com"
-  name    = "uzg-01.${cloudflare_zone.xvx_cz.name}"
-  proxied = true
   ttl     = 1
   type    = "CNAME"
 }
@@ -305,25 +165,30 @@ resource "cloudflare_dns_record" "cname_xvx_cz" {
   type    = "CNAME"
 }
 
-resource "cloudflare_dns_record" "cname_zero_trust_tunnel_cloudflared" {
-  for_each = cloudflare_zero_trust_tunnel_cloudflared.tunnels
-  zone_id  = cloudflare_zone.xvx_cz.id
-  comment  = "Cloudflare tunnel record for ${each.key}.cfargotunnel.com"
-  content  = "${each.value.id}.cfargotunnel.com"
-  name     = "${each.key}.${cloudflare_zone.xvx_cz.name}"
-  type     = "CNAME"
-  proxied  = true
-  ttl      = 1
-}
+resource "cloudflare_dns_record" "cname_zero_trust_tunnel" {
+  for_each = {
+    for record in flatten([
+      for tunnel_name, tunnel in cloudflare_zero_trust_tunnel_cloudflared_config.configs :
+      [
+        for ingress in tunnel.config.ingress :
+        {
+          tunnel_id   = tunnel.id
+          tunnel_name = tunnel_name
+          hostname    = ingress.hostname
+          service     = ingress.service
+        }
+        if ingress.hostname != null && ingress.hostname != ""
+      ]
+    ]) : record.hostname => record
+  }
 
-resource "cloudflare_dns_record" "cname_zigbee2mqtt_rpi_xvx_cz" {
   zone_id = cloudflare_zone.xvx_cz.id
-  comment = "Cloudflare tunnel record for the Zigbee2MQTT in RPi in my home network"
-  content = "df0d63bc-54e4-437c-bf09-1acf4581f63d.cfargotunnel.com"
-  name    = "zigbee2mqtt-rpi.${cloudflare_zone.xvx_cz.name}"
+  comment = "Cloudflare tunnel record for ${each.value.tunnel_name} - ${each.key} - ${each.value.service}"
+  content = "${each.value.tunnel_id}.cfargotunnel.com"
+  name    = each.key
+  type    = "CNAME"
   proxied = true
   ttl     = 1
-  type    = "CNAME"
 }
 
 resource "cloudflare_dns_record" "mx1_xvx_cz" {
