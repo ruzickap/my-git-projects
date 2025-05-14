@@ -16,7 +16,7 @@ locals {
         # keep-sorted start block=yes
         "gate" = {
           logo_url = "https://raw.githubusercontent.com/openwrt/branding/master/logo/openwrt_logo_blue_and_dark_blue.png"
-          service  = "http://127.0.0.1"
+          service  = "https://127.0.0.1"
           tags     = ["lan", "router", "wan"]
         }
         "gate-ssh" = {
@@ -113,7 +113,7 @@ data "http" "my_file" {
 # Needs: Access: Organizations, Identity Providers, and Groups
 # https://developers.cloudflare.com/api/python/resources/zero_trust/subresources/identity_providers/methods/create/
 resource "cloudflare_zero_trust_access_identity_provider" "google_oauth" {
-  name       = "My Test Google IDP"
+  name       = "Google IDP"
   type       = "google"
   account_id = var.cloudflare_account_id
   config = {
@@ -188,6 +188,9 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "configs" {
         for app_name, app in each.value.applications : {
           hostname = "${app_name}.${cloudflare_zone.xvx_cz.name}"
           service  = app.service
+          origin_request = {
+            no_tls_verify = true
+          }
         }
       ],
       [
@@ -207,10 +210,11 @@ resource "cloudflare_zero_trust_access_application" "applications" {
 
   account_id = var.cloudflare_account_id
 
-  name         = each.key
-  domain       = "${each.key}.${cloudflare_zone.xvx_cz.name}"
-  type         = "self_hosted"
-  allowed_idps = [cloudflare_zero_trust_access_identity_provider.google_oauth.id]
+  name                      = each.key
+  domain                    = "${each.key}.${cloudflare_zone.xvx_cz.name}"
+  type                      = "self_hosted"
+  allowed_idps              = [cloudflare_zero_trust_access_identity_provider.google_oauth.id]
+  auto_redirect_to_identity = true
 
   logo_url = each.value.logo_url
   tags     = each.value.tags
