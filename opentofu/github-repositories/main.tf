@@ -49,12 +49,18 @@ locals {
     },
   ]
   github_repositories = {
+    "container-image-upgrade-test" = {
+      name                   = "container-image-upgrade-test"
+      description            = "Container Image Upgrade Test Scan"
+      topics                 = ["container-image", "container", "scan", "security", "upgrade"]
+      github_actions_secrets = local.default_github_actions_secrets
+    },
     "k8s_multicluster_gitops" = {
       name                   = "k8s-multicluster-gitops"
       description            = "Infrastructure as Code for provisioning multiple Kubernetes clusters, managed using GitOps with ArgoCD"
       topics                 = ["aks", "argocd", "eks", "gitops", "infrastructure-as-code", "k8s", "k8s-gitops", "kind", "kubernetes", "multi-cluster", "terraform", "vcluster"]
       github_actions_secrets = local.default_github_actions_secrets
-    }
+    },
   }
   #trivy:ignore:avd-git-0001 Repository is public
   github_repositories_existing = {
