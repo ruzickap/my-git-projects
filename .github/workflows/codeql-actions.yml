@@ -1,4 +1,4 @@
-name: "CodeQL GitHub Actions"
+name: CodeQL GitHub Actions
 
 on:
   workflow_dispatch:
