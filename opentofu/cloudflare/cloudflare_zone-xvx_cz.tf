@@ -288,9 +288,10 @@ resource "cloudflare_dns_record" "txt_spf1_xvx_cz" {
 
 # # Needs: ????
 # # https://developers.cloudflare.com/api/resources/rulesets/
-# resource "cloudflare_ruleset" "status_xvx_cz" {
+# Getting 403 Forbidden
+# resource "cloudflare_ruleset" "stats_xvx_cz" {
 #   zone_id     = cloudflare_zone.xvx_cz.id
-#   name        = "status.xvx.cz"
+#   name        = "stats.xvx.cz"
 #   description = "Redirect to https://stats.uptimerobot.com/AOziwZJXwt"
 #   kind        = "zone"
 #   phase       = "http_request_dynamic_redirect"
@@ -304,8 +305,8 @@ resource "cloudflare_dns_record" "txt_spf1_xvx_cz" {
 #         }
 #       }
 #     }
-#     expression  = "(http.host eq \"status.xvx.cz\")"
-#     description = "status.xvx.cz"
+#     expression  = "(http.host eq \"stats.xvx.cz\")"
+#     description = "stats.xvx.cz"
 #     enabled     = false
 #   }]
 # }
