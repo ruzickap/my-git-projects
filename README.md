@@ -43,7 +43,7 @@ BRANCH_NAME="improve-tflint-docs"
 # Fork the target repository to your account, clone it locally,
 # and set up the original repository as the 'upstream' remote.
 gh repo fork --clone --remote ${GITHUB_REPO_TO_CONTRIBUTE}
-cd "$(basename "${GITHUB_REPO_TO_CONTRIBUTE}")"
+cd "$(basename "${GITHUB_REPO_TO_CONTRIBUTE}")" || exit
 
 # create new branch
 git checkout -b "${BRANCH_NAME}"
@@ -71,7 +71,7 @@ repositories.
 ```bash
 # clone GitHub repository
 git clone git@github.com:ruzickap/packer-templates.git
-cd packer-templates
+cd packer-templates || exit
 
 # create new branch
 git checkout -b "my_new_branch"
