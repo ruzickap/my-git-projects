@@ -224,12 +224,7 @@ git tag -d v1
 
 Create release:
 
-`release-it` is a CLI tool to automate versioning and package publishing (e.g., to npm, GitHub releases).
-```bash
-release-it
-```
-
-Alternatively, for manual tagging and pushing:
+For manual tagging and pushing:
 
 ```bash
 git tag v3.0.6
