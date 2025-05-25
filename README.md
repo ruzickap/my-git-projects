@@ -5,19 +5,19 @@ This README is a personal collection of useful Git and GitHub commands and workf
 ## Table of Contents
 
 - [General Links and Info](#general-links-and-info)
-- [Basic Git Workflow & Contributing](#basic-git-workflow--contributing)
+- [Basic Git Workflow and Contributing](#basic-git-workflow-and-contributing)
   - [Contribution](#contribution)
   - [Local development](#local-development)
 - [Managing Branches](#managing-branches)
   - [Merge changes from main to my local branch](#merge-changes-from-main-to-my-local-branch)
-- [Amending Commits & Tags](#amending-commits--tags)
+- [Amending Commits and Tags](#amending-commits-and-tags)
   - [Squash 2 last commits](#squash-2-last-commits)
   - [Amend older commit message](#amend-older-commit-message)
   - [Rename tag](#rename-tag)
   - [Delete tag](#delete-tag)
 - [Working with Submodules](#working-with-submodules)
   - [Update git submodules](#update-git-submodules)
-- [GitHub Actions & Releases](#github-actions--releases)
+- [GitHub Actions and Releases](#github-actions-and-releases)
   - [Update GitHub Action with tag @1](#update-github-action-with-tag-1)
   - [Sample commit for a Pull Request](#sample-commit-for-a-pull-request)
   - [List all GitHub actions in my repos](#list-all-github-actions-in-my-repos)
@@ -30,7 +30,7 @@ My projects on GitHub: [https://ruzickap.github.io](https://ruzickap.github.io)
 
 GitHub's official command-line tool (`gh`): [https://cli.github.com/](https://cli.github.com/)
 
-## Basic Git Workflow & Contributing
+## Basic Git Workflow and Contributing
 
 ### Contribution
 
@@ -129,7 +129,7 @@ git rebase --continue
 git push -f ruzickap feature/improve_documentation
 ```
 
-## Amending Commits & Tags
+## Amending Commits and Tags
 
 ### Squash 2 last commits
 
@@ -215,7 +215,7 @@ flag ensures that any nested submodules are also initialized and updated.
 git submodule update --init --recursive
 ```
 
-## GitHub Actions & Releases
+## GitHub Actions and Releases
 
 ### Update GitHub Action with tag @1
 
