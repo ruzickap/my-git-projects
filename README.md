@@ -3,6 +3,7 @@
 This README is a personal collection of useful Git and GitHub commands and workflows.
 
 ## Table of Contents
+
 - [General Links and Info](#general-links-and-info)
 - [Basic Git Workflow & Contributing](#basic-git-workflow--contributing)
   - [Contribution](#contribution)
@@ -64,7 +65,8 @@ git branch -D "${BRANCH_NAME}"
 
 ### Local development
 
-This section describes a typical workflow for local development on your own repositories.
+This section describes a typical workflow for local development on your own
+repositories.
 
 ```bash
 # clone GitHub repository
@@ -80,7 +82,8 @@ git add my_changed_file && git commit -m "done with feature"
 # open a pull request for the topic branch you've just pushed
 gh pr create --web --fill
 
-# After the PR is reviewed and approved, it's typically Squash and Merged via the GitHub UI.
+# After the PR is reviewed and approved, it's typically Squash and Merged
+# via the GitHub UI.
 
 # once PR is merged then remove the branch
 git checkout main
@@ -92,12 +95,16 @@ git branch -D my_new_branch
 
 ### Merge changes from main to my local branch
 
-This section describes two ways to update your local feature branch with the latest changes from the `main` branch using `git rebase`. Rebasing helps maintain a cleaner commit history.
+This section describes two ways to update your local feature branch with the
+latest changes from the `main` branch using `git rebase`. Rebasing helps
+maintain a cleaner commit history.
 
 Check: [https://codewithhugo.com/fix-git-failed-to-push-updates-were-rejected/](https://codewithhugo.com/fix-git-failed-to-push-updates-were-rejected/)
 
-The first method fetches all remote changes, then rebases your current branch onto `main`.
-If conflicts occur, `git mergetool` can be used to resolve them, followed by `git rebase --continue`.
+The first method fetches all remote changes, then rebases your current branch
+onto `main`. If conflicts occur, `git mergetool` can be used to resolve them,
+followed by `git rebase --continue`.
+
 ```bash
 git fetch
 git rebase main
@@ -105,8 +112,10 @@ git mergetool
 git rebase --continue
 ```
 
-The second method is more explicit, ensuring `main` is up-to-date first, then checking out the feature branch and rebasing it.
-It also includes steps for resolving conflicts manually if they occur during the rebase.
+The second method is more explicit, ensuring `main` is up-to-date first,
+then checking out the feature branch and rebasing it. It also includes steps
+for resolving conflicts manually if they occur during the rebase.
+
 ```bash
 git checkout main
 git pull -r && git submodule update --init
@@ -124,8 +133,8 @@ git push -f ruzickap feature/improve_documentation
 
 ### Squash 2 last commits
 
-This command sequence is used to combine the last two commits into a single commit.
-`HEAD~2` refers to the last two commits from the current HEAD.
+This command sequence is used to combine the last two commits into a single
+commit. `HEAD~2` refers to the last two commits from the current HEAD.
 The `-i` flag starts an interactive rebase session.
 
 ```bash
@@ -141,9 +150,13 @@ git commit -m 'Squash this' && git rebase -i HEAD~2 && git push -f
 [https://help.github.com/en/github/committing-changes-to-your-project/changing-a-commit-message#amending-older-or-multiple-commit-messages](https://help.github.com/en/github/committing-changes-to-your-project/changing-a-commit-message#amending-older-or-multiple-commit-messages)
 
 To change the message of an older commit:
-1. Use `git log` to find the hash of the commit *before* the one you want to amend.
-2. Start an interactive rebase. The `^` on the commit hash means you're starting the rebase from the parent of that commit, allowing you to edit the commit itself.
-Change 'pick' to 'reword' (or 'r') for the commit you want to change, then save and exit.
+
+1. Use `git log` to find the hash of the commit *before* the one you want
+   to amend.
+2. Start an interactive rebase. The `^` on the commit hash means you're
+   starting the rebase from the parent of that commit, allowing you to edit
+   the commit itself. Change 'pick' to 'reword' (or 'r') for the commit
+   you want to change, then save and exit.
 You'll be prompted to enter the new commit message.
 Since this rewrites history, a force push (`git push --force`) is required.
 
@@ -169,7 +182,10 @@ git push --force
 ### Rename tag
 
 To rename a Git tag (e.g., from "old" to "new"):
-1. Create a new annotated tag "new" pointing to the same commit as "old". `old^{}` dereferences the old tag to the commit it points to, ensuring the new tag points to the commit itself, not the old tag object.
+
+1. Create a new annotated tag "new" pointing to the same commit as "old".
+   `old^{}` dereferences the old tag to the commit it points to, ensuring
+   the new tag points to the commit itself, not the old tag object.
 2. Delete the old local tag "old".
 3. Delete the old remote tag "old".
 4. Push the new tag "new" to the remote.
@@ -192,8 +208,10 @@ git tag -d my-tag-name
 
 ### Update git submodules
 
-This command initializes any uninitialized submodules and updates existing ones to the commit specified in the parent repository.
-The `--recursive` flag ensures that any nested submodules are also initialized and updated.
+This command initializes any uninitialized submodules and updates existing
+ones to the commit specified in the parent repository. The `--recursive`
+flag ensures that any nested submodules are also initialized and updated.
+
 ```bash
 git submodule update --init --recursive
 ```
@@ -202,9 +220,12 @@ git submodule update --init --recursive
 
 ### Update GitHub Action with tag @1
 
-This section deals with managing tags, often for versioning GitHub Actions or releases.
+This section deals with managing tags, often for versioning GitHub Actions
+or releases.
 
-To list existing tags formatted with their subject (often the release title or version) in a table:
+To list existing tags formatted with their subject (often the release title
+or version) in a table:
+
 ```bash
 git for-each-ref --format="%(refname:short) | %(subject)" refs/tags | column -t
 ```
@@ -216,7 +237,9 @@ v1      |  Release  v1.0.0
 v1.0.0  |  Release  1.0.0
 ```
 
-Delete `v1` tag (if, for example, `v1` was a moving tag and you want to replace it with a specific version like `v1.0.0`):
+Delete `v1` tag (if, for example, `v1` was a moving tag and you want to
+replace it with a specific version like `v1.0.0`):
+
 ```bash
 git push --delete origin v1
 git tag -d v1
@@ -233,8 +256,11 @@ git push --tags
 
 ### Sample commit for a Pull Request
 
-This shows an example workflow for creating a feature branch, making commits, and opening a pull request.
-The commit message `feat(gh_actions): replace stale + add commitlint` follows the Conventional Commits specification, which can be useful for automated changelog generation and semantic versioning.
+This shows an example workflow for creating a feature branch, making commits,
+and opening a pull request. The commit message
+`feat(gh_actions): replace stale + add commitlint` follows the Conventional
+Commits specification, which can be useful for automated changelog generation
+and semantic versioning.
 
 ```bash
 git status
@@ -252,9 +278,12 @@ git pull -r
 
 ### List all GitHub actions in my repos
 
-This command searches for all GitHub Actions workflow files (`*.yml`) within a specified directory structure (`~/git/` up to 4 levels deep).
-It then uses `awk` to extract the `uses:` lines (which specify the action being used, e.g., `actions/checkout@v2`) from these files, sorts them, and shows unique entries.
-This is useful for getting an overview of common actions used across your repositories.
+This command searches for all GitHub Actions workflow files (`*.yml`) within
+a specified directory structure (`~/git/` up to 4 levels deep). It then uses
+`awk` to extract the `uses:` lines (which specify the action being used,
+e.g., `actions/checkout@v2`) from these files, sorts them, and shows unique
+entries. This is useful for getting an overview of common actions used across
+your repositories.
 
 ```bash
 find ~/git/ -maxdepth 4 -path "*/.github/workflows/*.yml" -type f -exec awk -F' uses: ' '/^\s*uses: \w/ || /^\s*- uses: \w/ { print "      - uses: " $2 }' {} \; | sort | uniq
