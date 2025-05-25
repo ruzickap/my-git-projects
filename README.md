@@ -43,7 +43,7 @@ BRANCH_NAME="improve-tflint-docs"
 # Fork the target repository to your account, clone it locally,
 # and set up the original repository as the 'upstream' remote.
 gh repo fork --clone --remote ${GITHUB_REPO_TO_CONTRIBUTE}
-cd "$(basename \"${GITHUB_REPO_TO_CONTRIBUTE}\")" || exit
+cd "$(basename "${GITHUB_REPO_TO_CONTRIBUTE}")"
 
 # create new branch
 git checkout -b "${BRANCH_NAME}"
@@ -71,7 +71,7 @@ repositories.
 ```bash
 # clone GitHub repository
 git clone git@github.com:ruzickap/packer-templates.git
-cd packer-templates || exit
+cd packer-templates
 
 # create new branch
 git checkout -b "my_new_branch"
@@ -122,7 +122,7 @@ git pull -r && git submodule update --init
 git checkout feature/improve_documentation
 git rebase main
 git status
-vim docs/test.rst
+# vim docs/test.rst
 # do the changes
 git add docs/test.rst
 git rebase --continue
@@ -140,7 +140,6 @@ The `-i` flag starts an interactive rebase session.
 ```bash
 git add some_file
 git commit -m 'Squash this' && git rebase -i HEAD~2 && git push -f
-# in your editor, change "pick" to "f" (fixup) or "s" (squash) 
 # for the commit(s) you want to merge into the preceding one.
 # Then save and close the editor. `git push -f` is needed as history is rewritten.
 ```
