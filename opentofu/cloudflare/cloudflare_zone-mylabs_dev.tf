@@ -15,7 +15,6 @@ resource "cloudflare_zone" "mylabs_dev" {
   }
 }
 
-# keep-sorted start block=yes newline_separated=yes
 ###############################################
 # CNAME
 ###############################################
@@ -37,41 +36,6 @@ resource "cloudflare_dns_record" "cname_www_mylabs_dev" {
   proxied = true
   ttl     = 1
   type    = "CNAME"
-}
-
-###############################################
-# MX records
-###############################################
-resource "cloudflare_dns_record" "mx1_mylabs_dev" {
-  zone_id  = cloudflare_zone.mylabs_dev.id
-  content  = "route1.mx.cloudflare.net"
-  name     = cloudflare_zone.mylabs_dev.name
-  priority = 6
-  proxied  = false
-  ttl      = 1
-  type     = "MX"
-}
-
-resource "cloudflare_dns_record" "mx2_mylabs_dev" {
-  zone_id  = cloudflare_zone.mylabs_dev.id
-  comment  = "Used by CloudFlare Email Routing"
-  content  = "route2.mx.cloudflare.net"
-  name     = cloudflare_zone.mylabs_dev.name
-  priority = 43
-  proxied  = false
-  ttl      = 1
-  type     = "MX"
-}
-
-resource "cloudflare_dns_record" "mx3_mylabs_dev" {
-  zone_id  = cloudflare_zone.mylabs_dev.id
-  comment  = "Used by CloudFlare Email Routing"
-  content  = "route3.mx.cloudflare.net"
-  name     = cloudflare_zone.mylabs_dev.name
-  priority = 48
-  proxied  = false
-  ttl      = 1
-  type     = "MX"
 }
 
 ###############################################
@@ -161,24 +125,56 @@ resource "cloudflare_dns_record" "ns4_k8s_mylabs_dev" {
 }
 
 ###############################################
-# SPF + DKIM
+# mailtrap
 ###############################################
-resource "cloudflare_dns_record" "spf_txt_mylabs_dev" {
+resource "cloudflare_dns_record" "cname_mt84_link_mylabs_dev" {
   zone_id = cloudflare_zone.mylabs_dev.id
-  content = "\"v=spf1 include:_spf.mx.cloudflare.net ~all\""
-  name    = cloudflare_zone.mylabs_dev.name
+  comment = "mailtrap domain verification"
+  content = "smtp.mailtrap.live"
+  name    = "mt84.${cloudflare_zone.mylabs_dev.name}"
+  proxied = false
+  ttl     = 1
+  type    = "CNAME"
+}
+
+resource "cloudflare_dns_record" "cname_rwmt1_domainkey_link_mylabs_dev" {
+  zone_id = cloudflare_zone.mylabs_dev.id
+  comment = "mailtrap DKIM"
+  content = "rwmt1.dkim.smtp.mailtrap.live"
+  name    = "rwmt1._domainkey.${cloudflare_zone.mylabs_dev.name}"
+  proxied = false
+  ttl     = 1
+  type    = "CNAME"
+}
+
+resource "cloudflare_dns_record" "cname_rwmt2_domainkey_link_mylabs_dev" {
+  zone_id = cloudflare_zone.mylabs_dev.id
+  comment = "mailtrap DKIM"
+  content = "rwmt2.dkim.smtp.mailtrap.live"
+  name    = "rwmt2._domainkey.${cloudflare_zone.mylabs_dev.name}"
+  proxied = false
+  ttl     = 1
+  type    = "CNAME"
+}
+
+resource "cloudflare_dns_record" "txt_dmarc_mylabs_dev" {
+  zone_id = cloudflare_zone.mylabs_dev.id
+  comment = "mailtrap DMARC"
+  content = "v=DMARC1; p=none; rua=mailto:dmarc@smtp.mailtrap.live; ruf=mailto:dmarc@smtp.mailtrap.live; rf=afrf; pct=100"
+  name    = "_dmarc.${cloudflare_zone.mylabs_dev.name}"
   proxied = false
   ttl     = 1
   type    = "TXT"
 }
 
-resource "cloudflare_dns_record" "txt_cf2024_1_domainkey_mylabs_dev" {
+resource "cloudflare_dns_record" "cname_mt_link_mylabs_dev" {
   zone_id = cloudflare_zone.mylabs_dev.id
-  content = "\"v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiweykoi+o48IOGuP7GR3X0MOExCUDY/BCRHoWBnh3rChl7WhdyCxW3jgq1daEjPPqoi7sJvdg5hEQVsgVRQP4DcnQDVjGMbASQtrY4WmB1VebF+RPJB2ECPsEDTpeiI5ZyUAwJaVX7r6bznU67g7LvFq35yIo4sdlmtZGV+i0H4cpYH9+3JJ78k\" \"m4KXwaf9xUJCWF6nxeD+qG6Fyruw1Qlbds2r85U9dkNDVAS3gioCvELryh1TxKGiVTkg4wqHTyHfWsp7KD3WQHYJn0RyfJJu6YEmL77zonn7p2SRMvTMP3ZEXibnC9gz3nnhR6wcYL8Q7zXypKTMD58bTixDSJwIDAQAB\""
-  name    = "cf2024-1._domainkey.${cloudflare_zone.mylabs_dev.name}"
+  comment = "mailtrap domain tracking"
+  content = "t.mailtrap.live"
+  name    = "mt-link.${cloudflare_zone.mylabs_dev.name}"
   proxied = false
   ttl     = 1
-  type    = "TXT"
+  type    = "CNAME"
 }
 
 ###############################################
@@ -196,4 +192,3 @@ resource "cloudflare_dns_record" "txt_cf2024_1_domainkey_mylabs_dev" {
 #     }
 #   }
 # }
-# keep-sorted end
