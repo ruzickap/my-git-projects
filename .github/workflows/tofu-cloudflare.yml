@@ -31,8 +31,6 @@ on:
     types: [labeled]
     paths:
       - opentofu/cloudflare/**
-  schedule:
-    - cron: 1 2 * * 3
 
 permissions: read-all
 

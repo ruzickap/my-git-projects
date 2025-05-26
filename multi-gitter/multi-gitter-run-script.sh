@@ -58,6 +58,10 @@ case "${REPOSITORY}" in
   ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
     echo -e "\n*** hugo | ${REPOSITORY}\n"
     rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/hugo/" .
+    ;;&
+  ruzickap/petr.ruzicka.dev)
+    echo -e "\n*** hugo-ch | ${REPOSITORY}\n"
+    git checkout lychee.toml
     ;;
 
   ## default

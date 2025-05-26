@@ -32,8 +32,6 @@ on:
     types: [labeled]
     paths:
       - opentofu/github-repositories/**
-  schedule:
-    - cron: 0 1 * * 2
 
 permissions: read-all
 
