@@ -57,7 +57,7 @@ git push origin "${BRANCH_NAME}"
 # open a pull request for the topic branch you've just pushed
 gh pr create --web --fill
 
-# once PR is merged then remove the branch
+# once the PR is merged, then remove the branch
 git checkout main
 git pull -r
 git branch -D "${BRANCH_NAME}"
@@ -85,7 +85,7 @@ gh pr create --web --fill
 # After the PR is reviewed and approved, it's typically Squash and Merged
 # via the GitHub UI.
 
-# once PR is merged then remove the branch
+# once the PR is merged, then remove the branch
 git checkout main
 git pull -r
 git branch -D my_new_branch
@@ -140,8 +140,8 @@ The `-i` flag starts an interactive rebase session.
 ```bash
 git add some_file
 git commit -m 'Squash this' && git rebase -i HEAD~2 && git push -f
-# for the commit(s) you want to merge into the preceding one.
-# Then save and close the editor. `git push -f` is needed as history is rewritten.
+# For the commit(s) you want to merge into the preceding one, change 'pick' to 'squash' or 's'.
+# Then save and close the editor. A `git push -f` is needed as history is rewritten.
 ```
 
 ### Amend older commit message
@@ -236,7 +236,7 @@ v1      |  Release  v1.0.0
 v1.0.0  |  Release  1.0.0
 ```
 
-Delete `v1` tag (if, for example, `v1` was a moving tag and you want to
+Delete the `v1` tag (e.g., if `v1` was a moving tag and you want to
 replace it with a specific version like `v1.0.0`):
 
 ```bash
