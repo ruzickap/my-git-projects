@@ -1,7 +1,7 @@
-# What should happen if the branch already exist.
+# What should happen if the branch already exists.
 # Available values:
 #   skip: Skip making any changes to the existing branch and do not create a new pull request.
-#   replace: Replace the existing content of the branch by force pushing any new changes, then reuse any existing pull request, or create a new one if none exist.
+#   replace: Replace the existing content of the branch by force pushing any new changes, then reuse any existing pull request, or create a new one if none exists.
 conflict-strategy: replace
 
 # The title of the PR. Will default to the first line of the commit message if none is set.
@@ -10,7 +10,7 @@ pr-title: "feat: add default github repo files"
 # Run without pushing changes or creating pull requests.
 dry-run: false
 
-# Take manual decision before committing any change. Requires git to be installed.
+# Take manual decisions before committing any change. Requires git to be installed.
 interactive: true
 
 # Labels to be added to any created pull request.
@@ -32,6 +32,6 @@ skip-repo:
   - ruzickap/old_stuff
   - ruzickap/renovate-test
 
-# Private repositories needs to be specified explicitly.
+# Private repositories need to be specified explicitly.
 repo:
   - ruzickap/cv

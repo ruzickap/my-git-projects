@@ -9,8 +9,8 @@ import {
 }
 
 resource "github_repository" "this" {
-  #checkov:skip=CKV_GIT_1:Ensure GitHub repository is Private
-  #checkov:skip=CKV2_GIT_1:Ensure each Repository has branch protection associated
+  #checkov:skip=CKV_GIT_1:Ensure GitHub repository is private
+  #checkov:skip=CKV2_GIT_1:Ensure each repository has branch protection associated
   for_each               = local.all_github_repositories
   allow_merge_commit     = false
   allow_update_branch    = true
@@ -108,7 +108,7 @@ resource "github_repository_ruleset" "main" {
   bypass_actors {
     actor_id   = 199026
     actor_type = "Integration"
-    # Need direct access for renovate to work
+    # Need direct access for Renovate to work
     bypass_mode = "always"
   }
   # Repository admin

@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       tofu_command:
-        description: tofu main command
+        description: OpenTofu main command
         required: true
         type: choice
         options:
@@ -89,7 +89,7 @@ jobs:
           INPUTS_TOFU_COMMAND: ${{ inputs.tofu_command }}
           GITHUB_EVENT_REPOSITORY_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          # If inputs.tofu_command form workflow_dispatch is set - use it as tofu_command
+          # If inputs.tofu_command from workflow_dispatch is set - use it as tofu_command
           if [[ -z "${INPUTS_TOFU_COMMAND}" ]]; then
 
             if [[ "${GITHUB_EVENT_NAME}" = "push" ]]; then
@@ -128,7 +128,7 @@ jobs:
         if: ${{ env.TOFU_COMMAND != '' }}
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: 💡 Run tofu "${{ env.TOFU_COMMAND }}"
+      - name: 💡 Run OpenTofu "${{ env.TOFU_COMMAND }}"
         if: ${{ env.TOFU_COMMAND != '' }}
         env:
           TOFU_COMMAND: ${{ env.TOFU_COMMAND }}

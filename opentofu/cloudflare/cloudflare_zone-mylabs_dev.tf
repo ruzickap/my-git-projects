@@ -125,11 +125,11 @@ resource "cloudflare_dns_record" "ns4_k8s_mylabs_dev" {
 }
 
 ###############################################
-# mailtrap
+# Mailtrap
 ###############################################
 resource "cloudflare_dns_record" "cname_mt84_link_mylabs_dev" {
   zone_id = cloudflare_zone.mylabs_dev.id
-  comment = "mailtrap domain verification"
+  comment = "Mailtrap domain verification"
   content = "smtp.mailtrap.live"
   name    = "mt84.${cloudflare_zone.mylabs_dev.name}"
   proxied = false
@@ -139,7 +139,7 @@ resource "cloudflare_dns_record" "cname_mt84_link_mylabs_dev" {
 
 resource "cloudflare_dns_record" "cname_rwmt1_domainkey_link_mylabs_dev" {
   zone_id = cloudflare_zone.mylabs_dev.id
-  comment = "mailtrap DKIM"
+  comment = "Mailtrap DKIM"
   content = "rwmt1.dkim.smtp.mailtrap.live"
   name    = "rwmt1._domainkey.${cloudflare_zone.mylabs_dev.name}"
   proxied = false
@@ -149,7 +149,7 @@ resource "cloudflare_dns_record" "cname_rwmt1_domainkey_link_mylabs_dev" {
 
 resource "cloudflare_dns_record" "cname_rwmt2_domainkey_link_mylabs_dev" {
   zone_id = cloudflare_zone.mylabs_dev.id
-  comment = "mailtrap DKIM"
+  comment = "Mailtrap DKIM"
   content = "rwmt2.dkim.smtp.mailtrap.live"
   name    = "rwmt2._domainkey.${cloudflare_zone.mylabs_dev.name}"
   proxied = false
@@ -159,7 +159,7 @@ resource "cloudflare_dns_record" "cname_rwmt2_domainkey_link_mylabs_dev" {
 
 resource "cloudflare_dns_record" "txt_dmarc_mylabs_dev" {
   zone_id = cloudflare_zone.mylabs_dev.id
-  comment = "mailtrap DMARC"
+  comment = "Mailtrap DMARC"
   content = "v=DMARC1; p=none; rua=mailto:dmarc@smtp.mailtrap.live; ruf=mailto:dmarc@smtp.mailtrap.live; rf=afrf; pct=100"
   name    = "_dmarc.${cloudflare_zone.mylabs_dev.name}"
   proxied = false
@@ -169,7 +169,7 @@ resource "cloudflare_dns_record" "txt_dmarc_mylabs_dev" {
 
 resource "cloudflare_dns_record" "cname_mt_link_mylabs_dev" {
   zone_id = cloudflare_zone.mylabs_dev.id
-  comment = "mailtrap domain tracking"
+  comment = "Mailtrap domain tracking"
   content = "t.mailtrap.live"
   name    = "mt-link.${cloudflare_zone.mylabs_dev.name}"
   proxied = false

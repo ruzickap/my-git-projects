@@ -1,9 +1,9 @@
-# Configuration for lychee link checker
+# Configuration for Lychee link checker
 # https://lychee.cli.rs/#/usage/config
 
 #############################  Cache  ###############################
 
-# Enable link caching. This can be helpful to avoid checking the same links on
+# Enable link caching. This can be helpful to avoid checking the same links in
 # multiple runs
 cache = true
 
@@ -29,7 +29,7 @@ exclude = [
   '%7B.*%7D',
   # Ignore all URLs with '$' - BASH variable in URL
   '\$',
-  # Ignore all URLs which starts with 'file://'
+  # Ignore all URLs that start with 'file://'
   'file://',
   # returns 403 when accessed from GitHub Action
   'stackexchange\.com',

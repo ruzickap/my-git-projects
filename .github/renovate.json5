@@ -21,7 +21,7 @@
       automerge: false,
     },
     {
-      description: "Ignore frequent renovate updates",
+      description: "Ignore frequent Renovate updates",
       enabled: false,
       matchPackageNames: ["renovatebot/github-action"],
       matchUpdateTypes: ["patch"],

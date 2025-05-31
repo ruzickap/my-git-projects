@@ -85,13 +85,13 @@ locals {
     }
     "ansible_my_workstation" = {
       name                   = "ansible-my_workstation"
-      description            = "Ansible playbooks to configure my workstation base on Fedora / macOS"
+      description            = "Ansible playbooks to configure my workstation based on Fedora / macOS"
       topics                 = ["ansible", "ansible-playbook", "configuration", "fedora", "macos", "public", "workstation"]
       github_actions_secrets = local.default_github_actions_secrets
     }
     "ansible_openwrt" = {
       name                   = "ansible-openwrt"
-      description            = "Ansible playbooks configuring Openwrt devices (Wi-Fi routers)"
+      description            = "Ansible playbooks configuring OpenWrt devices (Wi-Fi routers)"
       topics                 = ["ansible", "ansible-playbook", "openwrt", "public", "router", "wifi"]
       github_actions_secrets = local.default_github_actions_secrets
     }
@@ -109,7 +109,7 @@ locals {
     }
     "cheatsheet_macos" = {
       name                   = "cheatsheet-macos"
-      description            = "MacOS Keyboard Shortcuts"
+      description            = "macOS Keyboard Shortcuts"
       topics                 = ["cheatsheet", "cheatsheet-mscos", "latex", "macos", "public"]
       github_actions_secrets = local.default_github_actions_secrets
     }
@@ -208,7 +208,7 @@ locals {
     }
     "test_usb_stick_for_tv" = {
       name                   = "test_usb_stick_for_tv"
-      description            = "This script will store testing videos/music/pictures to your USB Stick which can be used for testing TVs"
+      description            = "This script will store testing videos/music/pictures to your USB stick which can be used for testing TVs"
       topics                 = ["android-tv", "test", "testing", "testing-tools", "testing-tvs", "tv", "usb"]
       github_actions_secrets = local.default_github_actions_secrets
     }

@@ -38,7 +38,7 @@ jobs:
     name: Sends a message to Slack when a PR is opened
     if: (github.event.action == 'opened' && github.event.pull_request.draft == false) || github.event.action == 'ready_for_review'
     steps:
-      - name: Post PR summary message to slack
+      - name: Post PR summary message to Slack
         id: message
         uses: slackapi/slack-github-action@b0fa283ad8fea605de13dc3f449259339835fc52 # v2.1.0
         with:
@@ -48,13 +48,13 @@ jobs:
             channel: ${{ secrets.MY_SLACK_CHANNEL_ID }}
             text: "💡 *${{ github.event.pull_request.user.login }}*: <${{ github.event.repository.html_url }}|${{ github.repository }}> - <${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}> (+${{ github.event.pull_request.additions }}, -${{ github.event.pull_request.deletions }})"
 
-      - name: Create file with slack message timestamp
+      - name: Create file with Slack message timestamp
         env:
           TS: ${{ steps.message.outputs.ts }}
         run: |
           echo "${TS}" > slack-message-timestamp.txt
 
-      - name: Cache slack message timestamp
+      - name: Cache Slack message timestamp
         uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: slack-message-timestamp.txt
@@ -62,16 +62,16 @@ jobs:
 
   slack-emoji-react:
     runs-on: ubuntu-latest
-    name: Adds emoji reaction to slack message when a PR is closed or reviewed
+    name: Adds emoji reaction to Slack message when a PR is closed or reviewed
     if: ${{ startsWith(github.event.pull_request.html_url, 'https') || startsWith(github.event.issue.pull_request.html_url, 'https') }}
     steps:
-      # gh commands needs to be executed in the repository
+      # gh commands need to be executed in the repository
       - name: Checkout Code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       # https://stackoverflow.com/questions/74640750/github-actions-not-finding-cache
-      # I can not use the cache action in this job because the cache is not shared between runs
-      - name: Save slack timestamp as an environment variable
+      # I cannot use the cache action in this job because the cache is not shared between runs
+      - name: Save Slack timestamp as an environment variable
         id: slack-timestamp
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -117,7 +117,7 @@ jobs:
               ;;
           esac
 
-      - name: React to PR summary message in slack with emoji
+      - name: React to PR summary message in Slack with emoji
         if: ${{ steps.slack-timestamp.outputs.github_event_pull_request_html_url == 'true' && env.EMOJI != 'false' }}
         uses: slackapi/slack-github-action@b0fa283ad8fea605de13dc3f449259339835fc52 # v2.1.0
         with:

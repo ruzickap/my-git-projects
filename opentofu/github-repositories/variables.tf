@@ -1,6 +1,6 @@
 # keep-sorted start block=yes newline_separated=yes
 variable "my_renovate_github_app_id" {
-  description = "My Renovate GitHub Application app id"
+  description = "My Renovate GitHub Application App ID"
   sensitive   = true
   type        = string
 }
@@ -18,7 +18,7 @@ variable "my_slack_bot_token" {
 }
 
 variable "my_slack_channel_id" {
-  description = "My Slack channel id"
+  description = "My Slack Channel ID"
   sensitive   = true
   type        = string
 }

@@ -78,7 +78,7 @@ resource "cloudflare_dns_record" "mx1_ruzicka_dev" {
 
 resource "cloudflare_dns_record" "mx2_ruzicka_dev" {
   zone_id  = cloudflare_zone.ruzicka_dev.id
-  comment  = "Used by CloudFlare Email Routing"
+  comment  = "Used by Cloudflare Email Routing"
   content  = "route2.mx.cloudflare.net"
   name     = cloudflare_zone.ruzicka_dev.name
   priority = 11
@@ -89,7 +89,7 @@ resource "cloudflare_dns_record" "mx2_ruzicka_dev" {
 
 resource "cloudflare_dns_record" "mx3_ruzicka_dev" {
   zone_id  = cloudflare_zone.ruzicka_dev.id
-  comment  = "Used by CloudFlare Email Routing"
+  comment  = "Used by Cloudflare Email Routing"
   content  = "route3.mx.cloudflare.net"
   name     = cloudflare_zone.ruzicka_dev.name
   priority = 20

@@ -9,7 +9,7 @@ This README is a personal collection of useful Git and GitHub commands and workf
   - [Contribution](#contribution)
   - [Local development](#local-development)
 - [Managing Branches](#managing-branches)
-  - [Merge changes from main to my local branch](#merge-changes-from-main-to-my-local-branch)
+  - [Merge changes from `main` to my local branch](#merge-changes-from-main-to-my-local-branch)
 - [Amending Commits and Tags](#amending-commits-and-tags)
   - [Squash 2 last commits](#squash-2-last-commits)
   - [Amend older commit message](#amend-older-commit-message)
@@ -18,7 +18,7 @@ This README is a personal collection of useful Git and GitHub commands and workf
 - [Working with Submodules](#working-with-submodules)
   - [Update git submodules](#update-git-submodules)
 - [GitHub Actions and Releases](#github-actions-and-releases)
-  - [Update GitHub Action with tag @1](#update-github-action-with-tag-1)
+  - [Update GitHub Action with tag `@1`](#update-github-action-with-tag-1)
   - [Sample commit for a Pull Request](#sample-commit-for-a-pull-request)
   - [List all GitHub actions in my repos](#list-all-github-actions-in-my-repos)
 
@@ -41,23 +41,23 @@ GITHUB_REPO_TO_CONTRIBUTE="https://github.com/oxsecurity/megalinter"
 BRANCH_NAME="improve-tflint-docs"
 
 # Fork the target repository to your account, clone it locally,
-# and set up the original repository as the 'upstream' remote.
+# and set up the original repository as the `upstream` remote.
 gh repo fork --clone --remote ${GITHUB_REPO_TO_CONTRIBUTE}
 cd "$(basename "${GITHUB_REPO_TO_CONTRIBUTE}")" || exit
 
-# create new branch
+# Create new branch
 git checkout -b "${BRANCH_NAME}"
 
 # Do the changes
 git add my_changed_file && git commit -m "done with feature"
 
-# push the changes to your new remote (https://github.com/cli/cli/issues/546)
+# Push the changes to your new remote (https://github.com/cli/cli/issues/546)
 git push origin "${BRANCH_NAME}"
 
-# open a pull request for the topic branch you've just pushed
+# Open a pull request for the topic branch you've just pushed
 gh pr create --web --fill
 
-# once the PR is merged, then remove the branch
+# Once the PR is merged, then remove the branch
 git checkout main
 git pull -r
 git branch -D "${BRANCH_NAME}"
@@ -69,23 +69,23 @@ This section describes a typical workflow for local development on your own
 repositories.
 
 ```bash
-# clone GitHub repository
+# Clone GitHub repository
 git clone git@github.com:ruzickap/packer-templates.git
 cd packer-templates || exit
 
-# create new branch
+# Create new branch
 git checkout -b "my_new_branch"
 
-# do the changes
+# Do the changes
 git add my_changed_file && git commit -m "done with feature"
 
-# open a pull request for the topic branch you've just pushed
+# Open a pull request for the topic branch you've just pushed
 gh pr create --web --fill
 
 # After the PR is reviewed and approved, it's typically Squash and Merged
 # via the GitHub UI.
 
-# once the PR is merged, then remove the branch
+# Once the PR is merged, then remove the branch
 git checkout main
 git pull -r
 git branch -D my_new_branch
@@ -93,7 +93,7 @@ git branch -D my_new_branch
 
 ## Managing Branches
 
-### Merge changes from main to my local branch
+### Merge changes from `main` to my local branch
 
 This section describes two ways to update your local feature branch with the
 latest changes from the `main` branch using `git rebase`. Rebasing helps
@@ -123,7 +123,7 @@ git checkout feature/improve_documentation
 git rebase main
 git status
 # vim docs/test.rst
-# do the changes
+# Do the changes
 git add docs/test.rst
 git rebase --continue
 git push -f ruzickap feature/improve_documentation
@@ -134,13 +134,13 @@ git push -f ruzickap feature/improve_documentation
 ### Squash 2 last commits
 
 This command sequence is used to combine the last two commits into a single
-commit. `HEAD~2` refers to the last two commits from the current HEAD.
+commit. `HEAD~2` refers to the last two commits from the current `HEAD`.
 The `-i` flag starts an interactive rebase session.
 
 ```bash
 git add some_file
 git commit -m 'Squash this' && git rebase -i HEAD~2 && git push -f
-# For the commit(s) you want to merge into the preceding one, change 'pick' to 'squash' or 's'.
+# For the commit(s) you want to merge into the preceding one, change `pick` to `squash` or `s`.
 # Then save and close the editor. A `git push -f` is needed as history is rewritten.
 ```
 
@@ -154,7 +154,7 @@ To change the message of an older commit:
    to amend.
 2. Start an interactive rebase. The `^` on the commit hash means you're
    starting the rebase from the parent of that commit, allowing you to edit
-   the commit itself. Change 'pick' to 'reword' (or 'r') for the commit
+   the commit itself. Change `pick` to `reword` (or `r`) for the commit
    you want to change, then save and exit.
 You'll be prompted to enter the new commit message.
 Since this rewrites history, a force push (`git push --force`) is required.
@@ -162,11 +162,11 @@ Since this rewrites history, a force push (`git push --force`) is required.
 ```bash
 git log
 # Example: If you want to amend commit d0efb71, and its parent is 123abcd
-# you would use 123abcd or 'd0efb71^'
+# you would use `123abcd` or `d0efb71^`
 git rebase -i 'd0efb71^' # Or use the hash of the commit *before* d0efb71
 
 # In the interactive rebase screen:
-# Change 'pick' to 'reword' for commit d0efb71
+# Change `pick` to 'reword' for commit d0efb71
 #   reword d0efb71 test commit
 # Save and close the editor.
 # Then, Git will open another editor for you to change the commit message.
@@ -217,7 +217,7 @@ git submodule update --init --recursive
 
 ## GitHub Actions and Releases
 
-### Update GitHub Action with tag @1
+### Update GitHub Action with tag `@1`
 
 This section deals with managing tags, often for versioning GitHub Actions
 or releases.
@@ -257,8 +257,8 @@ git push --tags
 
 This shows an example workflow for creating a feature branch, making commits,
 and opening a pull request. The commit message
-`feat(gh_actions): replace stale + add commitlint` follows the Conventional
-Commits specification, which can be useful for automated changelog generation
+`feat(gh_actions): replace stale + add commitlint` follows the [Conventional Commits](https://www.conventionalcommits.org/)
+specification, which can be useful for automated changelog generation
 and semantic versioning.
 
 ```bash

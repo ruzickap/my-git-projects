@@ -4,7 +4,7 @@
   "git-submodules": {
     enabled: true,
   },
-  // Keep the extends started with ":" at the end of the list to allow overriding
+  // Keep the extends that start with ":" at the end of the list to allow overriding
   extends: [
     "config:recommended",
     "docker:pinDigests",
@@ -33,7 +33,7 @@
       automerge: false,
     },
     {
-      description: "Ignore frequent renovate updates",
+      description: "Ignore frequent Renovate updates",
       enabled: false,
       matchPackageNames: ["renovatebot/github-action"],
       matchUpdateTypes: ["patch"],

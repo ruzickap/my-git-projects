@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: 2010-09-09
 # aws cloudformation deploy --region=eu-central-1 --capabilities CAPABILITY_NAMED_IAM --stack-name "github-action-iam-role-oidc" --template-file "gh-action-iam-role-oidc.yaml" --parameter-overrides "SubjectClaimFilters=repo:ruzickap/my-git-projects:*,repo:ruzickap/ruzickap.github.io:*,repo:ruzickap/gha-test:*,repo:ruzickap/malware-cryptominer-container:*,repo:ruzickap/k8s-multicluster-gitops:*"
 
 Description: >
-  Creates and OIDC provider and role for use with GitHub Actions.
+  Creates an OIDC provider and role for use with GitHub Actions.
   For more information on using OIDC to connect to AWS from GitHub Actions,
   see https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services.
 
@@ -12,26 +12,26 @@ Parameters:
     Type: CommaDelimitedList
     Default: 6938fd4d98bab03faadb97b34396831e3780aea1
     Description: >
-      Comma seperated list of thumbprints for GitHub Actions tokens.
+      Comma separated list of thumbprints for GitHub Actions tokens.
       Default comes from https://github.blog/changelog/2022-01-13-github-actions-update-on-oidc-based-deployments-to-aws/
   AudienceList:
     Type: CommaDelimitedList
     Default: sts.amazonaws.com
     Description: >
-      Comma separated list of allowed audience for the tokens.
-      Default is audience for the official AWS configure action from https://github.com/aws-actions/configure-aws-credentials
+      Comma separated list of allowed audiences for the tokens.
+      Default is the audience for the official AWS configure action from https://github.com/aws-actions/configure-aws-credentials
   SubjectClaimFilters:
     Type: CommaDelimitedList
     Default: "repo:ruzickap/my-git-projects:*"
     Description: >
       Subject claim filter for valid tokens.
-      Default allows any branch or tag of the McK-Internal/VM-wiz-automation to assume the role.
+      Default allows specific repositories to assume the role.
       See https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect#example-subject-claims
       for examples of filtering by branch or deployment environment.
   ManagedPolicyARNs:
     Type: CommaDelimitedList
     Default: arn:aws:iam::aws:policy/AdministratorAccess
-    Description: Comma separated list for arns for managed policies to attach to the role
+    Description: Comma separated list for ARNs for managed policies to attach to the role
 
 Resources:
   User:
@@ -66,12 +66,12 @@ Resources:
               AWS: !GetAtt User.Arn
             Action:
               - "sts:AssumeRole"
-      Description: Service Role for use in GitHub Actions
+      Description: Service role for use in GitHub Actions
       RoleName: GitHubOidcFederatedRole
       MaxSessionDuration: 36000
       ManagedPolicyArns: !Ref ManagedPolicyARNs
 
 Outputs:
   ServiceRoleARN:
-    Description: arn of service role for use in GitHub actions
+    Description: ARN of the service role for use in GitHub Actions
     Value: !GetAtt GitHubActionsServiceRole.Arn
