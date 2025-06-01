@@ -154,7 +154,7 @@ To change the message of an older commit:
    to amend.
 2. Start an interactive rebase. The `^` on the commit hash means you're
    starting the rebase from the parent of that commit, allowing you to edit
-   the commit itself. Change 'pick' to 'reword' (or 'r') for the commit
+   the commit itself. Change `pick` to `reword` (or `r`) for the commit
    you want to change, then save and exit.
 You'll be prompted to enter the new commit message.
 Since this rewrites history, a force push (`git push --force`) is required.
@@ -182,12 +182,12 @@ git push --force
 
 To rename a Git tag (e.g., from "old" to "new"):
 
-1. Create a new annotated tag "new" pointing to the same commit as "old".
+1. Create a new annotated tag `new` pointing to the same commit as `old`.
    `old^{}` dereferences the old tag to the commit it points to, ensuring
    the new tag points to the commit itself, not the old tag object.
-2. Delete the old local tag "old".
-3. Delete the old remote tag "old".
-4. Push the new tag "new" to the remote.
+2. Delete the old local tag `old`.
+3. Delete the old remote tag `old`.
+4. Push the new tag `new` to the remote.
 
 ```bash
 git tag -a new old^{}
