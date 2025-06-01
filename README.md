@@ -48,7 +48,7 @@ cd "$(basename "${GITHUB_REPO_TO_CONTRIBUTE}")" || exit
 # create new branch
 git checkout -b "${BRANCH_NAME}"
 
-# Make the changes
+# make the changes
 git add my_changed_file && git commit -m "done with feature"
 
 # push the changes to your new remote (https://github.com/cli/cli/issues/546)
