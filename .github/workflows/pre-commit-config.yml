@@ -36,7 +36,7 @@ jobs:
         run: |
           pip3 install checkov pre-commit
 
-      - name: Install pre-commit dependecies
+      - name: Install pre-commit dependencies
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           echo "/home/linuxbrew/.linuxbrew/bin" >> "${GITHUB_PATH}"

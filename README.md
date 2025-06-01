@@ -48,7 +48,7 @@ cd "$(basename "${GITHUB_REPO_TO_CONTRIBUTE}")" || exit
 # create new branch
 git checkout -b "${BRANCH_NAME}"
 
-# Do the changes
+# Make the changes
 git add my_changed_file && git commit -m "done with feature"
 
 # push the changes to your new remote (https://github.com/cli/cli/issues/546)
@@ -76,7 +76,7 @@ cd packer-templates || exit
 # create new branch
 git checkout -b "my_new_branch"
 
-# do the changes
+# make the changes
 git add my_changed_file && git commit -m "done with feature"
 
 # open a pull request for the topic branch you've just pushed
@@ -123,7 +123,7 @@ git checkout feature/improve_documentation
 git rebase main
 git status
 # vim docs/test.rst
-# do the changes
+# make the changes
 git add docs/test.rst
 git rebase --continue
 git push -f ruzickap feature/improve_documentation
