@@ -108,7 +108,7 @@ resource "github_repository_ruleset" "main" {
   bypass_actors {
     actor_id   = 199026
     actor_type = "Integration"
-    # Need direct access for renovate to work
+    # Needs direct access for Renovate to work
     bypass_mode = "always"
   }
   # Repository admin

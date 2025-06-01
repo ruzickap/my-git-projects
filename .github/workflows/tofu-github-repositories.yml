@@ -3,11 +3,11 @@ name: tofu-github-repositories
 
 # Use-cases:
 # * Never label PR with more than two "tofu" labels because of concurrency: https://github.com/orgs/community/discussions/41518
-# * When there is a new commit pushed to the branch with changes in `opentofu/github-repositories` directory - run `tofu plan`
-# * When PR is merged with changes in `opentofu/github-repositories` directory - run `tofu apply`
-# * When PR is labeled by `tofu-plan/apply/destroy` with changes in `opentofu/github-repositories` directory - run `tofu plan/apply/destroy`
-# * When scheduled - run `tofu apply`
-# * When manually called using workflow_dispatch - run `tofu plan/apply/destroy`
+# * When a new commit with changes in the `opentofu/github-repositories` directory is pushed to the branch, run `tofu plan`
+# * When a PR with changes in the `opentofu/github-repositories` directory is merged, run `tofu apply`
+# * When a PR with changes in the `opentofu/github-repositories` directory is labeled `tofu-plan/apply/destroy`, run `tofu plan/apply/destroy`
+# * When scheduled, run `tofu apply`
+# * When manually called using `workflow_dispatch`, run `tofu plan/apply/destroy`
 
 on:
   workflow_dispatch:
@@ -89,7 +89,7 @@ jobs:
           INPUTS_TOFU_COMMAND: ${{ inputs.tofu_command }}
           GITHUB_EVENT_REPOSITORY_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          # If inputs.tofu_command form workflow_dispatch is set - use it as tofu_command
+          # If `inputs.tofu_command` from `workflow_dispatch` is set, use it as `tofu_command`.
           if [[ -z "${INPUTS_TOFU_COMMAND}" ]]; then
 
             if [[ "${GITHUB_EVENT_NAME}" = "push" ]]; then

@@ -148,7 +148,7 @@ repos:
       - id: terraform_fmt
       - id: terraform_tflint
       - id: terraform_trivy
-      # Disabled due to AWS credentials requrements
+      # Disabled due to AWS credentials requirements
       # - id: terraform_validate
       # - id: terrascan
       #   args:

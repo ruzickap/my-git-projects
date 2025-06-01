@@ -85,7 +85,7 @@ locals {
     }
     "ansible_my_workstation" = {
       name                   = "ansible-my_workstation"
-      description            = "Ansible playbooks to configure my workstation base on Fedora / macOS"
+      description            = "Ansible playbooks to configure my workstation based on Fedora / macOS"
       topics                 = ["ansible", "ansible-playbook", "configuration", "fedora", "macos", "public", "workstation"]
       github_actions_secrets = local.default_github_actions_secrets
     }
@@ -208,7 +208,7 @@ locals {
     }
     "test_usb_stick_for_tv" = {
       name                   = "test_usb_stick_for_tv"
-      description            = "This script will store testing videos/music/pictures to your USB Stick which can be used for testing TVs"
+      description            = "This script stores testing videos/music/pictures on your USB stick, which can be used for testing TVs"
       topics                 = ["android-tv", "test", "testing", "testing-tools", "testing-tvs", "tv", "usb"]
       github_actions_secrets = local.default_github_actions_secrets
     }
