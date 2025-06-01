@@ -119,7 +119,7 @@ KEEP_TEMP =
 # - auto (default)
 COLOR =
 
-# Specify if *-eps-converted-to.pdf files are moved to BUILDDIR.
+# Specify whether *-eps-converted-to.pdf files are moved to BUILDDIR.
 # - always
 # - never
 # - auto (default)
@@ -752,7 +752,7 @@ Makefile = $(call cache,Makefile_impl)
 
 Makefile_impl = $(firstword $(MAKEFILE_LIST))
 
-# $(mostlycleanfiles) gives all intermediate files to be deleted by
+# $(mostlycleanfiles) gives all intermediately generated files, to be deleted by
 # "make mostlyclean".
 #   .aux - LaTeX auxiliary file
 #   .auxlock - TikZ externalization aux file lock
@@ -1715,7 +1715,7 @@ do_latex = \
 	fi
 
 # $(do_bibtex)
-# NOTE: When BUILDDIR is used, run bibtex in the current directory with
+# NOTE: when BUILDDIR is used, we run bibtex in the current directory with
 # temporarily copied .aux and Notes.bib files.
 do_bibtex = \
 	if $$need_bibtex; then \
@@ -1785,7 +1785,7 @@ do_sortref = \
 	fi
 
 # $(do_makeindex)
-# NOTE: When BUILDDIR is used, run makeindex in the current directory with
+# NOTE: when BUILDDIR is used, we run makeindex in the current directory with
 # the temporarily copied .idx file.
 do_makeindex = \
 	if $$need_makeindex; then \
@@ -1916,7 +1916,7 @@ dep_entry = \
 grep_lines = \
 	grep -B 3 $1 $2 | tr -d '\n'
 
-# NOTE: LaTeX may fail due to a missing _ref.tex.
+# NOTE: latex may fail due to a missing _ref.tex.
 check_noreffile = $(call grep_lines,'_ref.tex','$(build_prefix)$*.log') | grep "File \`$*_ref.tex' not found" >/dev/null 2>&1
 
 check_biblatex = grep 'Package: biblatex' '$(build_prefix)$*.log' >/dev/null 2>&1
@@ -2290,7 +2290,7 @@ expand_latexdiff_repo = \
 	(cd $(DIFFDIR)/$1/$$_git_prefix && $(call expand_latex_source,$*.tex,$*-expanded.tex))
 
 # $(call expand_latex_source,IN-TEX-FILE,OUT-TEX-FILE) expands a LaTeX source.
-# Optionally, a .bbl file is also expanded if it exists.
+# Optionally a .bbl file is also expanded if exists.
 expand_latex_source = { \
 	if [ -f "$2" ]; then :; else \
 		_tmp_latexexpand_fbody="$1"; \
