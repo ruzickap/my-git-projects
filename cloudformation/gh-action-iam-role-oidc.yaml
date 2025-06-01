@@ -31,7 +31,7 @@ Parameters:
   ManagedPolicyARNs:
     Type: CommaDelimitedList
     Default: arn:aws:iam::aws:policy/AdministratorAccess
-    Description: Comma separated list for arns for managed policies to attach to the role
+    Description: Comma-separated list of ARNs for managed policies to attach to the role
 
 Resources:
   User:
@@ -73,5 +73,5 @@ Resources:
 
 Outputs:
   ServiceRoleARN:
-    Description: arn of service role for use in GitHub actions
+    Description: ARN of service role for use in GitHub actions
     Value: !GetAtt GitHubActionsServiceRole.Arn
