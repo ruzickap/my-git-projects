@@ -30,7 +30,7 @@ case "${REPOSITORY}" in
     ;;&
   ruzickap/ansible-raspberry-pi-os)
     echo -e "\n*** ansible | ${REPOSITORY}\n"
-    git checkout lychee.toml ansible/.ansible-lint
+    git checkout ansible/.ansible-lint
     ;;
 
   ## latex
@@ -59,9 +59,9 @@ case "${REPOSITORY}" in
     echo -e "\n*** hugo | ${REPOSITORY}\n"
     rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/hugo/" .
     ;;&
-  ruzickap/petr.ruzicka.dev)
+  ruzickap/xvx.cz)
     echo -e "\n*** hugo-ch | ${REPOSITORY}\n"
-    git checkout lychee.toml
+    git checkout .spelling
     ;;
 
   ## default
@@ -74,18 +74,10 @@ case "${REPOSITORY}" in
   ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/malware-cryptominer-container)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout .checkov.yml .github/workflows/release-please.yml .github/renovate.json5 lychee.toml
-    ;;
-  ruzickap/my-git-projects)
-    echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout .github/renovate.json5
+    git checkout .checkov.yml .github/workflows/release-please.yml .github/renovate.json5
     ;;
   ruzickap/ruzickap.github.io)
     echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout .github/renovate.json5 .github/workflows/mega-linter.yml lychee.toml .markdownlint.yml .mega-linter.yml
-    ;;
-  ruzickap/k8s-multicluster-gitops)
-    echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout lychee.toml
+    git checkout .github/renovate.json5 .github/workflows/mega-linter.yml .markdownlint.yml .mega-linter.yml
     ;;
 esac
