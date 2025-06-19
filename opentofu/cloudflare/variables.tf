@@ -17,12 +17,6 @@ variable "cloudflare_zero_trust_access_identity_provider_google_oauth_client_sec
   type        = string
 }
 
-variable "cloudflare_zero_trust_tunnel_cloudflared_tunnel_secret" {
-  description = "Cloudflare Zero Trust Tunnel Cloudflared Tunnel Secret"
-  sensitive   = true
-  type        = string
-}
-
 variable "opentofu_encryption_passphrase" {
   description = "OpenTofu encryption passphrase"
   sensitive   = true

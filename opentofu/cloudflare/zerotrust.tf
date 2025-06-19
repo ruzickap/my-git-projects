@@ -10,8 +10,8 @@ locals {
     }
   ]
   cloudflare_zero_trust_tunnels_applications = {
+    # keep-sorted start block=yes
     "gate" = {
-      tunnel_secret = var.cloudflare_zero_trust_tunnel_cloudflared_tunnel_secret
       applications = {
         # keep-sorted start block=yes
         "gate" = {
@@ -41,8 +41,22 @@ locals {
         # keep-sorted end
       }
     },
+    "gate-peterovi" = {
+      applications = {
+        # keep-sorted start block=yes
+        "gate-peterovi" = {
+          logo_url = "https://raw.githubusercontent.com/openwrt/branding/master/logo/openwrt_logo_blue_and_dark_blue.png"
+          service  = "https://127.0.0.1"
+          tags     = ["lan", "router", "wan"]
+        }
+        "gate-ssh-peterovi" = {
+          service = "ssh://127.0.0.1:22"
+          tags    = ["lan", "router", "ssh", "wan"]
+        }
+        # keep-sorted end
+      }
+    },
     "raspi" = {
-      tunnel_secret = var.cloudflare_zero_trust_tunnel_cloudflared_tunnel_secret
       applications = {
         # keep-sorted start block=yes
         "alloy-rpi" = {
@@ -103,6 +117,7 @@ locals {
         # keep-sorted end
       }
     }
+    # keep-sorted end
   }
 }
 
@@ -170,11 +185,10 @@ resource "cloudflare_zero_trust_access_policy" "allow_all" {
 
 # Create cloudflare_zero_trust_tunnel_cloudflared resources for each tunnel in the map
 resource "cloudflare_zero_trust_tunnel_cloudflared" "tunnels" {
-  for_each      = local.cloudflare_zero_trust_tunnels_applications
-  account_id    = var.cloudflare_account_id
-  name          = each.key
-  config_src    = "cloudflare"
-  tunnel_secret = each.value.tunnel_secret
+  for_each   = local.cloudflare_zero_trust_tunnels_applications
+  account_id = var.cloudflare_account_id
+  name       = each.key
+  config_src = "cloudflare"
 }
 
 resource "cloudflare_zero_trust_tunnel_cloudflared_config" "configs" {
