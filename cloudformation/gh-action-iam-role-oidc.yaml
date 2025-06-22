@@ -66,6 +66,12 @@ Resources:
               AWS: !GetAtt User.Arn
             Action:
               - "sts:AssumeRole"
+          - Sid: AllowSelfToAssumeRole
+            Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:role/GitHubOidcFederatedRole"
+            Action:
+              - "sts:AssumeRole"
       Description: Service Role for use in GitHub Actions
       RoleName: GitHubOidcFederatedRole
       MaxSessionDuration: 36000
