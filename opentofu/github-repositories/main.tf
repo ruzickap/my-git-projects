@@ -30,133 +30,93 @@ provider "github" {}
 
 locals {
   all_github_repositories = merge(local.github_repositories_existing, local.github_repositories)
-  default_github_actions_secrets = [
-    {
-      secret_name     = "MY_RENOVATE_GITHUB_APP_ID"
-      plaintext_value = var.my_renovate_github_app_id
-    },
-    {
-      secret_name     = "MY_RENOVATE_GITHUB_PRIVATE_KEY"
-      plaintext_value = var.my_renovate_github_private_key
-    },
-    {
-      secret_name     = "MY_SLACK_BOT_TOKEN"
-      plaintext_value = var.my_slack_bot_token
-    },
-    {
-      secret_name     = "MY_SLACK_CHANNEL_ID"
-      plaintext_value = var.my_slack_channel_id
-    },
-  ]
   github_repositories = {
-    "container-image-upgrade-test" = {
-      name                   = "container-image-upgrade-test"
-      description            = "Container Image Upgrade Test Scan"
-      topics                 = ["container-image", "container", "scan", "security", "upgrade"]
-      github_actions_secrets = local.default_github_actions_secrets
-    },
     "k8s_multicluster_gitops" = {
-      name                   = "k8s-multicluster-gitops"
-      description            = "Infrastructure as Code for provisioning multiple Kubernetes clusters, managed using GitOps with ArgoCD"
-      topics                 = ["aks", "argocd", "eks", "gitops", "infrastructure-as-code", "k8s", "k8s-gitops", "kind", "kubernetes", "multi-cluster", "terraform", "vcluster"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "k8s-multicluster-gitops"
+      description = "Infrastructure as Code for provisioning multiple Kubernetes clusters, managed using GitOps with ArgoCD"
+      topics      = ["aks", "argocd", "eks", "gitops", "infrastructure-as-code", "k8s", "k8s-gitops", "kind", "kubernetes", "multi-cluster", "terraform", "vcluster"]
     },
   }
   #trivy:ignore:avd-git-0001 Repository is public
   github_repositories_existing = {
     # keep-sorted start block=yes
     "action_my_broken_link_checker" = {
-      name                   = "action-my-broken-link-checker"
-      description            = "A GitHub Action for checking broken links"
-      topics                 = ["actions", "broken-links", "checker", "github-action", "github-actions", "link-checker", "link-checking", "links", "public", "url-checker", "url-checking", "website"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "action-my-broken-link-checker"
+      description = "A GitHub Action for checking broken links"
+      topics      = ["actions", "broken-links", "checker", "github-action", "github-actions", "link-checker", "link-checking", "links", "public", "url-checker", "url-checking", "website"]
     }
     "action_my_markdown_link_checker" = {
-      name                   = "action-my-markdown-link-checker"
-      description            = "A GitHub Action for checking broken links in Markdown files"
-      topics                 = ["actions", "broken-links", "checker", "github-action", "github-actions", "link-checker", "link-checking", "links", "markdown", "public", "url-checker", "url-checking", "website"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "action-my-markdown-link-checker"
+      description = "A GitHub Action for checking broken links in Markdown files"
+      topics      = ["actions", "broken-links", "checker", "github-action", "github-actions", "link-checker", "link-checking", "links", "markdown", "public", "url-checker", "url-checking", "website"]
     }
     "action_my_markdown_linter" = {
-      name                   = "action-my-markdown-linter"
-      description            = "Style checking and linting for Markdown files"
-      topics                 = ["github-action", "github-actions", "lint", "linter", "linting", "linters", "markdown", "public"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "action-my-markdown-linter"
+      description = "Style checking and linting for Markdown files"
+      topics      = ["github-action", "github-actions", "lint", "linter", "linting", "linters", "markdown", "public"]
     }
     "ansible_my_workstation" = {
-      name                   = "ansible-my_workstation"
-      description            = "Ansible playbooks to configure my workstation based on Fedora / macOS"
-      topics                 = ["ansible", "ansible-playbook", "configuration", "fedora", "macos", "public", "workstation"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "ansible-my_workstation"
+      description = "Ansible playbooks to configure my workstation based on Fedora / macOS"
+      topics      = ["ansible", "ansible-playbook", "configuration", "fedora", "macos", "public", "workstation"]
     }
     "ansible_openwrt" = {
-      name                   = "ansible-openwrt"
-      description            = "Ansible playbooks configuring Openwrt devices (Wi-Fi routers)"
-      topics                 = ["ansible", "ansible-playbook", "openwrt", "public", "router", "wifi"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "ansible-openwrt"
+      description = "Ansible playbooks configuring Openwrt devices (Wi-Fi routers)"
+      topics      = ["ansible", "ansible-playbook", "openwrt", "public", "router", "wifi"]
     }
     "ansible_raspberry_pi_os" = {
-      name                   = "ansible-raspberry-pi-os"
-      description            = "Configure Raspberry Pi OS (RPi) using Ansible"
-      topics                 = ["ansible", "grafana", "kodi", "node-exporter", "public", "prometheus", "raspberry-pi", "raspberry-pi-os", "rpi"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "ansible-raspberry-pi-os"
+      description = "Configure Raspberry Pi OS (RPi) using Ansible"
+      topics      = ["ansible", "grafana", "kodi", "node-exporter", "public", "prometheus", "raspberry-pi", "raspberry-pi-os", "rpi"]
     }
     "cheatsheet_atom" = {
-      name                   = "cheatsheet-atom"
-      description            = "Atom Keyboard Shortcuts Cheatsheet"
-      topics                 = ["atom", "cheatsheet", "cheatsheet-atom", "latex", "public"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "cheatsheet-atom"
+      description = "Atom Keyboard Shortcuts Cheatsheet"
+      topics      = ["atom", "cheatsheet", "cheatsheet-atom", "latex", "public"]
     }
     "cheatsheet_macos" = {
-      name                   = "cheatsheet-macos"
-      description            = "MacOS Keyboard Shortcuts"
-      topics                 = ["cheatsheet", "cheatsheet-mscos", "latex", "macos", "public"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "cheatsheet-macos"
+      description = "MacOS Keyboard Shortcuts"
+      topics      = ["cheatsheet", "cheatsheet-mscos", "latex", "macos", "public"]
     }
     "cheatsheet_systemd" = {
-      name                   = "cheatsheet-systemd"
-      description            = "Cheatsheet for systemd"
-      topics                 = ["cheatsheet", "cheatsheet-systemd", "latex", "public", "systemd"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "cheatsheet-systemd"
+      description = "Cheatsheet for systemd"
+      topics      = ["cheatsheet", "cheatsheet-systemd", "latex", "public", "systemd"]
     }
     "cks_notes" = {
-      name                   = "cks-notes"
-      description            = "CKS Notes"
-      topics                 = ["cks", "cks-exam", "cks-exam-preparation", "k8s", "k8s-security", "kubernetes", "public", "security"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "cks-notes"
+      description = "CKS Notes"
+      topics      = ["cks", "cks-exam", "cks-exam-preparation", "k8s", "k8s-security", "kubernetes", "public", "security"]
     }
     "cv" = {
-      name                   = "cv"
-      description            = "My CV in LaTeX"
-      visibility             = "private"
-      topics                 = ["cv", "latex", "private", "resume", "texlive"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "cv"
+      description = "My CV in LaTeX"
+      visibility  = "private"
+      topics      = ["cv", "latex", "private", "resume", "texlive"]
     }
     "gha_test" = {
-      name                   = "gha-test"
-      description            = "GitHub Action test repository"
-      homepage_url           = "https://petr.ruzicka.dev"
-      topics                 = ["actions", "ci", "github", "test", "github-action", "gha"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name         = "gha-test"
+      description  = "GitHub Action test repository"
+      homepage_url = "https://petr.ruzicka.dev"
+      topics       = ["actions", "ci", "github", "test", "github-action", "gha"]
     }
     "malware_cryptominer_container" = {
-      name                   = "malware-cryptominer-container"
-      description            = "Container image with malware and crypto miner for testing purposes"
-      homepage_url           = "https://artifacthub.io/packages/container/malware-cryptominer-container/malware-cryptominer-container"
-      topics                 = ["container", "crypto", "cryptominer", "dockerfile", "eicar", "image", "malware", "public", "test", "xmrig"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name         = "malware-cryptominer-container"
+      description  = "Container image with malware and crypto miner for testing purposes"
+      homepage_url = "https://artifacthub.io/packages/container/malware-cryptominer-container/malware-cryptominer-container"
+      topics       = ["container", "crypto", "cryptominer", "dockerfile", "eicar", "image", "malware", "public", "test", "xmrig"]
     }
     "my_git_projects" = {
-      name                   = "my-git-projects"
-      description            = "My GitHub projects"
-      topics                 = ["github", "projects", "templates"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "my-git-projects"
+      description = "My GitHub projects"
+      topics      = ["github", "projects", "templates"]
     }
     "old_stuff" = {
-      name                   = "old_stuff"
-      description            = "Obsolete and old things"
-      topics                 = ["bash", "perl", "old", "scripts"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "old_stuff"
+      description = "Obsolete and old things"
+      topics      = ["bash", "perl", "old", "scripts"]
     }
     "petr_ruzicka_dev" = {
       name         = "petr.ruzicka.dev"
@@ -169,14 +129,12 @@ locals {
           branch = "gh-pages"
         }]
       }]
-      topics                 = ["personal", "personal-website", "public", "web", "website"]
-      github_actions_secrets = local.default_github_actions_secrets
+      topics = ["personal", "personal-website", "public", "web", "website"]
     }
     "ruzickap" = {
-      name                   = "ruzickap"
-      description            = "GitHub profile repository"
-      topics                 = ["github", "profile"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "ruzickap"
+      description = "GitHub profile repository"
+      topics      = ["github", "profile"]
     }
     "ruzickap_github_io" = {
       name            = "ruzickap.github.io"
@@ -189,8 +147,7 @@ locals {
           branch = "gh-pages"
         }]
       }]
-      topics                 = ["blog", "github", "github-actions", "jekyll", "markdown", "personal-website", "public", "web", "website"]
-      github_actions_secrets = local.default_github_actions_secrets
+      topics = ["blog", "github", "github-actions", "jekyll", "markdown", "personal-website", "public", "web", "website"]
     }
     "ruzickovabozena_xvx_cz" = {
       name         = "ruzickovabozena.xvx.cz"
@@ -203,14 +160,12 @@ locals {
           branch = "gh-pages"
         }]
       }]
-      topics                 = ["personal-site", "personal-website", "web", "website"]
-      github_actions_secrets = local.default_github_actions_secrets
+      topics = ["personal-site", "personal-website", "web", "website"]
     }
     "test_usb_stick_for_tv" = {
-      name                   = "test_usb_stick_for_tv"
-      description            = "This script stores testing videos/music/pictures on your USB stick, which can be used for testing TVs"
-      topics                 = ["android-tv", "test", "testing", "testing-tools", "testing-tvs", "tv", "usb"]
-      github_actions_secrets = local.default_github_actions_secrets
+      name        = "test_usb_stick_for_tv"
+      description = "This script stores testing videos/music/pictures on your USB stick, which can be used for testing TVs"
+      topics      = ["android-tv", "test", "testing", "testing-tools", "testing-tvs", "tv", "usb"]
     }
     "xvx_cz" = {
       name         = "xvx.cz"
@@ -223,8 +178,7 @@ locals {
           branch = "gh-pages"
         }]
       }]
-      topics                 = ["personal", "personal-website", "public", "web", "website", "xvx", "xvx-cz"]
-      github_actions_secrets = local.default_github_actions_secrets
+      topics = ["personal", "personal-website", "public", "web", "website", "xvx", "xvx-cz"]
     }
     # keep-sorted end
   }

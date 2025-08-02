@@ -58,32 +58,30 @@ resource "github_repository" "this" {
   }
 }
 
-# keep-sorted start block=yes
-resource "github_actions_secret" "my_renovate_github_app_id" {
-  for_each        = local.all_github_repositories
-  repository      = each.value.name
-  secret_name     = "MY_RENOVATE_GITHUB_APP_ID"
-  plaintext_value = var.my_renovate_github_app_id
+locals {
+  # Define all secrets to be created for each repository
+  github_actions_secrets = {
+    "MY_RENOVATE_GITHUB_APP_ID"      = var.my_renovate_github_app_id
+    "MY_RENOVATE_GITHUB_PRIVATE_KEY" = var.my_renovate_github_private_key
+    "MY_SLACK_BOT_TOKEN"             = var.my_slack_bot_token
+    "MY_SLACK_CHANNEL_ID"            = var.my_slack_channel_id
+  }
 }
-resource "github_actions_secret" "my_renovate_github_private_key" {
-  for_each        = local.all_github_repositories
-  repository      = each.value.name
-  secret_name     = "MY_RENOVATE_GITHUB_PRIVATE_KEY"
-  plaintext_value = var.my_renovate_github_private_key
+
+resource "github_actions_secret" "this" {
+  # checkov:skip=CKV_GIT_4:GitHub encrypts secrets automatically when stored via plaintext_value
+  for_each = {
+    for combo in setproduct(keys(local.all_github_repositories), keys(local.github_actions_secrets)) :
+    "${combo[0]}-${combo[1]}" => {
+      repository   = local.all_github_repositories[combo[0]].name
+      secret_name  = combo[1]
+      secret_value = local.github_actions_secrets[combo[1]]
+    }
+  }
+  repository      = each.value.repository
+  secret_name     = each.value.secret_name
+  plaintext_value = each.value.secret_value
 }
-resource "github_actions_secret" "my_slack_bot_token" {
-  for_each        = local.all_github_repositories
-  repository      = each.value.name
-  secret_name     = "MY_SLACK_BOT_TOKEN"
-  plaintext_value = var.my_slack_bot_token
-}
-resource "github_actions_secret" "my_slack_channel_id" {
-  for_each        = local.all_github_repositories
-  repository      = each.value.name
-  secret_name     = "MY_SLACK_CHANNEL_ID"
-  plaintext_value = var.my_slack_channel_id
-}
-# keep-sorted end
 
 import {
   for_each = local.github_repositories_existing
