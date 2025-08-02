@@ -69,6 +69,7 @@ locals {
 }
 
 resource "github_actions_secret" "this" {
+  # checkov:skip=CKV_GIT_4:GitHub encrypts secrets automatically when stored via plaintext_value
   for_each = {
     for combo in setproduct(keys(local.all_github_repositories), keys(local.github_actions_secrets)) :
     "${combo[0]}-${combo[1]}" => {
