@@ -47,12 +47,12 @@ env:
   TF_CLI_ARGS_plan: "-lock=false"
   TF_INPUT: "false"
   TF_IN_AUTOMATION: "true"
+  TF_VAR_UPTIMEROBOT_API_KEY: ${{ secrets.UPTIMEROBOT_API_KEY }}
   TF_VAR_cloudflare_account_id: ${{ secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}
   TF_VAR_cloudflare_zero_trust_access_identity_provider_google_oauth_client_id: ${{ secrets.TF_VAR_CLOUDFLARE_ZERO_TRUST_ACCESS_IDENTITY_PROVIDER_GOOGLE_OAUTH_CLIENT_ID }}
   TF_VAR_cloudflare_zero_trust_access_identity_provider_google_oauth_client_secret: ${{ secrets.TF_VAR_CLOUDFLARE_ZERO_TRUST_ACCESS_IDENTITY_PROVIDER_GOOGLE_OAUTH_CLIENT_SECRET }}
   TF_VAR_opentofu_encryption_passphrase: ${{ secrets.TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE }}
   TOFU_WORKING_DIRECTORY: opentofu/cloudflare
-  UPTIMEROBOT_API_KEY: ${{ secrets.UPTIMEROBOT_API_KEY }}
   # keep-sorted end
 
 # Use concurrency to prevent running tofu-cloudflare simultaneously
