@@ -2,7 +2,6 @@ locals {
   # keep-sorted start block=yes newline_separated=yes
   # CNAME Records for mylabs.dev
   mylabs_dev_cname_records = {
-    # Personal page redirects
     # keep-sorted start block=yes
     "" = {
       content = "petr.ruzicka.dev"
