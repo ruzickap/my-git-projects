@@ -1,4 +1,5 @@
 locals {
+  # keep-sorted start block=yes newline_separated=yes
   # A Records for xvx.cz
   xvx_cz_a_records = {
     # keep-sorted start block=yes
@@ -19,6 +20,7 @@ locals {
     }
     # keep-sorted end
   }
+
   # CNAME Records for xvx.cz
   xvx_cz_cname_records = {
     # keep-sorted start block=yes
@@ -26,7 +28,6 @@ locals {
       content = "ruzickap.github.io"
       comment = "Redirection for GitHub Pages: https://github.com/ruzickap/xvx.cz"
     }
-    # Google services records
     "byt" = {
       content = "ghs.google.com"
       comment = "Redirection for https://bytvujezdech1.blogspot.com"
@@ -39,7 +40,6 @@ locals {
       content = "ghs.google.com"
       comment = "Redirection for https://linux-xvx-cz.blogspot.com"
     }
-    # GitHub Pages records
     "linux-old" = {
       content = "ruzickap.github.io"
       comment = "Redirection for GitHub Pages: https://github.com/ruzickap/linux.xvx.cz"
@@ -60,7 +60,6 @@ locals {
       content = "ruzickap.github.io"
       comment = "Main Page"
     }
-    # Other CNAME records
     "www.linux" = {
       content = "linux.xvx.cz"
       comment = ""
@@ -136,8 +135,10 @@ locals {
     }
     # keep-sorted end
   }
+  # keep-sorted end
 }
 
+# Zone for xvx.cz
 resource "cloudflare_zone" "xvx_cz" {
   account = {
     id = var.cloudflare_account_id
@@ -150,7 +151,7 @@ resource "cloudflare_zone" "xvx_cz" {
   }
 }
 
-# A Records
+# A Records for xvx.cz
 resource "cloudflare_dns_record" "xvx_cz_a_records" {
   for_each = local.xvx_cz_a_records
 
@@ -163,7 +164,7 @@ resource "cloudflare_dns_record" "xvx_cz_a_records" {
   type    = "A"
 }
 
-# CNAME Records
+# CNAME Records for xvx.cz
 resource "cloudflare_dns_record" "xvx_cz_cname_records" {
   for_each = local.xvx_cz_cname_records
 
@@ -176,6 +177,7 @@ resource "cloudflare_dns_record" "xvx_cz_cname_records" {
   type    = "CNAME"
 }
 
+# Creates a proxied CNAME for each Zero Trust tunnel ingress hostname.
 resource "cloudflare_dns_record" "cname_zero_trust_tunnel" {
   for_each = {
     for record in flatten([
@@ -202,7 +204,7 @@ resource "cloudflare_dns_record" "cname_zero_trust_tunnel" {
   ttl     = 1
 }
 
-# MX Records
+# MX Records for xvx.cz
 resource "cloudflare_dns_record" "xvx_cz_mx_records" {
   for_each = local.xvx_cz_mx_records
 
@@ -215,7 +217,7 @@ resource "cloudflare_dns_record" "xvx_cz_mx_records" {
   type     = "MX"
 }
 
-# TXT Records
+# TXT Records for xvx.cz
 resource "cloudflare_dns_record" "xvx_cz_txt_records" {
   for_each = local.xvx_cz_txt_records
 

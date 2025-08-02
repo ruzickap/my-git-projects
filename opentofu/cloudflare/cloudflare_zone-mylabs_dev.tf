@@ -1,4 +1,5 @@
 locals {
+  # keep-sorted start block=yes newline_separated=yes
   # CNAME Records for mylabs.dev
   mylabs_dev_cname_records = {
     # Personal page redirects
@@ -13,7 +14,6 @@ locals {
       comment = "mailtrap domain tracking"
       proxied = false
     }
-    # Mailtrap records
     "mt84" = {
       content = "smtp.mailtrap.live"
       comment = "mailtrap domain verification"
@@ -40,7 +40,6 @@ locals {
   # NS Records for AWS Route 53 delegation - mylabs.dev
   mylabs_dev_ns_records = {
     # keep-sorted start block=yes
-    # aws.mylabs.dev delegation
     "aws-ns1" = {
       content = "ns-227.awsdns-28.com"
       name    = "aws"
@@ -61,7 +60,6 @@ locals {
       name    = "aws"
       comment = "AWS Route 53 domain delegation to ruzicka-sbx01"
     }
-    # k8s.mylabs.dev delegation
     "k8s-ns1" = {
       content = "ns-302.awsdns-37.com"
       name    = "k8s"
@@ -92,6 +90,7 @@ locals {
       comment = "mailtrap DMARC"
     }
   }
+  # keep-sorted end
 }
 
 import {
@@ -99,6 +98,7 @@ import {
   id = "2859c4d6f599a36a424765646b79904e"
 }
 
+# Zone for mylabs.dev
 resource "cloudflare_zone" "mylabs_dev" {
   account = {
     id = var.cloudflare_account_id
@@ -111,7 +111,7 @@ resource "cloudflare_zone" "mylabs_dev" {
   }
 }
 
-# CNAME Records
+# CNAME Records for mylabs.dev
 resource "cloudflare_dns_record" "mylabs_dev_cname_records" {
   for_each = local.mylabs_dev_cname_records
 
@@ -124,7 +124,7 @@ resource "cloudflare_dns_record" "mylabs_dev_cname_records" {
   type    = "CNAME"
 }
 
-# NS Records for AWS Route 53 delegation
+# NS Records for AWS Route 53 delegation - mylabs.dev
 resource "cloudflare_dns_record" "mylabs_dev_ns_records" {
   for_each = local.mylabs_dev_ns_records
 
@@ -137,7 +137,7 @@ resource "cloudflare_dns_record" "mylabs_dev_ns_records" {
   type    = "NS"
 }
 
-# TXT Records
+# TXT Records for mylabs.dev
 resource "cloudflare_dns_record" "mylabs_dev_txt_records" {
   for_each = local.mylabs_dev_txt_records
 

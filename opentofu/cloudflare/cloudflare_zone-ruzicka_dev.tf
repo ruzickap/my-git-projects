@@ -1,4 +1,5 @@
 locals {
+  # keep-sorted start block=yes newline_separated=yes
   # CNAME Records for ruzicka.dev
   ruzicka_dev_cname_records = {
     # keep-sorted start block=yes
@@ -71,6 +72,7 @@ locals {
     }
     # keep-sorted end
   }
+  # keep-sorted end
 }
 
 import {
@@ -78,6 +80,7 @@ import {
   id = "452e45a673326608122e759793a713f3"
 }
 
+# Zone for ruzicka.dev
 resource "cloudflare_zone" "ruzicka_dev" {
   account = {
     id = var.cloudflare_account_id
@@ -90,7 +93,7 @@ resource "cloudflare_zone" "ruzicka_dev" {
   }
 }
 
-# CNAME Records
+# CNAME Records for ruzicka.dev
 resource "cloudflare_dns_record" "ruzicka_dev_cname_records" {
   for_each = local.ruzicka_dev_cname_records
 
@@ -103,7 +106,7 @@ resource "cloudflare_dns_record" "ruzicka_dev_cname_records" {
   type    = "CNAME"
 }
 
-# MX Records - CloudFlare Email Routing
+# MX Records for ruzicka.dev - CloudFlare Email Routing
 resource "cloudflare_dns_record" "ruzicka_dev_mx_records" {
   for_each = local.ruzicka_dev_mx_records
 
@@ -117,7 +120,7 @@ resource "cloudflare_dns_record" "ruzicka_dev_mx_records" {
   type     = "MX"
 }
 
-# TXT Records
+# TXT Records for ruzicka.dev
 resource "cloudflare_dns_record" "ruzicka_dev_txt_records" {
   for_each = local.ruzicka_dev_txt_records
 
