@@ -41,21 +41,6 @@ locals {
         # keep-sorted end
       }
     },
-    "gate-peterovi" = {
-      applications = {
-        # keep-sorted start block=yes
-        "gate-peterovi" = {
-          logo_url = "https://raw.githubusercontent.com/openwrt/branding/master/logo/openwrt_logo_blue_and_dark_blue.png"
-          service  = "https://127.0.0.1"
-          tags     = ["lan", "router", "wan"]
-        }
-        "gate-ssh-peterovi" = {
-          service = "ssh://127.0.0.1:22"
-          tags    = ["lan", "router", "ssh", "wan"]
-        }
-        # keep-sorted end
-      }
-    },
     "raspi" = {
       applications = {
         # keep-sorted start block=yes
