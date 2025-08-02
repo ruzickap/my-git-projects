@@ -22,4 +22,10 @@ variable "opentofu_encryption_passphrase" {
   sensitive   = true
   type        = string
 }
+
+variable "uptimerobot_api_key" {
+  description = "UptimeRobot API Key"
+  sensitive   = true
+  type        = string
+}
 # keep-sorted end

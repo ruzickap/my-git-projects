@@ -21,13 +21,21 @@ terraform {
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "5.4.0"
+      version = "5.8.2"
     }
     http = {
       source  = "hashicorp/http"
       version = "~> 3"
     }
+    uptimerobot = {
+      source  = "uptimerobot/uptimerobot"
+      version = "1.1.0"
+    }
   }
 }
 
 provider "cloudflare" {}
+
+provider "uptimerobot" {
+  api_key = var.uptimerobot_api_key
+}
