@@ -117,29 +117,24 @@ fi
 # Build the documents
 print_info "Starting LaTeX document build..."
 
-# Use a more efficient approach: create a custom script inside the container
-# to avoid installing packages every time
+# Create the container script that installs packages and runs make
 CONTAINER_SCRIPT="
 #!/bin/bash
-set -euo pipefail
+set -euxo pipefail
 
-# Install required packages (cached in container)
-if ! command -v pdftoppm >/dev/null 2>&1; then
-    echo 'Installing poppler-utils...'
-    apk add --no-cache poppler-utils
-fi
+# Install required packages
+echo 'Installing poppler-utils...'
+apk add --no-cache poppler-utils
 
 # Run make targets
 echo 'Running make targets: ${MAKE_TARGETS}'
 exec make ${MAKE_TARGETS}
 "
 
-# Run the Docker container with improved security and error handling
+# Run the Docker container as root to allow package installation
 if docker run --rm \
-  --user "$(id -u):$(id -g)" \
-  --volume "${PWD}:${WORKING_DIR}:Z" \
+  --volume "${PWD}:${WORKING_DIR}" \
   --workdir "${WORKING_DIR}" \
-  --network none \
   "${DOCKER_IMAGE}" \
   bash -c "${CONTAINER_SCRIPT}"; then
 
