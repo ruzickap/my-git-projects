@@ -22,8 +22,7 @@ on:
 
 env:
   # keep-sorted start
-  # Set log level for debugging (info, debug, or trace)
-  # https://docs.renovatebot.com/troubleshooting/#log-debug-levels
+  # Set log level for debugging (info, debug, or trace) https://docs.renovatebot.com/troubleshooting/#log-debug-levels
   LOG_LEVEL: ${{ inputs.logLevel || 'debug' }}
   # Enable automatic merging of dependency updates
   RENOVATE_AUTOMERGE: "true"

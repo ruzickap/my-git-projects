@@ -13,7 +13,7 @@
 
   // Git Submodules Configuration
   "git-submodules": {
-    enabled: true, // Automatically update git submodules when newer commits are available
+    enabled: true,
   },
   // Base Configuration Presets
   // Keep the extends started with ":" at the end of the list to allow overriding
