@@ -74,7 +74,7 @@ case "$REPOSITORY" in
     checkout_files "run.sh"
     remove_files ".github/workflows/codeql-actions.yml" ".github/workflows/scorecards.yml"
     ;;
-  ruzickap/petr.ruzicka.dev|ruzickap/xvx.cz)
+  ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
     copy_defaults "$GH_REPO_DEFAULTS_BASE/hugo"
     checkout_files ".spelling"
     ;;
