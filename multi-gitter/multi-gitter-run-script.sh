@@ -1,56 +1,19 @@
 #!/usr/bin/env bash
 
-#===============================================================================
-# Multi-Gitter Repository Update Script
-#
-# This script is used with multi-gitter to update multiple repositories with
-# standardized configuration files and settings.
-#
-# Usage: Called automatically by multi-gitter with REPOSITORY environment variable
-# Requirements: rclone, git
-#===============================================================================
-
-set -euxo pipefail # Exit on error, undefined vars, pipe failures
+set -euo pipefail
 
 # Configuration
-readonly GH_REPO_DEFAULTS_BASE="${GH_REPO_DEFAULTS_BASE:-${HOME}/git/my-git-projects/gh-repo-defaults}"
-readonly RCLONE_OPTS="${RCLONE_OPTS:---verbose --stats 0}"
+GH_REPO_DEFAULTS_BASE="${GH_REPO_DEFAULTS_BASE:-${HOME}/git/my-git-projects/gh-repo-defaults}"
 
-# Logging functions
-log_info() {
-  echo -e "\n[INFO] $*" >&2
-}
+# Simple logging
+log() { echo "[$(date +'%H:%M:%S')] $*" >&2; }
+die() { log "ERROR: $*"; exit 1; }
 
-log_error() {
-  echo -e "\n[ERROR] $*" >&2
-}
-
-log_section() {
-  echo -e "\n***************************************************"
-  echo -e "* $*"
-  echo -e "***************************************************\n"
-}
-
-# Validation functions
-validate_environment() {
-  if [[ -z "${REPOSITORY:-}" ]]; then
-    log_error "REPOSITORY environment variable is required"
-    exit 1
-  fi
-
-  if [[ ! -d "${GH_REPO_DEFAULTS_BASE}" ]]; then
-    log_error "GitHub repo defaults directory not found: ${GH_REPO_DEFAULTS_BASE}"
-    exit 1
-  fi
-
-  # Check required commands
-  for cmd in rclone git; do
-    if ! command -v "$cmd" &> /dev/null; then
-      log_error "Required command not found: $cmd"
-      exit 1
-    fi
-  done
-}
+# Validation
+[[ -n "${REPOSITORY:-}" ]] || die "REPOSITORY environment variable required"
+[[ -d "$GH_REPO_DEFAULTS_BASE" ]] || die "Defaults directory not found: $GH_REPO_DEFAULTS_BASE"
+command -v rclone >/dev/null || die "rclone not found"
+command -v git >/dev/null || die "git not found"
 
 # Core functions
 copy_defaults() {
@@ -70,120 +33,60 @@ copy_defaults() {
 }
 
 checkout_files() {
-  local files=("$@")
-  log_info "Checking out specific files for ${REPOSITORY}"
-
-  for file in "${files[@]}"; do
-    if ! git checkout "$file" 2> /dev/null; then
-      log_info "Could not checkout $file (may not exist)"
+  for FILE in "$@"; do
+    if git checkout "$FILE" 2>/dev/null; then
+      log "Checked out: $FILE"
+    else
+      log "Skipped: $FILE"
     fi
   done
 }
 
 remove_files() {
-  local files=("$@")
-  log_info "Removing files for ${REPOSITORY}"
-
-  for file in "${files[@]}"; do
-    if [[ -f "$file" ]]; then
-      rm "$file"
-      log_info "Removed: $file"
-    fi
+  for FILE in "$@"; do
+    [[ -f "$FILE" ]] && rm "$FILE" && log "Removed: $FILE"
   done
 }
 
-# Repository type handlers
-handle_action_repos() {
-  copy_defaults "${GH_REPO_DEFAULTS_BASE}/action" "action"
-}
+# Main processing
+log "Processing $REPOSITORY"
 
-handle_ansible_repos() {
-  copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible" "ansible"
+# Always copy base defaults
+copy_defaults "$GH_REPO_DEFAULTS_BASE/my-defaults"
 
-  # Special handling for specific ansible repos
-  case "${REPOSITORY}" in
-    ruzickap/ansible-raspberry-pi-os)
-      checkout_files "ansible/.ansible-lint"
-      ;;
-  esac
-}
+# Repository-specific handling
+case "$REPOSITORY" in
+  ruzickap/action-*)
+    copy_defaults "$GH_REPO_DEFAULTS_BASE/action"
+    ;;
+  ruzickap/ansible-*)
+    copy_defaults "$GH_REPO_DEFAULTS_BASE/ansible"
+    [[ "$REPOSITORY" == "ruzickap/ansible-raspberry-pi-os" ]] && checkout_files "ansible/.ansible-lint"
+    ;;
+  ruzickap/cheatsheet-*)
+    copy_defaults "$GH_REPO_DEFAULTS_BASE/latex"
+    ;;
+  ruzickap/cv)
+    copy_defaults "$GH_REPO_DEFAULTS_BASE/latex"
+    checkout_files "run.sh"
+    remove_files ".github/workflows/codeql-actions.yml" ".github/workflows/scorecards.yml"
+    ;;
+  ruzickap/petr.ruzicka.dev)
+    copy_defaults "$GH_REPO_DEFAULTS_BASE/hugo"
+    ;;
+  ruzickap/xvx.cz)
+    copy_defaults "$GH_REPO_DEFAULTS_BASE/hugo"
+    checkout_files ".spelling"
+    ;;
+  ruzickap/malware-cryptominer-container)
+    checkout_files ".checkov.yml" ".github/workflows/release-please.yml" ".github/renovate.json5"
+    ;;
+  ruzickap/ruzickap.github.io)
+    checkout_files ".github/renovate.json5" ".github/workflows/mega-linter.yml" ".markdownlint.yml" ".mega-linter.yml"
+    ;;
+  *)
+    log "Using default configuration for $REPOSITORY"
+    ;;
+esac
 
-handle_latex_repos() {
-  copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex" "latex"
-
-  # Special handling for CV repo
-  case "${REPOSITORY}" in
-    ruzickap/cv)
-      checkout_files "run.sh"
-      remove_files ".github/workflows/codeql-actions.yml" ".github/workflows/scorecards.yml"
-      ;;
-  esac
-}
-
-handle_hugo_repos() {
-  copy_defaults "${GH_REPO_DEFAULTS_BASE}/hugo" "hugo"
-
-  # Special handling for xvx.cz
-  case "${REPOSITORY}" in
-    ruzickap/xvx.cz)
-      checkout_files ".spelling"
-      ;;
-  esac
-}
-
-handle_special_repos() {
-  case "${REPOSITORY}" in
-    ruzickap/malware-cryptominer-container)
-      checkout_files ".checkov.yml" ".github/workflows/release-please.yml" ".github/renovate.json5"
-      ;;
-    ruzickap/ruzickap.github.io)
-      checkout_files ".github/renovate.json5" ".github/workflows/mega-linter.yml" ".markdownlint.yml" ".mega-linter.yml"
-      ;;
-  esac
-}
-
-# Main processing function
-process_repository() {
-  log_section "${REPOSITORY}"
-
-  # Always copy base defaults first
-  copy_defaults "${GH_REPO_DEFAULTS_BASE}/my-defaults" "my-defaults"
-
-  # Process based on repository pattern/name
-  case "${REPOSITORY}" in
-    ruzickap/action-*)
-      handle_action_repos
-      ;;
-    ruzickap/ansible-*)
-      handle_ansible_repos
-      ;;
-    ruzickap/cheatsheet-* | ruzickap/cv)
-      handle_latex_repos
-      ;;
-    ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
-      handle_hugo_repos
-      ;;
-    *)
-      log_info "Using default configuration for ${REPOSITORY}"
-      ;;
-  esac
-
-  # Handle repositories with special requirements
-  handle_special_repos
-
-  log_info "Processing completed for ${REPOSITORY}"
-}
-
-# Main execution
-main() {
-  validate_environment
-
-  if [[ "${DEBUG:-false}" == "true" ]]; then
-    set -x
-  fi
-
-  process_repository
-}
-
-# Execute main function
-main "$@"
+log "Completed processing $REPOSITORY"
