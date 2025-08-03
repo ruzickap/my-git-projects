@@ -30,37 +30,37 @@
   ],
   // Pull Request Labeling
   labels: [
-    "renovate", // Base label for all Renovate PRs
-    "renovate/{{replace '.*/' '' depName}}", // Add dependency name as label (removes path prefix)
-    "renovate/{{updateType}}", // Add update type (major/minor/patch) as label
+    "renovate",
+    "renovate/{{replace '.*/' '' depName}}",
+    "renovate/{{updateType}}",
   ],
   // Lock File Maintenance
   lockFileMaintenance: {
-    enabled: true, // Automatically update lock files (package-lock.json, yarn.lock, etc.)
-    schedule: ["before 6am on Sunday"], // Schedule lock file updates for early Sunday morning
+    enabled: true,
+    schedule: ["before 6am on Sunday"],
   },
   // Package-specific Update Rules
   packageRules: [
     {
       description: "Disable auto-merge for major updates",
-      matchUpdateTypes: ["major"], // Apply to major version updates
-      automerge: false, // Require manual review for potentially breaking changes
+      matchUpdateTypes: ["major"],
+      automerge: false,
     },
     {
       description: "Ignore frequent renovate updates",
-      enabled: false, // Disable patch updates for renovatebot action
-      matchPackageNames: ["renovatebot/github-action"], // Only applies to the renovatebot GitHub Action
-      matchUpdateTypes: ["patch"], // Only affects patch-level updates
+      enabled: false,
+      matchPackageNames: ["renovatebot/github-action"],
+      matchUpdateTypes: ["patch"],
     },
     {
       description: "Update renovatebot/github-action minor updates on Sundays",
-      matchPackageNames: ["renovatebot/github-action"], // Only applies to the renovatebot GitHub Action
-      matchUpdateTypes: ["minor"], // Only affects minor version updates
-      schedule: ["* * * * 0"], // Cron: Run on Sundays (day 0 of week)
+      matchPackageNames: ["renovatebot/github-action"],
+      matchUpdateTypes: ["minor"],
+      schedule: ["* * * * 0"],
     },
   ],
-  prBodyTemplate: "{{{table}}}{{{notes}}}{{{changelogs}}}", // PR description template: dependency table + release notes + changelogs
-  rebaseWhen: "behind-base-branch", // Rebase PRs when the base branch has moved ahead
+  prBodyTemplate: "{{{table}}}{{{notes}}}{{{changelogs}}}",
+  rebaseWhen: "behind-base-branch",
   // This allows Renovate to detect and update dependencies that aren't in standard package files
   regexManagers: [
     {
@@ -81,6 +81,6 @@
       versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
     },
   ],
-  separateMinorPatch: true, // Create separate PRs for minor and patch updates
+  separateMinorPatch: true,
   // # keep-sorted end
 }
