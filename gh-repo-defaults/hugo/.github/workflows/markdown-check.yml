@@ -1,4 +1,7 @@
 ---
+# GitHub Actions workflow for comprehensive markdown validation
+# Performs linting, link checking, and spell checking on markdown files
+# Ensures markdown content quality and link validity
 name: markdown-check
 
 on:
