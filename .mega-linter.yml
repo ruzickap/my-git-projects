@@ -76,4 +76,7 @@ TERRAFORM_TFLINT_UNSECURED_ENV_VARIABLES:
 
 # Prettier (TypeScript/JavaScript formatter) configuration
 TYPESCRIPT_PRETTIER_ARGUMENTS: --html-whitespace-sensitivity=ignore
+
+# Validate all files in the codebase, not just changed files
+VALIDATE_ALL_CODEBASE: true
 # keep-sorted end

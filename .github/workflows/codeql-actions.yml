@@ -12,6 +12,7 @@ on:
     paths:
       - .github/workflows/*.yml
   schedule:
+    # Run at 10:17 UTC every Tuesday
     - cron: 17 10 * * 2
 
 permissions: read-all
@@ -21,6 +22,7 @@ jobs:
     name: Analyze GitHub Actions
     runs-on: ubuntu-latest
     permissions:
+      # Required for CodeQL to write security events
       security-events: write
       packages: read
     steps:

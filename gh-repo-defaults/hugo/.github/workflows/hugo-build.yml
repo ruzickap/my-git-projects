@@ -1,4 +1,7 @@
 ---
+# GitHub Actions workflow for Hugo static site building and deployment
+# Builds Hugo site, checks for broken links, and deploys to GitHub Pages
+# https://gohugo.io/
 name: hugo-build
 
 on:
