@@ -21,7 +21,6 @@ jobs:
     name: Analyze GitHub Actions
     runs-on: ubuntu-latest
     permissions:
-      # Required for CodeQL to write security events
       security-events: write
       packages: read
     steps:
