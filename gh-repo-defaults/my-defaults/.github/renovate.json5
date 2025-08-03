@@ -10,7 +10,6 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
 
   // # keep-sorted start block=yes
-
   // Git Submodules Configuration
   "git-submodules": {
     enabled: true, // Automatically update git submodules when newer commits are available
