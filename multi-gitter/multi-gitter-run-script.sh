@@ -7,25 +7,31 @@ GH_REPO_DEFAULTS_BASE="${GH_REPO_DEFAULTS_BASE:-${HOME}/git/my-git-projects/gh-r
 
 # Simple logging
 log() { echo "[$(date +'%H:%M:%S')] $*" >&2; }
-die() { log "ERROR: $*"; exit 1; }
+die() {
+  log "ERROR: $*"
+  exit 1
+}
 
 # Validation
 [[ -n "${REPOSITORY:-}" ]] || die "REPOSITORY environment variable required"
 [[ -d "$GH_REPO_DEFAULTS_BASE" ]] || die "Defaults directory not found: $GH_REPO_DEFAULTS_BASE"
-command -v rclone >/dev/null || die "rclone not found"
-command -v git >/dev/null || die "git not found"
+command -v rclone > /dev/null || die "rclone not found"
+command -v git > /dev/null || die "git not found"
 
 # Core functions
 copy_defaults() {
   local SOURCE_DIR="$1"
-  [[ -d "$SOURCE_DIR" ]] || { log "Skipping missing: $SOURCE_DIR"; return 0; }
+  [[ -d "$SOURCE_DIR" ]] || {
+    log "Skipping missing: $SOURCE_DIR"
+    return 0
+  }
   log "Copying ${SOURCE_DIR##*/} to $REPOSITORY"
   rclone copyto --verbose --stats=0 "$SOURCE_DIR" .
 }
 
 checkout_files() {
   for FILE in "$@"; do
-    if git checkout "$FILE" 2>/dev/null; then
+    if git checkout "$FILE" 2> /dev/null; then
       log "Checked out: $FILE"
     else
       log "Skipped: $FILE"
