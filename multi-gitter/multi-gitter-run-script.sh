@@ -10,7 +10,7 @@
 # Requirements: rclone, git
 #===============================================================================
 
-set -euxo pipefail  # Exit on error, undefined vars, pipe failures
+set -euxo pipefail # Exit on error, undefined vars, pipe failures
 
 # Configuration
 readonly GH_REPO_DEFAULTS_BASE="${GH_REPO_DEFAULTS_BASE:-${HOME}/git/my-git-projects/gh-repo-defaults}"
@@ -74,7 +74,7 @@ checkout_files() {
   log_info "Checking out specific files for ${REPOSITORY}"
 
   for file in "${files[@]}"; do
-    if ! git checkout "$file" 2>/dev/null; then
+    if ! git checkout "$file" 2> /dev/null; then
       log_info "Could not checkout $file (may not exist)"
     fi
   done

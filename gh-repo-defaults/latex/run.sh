@@ -20,29 +20,29 @@ NC='\033[0m' # No Color
 
 # Function to print colored output
 print_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
+  echo -e "${BLUE}[INFO]${NC} $1"
 }
 
 print_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
+  echo -e "${GREEN}[SUCCESS]${NC} $1"
 }
 
 print_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
+  echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
 print_error() {
-    echo -e "${RED}[ERROR]${NC} $1" >&2
+  echo -e "${RED}[ERROR]${NC} $1" >&2
 }
 
 # Function to check if command exists
 command_exists() {
-    command -v "$1" >/dev/null 2>&1
+  command -v "$1" > /dev/null 2>&1
 }
 
 # Function to show usage
 show_usage() {
-    cat << EOF
+  cat << EOF
 Usage: $0 [OPTIONS] [MAKE_TARGETS...]
 
 This script builds LaTeX documents using Docker with TeXLive Full.
@@ -68,35 +68,35 @@ EOF
 # Parse command line arguments
 VERBOSE=false
 while [[ $# -gt 0 ]]; do
-    case $1 in
-        -h|--help)
-            show_usage
-            exit 0
-            ;;
-        -i|--image)
-            DOCKER_IMAGE="$2"
-            shift 2
-            ;;
-        -v|--verbose)
-            VERBOSE=true
-            shift
-            ;;
-        -*)
-            print_error "Unknown option: $1"
-            show_usage
-            exit 1
-            ;;
-        *)
-            # Remaining arguments are make targets
-            MAKE_TARGETS="$*"
-            break
-            ;;
-    esac
+  case $1 in
+    -h | --help)
+      show_usage
+      exit 0
+      ;;
+    -i | --image)
+      DOCKER_IMAGE="$2"
+      shift 2
+      ;;
+    -v | --verbose)
+      VERBOSE=true
+      shift
+      ;;
+    -*)
+      print_error "Unknown option: $1"
+      show_usage
+      exit 1
+      ;;
+    *)
+      # Remaining arguments are make targets
+      MAKE_TARGETS="$*"
+      break
+      ;;
+  esac
 done
 
 # Enable verbose mode if requested
 if [[ "$VERBOSE" == "true" ]]; then
-    set -x
+  set -x
 fi
 
 # Display configuration
@@ -107,11 +107,11 @@ echo "  Working Directory: ${PWD}"
 
 # Pull/update Docker image if needed
 print_info "Checking Docker image..."
-if ! docker image inspect "${DOCKER_IMAGE}" >/dev/null 2>&1; then
-    print_info "Docker image not found locally, pulling..."
-    docker pull "${DOCKER_IMAGE}"
+if ! docker image inspect "${DOCKER_IMAGE}" > /dev/null 2>&1; then
+  print_info "Docker image not found locally, pulling..."
+  docker pull "${DOCKER_IMAGE}"
 else
-    print_info "Docker image found locally"
+  print_info "Docker image found locally"
 fi
 
 # Build the documents
@@ -136,20 +136,20 @@ exec make ${MAKE_TARGETS}
 
 # Run the Docker container with improved security and error handling
 if docker run --rm \
-    --user "$(id -u):$(id -g)" \
-    --volume "${PWD}:${WORKING_DIR}:Z" \
-    --workdir "${WORKING_DIR}" \
-    --network none \
-    "${DOCKER_IMAGE}" \
-    bash -c "${CONTAINER_SCRIPT}"; then
+  --user "$(id -u):$(id -g)" \
+  --volume "${PWD}:${WORKING_DIR}:Z" \
+  --workdir "${WORKING_DIR}" \
+  --network none \
+  "${DOCKER_IMAGE}" \
+  bash -c "${CONTAINER_SCRIPT}"; then
 
-    print_success "LaTeX document build completed successfully!"
+  print_success "LaTeX document build completed successfully!"
 
-    # Show generated files
-    print_info "Generated files:"
-    find . -maxdepth 1 \( -name "*.pdf" -o -name "*.jpg" -o -name "*.png" -o -name "*.svg" \) -newer Makefile 2>/dev/null | sort || true
+  # Show generated files
+  print_info "Generated files:"
+  find . -maxdepth 1 \( -name "*.pdf" -o -name "*.jpg" -o -name "*.png" -o -name "*.svg" \) -newer Makefile 2> /dev/null | sort || true
 
 else
-    print_error "LaTeX document build failed!"
-    exit 1
+  print_error "LaTeX document build failed!"
+  exit 1
 fi
