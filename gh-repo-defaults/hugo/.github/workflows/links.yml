@@ -1,7 +1,6 @@
 ---
 # GitHub Actions workflow for broken link detection
 # Scans website content and external links for broken or invalid URLs
-# https://lychee.cli.rs/
 name: links
 
 on:
