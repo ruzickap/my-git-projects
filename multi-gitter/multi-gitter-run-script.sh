@@ -1,83 +1,94 @@
 #!/usr/bin/env bash
 
-echo -e "\n***************************************************\n* ${REPOSITORY}\n***************************************************\n"
+set -euo pipefail
 
-set -x
+# Configuration
+GH_REPO_DEFAULTS_BASE="${GH_REPO_DEFAULTS_BASE:-${HOME}/git/my-git-projects/gh-repo-defaults}"
 
-rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/my-defaults/" .
+# Simple logging
+log() { echo "[$(date +'%H:%M:%S')] $*" >&2; }
+log_info() { log "INFO: $*"; }
+log_error() { log "ERROR: $*"; }
+die() {
+  log_error "$*"
+  exit 1
+}
 
-case "${REPOSITORY}" in
-  ## action
-  ## ---------------------------------------------------------------------------------------------------------------------
-  # ruzickap/action-my-broken-link-checker
-  # ruzickap/action-my-markdown-link-checker
-  # ruzickap/action-my-markdown-linter
-  ## ---------------------------------------------------------------------------------------------------------------------
+# Validation
+[[ -n "${REPOSITORY:-}" ]] || die "REPOSITORY environment variable required"
+[[ -d "$GH_REPO_DEFAULTS_BASE" ]] || die "Defaults directory not found: $GH_REPO_DEFAULTS_BASE"
+command -v rclone > /dev/null || die "rclone not found"
+command -v git > /dev/null || die "git not found"
+
+# Core functions
+copy_defaults() {
+  local source_dir="$1"
+  local description="${2:-${source_dir##*/}}"
+
+  if [[ ! -d "$source_dir" ]]; then
+    log "ERROR: Source directory not found: $source_dir"
+    return 1
+  fi
+
+  log_info "$description | ${REPOSITORY}"
+  if ! rclone copyto --verbose --stats 0 "$source_dir" .; then
+    log_error "Failed to copy from: $source_dir"
+    return 1
+  fi
+}
+
+checkout_files() {
+  for FILE in "$@"; do
+    if git checkout "$FILE" 2> /dev/null; then
+      log_info "Checked out: $FILE"
+    else
+      log_info "Skipped: $FILE"
+    fi
+  done
+}
+
+remove_files() {
+  for FILE in "$@"; do
+    [[ -f "$FILE" ]] && rm "$FILE" && log_info "Removed: $FILE"
+  done
+}
+
+# Main processing
+log_info "Processing $REPOSITORY"
+
+# Always copy base defaults
+copy_defaults "$GH_REPO_DEFAULTS_BASE/my-defaults"
+
+# Repository-specific handling
+case "$REPOSITORY" in
   ruzickap/action-*)
-    echo -e "\n*** action | ${REPOSITORY}\n"
-    rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/action/" .
-    ;;&
-
-  ## ansible
-  ## ---------------------------------------------------------------------------------------------------------------------
-  # ruzickap/ansible-my_workstation
-  # ruzickap/ansible-openwrt
-  # ruzickap/ansible-raspberry-pi-os
-  ## ---------------------------------------------------------------------------------------------------------------------
+    copy_defaults "$GH_REPO_DEFAULTS_BASE/action"
+    ;;
   ruzickap/ansible-*)
-    echo -e "\n*** ansible | ${REPOSITORY}\n"
-    rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/ansible/" .
-    ;;&
-  ruzickap/ansible-raspberry-pi-os)
-    echo -e "\n*** ansible | ${REPOSITORY}\n"
-    git checkout ansible/.ansible-lint
+    copy_defaults "$GH_REPO_DEFAULTS_BASE/ansible"
+    [[ "$REPOSITORY" == "ruzickap/ansible-raspberry-pi-os" ]] && checkout_files "ansible/.ansible-lint"
     ;;
-
-  ## latex
-  ## ---------------------------------------------------------------------------------------------------------------------
-  # ruzickap/cheatsheet-macos
-  # ruzickap/cv
-  # ruzickap/cheatsheet-systemd
-  # ruzickap/cheatsheet-atom
-  ## ---------------------------------------------------------------------------------------------------------------------
-  ruzickap/cheatsheet-* | ruzickap/cv)
-    echo -e "\n*** latex | ${REPOSITORY}\n"
-    rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/latex/" .
-    ;;&
+  ruzickap/cheatsheet-*)
+    copy_defaults "$GH_REPO_DEFAULTS_BASE/latex"
+    ;;
   ruzickap/cv)
-    echo -e "\n*** latex-ch | ${REPOSITORY}\n"
-    git checkout run.sh
-    rm .github/workflows/{codeql-actions.yml,scorecards.yml}
+    copy_defaults "$GH_REPO_DEFAULTS_BASE/latex"
+    checkout_files "run.sh"
+    remove_files ".github/workflows/codeql-actions.yml" ".github/workflows/scorecards.yml"
     ;;
-
-  ## hugo
-  ## ---------------------------------------------------------------------------------------------------------------------
-  # ruzickap/petr.ruzicka.dev
-  # ruzickap/xvx.cz
-  ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
-    echo -e "\n*** hugo | ${REPOSITORY}\n"
-    rclone copyto --verbose --stats 0 "${HOME}/git/my-git-projects/gh-repo-defaults/hugo/" .
-    ;;&
-  ruzickap/xvx.cz)
-    echo -e "\n*** hugo-ch | ${REPOSITORY}\n"
-    git checkout .spelling
+    copy_defaults "$GH_REPO_DEFAULTS_BASE/hugo"
+    checkout_files ".spelling"
     ;;
-
-  ## default
-  ## ---------------------------------------------------------------------------------------------------------------------
-  # ruzickap/gha-test
-  # ruzickap/malware-cryptominer-container
-  # ruzickap/my-git-projects
-  # ruzickap/ruzickap
-  # ruzickap/test_usb_stick_for_tv
-  ## ---------------------------------------------------------------------------------------------------------------------
   ruzickap/malware-cryptominer-container)
-    echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout .checkov.yml .github/workflows/release-please.yml .github/renovate.json5
+    checkout_files ".checkov.yml" ".github/workflows/release-please.yml" ".github/renovate.json5"
     ;;
   ruzickap/ruzickap.github.io)
-    echo -e "\n*** default-ch | ${REPOSITORY}\n"
-    git checkout .github/renovate.json5 .github/workflows/mega-linter.yml .markdownlint.yml .mega-linter.yml
+    checkout_files ".github/renovate.json5" ".github/workflows/mega-linter.yml" ".markdownlint.yml" ".mega-linter.yml"
+    ;;
+  *)
+    log_info "Using default configuration for $REPOSITORY"
     ;;
 esac
+
+log_info "Completed processing $REPOSITORY"

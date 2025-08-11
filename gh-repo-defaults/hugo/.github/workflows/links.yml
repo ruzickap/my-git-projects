@@ -1,4 +1,6 @@
 ---
+# GitHub Actions workflow for broken link detection
+# Scans website content and external links for broken or invalid URLs
 name: links
 
 on:
