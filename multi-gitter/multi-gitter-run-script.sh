@@ -7,8 +7,10 @@ GH_REPO_DEFAULTS_BASE="${GH_REPO_DEFAULTS_BASE:-${HOME}/git/my-git-projects/gh-r
 
 # Simple logging
 log() { echo "[$(date +'%H:%M:%S')] $*" >&2; }
+log_info() { log "INFO: $*"; }
+log_error() { log "ERROR: $*"; }
 die() {
-  log "ERROR: $*"
+  log_error "$*"
   exit 1
 }
 
@@ -24,12 +26,12 @@ copy_defaults() {
   local description="${2:-${source_dir##*/}}"
 
   if [[ ! -d "$source_dir" ]]; then
-    log_error "Source directory not found: $source_dir"
+    log "ERROR: Source directory not found: $source_dir"
     return 1
   fi
 
   log_info "$description | ${REPOSITORY}"
-  if ! rclone copyto ${RCLONE_OPTS} "$source_dir" .; then
+  if ! rclone copyto --verbose --stats 0 "$source_dir" .; then
     log_error "Failed to copy from: $source_dir"
     return 1
   fi
@@ -38,21 +40,21 @@ copy_defaults() {
 checkout_files() {
   for FILE in "$@"; do
     if git checkout "$FILE" 2> /dev/null; then
-      log "Checked out: $FILE"
+      log_info "Checked out: $FILE"
     else
-      log "Skipped: $FILE"
+      log_info "Skipped: $FILE"
     fi
   done
 }
 
 remove_files() {
   for FILE in "$@"; do
-    [[ -f "$FILE" ]] && rm "$FILE" && log "Removed: $FILE"
+    [[ -f "$FILE" ]] && rm "$FILE" && log_info "Removed: $FILE"
   done
 }
 
 # Main processing
-log "Processing $REPOSITORY"
+log_info "Processing $REPOSITORY"
 
 # Always copy base defaults
 copy_defaults "$GH_REPO_DEFAULTS_BASE/my-defaults"
@@ -85,8 +87,8 @@ case "$REPOSITORY" in
     checkout_files ".github/renovate.json5" ".github/workflows/mega-linter.yml" ".markdownlint.yml" ".mega-linter.yml"
     ;;
   *)
-    log "Using default configuration for $REPOSITORY"
+    log_info "Using default configuration for $REPOSITORY"
     ;;
 esac
 
-log "Completed processing $REPOSITORY"
+log_info "Completed processing $REPOSITORY"
