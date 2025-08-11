@@ -1,22 +1,47 @@
 {
+  /**
+   * Renovate Configuration
+   *
+   * This configuration file defines how Renovate handles dependency updates for repositories.
+   * Renovate is a bot that automatically creates pull requests to update dependencies.
+   *
+   * Documentation: https://docs.renovatebot.com/configuration-options/
+   */
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  automerge: true,
-  automergeType: "branch",
+
+  // # keep-sorted start block=yes
+  // Git Submodules Configuration
+  "git-submodules": {
+    enabled: true,
+  },
+  // Base Configuration Presets
+  // Keep the extends started with ":" at the end of the list to allow overriding
   extends: [
-    "config:recommended",
-    ":disableDependencyDashboard",
-    ":disableRateLimiting",
-    ":enableVulnerabilityAlertsWithLabel(security)",
-    "helpers:pinGitHubActionDigestsToSemver",
-    "security:openssf-scorecard",
+    "config:recommended", // Renovate's recommended configuration preset
+    "docker:pinDigests", // Pin Docker image digests for security
+    "helpers:pinGitHubActionDigestsToSemver", // Pin GitHub Actions to specific versions with semantic versioning
+    "security:openssf-scorecard", // Add OpenSSF Scorecard security insights
+    ":disableDependencyDashboard", // Don't create dependency dashboard issues
+    ":disableRateLimiting", // Disable rate limiting for faster updates
+    ":docker", // Enable Docker container updates
+    ":enableVulnerabilityAlertsWithLabel(security)", // Add security label to vulnerability alerts
+    ":pinSkipCi", // Pin dependencies and skip CI for pin-only updates
   ],
+  // Pull Request Labeling
   labels: [
     "renovate",
     "renovate/{{replace '.*/' '' depName}}",
     "renovate/{{updateType}}",
   ],
+  // Lock File Maintenance
+  lockFileMaintenance: {
+    enabled: true,
+    schedule: ["before 6am on Sunday"],
+  },
+  // Package-specific Update Rules
   packageRules: [
     {
+      description: "Disable auto-merge for major updates",
       matchUpdateTypes: ["major"],
       automerge: false,
     },
@@ -34,19 +59,27 @@
     },
   ],
   prBodyTemplate: "{{{table}}}{{{notes}}}{{{changelogs}}}",
-  "pre-commit": {
-    enabled: true,
-  },
   rebaseWhen: "behind-base-branch",
+  // This allows Renovate to detect and update dependencies that aren't in standard package files
   regexManagers: [
     {
+      // Template for extracting version numbers from custom patterns
       extractVersionTemplate: "{{#if extractVersion}}{{{extractVersion}}}{{else}}^v?(?<version>.+)${{/if}}",
-      fileMatch: ["\\.ya?ml$", "\\.md$"],
+
+      // File types to scan for custom dependency patterns
+      fileMatch: ["\\.ya?ml$", "\\.md$", "^Dockerfile$", "^entrypoint\\.sh$"],
+
+      // Regex pattern to match custom dependency declarations
+      // Format: # renovate: datasource=<source> depName=<name> [versioning=<type>] [extractVersion=<regex>] [registryUrl=<url>]
+      // Example: # renovate: datasource=github-releases depName=helm/helm versioning=semver
       matchStrings: [
         '# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)( versioning=(?<versioning>.+?))?( extractVersion=(?<extractVersion>.+?))?( registryUrl=(?<registryUrl>.+?))?\\s.*[=:]\\s*"?(?<currentValue>.+?)"?\\s',
       ],
+
+      // Default to semantic versioning unless specified otherwise
       versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
     },
   ],
   separateMinorPatch: true,
+  // # keep-sorted end
 }
