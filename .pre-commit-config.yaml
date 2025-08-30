@@ -3,6 +3,9 @@
 #                       Pre-commit configuration file                                    #
 #                                                                                        #
 ##########################################################################################
+# ln -s ~/git/my-git-projects/.pre-commit-config.yaml .pre-commit-config.yaml
+# pre-commit install && pre-commit install --hook-type commit-msg
+# prek install && prek install --hook-type commit-msg
 ---
 fail_fast: true
 repos:
@@ -135,7 +138,7 @@ repos:
   #       stages: [commit-msg]
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.10.0.1
+    rev: v0.11.0.1
     hooks:
       - id: shellcheck
 
@@ -214,7 +217,7 @@ repos:
       - id: gitleaks
 
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.10.0-2
+    rev: v3.12.0-2
     hooks:
       - id: shfmt
         args:
@@ -251,7 +254,7 @@ repos:
   #       entry: bash -c 'if [[ -f .mega-linter.yml ]] && docker info &>/dev/null; then npx -- mega-linter-runner --containername megalinter-incremental --remove-container --fix --env APPLY_FIXES=all --env LOG_LEVEL=warning --env VALIDATE_ALL_CODEBASE=false --filesonly; fi'
 
   - repo: https://github.com/google/keep-sorted
-    rev: v0.6.1
+    rev: v0.7.1
     hooks:
       - id: keep-sorted
 
@@ -260,5 +263,3 @@ repos:
     hooks:
       - id: commitizen
         stages: [commit-msg]
-# ln -s ~/git/my-git-projects/.pre-commit-config.yaml .pre-commit-config.yaml
-# pre-commit install && pre-commit install --hook-type commit-msg
