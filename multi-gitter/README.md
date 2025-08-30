@@ -23,6 +23,21 @@ development tools across all your repositories.
 2. Install [rclone](https://rclone.org/)
 3. Ensure you have Git configured with appropriate authentication
 
+### Authentication Setup
+
+Before running multi-gitter, you need to authenticate with GitHub:
+
+```bash
+# Check current authentication status
+gh auth status
+
+# Set up GitHub token for authentication
+GITHUB_TOKEN="$(gh auth token --user ruzickap)"
+export GITHUB_TOKEN
+```
+
+**Note:** Replace `ruzickap` with your GitHub username if different.
+
 ### Environment Variables
 
 The script supports the following environment variables:
@@ -42,8 +57,14 @@ multi-gitter run --config config.yaml --dry-run ./multi-gitter-run-script.sh
 # Interactive run
 multi-gitter run --config config.yaml ./multi-gitter-run-script.sh
 
-# Non-interactive run (use with caution)
-multi-gitter run --config config.yaml --interactive=false ./multi-gitter-run-script.sh
+# Run on specific repositories with custom PR title
+multi-gitter run --config config.yaml ./multi-gitter-run-script.sh \
+  --repo ruzickap/k8s-eks-bottlerocket-fargate \
+  --repo ruzickap/k8s-eks-flux \
+  --pr-title "fix(gha): fix issue with renovate extends"
+
+# Check status of repositories
+multi-gitter status --config config.yaml
 ```
 
 ### Repository Categories
