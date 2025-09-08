@@ -65,6 +65,9 @@ multi-gitter run --config config.yaml ./multi-gitter-run-script.sh \
 
 # Check status of repositories
 multi-gitter status --config config.yaml
+
+# Merge all open pull requests created by multi-gitter
+multi-gitter merge --config config.yaml
 ```
 
 ### Repository Categories

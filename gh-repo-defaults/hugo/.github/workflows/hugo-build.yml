@@ -34,12 +34,12 @@ jobs:
         id: pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
 
-      - name: Check broken links
-        uses: ruzickap/action-my-broken-link-checker@f5a3296e86117675ab07b9fbf1a92027e5c340ef # v2.8.1
+      - name: Link Checker
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: lycheeverse/lychee-action@885c65f3dc543b57c898c8099f4e08c8afd178a2 # v2.6.1
         with:
-          url: ${{ steps.pages.outputs.base_url }}
-          pages_path: public
-          cmd_params: '--exclude="(html5up.net|instagram.com|linkedin.com|pixabay.com|unsplash.com)" --buffer-size=8192 --ignore-fragments --max-connections-per-host=5 --color=always --rate-limit=5 --header="User-Agent:Mozilla" --skip-tls-verification --timeout=20'
+          args: "--include-verbatim --no-progress --base-url ${{ steps.pages.outputs.base_url }} public"
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
