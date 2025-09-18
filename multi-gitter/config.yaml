@@ -15,7 +15,7 @@
 conflict-strategy: replace
 
 # Pull request configuration
-pr-title: "feat: add default github repo files"
+pr-title: "chore: add default github repo files"
 pr-body: |
   This PR adds/updates standardized repository configuration files including:
   - GitHub workflows and actions
@@ -47,7 +47,7 @@ platform: github
 
 # Target repositories
 # All repositories owned by this user will be processed
-user: ruzickap
+# user: ruzickap
 
 # Repositories to skip
 skip-repo:
@@ -69,7 +69,7 @@ branch: multi-gitter-updates
 
 # Commit configuration
 commit-message: |
-  feat: add/update default repository files
+  chore: add/update default repository files
 
   - Add standardized GitHub workflows
   - Update linting and security configurations
