@@ -67,13 +67,13 @@ resource "uptimerobot_monitor" "domain_monitors" {
   tags = each.value.tags
 }
 
-# # Public Status Page for all monitored services
-# resource "uptimerobot_psp" "all_services" {
-#   name = "My Services Status"
+# Public Status Page for all monitored services
+resource "uptimerobot_psp" "all_services" {
+  name = "My Services Status"
 
-#   # Include all monitors: Zero Trust applications + All monitored domains
-#   monitor_ids = concat(
-#     [for monitor in uptimerobot_monitor.zero_trust_applications : monitor.id],
-#     [for monitor in uptimerobot_monitor.domain_monitors : monitor.id]
-#   )
-# }
+  # Include all monitors: Zero Trust applications + All monitored domains
+  monitor_ids = concat(
+    [for monitor in uptimerobot_monitor.zero_trust_applications : monitor.id],
+    [for monitor in uptimerobot_monitor.domain_monitors : monitor.id]
+  )
+}
