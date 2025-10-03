@@ -34,7 +34,7 @@ jobs:
 
       - name: Install pre-commit
         run: |
-          pip3 install checkov pre-commit
+          pip3 install checkov
 
       - name: Install pre-commit dependencies
         run: |
@@ -47,7 +47,4 @@ jobs:
           tfupdate --version
           tofu -version
 
-      # Prettier doesn't work due to error: UndefinedParserError: No parser could be inferred for file "stdin".
-      - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
-        env:
-          SKIP: prettier
+      - uses: j178/prek-action@v1
