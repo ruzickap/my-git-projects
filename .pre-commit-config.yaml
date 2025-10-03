@@ -143,7 +143,7 @@ repos:
       - id: shellcheck
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.100.0
+    rev: v1.101.0
     hooks:
       # - id: terraform_checkov
       #   args:
@@ -259,7 +259,7 @@ repos:
       - id: keep-sorted
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.8.4
+    rev: v4.9.1
     hooks:
       - id: commitizen
         stages: [commit-msg]
