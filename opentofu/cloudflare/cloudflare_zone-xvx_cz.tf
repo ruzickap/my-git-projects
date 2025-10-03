@@ -34,7 +34,7 @@ locals {
     }
     "cestovani" = {
       content = "ghs.google.com"
-      comment = ""
+      comment = "Cestování"
     }
     "linux" = {
       content = "ghs.google.com"
@@ -62,7 +62,7 @@ locals {
     }
     "www.linux" = {
       content = "linux.xvx.cz"
-      comment = ""
+      comment = "Petr's blog about Linux"
     }
     "www.linux-old" = {
       content = "ruzickap.github.io"
@@ -70,11 +70,11 @@ locals {
     }
     "www.ruzickovabozena" = {
       content = "ruzickap.github.io"
-      comment = ""
+      comment = "Božena Růžičková - Profesní webové stránky"
     }
     "www.svatba" = {
       content = "ruzickap.github.io"
-      comment = ""
+      comment = "Svatba: Andrea a Petr"
     }
     # keep-sorted end
   }
