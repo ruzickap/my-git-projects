@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.6.0](https://github.com/ruzickap/my-git-projects/compare/v0.5.0...v0.6.0) (2025-10-03)
+
+
+### Features
+
+* add Cloudflare Pages project configuration and remove SubjectClaimFilters from GitHub Actions workflow ([#213](https://github.com/ruzickap/my-git-projects/issues/213)) ([192148a](https://github.com/ruzickap/my-git-projects/commit/192148a5061530d3a97708f3b9f1e97868242b47))
+* add Cloudflare Zero Trust variables and resources ([#191](https://github.com/ruzickap/my-git-projects/issues/191)) ([8fb89ee](https://github.com/ruzickap/my-git-projects/commit/8fb89eed6564ea4f7469fb64f63b46509bdd7235))
+* add container-image-upgrade-test repository with metadata and secrets ([#198](https://github.com/ruzickap/my-git-projects/issues/198)) ([974254c](https://github.com/ruzickap/my-git-projects/commit/974254cfff67cddc0aa51d4815bb0751dc9f3aa5))
+* add required status checks for GitHub repository ruleset ([#199](https://github.com/ruzickap/my-git-projects/issues/199)) ([f91f758](https://github.com/ruzickap/my-git-projects/commit/f91f758e62dc2e4c5305914b5d0d1f8d720df2e2))
+* add uzg Cloudflare DNS records and update Zero Trust application details ([#193](https://github.com/ruzickap/my-git-projects/issues/193)) ([c92e943](https://github.com/ruzickap/my-git-projects/commit/c92e943190df576fbd60dc1ab7d0e2b037bb49e5))
+* add xvx.cz, update DNS record names to use zone name variable ([#192](https://github.com/ruzickap/my-git-projects/issues/192)) ([9b37f65](https://github.com/ruzickap/my-git-projects/commit/9b37f654fc1e6a0f9903ee664677879f475d766a))
+* add/update default repository files ([#218](https://github.com/ruzickap/my-git-projects/issues/218)) ([a70273c](https://github.com/ruzickap/my-git-projects/commit/a70273cb7e1aed50bdc9b58c60e825f59bd52157))
+* add/update default repository files ([#219](https://github.com/ruzickap/my-git-projects/issues/219)) ([3c725a0](https://github.com/ruzickap/my-git-projects/commit/3c725a027dc4f2677c9ad25a527f3a1a95c88f54))
+* Improve README.md structure and clarity ([#202](https://github.com/ruzickap/my-git-projects/issues/202)) ([851b286](https://github.com/ruzickap/my-git-projects/commit/851b286cce61ebbf3dc1e14546c1afdf5deb160c))
+* install tfcmt and update DNS record names for clarity ([#189](https://github.com/ruzickap/my-git-projects/issues/189)) ([aeaace7](https://github.com/ruzickap/my-git-projects/commit/aeaace71950920a468700b0d79e8b2d5c9d9556a))
+* integrate UptimeRobot for domain monitoring and update Cloudflare configurations ([#214](https://github.com/ruzickap/my-git-projects/issues/214)) ([5cf5ca7](https://github.com/ruzickap/my-git-projects/commit/5cf5ca721b5ac7886231bf23aac8f2b7d8027edf))
+* refactor Cloudflare Zero Trust tunnel records and applications ([#195](https://github.com/ruzickap/my-git-projects/issues/195)) ([d7c2f28](https://github.com/ruzickap/my-git-projects/commit/d7c2f2848d03aa1ae5f4db5dcc9a166386759a99))
+* replace pre-commit by prek ([#233](https://github.com/ruzickap/my-git-projects/issues/233)) ([5b4c8ad](https://github.com/ruzickap/my-git-projects/commit/5b4c8ad0ab2dffe67a93d7a1b7d3e7161a721982))
+* update Cloudflare Zero Trust tunnel application names and configurations ([#196](https://github.com/ruzickap/my-git-projects/issues/196)) ([7c370c4](https://github.com/ruzickap/my-git-projects/commit/7c370c4724d87beae4954dc8e076a546ad5c6711))
+* update dependencies in pre-commit config and Terraform ([#222](https://github.com/ruzickap/my-git-projects/issues/222)) ([654941a](https://github.com/ruzickap/my-git-projects/commit/654941a8b079313179f6d32daccabf40313d55b2))
+* update release-please workflows to enhance permissions and streamline tagging process ([#227](https://github.com/ruzickap/my-git-projects/issues/227)) ([8813eb3](https://github.com/ruzickap/my-git-projects/commit/8813eb3332fbab5569c5b2940b0ae94bfdafc18a))
+* update service URL to HTTPS and modify Google IDP name ([#197](https://github.com/ruzickap/my-git-projects/issues/197)) ([385ee7e](https://github.com/ruzickap/my-git-projects/commit/385ee7ee4389fdb0faead6c50b96260e76e07caa))
+
+
+### Bug Fixes
+
+* Correct grammar and formatting across repository files ([#207](https://github.com/ruzickap/my-git-projects/issues/207)) ([3c7e652](https://github.com/ruzickap/my-git-projects/commit/3c7e6527f73cdf9c06fa1706ff2717b60e5bb73e))
+* Enhance comments in Cloudflare zone configurations ([#232](https://github.com/ruzickap/my-git-projects/issues/232)) ([594a4d4](https://github.com/ruzickap/my-git-projects/commit/594a4d4633fc9fa74416245ee6c3dd11103d2767))
+* pin Cloudflare tf provider ([#201](https://github.com/ruzickap/my-git-projects/issues/201)) ([9880754](https://github.com/ruzickap/my-git-projects/commit/98807546afbbff5141ead99094c0972320e0b6fa))
+* update SubjectClaimFilters and add role assumption for GitHub Actions ([#212](https://github.com/ruzickap/my-git-projects/issues/212)) ([a9b23ee](https://github.com/ruzickap/my-git-projects/commit/a9b23eef28cfb4dd4160445006d8c5f9d6548279))
+* update URLs and improve comments in workflow and scripts ([#208](https://github.com/ruzickap/my-git-projects/issues/208)) ([805ed98](https://github.com/ruzickap/my-git-projects/commit/805ed98176178764272f99c29f2e89e8276a2464))
+
 ## [0.5.0](https://github.com/ruzickap/my-git-projects/compare/v0.4.0...v0.5.0) (2025-05-06)
 
 
