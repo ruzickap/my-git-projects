@@ -22,7 +22,7 @@ defaults:
 permissions: read-all
 
 jobs:
-  pre-commit-config-test:
+  pre-commit-config:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
@@ -32,11 +32,11 @@ jobs:
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Install pre-commit
+      - name: Install checkov using pip3
         run: |
           pip3 install checkov
 
-      - name: Install pre-commit dependencies
+      - name: Install dependencies
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           echo "/home/linuxbrew/.linuxbrew/bin" >> "${GITHUB_PATH}"
@@ -47,4 +47,4 @@ jobs:
           tfupdate --version
           tofu -version
 
-      - uses: j178/prek-action@8b6a22b79a7469cb7048b98da156f98876c960b1 # v1
+      - uses: j178/prek-action@8b6a22b79a7469cb7048b98da156f98876c960b1 # v1.0.10
