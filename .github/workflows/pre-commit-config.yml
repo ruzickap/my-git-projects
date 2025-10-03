@@ -13,7 +13,7 @@ on:
 env:
   AWS_DEFAULT_REGION: eu-central-1
   AWS_ROLE_TO_ASSUME: ${{ secrets.RUZICKA_SBX01_AWS_ROLE_TO_ASSUME }}
-  SKIP: no-commit-to-branch,terraform_validate
+  SKIP: no-commit-to-branch
 
 defaults:
   run:
@@ -34,7 +34,7 @@ jobs:
 
       - name: Install pre-commit
         run: |
-          pip3 install checkov
+          uv install checkov
 
       - name: Install pre-commit dependencies
         run: |
