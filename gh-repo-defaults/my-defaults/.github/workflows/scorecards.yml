@@ -14,7 +14,7 @@ on:
 permissions: read-all
 
 jobs:
-  security-scorecard:
+  scorecards:
     runs-on: ubuntu-latest
     permissions:
       # Required for uploading SARIF results to GitHub Security tab

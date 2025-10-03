@@ -6,78 +6,81 @@ set -euo pipefail
 GH_REPO_DEFAULTS_BASE="${GH_REPO_DEFAULTS_BASE:-${HOME}/git/my-git-projects/gh-repo-defaults}"
 
 # Simple logging
-log() { echo "[$(date +'%H:%M:%S')] $*" >&2; }
-log_info() { log "INFO: $*"; }
-log_error() { log "ERROR: $*"; }
+log() { echo "[$(date +'%H:%M:%S')] ${*}" >&2; }
+log_info() { log "INFO: ${*}"; }
+log_error() { log "ERROR: ${*}"; }
 die() {
-  log_error "$*"
+  log_error "${*}"
   exit 1
 }
 
 # Validation
 [[ -n "${REPOSITORY:-}" ]] || die "REPOSITORY environment variable required"
-[[ -d "$GH_REPO_DEFAULTS_BASE" ]] || die "Defaults directory not found: $GH_REPO_DEFAULTS_BASE"
+[[ -d "${GH_REPO_DEFAULTS_BASE}" ]] || die "Defaults directory not found: ${GH_REPO_DEFAULTS_BASE}"
 command -v rclone > /dev/null || die "rclone not found"
 command -v git > /dev/null || die "git not found"
 
 # Core functions
 copy_defaults() {
-  local source_dir="$1"
-  local description="${2:-${source_dir##*/}}"
+  local SOURCE_DIR="${1}"
+  local DESCRIPTION="${2:-${SOURCE_DIR##*/}}"
 
-  if [[ ! -d "$source_dir" ]]; then
-    log "ERROR: Source directory not found: $source_dir"
+  if [[ ! -d "${SOURCE_DIR}" ]]; then
+    log "ERROR: Source directory not found: ${SOURCE_DIR}"
     return 1
   fi
 
-  log_info "$description | ${REPOSITORY}"
-  if ! rclone copyto --verbose --stats 0 "$source_dir" .; then
-    log_error "Failed to copy from: $source_dir"
+  log_info "${DESCRIPTION} | ${REPOSITORY}"
+  if ! rclone copyto --verbose --stats 0 "${SOURCE_DIR}" .; then
+    log_error "Failed to copy from: ${SOURCE_DIR}"
     return 1
   fi
 }
 
 checkout_files() {
-  for FILE in "$@"; do
-    if git checkout "$FILE" 2> /dev/null; then
-      log_info "Checked out: $FILE"
+  for FILE in "${@}"; do
+    if git checkout "${FILE}" 2> /dev/null; then
+      log_info "Checked out: ${FILE}"
     else
-      log_info "Skipped: $FILE"
+      log_info "Skipped: ${FILE}"
     fi
   done
 }
 
 remove_files() {
-  for FILE in "$@"; do
-    [[ -f "$FILE" ]] && rm "$FILE" && log_info "Removed: $FILE"
+  for FILE in "${@}"; do
+    [[ -f "${FILE}" ]] && rm "${FILE}" && log_info "Removed: ${FILE}"
   done
 }
 
 # Main processing
-log_info "Processing $REPOSITORY"
+log_info "Processing ${REPOSITORY}"
 
 # Always copy base defaults
-copy_defaults "$GH_REPO_DEFAULTS_BASE/my-defaults"
+copy_defaults "${GH_REPO_DEFAULTS_BASE}/my-defaults"
 
 # Repository-specific handling
-case "$REPOSITORY" in
+case "${REPOSITORY}" in
   ruzickap/action-*)
-    copy_defaults "$GH_REPO_DEFAULTS_BASE/action"
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/action"
     ;;
   ruzickap/ansible-*)
-    copy_defaults "$GH_REPO_DEFAULTS_BASE/ansible"
-    [[ "$REPOSITORY" == "ruzickap/ansible-raspberry-pi-os" ]] && checkout_files "ansible/.ansible-lint"
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
+    [[ "${REPOSITORY}" == "ruzickap/ansible-raspberry-pi-os" ]] && checkout_files "ansible/.ansible-lint"
     ;;
   ruzickap/cheatsheet-*)
-    copy_defaults "$GH_REPO_DEFAULTS_BASE/latex"
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
     ;;
   ruzickap/cv)
-    copy_defaults "$GH_REPO_DEFAULTS_BASE/latex"
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
     checkout_files "run.sh"
-    remove_files ".github/workflows/codeql-actions.yml" ".github/workflows/scorecards.yml"
+    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
+    ;;
+  ruzickap/gha_test)
+    remove_files ".github/workflows/pr-slack-notification.yml"
     ;;
   ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
-    copy_defaults "$GH_REPO_DEFAULTS_BASE/hugo"
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/hugo"
     checkout_files ".spelling"
     ;;
   ruzickap/malware-cryptominer-container)
@@ -87,8 +90,8 @@ case "$REPOSITORY" in
     checkout_files ".github/renovate.json5" ".github/workflows/mega-linter.yml" ".markdownlint.yml" ".mega-linter.yml"
     ;;
   *)
-    log_info "Using default configuration for $REPOSITORY"
+    log_info "Using default configuration for ${REPOSITORY}"
     ;;
 esac
 
-log_info "Completed processing $REPOSITORY"
+log_info "Completed processing ${REPOSITORY}"

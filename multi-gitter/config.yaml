@@ -47,7 +47,7 @@ platform: github
 
 # Target repositories
 # All repositories owned by this user will be processed
-# user: ruzickap
+user: ruzickap
 
 # Repositories to skip
 skip-repo:
