@@ -13,7 +13,7 @@ on:
 env:
   AWS_DEFAULT_REGION: eu-central-1
   AWS_ROLE_TO_ASSUME: ${{ secrets.RUZICKA_SBX01_AWS_ROLE_TO_ASSUME }}
-  SKIP: no-commit-to-branch,terraform_validate
+  SKIP: no-commit-to-branch
 
 defaults:
   run:
@@ -22,7 +22,7 @@ defaults:
 permissions: read-all
 
 jobs:
-  pre-commit-config-test:
+  pre-commit-config:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
@@ -32,11 +32,11 @@ jobs:
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Install pre-commit
+      - name: Install checkov using pip3
         run: |
-          pip3 install checkov pre-commit
+          pip3 install checkov
 
-      - name: Install pre-commit dependencies
+      - name: Install dependencies
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           echo "/home/linuxbrew/.linuxbrew/bin" >> "${GITHUB_PATH}"
@@ -47,7 +47,4 @@ jobs:
           tfupdate --version
           tofu -version
 
-      # Prettier doesn't work due to error: UndefinedParserError: No parser could be inferred for file "stdin".
-      - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
-        env:
-          SKIP: prettier
+      - uses: j178/prek-action@8b6a22b79a7469cb7048b98da156f98876c960b1 # v1.0.10
