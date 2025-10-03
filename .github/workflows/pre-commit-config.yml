@@ -48,5 +48,3 @@ jobs:
           tofu -version
 
       - uses: j178/prek-action@8b6a22b79a7469cb7048b98da156f98876c960b1 # v1.0.10
-        with:
-          extra-args: "--all-files"
