@@ -14,3 +14,9 @@ echo "*** ${AWS_ACCESS_KEY_ID} | ${AWS_SECRET_ACCESS_KEY} | ${AWS_S3_ENDPOINT}"
 tofu init
 tofu apply
 ```
+
+Links:
+
+* <https://zonemaster.net/>
+* <https://dnsviz.net/>
+* <https://intodns.com/>
