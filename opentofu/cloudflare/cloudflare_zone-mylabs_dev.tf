@@ -36,6 +36,15 @@ locals {
     # keep-sorted end
   }
 
+  # MX Records for mylabs.dev - Mailtrap
+  mylabs_dev_mx_records = {
+    "mx1" = {
+      content  = "smtp.mailtrap.live"
+      priority = 10
+      comment  = "Mailtrap MX record"
+    }
+  }
+
   # NS Records for AWS Route 53 delegation - mylabs.dev
   mylabs_dev_ns_records = {
     # keep-sorted start block=yes
@@ -87,6 +96,12 @@ locals {
     "_dmarc" = {
       content = "v=DMARC1; p=none; rua=mailto:dmarc@smtp.mailtrap.live; ruf=mailto:dmarc@smtp.mailtrap.live; rf=afrf; pct=100"
       comment = "mailtrap DMARC"
+      name    = "_dmarc"
+    }
+    "spf" = {
+      content = "v=spf1 include:_spf.smtp.mailtrap.live ~all"
+      comment = "Mailtrap SPF"
+      name    = ""
     }
   }
   # keep-sorted end
@@ -136,6 +151,20 @@ resource "cloudflare_dns_record" "mylabs_dev_ns_records" {
   type    = "NS"
 }
 
+# MX Records for mylabs.dev - Mailtrap
+resource "cloudflare_dns_record" "mylabs_dev_mx_records" {
+  for_each = local.mylabs_dev_mx_records
+
+  zone_id  = cloudflare_zone.mylabs_dev.id
+  comment  = each.value.comment
+  content  = each.value.content
+  name     = cloudflare_zone.mylabs_dev.name
+  priority = each.value.priority
+  proxied  = false
+  ttl      = 1
+  type     = "MX"
+}
+
 # TXT Records for mylabs.dev
 resource "cloudflare_dns_record" "mylabs_dev_txt_records" {
   for_each = local.mylabs_dev_txt_records
@@ -143,7 +172,7 @@ resource "cloudflare_dns_record" "mylabs_dev_txt_records" {
   zone_id = cloudflare_zone.mylabs_dev.id
   comment = each.value.comment
   content = each.value.content
-  name    = "${each.key}.${cloudflare_zone.mylabs_dev.name}"
+  name    = each.value.name == "" ? cloudflare_zone.mylabs_dev.name : "${each.value.name}.${cloudflare_zone.mylabs_dev.name}"
   proxied = false
   ttl     = 1
   type    = "TXT"
