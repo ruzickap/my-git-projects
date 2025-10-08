@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/ruzickap/my-git-projects/compare/v0.6.0...v0.7.0) (2025-10-08)
+
+
+### Features
+
+* add MX records for mylabs.dev and update TXT record naming convention ([#236](https://github.com/ruzickap/my-git-projects/issues/236)) ([3c89bda](https://github.com/ruzickap/my-git-projects/commit/3c89bda0f22ad4d1a75f99bde95a5edb38dc87b2))
+
 ## [0.6.0](https://github.com/ruzickap/my-git-projects/compare/v0.5.0...v0.6.0) (2025-10-03)
 
 
