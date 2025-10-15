@@ -29,7 +29,7 @@ terraform {
     }
     uptimerobot = {
       source  = "uptimerobot/uptimerobot"
-      version = "1.2.7"
+      version = "1.2.8"
     }
   }
 }
