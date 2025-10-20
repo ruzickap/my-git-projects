@@ -66,7 +66,6 @@ case "${REPOSITORY}" in
     ;;
   ruzickap/ansible-*)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
-    [[ "${REPOSITORY}" == "ruzickap/ansible-raspberry-pi-os" ]] && checkout_files "ansible/.ansible-lint"
     ;;
   ruzickap/cheatsheet-*)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
