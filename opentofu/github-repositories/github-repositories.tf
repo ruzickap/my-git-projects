@@ -73,8 +73,9 @@ resource "github_actions_secret" "this" {
   for_each = {
     for combo in setproduct(keys(local.all_github_repositories), keys(local.github_actions_secrets)) :
     "${combo[0]}-${combo[1]}" => {
-      repository   = local.all_github_repositories[combo[0]].name
-      secret_name  = combo[1]
+      repository  = local.all_github_repositories[combo[0]].name
+      secret_name = combo[1]
+      # kics-scan ignore-line
       secret_value = local.github_actions_secrets[combo[1]]
     }
   }

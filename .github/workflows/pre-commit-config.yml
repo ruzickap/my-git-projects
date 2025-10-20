@@ -23,7 +23,7 @@ permissions: read-all
 
 jobs:
   pre-commit-config:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     env:
       GH_TOKEN: ${{ github.token }}
     permissions:
