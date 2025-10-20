@@ -60,6 +60,9 @@ skip-repo:
   # Test repositories that shouldn't be modified
   - ruzickap/renovate-test
 
+  # WizCLI test repo
+  - ruzickap/wizcli-terraform-test
+
 # Private repositories (need to be specified explicitly)
 repo:
   - ruzickap/cv
