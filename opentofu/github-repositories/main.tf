@@ -34,7 +34,7 @@ locals {
     "k8s_multicluster_gitops" = {
       name        = "k8s-multicluster-gitops"
       description = "Infrastructure as Code for provisioning multiple Kubernetes clusters, managed using GitOps with ArgoCD"
-      topics      = ["aks", "argocd", "eks", "gitops", "infrastructure-as-code", "k8s", "k8s-gitops", "kind", "kubernetes", "multi-cluster", "terraform", "vcluster"]
+      topics      = ["aks", "argocd", "eks", "gitops", "infrastructure-as-code", "k8s", "k8s-gitops", "kind", "kubernetes", "multi-cluster", "terraform", "vcluster"] # codespell:ignore
     },
   }
   #trivy:ignore:avd-git-0001 Repository is public

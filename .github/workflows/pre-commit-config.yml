@@ -33,6 +33,10 @@ jobs:
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
+      - uses: actions/setup-go@v6
+        with:
+          go-version: 1.24
+
       - name: Install checkov using pip3
         run: |
           pip3 install checkov
@@ -43,9 +47,10 @@ jobs:
           echo "/home/linuxbrew/.linuxbrew/bin" >> "${GITHUB_PATH}"
           brew install opentofu terrascan tflint tfupdate trivy
 
-          trivy version
           terrascan version
+          tflint --version
           tfupdate --version
           tofu -version
+          trivy version
 
       - uses: j178/prek-action@91fd7d7cf70ae1dee9f4f44e7dfa5d1073fe6623 # v1.0.11

@@ -72,7 +72,8 @@ case "${REPOSITORY}" in
     ;;
   ruzickap/cv)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
-    checkout_files "run.sh"
+    # arm64 is not supported in private repos
+    checkout_files "run.sh" ".github/workflows/release-please.yml" ".github/workflows/renovate.yml" ".github/workflows/semantic-pull-request.yml" ".github/workflows/stale.yml"
     remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
     ;;
   ruzickap/gha_test)

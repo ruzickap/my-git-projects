@@ -40,7 +40,7 @@ repos:
       - id: shellcheck
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.101.1
+    rev: v1.103.0
     hooks:
       - id: terraform_checkov
         # args:
@@ -142,13 +142,13 @@ repos:
       - id: commitizen-branch
         stages: [pre-push]
 
-  # - repo: https://github.com/commit-check/commit-check
-  #   rev: v2.0.0
-  #   hooks:
-  #     - id: check-message
-  #     - id: check-branch
-  #     - id: check-author-name
-  #     - id: check-author-email
+  - repo: https://github.com/commit-check/commit-check
+    rev: v2.1.0
+    hooks:
+      - id: check-message
+      - id: check-branch
+      - id: check-author-name
+      - id: check-author-email
 
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
@@ -165,3 +165,13 @@ repos:
             --ignore=body-is-missing,
             --msg-filename,
           ]
+
+  # - repo: https://github.com/tak-bro/aicommit2
+  #   rev: v2.4.14
+  #   hooks:
+  #     - id: aicommit2
+  #       name: AI Commit Message Generator
+  #       entry: aicommit2 --pre-commit
+  #       language: node
+  #       stages: [prepare-commit-msg]
+  #       always_run: true
