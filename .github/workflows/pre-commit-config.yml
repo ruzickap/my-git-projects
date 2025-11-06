@@ -45,7 +45,7 @@ jobs:
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           echo "/home/linuxbrew/.linuxbrew/bin" >> "${GITHUB_PATH}"
-          brew install opentofu terrascan tflint tfupdate trivy
+          brew install opentofu terraform-docs terrascan tflint tfupdate trivy
 
           trivy version
           terrascan version
