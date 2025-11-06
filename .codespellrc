@@ -1,3 +1,2 @@
 [codespell]
-ignore-words-list = "aks"
 skip = gh-repo-defaults/latex/Makefile
