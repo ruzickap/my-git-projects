@@ -68,7 +68,7 @@ repo:
   - ruzickap/cv
 
 # Branch configuration
-branch: multi-gitter-updates
+branch: chore/multi-gitter-updates
 
 # Commit configuration
 commit-message: |

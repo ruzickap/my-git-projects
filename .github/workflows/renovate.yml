@@ -20,7 +20,7 @@ on:
   push:
     branches:
       - main
-      - "!renovate/*"
+      - "!chore/renovate/*"
   schedule:
     - cron: 0 0-3 * * 0
 
