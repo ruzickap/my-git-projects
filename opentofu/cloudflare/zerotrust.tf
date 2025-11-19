@@ -49,11 +49,6 @@ locals {
           service  = "http://localhost:12345"
           tags     = ["rpi", "wifi"]
         }
-        "cadvisor-rpi" = {
-          logo_url = "https://raw.githubusercontent.com/walkxcode/dashboard-icons/50c4b5ee2b207708a16726b5ff87a9ab0438ea17/png/cadvisor.png"
-          service  = "http://localhost:8085"
-          tags     = ["rpi", "wifi"]
-        }
         "esphome-rpi" = {
           logo_url = "https://raw.githubusercontent.com/esphome/esphome-docs/e28345cd8f1c9380bc25dd977fcf443ba5c8612c/images/logo.svg"
           service  = "http://localhost:6052"

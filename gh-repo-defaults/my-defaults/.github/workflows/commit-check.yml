@@ -25,7 +25,7 @@ jobs:
           cat > commit-check.toml << EOF
           [commit]
           subject_capitalized = false
-          subject_max_length = 72
+          subject_max_length = 80
           EOF
 
       - uses: commit-check/commit-check-action@a0193b1ca486178b85d7a1db145af34cd227f81f # v2.1.1

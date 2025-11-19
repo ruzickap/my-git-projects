@@ -31,7 +31,7 @@ copy_defaults() {
   fi
 
   log_info "${DESCRIPTION} | ${REPOSITORY}"
-  if ! rclone copyto --verbose --stats 0 "${SOURCE_DIR}" .; then
+  if ! rclone copyto --verbose --stats 0 --no-update-modtime --no-update-dir-modtime "${SOURCE_DIR}" .; then
     log_error "Failed to copy from: ${SOURCE_DIR}"
     return 1
   fi
@@ -73,7 +73,7 @@ case "${REPOSITORY}" in
   ruzickap/cv)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
     # arm64 is not supported in private repos
-    checkout_files "run.sh" ".github/workflows/release-please.yml" ".github/workflows/renovate.yml" ".github/workflows/semantic-pull-request.yml" ".github/workflows/stale.yml"
+    checkout_files "run.sh" ".github/workflows/commit-check.yml" ".github/workflows/release-please.yml" ".github/workflows/renovate.yml" ".github/workflows/semantic-pull-request.yml" ".github/workflows/stale.yml"
     remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
     ;;
   ruzickap/gha_test)
@@ -87,7 +87,7 @@ case "${REPOSITORY}" in
     checkout_files ".checkov.yml" ".github/workflows/release-please.yml" ".github/renovate.json5"
     ;;
   ruzickap/ruzickap.github.io)
-    checkout_files ".github/renovate.json5" ".github/workflows/mega-linter.yml" ".markdownlint.yml" ".mega-linter.yml"
+    checkout_files ".github/renovate.json5" ".github/workflows/mega-linter.yml" ".markdownlint.yml" ".mega-linter.yml" "AGENTS.md"
     ;;
   *)
     log_info "Using default configuration for ${REPOSITORY}"
