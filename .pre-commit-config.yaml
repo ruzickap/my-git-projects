@@ -60,12 +60,12 @@ repos:
           - --args=--version "~> 1.9"
 
   - repo: https://github.com/terraform-docs/terraform-docs
-    rev: "v0.20.0"
+    rev: v0.20.0
     hooks:
       - id: terraform-docs-go
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.45.0
+    rev: v0.46.0
     hooks:
       - id: markdownlint
         exclude: ^CHANGELOG.md$
@@ -135,7 +135,7 @@ repos:
       - id: keep-sorted
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.9.1
+    rev: v4.10.0
     hooks:
       - id: commitizen
         stages: [commit-msg]
@@ -143,7 +143,7 @@ repos:
         stages: [pre-push]
 
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.1.0
+    rev: v2.1.2
     hooks:
       - id: check-message
       - id: check-branch
