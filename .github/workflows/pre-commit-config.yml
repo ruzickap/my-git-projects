@@ -46,11 +46,14 @@ jobs:
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           echo "/home/linuxbrew/.linuxbrew/bin" >> "${GITHUB_PATH}"
           brew install opentofu terrascan tflint tfupdate trivy
+          curl -sLo /usr/local/bin/wizcli https://downloads.wiz.io/v1/wizcli/latest/wizcli-linux-amd64
+          chmod a+x /usr/local/bin/wizcli
 
           terrascan version
           tflint --version
           tfupdate --version
           tofu -version
           trivy version
+          wizcli version
 
       - uses: j178/prek-action@91fd7d7cf70ae1dee9f4f44e7dfa5d1073fe6623 # v1.0.11
