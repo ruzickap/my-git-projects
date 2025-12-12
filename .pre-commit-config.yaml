@@ -175,3 +175,8 @@ repos:
   #       language: node
   #       stages: [prepare-commit-msg]
   #       always_run: true
+
+  - repo: https://github.com/ruzickap/pre-commit-wizcli
+    rev: v1.0.0
+    hooks:
+      - id: wizcli-scan-dir-secrets

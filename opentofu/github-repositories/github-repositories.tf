@@ -61,7 +61,7 @@ resource "github_repository" "this" {
 resource "github_workflow_repository_permissions" "this" {
   for_each                         = local.all_github_repositories
   default_workflow_permissions     = "read"
-  can_approve_pull_request_reviews = false
+  can_approve_pull_request_reviews = true
   repository                       = github_repository.this[each.key].name
 }
 

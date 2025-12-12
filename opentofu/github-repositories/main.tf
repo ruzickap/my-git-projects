@@ -36,6 +36,11 @@ locals {
       description = "Infrastructure as Code for provisioning multiple Kubernetes clusters, managed using GitOps with ArgoCD"
       topics      = ["aks", "argocd", "eks", "gitops", "infrastructure-as-code", "k8s", "k8s-gitops", "kind", "kubernetes", "multi-cluster", "terraform", "vcluster"] # codespell:ignore
     },
+    "pre_commit_wizcli" = {
+      name        = "pre-commit-wizcli"
+      description = "pre-commit hook for WizCLI that checks your code"
+      topics      = ["pre-commit", "wizcli", "wiz"]
+    },
   }
   #trivy:ignore:avd-git-0001 Repository is public
   github_repositories_existing = {
@@ -88,7 +93,7 @@ locals {
     "cks_notes" = {
       name        = "cks-notes"
       description = "CKS Notes"
-      topics      = ["cks", "cks-exam", "cks-exam-preparation", "k8s", "k8s-security", "kubernetes", "public", "security"]
+      topics      = ["cks", "cks-exam", "cks-exam-preparation", "k8s", "k8s-security", "kubernetes", "notes", "public", "security"]
     }
     "cv" = {
       name        = "cv"
