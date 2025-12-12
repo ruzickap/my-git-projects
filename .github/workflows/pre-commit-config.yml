@@ -58,6 +58,7 @@ jobs:
         env:
           PRE_COMMIT_WIZCLI_REPO: https://github.com/ruzickap/pre-commit-wizcli
         run: |
-          yq -i "del(.repos[] | select(.repo == \"${PRE_COMMIT_WIZCLI_REPO}\"))" .pre-commit-config.yaml
+          gawk -i inplace '/ruzickap\/pre-commit-wizcli/{n=4} n{n--;next} 1' .pre-commit-config.yaml
+          git add .pre-commit-config.yaml
 
       - uses: j178/prek-action@91fd7d7cf70ae1dee9f4f44e7dfa5d1073fe6623 # v1.0.11
