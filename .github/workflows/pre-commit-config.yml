@@ -56,9 +56,9 @@ jobs:
 
       - name: Remove pre-commit hooks which can not be tested
         env:
-          PRE_COMMIT_WIZCLI_REPO: https://github.com/ruzickap/pre-commit-wizcli
+          PRE_COMMIT_DELETE_HOOK_REPO: https://github.com/ruzickap/pre-commit-wizcli
         run: |
-          sed '/^$/N;/\n.*ruzickap\/pre-commit-wizcli/{:a;N;/wizcli-scan-dir/!ba;d}' .pre-commit-config.yaml
+          yq -i -P --indent 2 'del(.repos[] | select(.repo == "${PRE_COMMIT_DELETE_HOOK_REPO}"))' .pre-commit-config.yaml
           git add .pre-commit-config.yaml
 
       - uses: j178/prek-action@91fd7d7cf70ae1dee9f4f44e7dfa5d1073fe6623 # v1.0.11
