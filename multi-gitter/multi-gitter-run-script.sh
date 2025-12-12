@@ -58,6 +58,7 @@ log_info "Processing ${REPOSITORY}"
 
 # Always copy base defaults
 copy_defaults "${GH_REPO_DEFAULTS_BASE}/my-defaults"
+sed -i "s@/ruzickap/my-git-projects/@/${REPOSITORY}/@" ".github/ISSUE_TEMPLATE/config.yml"
 
 # Repository-specific handling
 case "${REPOSITORY}" in
