@@ -13,7 +13,7 @@ on:
 env:
   AWS_DEFAULT_REGION: eu-central-1
   AWS_ROLE_TO_ASSUME: ${{ secrets.RUZICKA_SBX01_AWS_ROLE_TO_ASSUME }}
-  SKIP: no-commit-to-branch
+  SKIP: no-commit-to-branch,wizcli-scan-dir-secrets
 
 defaults:
   run:
@@ -54,12 +54,5 @@ jobs:
           tfupdate --version
           tofu -version
           trivy version
-
-      - name: Remove pre-commit hooks which can not be tested
-        env:
-          PRE_COMMIT_DELETE_HOOK_REPO: https://github.com/ruzickap/pre-commit-wizcli
-        run: |
-          yq -i -P --indent 2 'del(.repos[] | select(.repo == "${PRE_COMMIT_DELETE_HOOK_REPO}"))' .pre-commit-config.yaml
-          git add .pre-commit-config.yaml
 
       - uses: j178/prek-action@91fd7d7cf70ae1dee9f4f44e7dfa5d1073fe6623 # v1.0.11
