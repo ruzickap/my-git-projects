@@ -46,7 +46,6 @@ jobs:
             mq 'select(.code.lang == "bash" || .code.lang == "shell" || .code.lang == "sh") | to_text()' "${FILE}" >> shell_commands_from_md.sh
           done <<< "${ALL_CHANGED_FILES}"
           chmod a+x shell_commands_from_md.sh
-          cat shell_commands_from_md.sh
 
       - name: Restore lychee cache
         id: restore-cache
