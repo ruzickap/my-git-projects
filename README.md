@@ -4,23 +4,25 @@ This README is a personal collection of useful Git and GitHub commands and workf
 
 ## Table of Contents
 
-- [General Links and Info](#general-links-and-info)
-- [Basic Git Workflow and Contributing](#basic-git-workflow-and-contributing)
-  - [Contribution](#contribution)
-  - [Local development](#local-development)
-- [Managing Branches](#managing-branches)
-  - [Merge changes from main to my local branch](#merge-changes-from-main-to-my-local-branch)
-- [Amending Commits and Tags](#amending-commits-and-tags)
-  - [Squash 2 last commits](#squash-2-last-commits)
-  - [Amend older commit message](#amend-older-commit-message)
-  - [Rename tag](#rename-tag)
-  - [Delete tag](#delete-tag)
-- [Working with Submodules](#working-with-submodules)
-  - [Update git submodules](#update-git-submodules)
-- [GitHub Actions and Releases](#github-actions-and-releases)
-  - [Update GitHub Action with tag @1](#update-github-action-with-tag-1)
-  - [Sample commit for a Pull Request](#sample-commit-for-a-pull-request)
-  - [List all GitHub actions in my repos](#list-all-github-actions-in-my-repos)
+- [GitHub](#github)
+  - [Table of Contents](#table-of-contents)
+  - [General Links and Info](#general-links-and-info)
+  - [Basic Git Workflow and Contributing](#basic-git-workflow-and-contributing)
+    - [Contribution](#contribution)
+    - [Local development](#local-development)
+  - [Managing Branches](#managing-branches)
+    - [Merge changes from main to my local branch](#merge-changes-from-main-to-my-local-branch)
+  - [Amending Commits and Tags](#amending-commits-and-tags)
+    - [Squash 2 last commits](#squash-2-last-commits)
+    - [Amend older commit message](#amend-older-commit-message)
+    - [Rename tag](#rename-tag)
+    - [Delete tag](#delete-tag)
+  - [Working with Submodules](#working-with-submodules)
+    - [Update git submodules](#update-git-submodules)
+  - [GitHub Actions and Releases](#github-actions-and-releases)
+    - [Update GitHub Action with tag @1](#update-github-action-with-tag-1)
+    - [Sample commit for a Pull Request](#sample-commit-for-a-pull-request)
+    - [List all GitHub actions in my repos](#list-all-github-actions-in-my-repos)
 
 ## General Links and Info
 
@@ -190,16 +192,22 @@ To rename a Git tag (e.g., from "old" to "new"):
 4. Push the new tag `new` to the remote.
 
 ```bash
+# Create new annotated tag pointing to the same commit as old tag
 git tag -a new old^{}
+# Delete the old local tag
 git tag -d old
+# Delete the old remote tag
 git push origin :refs/tags/old
+# Push the new tag to remote
 git push --tags
 ```
 
 ### Delete tag
 
 ```bash
+# Delete the remote tag
 git push origin :refs/tags/my-tag-name
+# Delete the local tag
 git tag -d my-tag-name
 ```
 
