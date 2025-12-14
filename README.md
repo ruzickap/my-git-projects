@@ -108,9 +108,13 @@ onto `main`. If conflicts occur, `git mergetool` can be used to resolve them,
 followed by `git rebase --continue`.
 
 ```bash
+# Download latest changes from remote without merging
 git fetch
+# Rebase current branch onto main to apply your commits on top
 git rebase main
+# Launch visual tool to resolve any merge conflicts
 git mergetool
+# Continue the rebase after resolving conflicts
 git rebase --continue
 ```
 
@@ -119,15 +123,23 @@ then checking out the feature branch and rebasing it. It also includes steps
 for resolving conflicts manually if they occur during the rebase.
 
 ```bash
+# Switch to the main branch
 git checkout main
+# Pull latest changes with rebase and initialize/update submodules
 git pull -r && git submodule update --init
+# Switch to your feature branch
 git checkout feature/improve_documentation
+# Rebase feature branch onto updated main
 git rebase main
+# Check which files have conflicts
 git status
 # vim docs/test.rst
 # make the changes
+# Stage the resolved file
 git add docs/test.rst
+# Continue rebase after resolving conflicts
 git rebase --continue
+# Force push the rebased branch to your remote fork
 git push -f ruzickap feature/improve_documentation
 ```
 

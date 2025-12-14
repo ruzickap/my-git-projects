@@ -20,19 +20,33 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 2
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47.0.0
+        with:
+          separator: "\n"
+          files: |
+            **/*.md
 
       # Extract shell commands from markdown code blocks for validation
-      # This creates a README.sh file containing all bash/shell/sh code blocks
+      # This creates a shell_commands_from_md.sh file containing all bash/shell/sh code blocks
       # from markdown files to ensure they are syntactically correct
       - name: Extract commands from markdown files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_and_modified_files }}
         run: |
           set -euxo pipefail
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          brew install mdq
-          echo '#!/usr/bin/env bash' > README.sh
-          readarray -d '' MD_FILES < <(find . -type f -name "*.md" -print0)
-          mdq '```/^bash$|^shell$|^sh$/' --br -o plain "${MD_FILES[@]}" >> README.sh || true
-          chmod a+x README.sh
+          brew install mq
+          echo '#!/usr/bin/env bash' > shell_commands_from_md.sh
+          while IFS= read -r FILE; do
+            mq 'select(.code.lang == "bash" || .code.lang == "shell" || .code.lang == "sh") | to_text()' "${FILE}" >> shell_commands_from_md.sh
+          done <<< "${ALL_CHANGED_FILES}"
+          chmod a+x shell_commands_from_md.sh
+          cat shell_commands_from_md.sh
 
       - name: Restore lychee cache
         id: restore-cache
@@ -50,7 +64,7 @@ jobs:
 
       - name: Save lychee cache
         uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
-        if: always()
+        if: always() && steps.restore-cache.outputs.cache-primary-key
         with:
           path: .lycheecache
           key: ${{ steps.restore-cache.outputs.cache-primary-key }}
