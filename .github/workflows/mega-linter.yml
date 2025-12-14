@@ -27,7 +27,6 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47.0.0
         with:
-          separator: "\n"
           files: |
             **/*.md
 
@@ -35,6 +34,7 @@ jobs:
       # This creates a shell_commands_from_md.sh file containing all bash/shell/sh code blocks
       # from markdown files to ensure they are syntactically correct
       - name: Extract commands from markdown files
+        if: steps.changed-files.outputs.any_changed == 'true'
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_and_modified_files }}
         run: |
@@ -42,9 +42,8 @@ jobs:
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew install mq
           echo '#!/usr/bin/env bash' > shell_commands_from_md.sh
-          while IFS= read -r FILE; do
-            mq 'select(.code.lang == "bash" || .code.lang == "shell" || .code.lang == "sh") | to_text()' "${FILE}" >> shell_commands_from_md.sh
-          done <<< "${ALL_CHANGED_FILES}"
+          read -ra FILES <<< "${ALL_CHANGED_FILES}"
+          mq 'select(.code.lang == "bash" || .code.lang == "shell" || .code.lang == "sh") | to_text()' "${FILES[@]}" >> shell_commands_from_md.sh
           chmod a+x shell_commands_from_md.sh
 
       - name: Restore lychee cache
