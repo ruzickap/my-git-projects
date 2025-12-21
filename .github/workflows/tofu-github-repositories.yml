@@ -122,7 +122,7 @@ jobs:
 
       - name: Setup OpenTofu
         if: ${{ env.TOFU_COMMAND != '' }}
-        uses: opentofu/setup-opentofu@000eeb8522f0572907c393e8151076c205fdba1b # v1.0.6
+        uses: opentofu/setup-opentofu@e95ccdd20623115bfd7d47df14a3250d6066a9d0 # v1.0.7
 
       - name: Checkout repository
         if: ${{ env.TOFU_COMMAND != '' }}
