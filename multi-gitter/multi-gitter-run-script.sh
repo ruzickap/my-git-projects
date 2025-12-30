@@ -77,6 +77,11 @@ case "${REPOSITORY}" in
     checkout_files "run.sh" ".github/workflows/commit-check.yml" ".github/workflows/release-please.yml" ".github/workflows/renovate.yml" ".github/workflows/semantic-pull-request.yml" ".github/workflows/stale.yml"
     remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
     ;;
+  ruzickap/caisp-notes)
+    # arm64 is not supported in private repos
+    checkout_files ".github/workflows/commit-check.yml" ".github/workflows/release-please.yml" ".github/workflows/renovate.yml" ".github/workflows/semantic-pull-request.yml" ".github/workflows/stale.yml" ".markdownlint.yml" ".mega-linter.yml"
+    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
+    ;;
   ruzickap/gha_test)
     remove_files ".github/workflows/pr-slack-notification.yml"
     ;;
@@ -88,7 +93,7 @@ case "${REPOSITORY}" in
     checkout_files ".checkov.yml" ".github/workflows/release-please.yml" ".github/renovate.json5"
     ;;
   ruzickap/ruzickap.github.io)
-    checkout_files ".github/renovate.json5" ".github/workflows/mega-linter.yml" ".markdownlint.yml" ".mega-linter.yml" "AGENTS.md"
+    checkout_files ".github/renovate.json5" ".markdownlint.yml" ".mega-linter.yml" "AGENTS.md"
     ;;
   *)
     log_info "Using default configuration for ${REPOSITORY}"

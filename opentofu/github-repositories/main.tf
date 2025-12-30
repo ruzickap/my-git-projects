@@ -31,6 +31,12 @@ provider "github" {}
 locals {
   all_github_repositories = merge(local.github_repositories_existing, local.github_repositories)
   github_repositories = {
+    "caisp_notes" = {
+      name        = "caisp-notes"
+      description = "Certified AI Security Professional Notes"
+      visibility  = "private"
+      topics      = ["ai", "ai-security", "caisp", "caisp-exam", "caisp-exam-preparation", "devsecops", "notes", "security"]
+    }
     "k8s_multicluster_gitops" = {
       name        = "k8s-multicluster-gitops"
       description = "Infrastructure as Code for provisioning multiple Kubernetes clusters, managed using GitOps with ArgoCD"
