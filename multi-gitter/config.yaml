@@ -15,7 +15,6 @@
 conflict-strategy: replace
 
 # Pull request configuration
-pr-auto-merge: true
 pr-title: "chore: add default github repo files"
 pr-body: |
   This PR adds/updates standardized repository configuration files including:

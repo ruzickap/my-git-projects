@@ -12,7 +12,6 @@ resource "github_repository" "this" {
   #checkov:skip=CKV_GIT_1:Ensure GitHub repository is Private
   #checkov:skip=CKV2_GIT_1:Ensure each Repository has branch protection associated
   for_each               = local.all_github_repositories
-  allow_auto_merge       = true
   allow_merge_commit     = false
   allow_update_branch    = true
   auto_init              = true
@@ -147,6 +146,18 @@ resource "github_repository_ruleset" "main" {
       strict_required_status_checks_policy = true
       required_check {
         context = "semantic-pull-request"
+      }
+    }
+    required_code_scanning {
+      required_code_scanning_tool {
+        alerts_threshold          = "errors"
+        security_alerts_threshold = "high_or_higher"
+        tool                      = "CodeQL"
+      }
+      required_code_scanning_tool {
+        alerts_threshold          = "errors"
+        security_alerts_threshold = "high_or_higher"
+        tool                      = "Scorecard"
       }
     }
   }
