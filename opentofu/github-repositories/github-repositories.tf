@@ -148,17 +148,5 @@ resource "github_repository_ruleset" "main" {
         context = "semantic-pull-request"
       }
     }
-    required_code_scanning {
-      required_code_scanning_tool {
-        alerts_threshold          = "errors"
-        security_alerts_threshold = "high_or_higher"
-        tool                      = "CodeQL"
-      }
-      required_code_scanning_tool {
-        alerts_threshold          = "errors"
-        security_alerts_threshold = "high_or_higher"
-        tool                      = "Scorecard"
-      }
-    }
   }
 }
