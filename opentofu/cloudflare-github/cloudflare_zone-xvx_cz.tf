@@ -141,7 +141,7 @@ locals {
 # Zone for xvx.cz
 resource "cloudflare_zone" "xvx_cz" {
   account = {
-    id = var.cloudflare_account_id
+    id = local.cloudflare_account_id
   }
   name = "xvx.cz"
   type = "full"
@@ -229,29 +229,26 @@ resource "cloudflare_dns_record" "xvx_cz_txt_records" {
   type    = "TXT"
 }
 
+# Redirect stats.xvx.cz to UptimeRobot status page
+resource "cloudflare_ruleset" "stats_xvx_cz" {
+  zone_id     = cloudflare_zone.xvx_cz.id
+  name        = "Redirect stats.xvx.cz to UptimeRobot status page"
+  description = "Redirect stats.xvx.cz to UptimeRobot status page"
+  kind        = "zone"
+  phase       = "http_request_dynamic_redirect"
 
-
-# # Disabled - Getting 403 Forbidden
-# # Needs: Zone Edit permissions
-# # https://developers.cloudflare.com/api/resources/rulesets/
-# resource "cloudflare_ruleset" "stats_xvx_cz" {
-#   zone_id     = cloudflare_zone.xvx_cz.id
-#   name        = "stats.xvx.cz"
-#   description = "Redirect to https://stats.uptimerobot.com/AOziwZJXwt"
-#   kind        = "zone"
-#   phase       = "http_request_dynamic_redirect"
-#   rules = [{
-#     action = "redirect"
-#     action_parameters = {
-#       from_value = {
-#         status_code = 301
-#         target_url = {
-#           value = "https://stats.uptimerobot.com/AOziwZJXwt"
-#         }
-#       }
-#     }
-#     expression  = "(http.host eq \"stats.xvx.cz\")"
-#     description = "stats.xvx.cz"
-#     enabled     = false
-#   }]
-# }
+  rules = [{
+    action = "redirect"
+    action_parameters = {
+      from_value = {
+        status_code = 302
+        target_url = {
+          value = "https://stats.uptimerobot.com/${uptimerobot_psp.all_services.url_key}"
+        }
+      }
+    }
+    expression  = "(http.host eq \"stats.xvx.cz\")"
+    description = "Redirect stats.xvx.cz to UptimeRobot status page"
+    enabled     = true
+  }]
+}

@@ -115,7 +115,7 @@ import {
 # Zone for mylabs.dev
 resource "cloudflare_zone" "mylabs_dev" {
   account = {
-    id = var.cloudflare_account_id
+    id = local.cloudflare_account_id
   }
   name = "mylabs.dev"
   type = "full"
@@ -178,16 +178,28 @@ resource "cloudflare_dns_record" "mylabs_dev_txt_records" {
   type    = "TXT"
 }
 
-# Disabled - Example page rule for reference
-# resource "cloudflare_page_rule" "example_page_rule" {
-#   zone_id  = cloudflare_zone.mylabs_dev.id
-#   target   = "mylabs2.dev/*"
-#   priority = 1
-#   status   = "active"
-#   actions = {
-#     forwarding_url = {
-#       url         = "https://petr.ruzicka.dev/"
-#       status_code = 302
-#     }
-#   }
-# }
+# Redirect mylabs.dev and www.mylabs.dev to petr.ruzicka.dev
+resource "cloudflare_ruleset" "mylabs_dev_redirects" {
+  zone_id = cloudflare_zone.mylabs_dev.id
+  name    = "Redirect mylabs.dev to petr.ruzicka.dev"
+  kind    = "zone"
+  phase   = "http_request_dynamic_redirect"
+
+  rules = [
+    {
+      action = "redirect"
+      action_parameters = {
+        from_value = {
+          status_code = 302
+          target_url = {
+            value = "https://petr.ruzicka.dev/"
+          }
+          preserve_query_string = false
+        }
+      }
+      expression  = "(http.host eq \"www.mylabs.dev\") or (http.host eq \"mylabs.dev\")"
+      description = "Redirect mylabs.dev and www.mylabs.dev to petr.ruzicka.dev"
+      enabled     = true
+    }
+  ]
+}

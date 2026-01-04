@@ -1,35 +1,13 @@
-terraform {
-  backend "s3" {
-    bucket                      = "ruzickap-my-git-projects-opentofu-state-file"
-    key                         = "ruzickap-my-git-projects-opentofu-github-repositories.tfstate"
-    region                      = "us-east-1"
-    skip_credentials_validation = true
-  }
-  encryption {
-    key_provider "pbkdf2" "mykey" {
-      passphrase = var.opentofu_encryption_passphrase
-    }
-    method "aes_gcm" "new_method" {
-      keys = key_provider.pbkdf2.mykey
-    }
-    state {
-      method   = method.aes_gcm.new_method
-      enforced = true
-    }
-  }
-  required_version = "~> 1.9"
-  required_providers {
-    github = {
-      source  = "integrations/github"
-      version = "~> 6.8"
-    }
-  }
-}
-
-provider "github" {}
-
 locals {
+  # keep-sorted start block=yes
   all_github_repositories = merge(local.github_repositories_existing, local.github_repositories)
+  # Default secrets applied to all GitHub repositories
+  github_action_default_secrets = {
+    "MY_RENOVATE_GITHUB_APP_ID"      = var.my_renovate_github_app_id
+    "MY_RENOVATE_GITHUB_PRIVATE_KEY" = var.my_renovate_github_private_key
+    "MY_SLACK_BOT_TOKEN"             = var.my_slack_bot_token
+    "MY_SLACK_CHANNEL_ID"            = var.my_slack_channel_id
+  }
   github_repositories = {
     "caisp_notes" = {
       name        = "caisp-notes"
@@ -123,6 +101,12 @@ locals {
       name        = "my-git-projects"
       description = "My GitHub projects"
       topics      = ["github", "projects", "templates"]
+      secrets = {
+        "OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN" = var.opentofu_cloudflare_github_api_token
+        "CLOUDFLARE_R2_ACCESS_KEY_ID"          = cloudflare_account_token.opentofu_cloudflare_github.id
+        "CLOUDFLARE_R2_SECRET_ACCESS_KEY"      = sha256(var.opentofu_cloudflare_github_api_token)
+        "CLOUDFLARE_R2_ENDPOINT_URL_S3"        = "https://${local.cloudflare_account_id}.r2.cloudflarestorage.com"
+      }
     }
     "old_stuff" = {
       name        = "old_stuff"
@@ -141,6 +125,10 @@ locals {
         }]
       }]
       topics = ["personal", "personal-website", "public", "web", "website"]
+      secrets = {
+        "CLOUDFLARE_ACCOUNT_ID" = local.cloudflare_account_id
+        "CLOUDFLARE_API_TOKEN"  = cloudflare_account_token.pages_petr_ruzicka_dev.value
+      }
     }
     "ruzickap" = {
       name        = "ruzickap"
@@ -159,6 +147,10 @@ locals {
         }]
       }]
       topics = ["blog", "github", "github-actions", "jekyll", "markdown", "personal-website", "public", "web", "website"]
+      secrets = {
+        "CLOUDFLARE_ACCOUNT_ID" = local.cloudflare_account_id
+        "CLOUDFLARE_API_TOKEN"  = cloudflare_account_token.pages_ruzickap_github_io.value
+      }
     }
     "ruzickovabozena_xvx_cz" = {
       name         = "ruzickovabozena.xvx.cz"
@@ -190,7 +182,173 @@ locals {
         }]
       }]
       topics = ["personal", "personal-website", "public", "web", "website", "xvx", "xvx-cz"]
+      secrets = {
+        "CLOUDFLARE_ACCOUNT_ID" = local.cloudflare_account_id
+        "CLOUDFLARE_API_TOKEN"  = cloudflare_account_token.pages_xvx_cz.value
+      }
     }
     # keep-sorted end
+  }
+  # keep-sorted end
+}
+
+import {
+  for_each = local.github_repositories_existing
+  id       = each.value.name
+  to       = github_repository.this[each.key]
+}
+
+resource "github_repository" "this" {
+  #checkov:skip=CKV_GIT_1:Ensure GitHub repository is Private
+  #checkov:skip=CKV2_GIT_1:Ensure each Repository has branch protection associated
+  for_each = local.all_github_repositories
+  # Merge settings
+  allow_merge_commit     = false # disable merge commits, use squash/rebase only
+  allow_update_branch    = true  # allow updating PR branches from base branch
+  delete_branch_on_merge = true  # auto-delete head branches after merge
+
+  # Repository initialization
+  auto_init        = true         # create initial commit with README
+  license_template = "apache-2.0" # default license for new repos
+
+  # Repository metadata
+  name         = each.value.name
+  description  = try(each.value.description, "")
+  homepage_url = try(each.value.homepage_url, "")
+  visibility   = try(each.value.visibility, "public") #trivy:ignore:AVD-GIT-0001
+
+  # Repository features
+  has_discussions = try(each.value.has_discussions, false)
+  has_issues      = true  # enable issue tracking
+  has_projects    = false # disable GitHub Projects
+  has_wiki        = false # disable wiki (prefer docs in repo)
+
+  # Security
+  vulnerability_alerts = true # enable Dependabot vulnerability alerts
+
+  dynamic "pages" {
+    for_each = try(each.value.pages, [])
+    content {
+      cname = try(pages.value.cname, null)
+      dynamic "source" {
+        for_each = try(pages.value.source, [])
+        content {
+          branch = source.value.branch
+          path   = try(source.value.path, null)
+        }
+      }
+    }
+  }
+
+  dynamic "security_and_analysis" {
+    for_each = try(each.value.visibility, "") != "private" ? [1] : []
+    content {
+      secret_scanning {
+        status = "enabled"
+      }
+      secret_scanning_push_protection {
+        status = "enabled"
+      }
+    }
+  }
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "github_workflow_repository_permissions" "this" {
+  for_each                         = local.all_github_repositories
+  default_workflow_permissions     = "read"
+  can_approve_pull_request_reviews = true
+  repository                       = github_repository.this[each.key].name
+}
+
+resource "github_actions_secret" "this" {
+  # checkov:skip=CKV_GIT_4:GitHub encrypts secrets automatically when stored via plaintext_value
+  for_each = {
+    for item in flatten([
+      for repo_key, repo in local.all_github_repositories : [
+        # kics-scan ignore-line
+        for secret_name, secret_value in merge(local.github_action_default_secrets, try(repo.secrets, {})) : {
+          key          = "${repo_key}-${secret_name}"
+          repository   = repo.name
+          secret_name  = secret_name
+          secret_value = secret_value
+        }
+      ]
+    ]) : item.key => item
+  }
+  repository      = each.value.repository
+  secret_name     = each.value.secret_name
+  plaintext_value = each.value.secret_value
+}
+
+# Import existing GitHub Repositories
+import {
+  for_each = local.github_repositories_existing
+  id       = each.value.name
+  to       = github_repository_topics.this[each.key]
+}
+
+resource "github_repository_topics" "this" {
+  for_each   = local.all_github_repositories
+  repository = each.value.name
+  topics     = try(each.value.topics, [])
+}
+
+resource "github_repository_ruleset" "main" {
+  for_each    = { for k, v in local.all_github_repositories : k => v if try(v.visibility != "private", true) }
+  name        = "main"
+  repository  = each.value.name
+  target      = "branch"
+  enforcement = "active"
+
+  # My Renovate App
+  # Renovate bot - needs direct access to create update branches
+  bypass_actors {
+    actor_id    = 199026 # Renovate GitHub App ID
+    actor_type  = "Integration"
+    bypass_mode = "always" # allow direct pushes without PR
+  }
+
+  # Repository admin - can bypass via PR only
+  bypass_actors {
+    actor_id    = 5 # admin role ID
+    actor_type  = "RepositoryRole"
+    bypass_mode = "pull_request" # must still use PR workflow
+  }
+
+  # Apply ruleset to default branch only
+  conditions {
+    ref_name {
+      exclude = []
+      include = ["~DEFAULT_BRANCH"]
+    }
+  }
+
+  rules {
+    # Branch protection rules
+    deletion                = true # prevent branch deletion
+    non_fast_forward        = true # prevent force pushes
+    required_linear_history = true # require linear commit history (no merge commits)
+    # required_signatures     = true
+
+    # Pull request requirements
+    pull_request {
+      dismiss_stale_reviews_on_push     = true # invalidate approvals when new commits are pushed
+      require_code_owner_review         = true # require approval from code owners
+      require_last_push_approval        = true # last pusher cannot self-approve
+      required_approving_review_count   = 2    # minimum number of approving reviews
+      required_review_thread_resolution = true # all conversations must be resolved
+    }
+
+    # CI/CD status checks
+    required_status_checks {
+      strict_required_status_checks_policy = true # branch must be up-to-date before merging
+      required_check {
+        context = "semantic-pull-request" # enforce conventional commit PR titles
+      }
+    }
   }
 }

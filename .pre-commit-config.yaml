@@ -57,7 +57,7 @@ repos:
       - id: tfupdate
         args:
           - --args=terraform
-          - --args=--version "~> 1.9"
+          - --args=--version "~> 1.11"
 
   # - repo: https://github.com/terraform-docs/terraform-docs
   #   rev: v0.20.0
