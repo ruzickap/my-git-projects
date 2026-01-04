@@ -42,9 +42,10 @@ export TF_VAR_opentofu_cloudflare_github_api_token="opentofu-cloudflare-github-a
 # https://developers.cloudflare.com/r2/api/tokens/#get-s3-api-credentials-from-an-api-token
 ACCOUNT_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ${TF_VAR_opentofu_cloudflare_github_api_token}" | jq -r '.result[0].id')
 export TF_VAR_opentofu_cloudflare_github_api_token_name="opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)"
-export AWS_ACCESS_KEY_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/tokens" -H "Authorization: Bearer ${TF_VAR_opentofu_cloudflare_github_api_token}" | jq -r --arg name "${TF_VAR_opentofu_cloudflare_github_api_token_name}" '.result[] | select(.name == $name) | .id')
-export AWS_SECRET_ACCESS_KEY=$(echo -n "${TF_VAR_opentofu_cloudflare_github_api_token}" | sha256sum | cut -d' ' -f1)
-export AWS_S3_ENDPOINT="https://${ACCOUNT_ID}.r2.cloudflarestorage.com"
+AWS_ACCESS_KEY_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/tokens" -H "Authorization: Bearer ${TF_VAR_opentofu_cloudflare_github_api_token}" | jq -r --arg name "${TF_VAR_opentofu_cloudflare_github_api_token_name}" '.result[] | select(.name == $name) | .id')
+AWS_SECRET_ACCESS_KEY=$(echo -n "${TF_VAR_opentofu_cloudflare_github_api_token}" | sha256sum | cut -d' ' -f1)
+AWS_S3_ENDPOINT="https://${ACCOUNT_ID}.r2.cloudflarestorage.com"
+export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_S3_ENDPOINT
 
 # Use the GitHub PAT
 export GITHUB_TOKEN="your-github-pat-here"
