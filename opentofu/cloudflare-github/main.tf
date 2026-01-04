@@ -35,7 +35,7 @@ terraform {
     }
     restapi = {
       source  = "Mastercard/restapi"
-      version = "~> 1.20"
+      version = "~> 2.0"
     }
     uptimerobot = {
       source  = "uptimerobot/uptimerobot"
