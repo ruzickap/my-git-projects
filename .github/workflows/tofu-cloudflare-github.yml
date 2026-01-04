@@ -1,11 +1,15 @@
 ---
-name: tofu-github-repositories
+name: tofu-cloudflare-github
 
 # Use-cases:
-# * Never label PR with more than two "tofu" labels because of concurrency: https://github.com/orgs/community/discussions/41518
-# * When a new commit with changes in the `opentofu/github-repositories` directory is pushed to the branch, run `tofu plan`
-# * When a PR with changes in the `opentofu/github-repositories` directory is merged, run `tofu apply`
-# * When a PR with changes in the `opentofu/github-repositories` directory is labeled `tofu-plan/apply/destroy`, run `tofu plan/apply/destroy`
+# * Never label PR with more than two "tofu" labels because of concurrency:
+#   https://github.com/orgs/community/discussions/41518
+# * When a new commit with changes in the `opentofu/cloudflare-github`
+#   directory is pushed to the branch, run `tofu plan`
+# * When a PR with changes in the `opentofu/cloudflare-github` directory is
+#   merged, run `tofu apply`
+# * When a PR with changes in the `opentofu/cloudflare-github` directory is
+#   labeled `tofu-plan/apply/destroy`, run `tofu plan/apply/destroy`
 # * When scheduled, run `tofu apply`
 # * When manually called using `workflow_dispatch`, run `tofu plan/apply/destroy`
 
@@ -22,50 +26,55 @@ on:
           # Disable destroy
           # - destroy
         default: plan
-  push:
-    # https://stackoverflow.com/questions/76037078/why-is-my-github-action-on-paths-also-triggered-when-pushing-a-new-tag
-    branches:
-      - "**"
-    paths:
-      - opentofu/github-repositories/**
+  # push:
+  #   # https://stackoverflow.com/questions/76037078/why-is-my-github-action-on-paths-also-triggered-when-pushing-a-new-tag
+  #   branches:
+  #     - "**"
+  #   paths:
+  #     - opentofu/cloudflare-github/**
   pull_request:
     types: [labeled]
     paths:
-      - opentofu/github-repositories/**
+      - opentofu/cloudflare-github/**
 
 permissions: read-all
 
 env:
   # keep-sorted start
-  AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_STORAGE_AWS_ACCESS_KEY_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
   AWS_REGION: eu-central-1
   AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-  AWS_S3_ENDPOINT: ${{ secrets.CLOUDFLARE_R2_STORAGE_AWS_ENDPOINT_URL_S3 }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_STORAGE_AWS_SECRET_ACCESS_KEY }}
+  AWS_S3_ENDPOINT: ${{ secrets.CLOUDFLARE_R2_ENDPOINT_URL_S3 }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
+  CLOUDFLARE_API_TOKEN: ${{ secrets.OPENTOFU_CLOUDFLARE_API_TOKEN_ADMIN }}
   TF_CLI_ARGS_apply: "-auto-approve"
   TF_CLI_ARGS_destroy: "-auto-approve"
   TF_CLI_ARGS_plan: "-lock=false"
   TF_INPUT: "false"
   TF_IN_AUTOMATION: "true"
+  TF_VAR_cloudflare_zero_trust_access_identity_provider_google_oauth_client_id: ${{ secrets.TF_VAR_CLOUDFLARE_ZERO_TRUST_ACCESS_IDENTITY_PROVIDER_GOOGLE_OAUTH_CLIENT_ID }}
+  TF_VAR_cloudflare_zero_trust_access_identity_provider_google_oauth_client_secret: ${{ secrets.TF_VAR_CLOUDFLARE_ZERO_TRUST_ACCESS_IDENTITY_PROVIDER_GOOGLE_OAUTH_CLIENT_SECRET }}
   TF_VAR_my_renovate_github_app_id: ${{ secrets.MY_RENOVATE_GITHUB_APP_ID }}
   TF_VAR_my_renovate_github_private_key: ${{ secrets.MY_RENOVATE_GITHUB_PRIVATE_KEY }}
   TF_VAR_my_slack_bot_token: ${{ secrets.MY_SLACK_BOT_TOKEN }}
   TF_VAR_my_slack_channel_id: ${{ secrets.MY_SLACK_CHANNEL_ID }}
   TF_VAR_opentofu_encryption_passphrase: ${{ secrets.TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE }}
-  TOFU_WORKING_DIRECTORY: opentofu/github-repositories
+  TF_VAR_uptimerobot_api_key: ${{ secrets.UPTIMEROBOT_API_KEY }}
+  TOFU_WORKING_DIRECTORY: opentofu/cloudflare-github
   # keep-sorted end
 
-# Use concurrency to prevent running tofu-github-repositories simultaneously
+# Use concurrency to prevent running tofu-cloudflare-github simultaneously
 concurrency:
-  group: tofu-github-repositories
+  group: tofu-cloudflare-github
 
 defaults:
   run:
     shell: bash -euxo pipefail {0}
 
 jobs:
-  tofu-github-repositories:
-    # If the action is triggered by a pull request event then run it only for labels `tofu-plan/apply/destroy`
+  tofu-cloudflare-github:
+    # If the action is triggered by a pull request event then run it only
+    # for labels `tofu-plan/apply/destroy`
     runs-on: ubuntu-latest
     permissions:
       actions: read # Required to identify workflow run
@@ -89,7 +98,8 @@ jobs:
           INPUTS_TOFU_COMMAND: ${{ inputs.tofu_command }}
           GITHUB_EVENT_REPOSITORY_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          # If `inputs.tofu_command` from `workflow_dispatch` is set, use it as `tofu_command`.
+          # If `inputs.tofu_command` from `workflow_dispatch` is set,
+          # use it as `tofu_command`.
           if [[ -z "${INPUTS_TOFU_COMMAND}" ]]; then
 
             if [[ "${GITHUB_EVENT_NAME}" = "push" ]]; then
@@ -147,4 +157,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.number }}
           PR_LABEL: ${{ github.event.label.name }}
-        run: gh api "/repos/{owner}/{repo}/issues/${PR_NUMBER}/labels/${PR_LABEL}" --method DELETE
+        run: |
+          gh api "/repos/{owner}/{repo}/issues/${PR_NUMBER}/labels/${PR_LABEL}" \
+            --method DELETE

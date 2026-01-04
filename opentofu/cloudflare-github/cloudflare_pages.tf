@@ -8,10 +8,9 @@ locals {
   }
 }
 
-# Needs: Account - Cloudflare Pages, Project - Cloudflare Pages
 resource "cloudflare_pages_project" "projects" {
   for_each          = local.cloudflare_pages_projects
-  account_id        = var.cloudflare_account_id
+  account_id        = local.cloudflare_account_id
   name              = each.value
   production_branch = "main"
 }

@@ -5,7 +5,7 @@ locals {
   allowed_emails = [
     {
       email = {
-        email = "petr.ruzicka@gmail.com"
+        email = local.my_email
       }
     }
   ]
@@ -110,7 +110,7 @@ data "http" "my_file" {
 resource "cloudflare_zero_trust_access_identity_provider" "google_oauth" {
   name       = "Google IDP"
   type       = "google"
-  account_id = var.cloudflare_account_id
+  account_id = local.cloudflare_account_id
   config = {
     client_id     = var.cloudflare_zero_trust_access_identity_provider_google_oauth_client_id
     client_secret = var.cloudflare_zero_trust_access_identity_provider_google_oauth_client_secret
@@ -118,7 +118,7 @@ resource "cloudflare_zero_trust_access_identity_provider" "google_oauth" {
 }
 
 resource "cloudflare_zero_trust_access_policy" "google_sso_access" {
-  account_id = var.cloudflare_account_id
+  account_id = local.cloudflare_account_id
   name       = "Google SSO Access"
   decision   = "allow"
   include    = local.allowed_emails
@@ -126,7 +126,7 @@ resource "cloudflare_zero_trust_access_policy" "google_sso_access" {
 
 # Needs: Zero Trust
 resource "cloudflare_zero_trust_list" "uptimerobot_ips" {
-  account_id  = var.cloudflare_account_id
+  account_id  = local.cloudflare_account_id
   name        = "UptimeRobot IPs"
   type        = "IP"
   description = "UptimeRobot IP addresses of their checks (https://uptimerobot.com/help/locations/)"
@@ -134,13 +134,13 @@ resource "cloudflare_zero_trust_list" "uptimerobot_ips" {
 }
 
 resource "cloudflare_zero_trust_access_tag" "tags" {
-  account_id = var.cloudflare_account_id
+  account_id = local.cloudflare_account_id
   for_each   = toset(local.tags)
   name       = each.key
 }
 
 resource "cloudflare_zero_trust_access_policy" "uptimerobot_direct_access" {
-  account_id = var.cloudflare_account_id
+  account_id = local.cloudflare_account_id
   name       = "UptimeRobot Direct Access"
   decision   = "bypass"
   include = [{
@@ -151,7 +151,7 @@ resource "cloudflare_zero_trust_access_policy" "uptimerobot_direct_access" {
 }
 
 resource "cloudflare_zero_trust_access_policy" "allow_all" {
-  account_id = var.cloudflare_account_id
+  account_id = local.cloudflare_account_id
   name       = "Allow All"
   decision   = "bypass"
   include    = [{ everyone = {} }]
@@ -166,14 +166,14 @@ resource "cloudflare_zero_trust_access_policy" "allow_all" {
 # Create cloudflare_zero_trust_tunnel_cloudflared resources for each tunnel in the map
 resource "cloudflare_zero_trust_tunnel_cloudflared" "tunnels" {
   for_each   = local.cloudflare_zero_trust_tunnels_applications
-  account_id = var.cloudflare_account_id
+  account_id = local.cloudflare_account_id
   name       = each.key
   config_src = "cloudflare"
 }
 
 resource "cloudflare_zero_trust_tunnel_cloudflared_config" "configs" {
   for_each   = local.cloudflare_zero_trust_tunnels_applications
-  account_id = var.cloudflare_account_id
+  account_id = local.cloudflare_account_id
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.tunnels[each.key].id
   source     = "cloudflare"
   config = {
@@ -202,7 +202,7 @@ resource "cloudflare_zero_trust_access_application" "applications" {
     app_name => app if !startswith(app.service, "ssh://")
   }
 
-  account_id = var.cloudflare_account_id
+  account_id = local.cloudflare_account_id
 
   name                      = each.key
   domain                    = "${each.key}.${cloudflare_zone.xvx_cz.name}"

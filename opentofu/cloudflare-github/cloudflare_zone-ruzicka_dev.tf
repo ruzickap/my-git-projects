@@ -10,7 +10,7 @@ locals {
     }
     "blog" = {
       content = "ruzickap.github.io"
-      comment = "ruzickap.github.io - personal blog 🏠 (https://github.com/ruzickap/ruzickap.github.io)"
+      comment = "Blog (https://github.com/ruzickap/ruzickap.github.io)"
       proxied = true
     }
     "petr" = {
@@ -83,7 +83,7 @@ import {
 # Zone for ruzicka.dev
 resource "cloudflare_zone" "ruzicka_dev" {
   account = {
-    id = var.cloudflare_account_id
+    id = local.cloudflare_account_id
   }
   name = "ruzicka.dev"
   type = "full"
@@ -131,4 +131,46 @@ resource "cloudflare_dns_record" "ruzicka_dev_txt_records" {
   proxied = false
   ttl     = 1
   type    = "TXT"
+}
+
+# Redirect rules for ruzicka.dev
+resource "cloudflare_ruleset" "ruzicka_dev_redirects" {
+  zone_id     = cloudflare_zone.ruzicka_dev.id
+  name        = "Redirect rules for ruzicka.dev"
+  description = "HTTP redirect rules for ruzicka.dev domain and subdomains"
+  kind        = "zone"
+  phase       = "http_request_dynamic_redirect"
+
+  rules = [
+    {
+      action = "redirect"
+      action_parameters = {
+        from_value = {
+          status_code = 302
+          target_url = {
+            expression = "concat(\"https://ruzickap.github.io\", http.request.uri.path)"
+          }
+          preserve_query_string = true
+        }
+      }
+      expression  = "(http.host eq \"blog.ruzicka.dev\")"
+      description = "Redirect blog.ruzicka.dev to ruzickap.github.io"
+      enabled     = true
+    },
+    {
+      action = "redirect"
+      action_parameters = {
+        from_value = {
+          status_code = 302
+          target_url = {
+            value = "https://petr.ruzicka.dev/"
+          }
+          preserve_query_string = false
+        }
+      }
+      expression  = "(http.host eq \"ruzicka.dev\") or (http.host eq \"www.ruzicka.dev\")"
+      description = "Redirect ruzicka.dev and www.ruzicka.dev to petr.ruzicka.dev"
+      enabled     = true
+    }
+  ]
 }
