@@ -64,13 +64,11 @@ repos:
   #   hooks:
   #     - id: terraform-docs-go
 
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.46.0
+  - repo: https://github.com/rvben/rumdl-pre-commit
+    rev: v0.0.208
     hooks:
-      - id: markdownlint
-        exclude: ^CHANGELOG.md$
-        args:
-          - --config=.markdownlint.yml
+      - id: rumdl # Lint only (fails on issues)
+      - id: rumdl-fmt # Auto-format (fixes what it can)
 
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.37.1
