@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.0.0](https://github.com/ruzickap/my-git-projects/compare/v0.6.0...v1.0.0) (2026-01-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* merge cloudflare and github-repositories code + rewrite ([#267](https://github.com/ruzickap/my-git-projects/issues/267))
+
+### Features
+
+* add AI Agent guidelines and best practices document ([#251](https://github.com/ruzickap/my-git-projects/issues/251)) ([bf1e723](https://github.com/ruzickap/my-git-projects/commit/bf1e723fc530578587c61cc1944d29febc7bea82))
+* add commit message validation workflow ([#244](https://github.com/ruzickap/my-git-projects/issues/244)) ([626ba84](https://github.com/ruzickap/my-git-projects/commit/626ba849250adc24190d3e9622e6913f3aff44c3))
+* add MX records for mylabs.dev and update TXT record naming convention ([#236](https://github.com/ruzickap/my-git-projects/issues/236)) ([3c89bda](https://github.com/ruzickap/my-git-projects/commit/3c89bda0f22ad4d1a75f99bde95a5edb38dc87b2))
+* **github:** enable auto merge for GitHub repositories ([87b85a8](https://github.com/ruzickap/my-git-projects/commit/87b85a8a1ef17633a61f561f514f2ad6cfd9383d))
+* merge cloudflare and github-repositories code + rewrite ([#267](https://github.com/ruzickap/my-git-projects/issues/267)) ([7dfc4ee](https://github.com/ruzickap/my-git-projects/commit/7dfc4ee0dda01bfddc30b57e2dd0041ed6badbf2))
+
+
+### Bug Fixes
+
+* fix command extraction only runs ([428e1fa](https://github.com/ruzickap/my-git-projects/commit/428e1fa663f105e2b38f76282cd8181a93a8c352))
+
 ## [0.6.0](https://github.com/ruzickap/my-git-projects/compare/v0.5.0...v0.6.0) (2025-10-03)
 
 
