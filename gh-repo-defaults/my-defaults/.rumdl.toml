@@ -1,0 +1,5 @@
+# rumdl configuration file - https://github.com/rvben/rumdl
+
+# MD013: Line length - https://github.com/rvben/rumdl/blob/main/docs/md013.md
+[MD013]
+code-blocks = false  # Exclude code blocks from line length check
