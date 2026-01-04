@@ -41,6 +41,9 @@ JSON_JSONLINT_ARGUMENTS: --comments
 # Exclude devcontainer.json from JSON linting (VS Code extension format)
 JSON_JSONLINT_FILTER_REGEX_EXCLUDE: .devcontainer/devcontainer.json
 
+# Exclude CHANGELOG.md from rumdl (auto-generated, may have formatting issues)
+MARKDOWN_RUMDL_FILTER_REGEX_EXCLUDE: CHANGELOG.md
+
 # Disable the MegaLinter ASCII art graphic in output
 PRINT_ALPACA: false
 
