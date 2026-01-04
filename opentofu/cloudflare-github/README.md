@@ -95,12 +95,8 @@ permissions to `cloudflare_account_token.tf`):
 ACCOUNT_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ${TF_VAR_opentofu_cloudflare_github_api_token}" | jq -r '.result[0].id')
 
 # Account-scoped permissions
-curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/iam/permission_groups" \
-  -H "Authorization: Bearer ${TF_VAR_opentofu_cloudflare_github_api_token}" | \
-  jq '.result[] | select(.meta.scopes == "com.cloudflare.api.account")'
+curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/iam/permission_groups" -H "Authorization: Bearer ${TF_VAR_opentofu_cloudflare_github_api_token}" | jq '.result[] | select(.meta.scopes == "com.cloudflare.api.account")'
 
 # Zone-scoped permissions
-curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/iam/permission_groups" \
-  -H "Authorization: Bearer ${TF_VAR_opentofu_cloudflare_github_api_token}" | \
-  jq '.result[] | select(.meta.scopes == "com.cloudflare.api.account.zone")'
+curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/iam/permission_groups" -H "Authorization: Bearer ${TF_VAR_opentofu_cloudflare_github_api_token}" | jq '.result[] | select(.meta.scopes == "com.cloudflare.api.account.zone")'
 ```
