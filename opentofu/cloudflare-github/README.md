@@ -70,7 +70,7 @@ tofu output -json cloudflare_web_analytics_site_ruzickap_github_io_token | jq -r
 The output contains the following environment variables:
 
 | Variable                               | Description                        |
-| -------------------------------------- | ---------------------------------- |
+|----------------------------------------|------------------------------------|
 | `CLOUDFLARE_R2_ACCESS_KEY_ID`          | R2 S3-compatible Access Key ID     |
 | `CLOUDFLARE_R2_ENDPOINT_URL_S3`        | R2 S3-compatible endpoint URL      |
 | `CLOUDFLARE_R2_SECRET_ACCESS_KEY`      | R2 S3-compatible Secret Access Key |

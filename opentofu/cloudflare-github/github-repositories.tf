@@ -269,11 +269,11 @@ resource "github_actions_secret" "this" {
   for_each = {
     for item in flatten([
       for repo_key, repo in local.all_github_repositories : [
-        # kics-scan ignore-line
         for secret_name, secret_value in merge(local.github_action_default_secrets, try(repo.secrets, {})) : {
-          key          = "${repo_key}-${secret_name}"
-          repository   = repo.name
-          secret_name  = secret_name
+          key         = "${repo_key}-${secret_name}"
+          repository  = repo.name
+          secret_name = secret_name
+          # kics-scan ignore-line
           secret_value = secret_value
         }
       ]
