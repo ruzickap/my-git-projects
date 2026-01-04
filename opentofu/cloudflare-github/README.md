@@ -20,7 +20,11 @@ This bucket is used to store OpenTofu state files.
 
 2. Fill in the **Create Custom Token** form:
 
-   - **Token name**: `opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)`
+   - **Token name**:
+
+     ```text
+     opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)
+     ```
 
    - **Permissions**:
      - `Account` → `Account Settings` → `Edit` (to list accounts)

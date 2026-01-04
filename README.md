@@ -1,6 +1,7 @@
 # GitHub
 
-This README is a personal collection of useful Git and GitHub commands and workflows.
+This README is a personal collection of useful Git and GitHub commands
+and workflows.
 
 ## Table of Contents
 
@@ -36,7 +37,8 @@ GitHub's official command-line tool (`gh`): [https://cli.github.com/](https://cl
 
 ### Contribution
 
-This section outlines the process for contributing to an external GitHub repository.
+This section outlines the process for contributing to an external GitHub
+repository.
 
 ```bash
 GITHUB_REPO_TO_CONTRIBUTE="https://github.com/oxsecurity/megalinter"
@@ -170,6 +172,7 @@ To change the message of an older commit:
    starting the rebase from the parent of that commit, allowing you to edit
    the commit itself. Change `pick` to `reword` (or `r`) for the commit
    you want to change, then save and exit.
+
 You'll be prompted to enter the new commit message.
 Since this rewrites history, a force push (`git push --force`) is required.
 
