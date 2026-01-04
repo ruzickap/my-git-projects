@@ -79,7 +79,7 @@ case "${REPOSITORY}" in
     ;;
   ruzickap/caisp-notes)
     # arm64 is not supported in private repos
-    checkout_files ".github/workflows/commit-check.yml" ".github/workflows/release-please.yml" ".github/workflows/renovate.yml" ".github/workflows/semantic-pull-request.yml" ".github/workflows/stale.yml" ".markdownlint.yml" ".mega-linter.yml"
+    checkout_files ".github/workflows/commit-check.yml" ".github/workflows/release-please.yml" ".github/workflows/renovate.yml" ".github/workflows/semantic-pull-request.yml" ".github/workflows/stale.yml" ".mega-linter.yml"
     remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
     ;;
   ruzickap/gha_test)
@@ -87,13 +87,12 @@ case "${REPOSITORY}" in
     ;;
   ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/hugo"
-    checkout_files ".spelling"
     ;;
   ruzickap/malware-cryptominer-container)
     checkout_files ".checkov.yml" ".github/workflows/release-please.yml" ".github/renovate.json5"
     ;;
   ruzickap/ruzickap.github.io)
-    checkout_files ".github/renovate.json5" ".markdownlint.yml" ".mega-linter.yml" "AGENTS.md"
+    checkout_files ".github/renovate.json5" ".rumdl.toml" ".mega-linter.yml" "AGENTS.md"
     ;;
   *)
     log_info "Using default configuration for ${REPOSITORY}"

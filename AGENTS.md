@@ -31,6 +31,7 @@ and maintainability across all contributions.
 - **Code blocks**: For `bash`/`shell` code blocks:
   - Verify they pass `shellcheck` validation
   - Format with `shfmt` for consistency
+- Check if URL links are accessible using `lychee`
 
 ### Markdown Best Practices
 
@@ -39,6 +40,13 @@ and maintainability across all contributions.
 - Use semantic HTML only when necessary
 - Prefer code fences over inline code for multi-line examples
 - Include language identifiers in code fences
+
+## GitHub Actions
+
+- **Validation after changes**: Each time you modify a GitHub Action workflow
+  file or a composite action file:
+  - Validate the file using `actionlint` to ensure it is compliant and
+    correctly formatted
 
 ## Version Control
 
