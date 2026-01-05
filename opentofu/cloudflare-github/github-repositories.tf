@@ -3,10 +3,11 @@ locals {
   all_github_repositories = merge(local.github_repositories_existing, local.github_repositories)
   # Default secrets applied to all GitHub repositories
   github_action_default_secrets = {
-    "MY_RENOVATE_GITHUB_APP_ID"      = var.my_renovate_github_app_id
-    "MY_RENOVATE_GITHUB_PRIVATE_KEY" = var.my_renovate_github_private_key
-    "MY_SLACK_BOT_TOKEN"             = var.my_slack_bot_token
-    "MY_SLACK_CHANNEL_ID"            = var.my_slack_channel_id
+    "MY_RENOVATE_GITHUB_APP_ID" = data.sops_file.env_yaml.data["MY_RENOVATE_GITHUB_APP_ID"]
+    # kics-scan ignore-line - False positive: value comes from encrypted SOPS file, not hardcoded
+    "MY_RENOVATE_GITHUB_PRIVATE_KEY" = data.sops_file.env_yaml.data["MY_RENOVATE_GITHUB_PRIVATE_KEY"]
+    "MY_SLACK_BOT_TOKEN"             = data.sops_file.env_yaml.data["MY_SLACK_BOT_TOKEN"]
+    "MY_SLACK_CHANNEL_ID"            = data.sops_file.env_yaml.data["MY_SLACK_CHANNEL_ID"]
   }
   github_repositories = {
     "caisp_notes" = {
@@ -102,9 +103,9 @@ locals {
       description = "My GitHub projects"
       topics      = ["github", "projects", "templates"]
       secrets = {
-        "OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN" = var.opentofu_cloudflare_github_api_token
+        "OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN" = data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"]
         "CLOUDFLARE_R2_ACCESS_KEY_ID"          = cloudflare_account_token.opentofu_cloudflare_github.id
-        "CLOUDFLARE_R2_SECRET_ACCESS_KEY"      = sha256(var.opentofu_cloudflare_github_api_token)
+        "CLOUDFLARE_R2_SECRET_ACCESS_KEY"      = sha256(data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"])
         "CLOUDFLARE_R2_ENDPOINT_URL_S3"        = "https://${local.cloudflare_account_id}.r2.cloudflarestorage.com"
       }
     }

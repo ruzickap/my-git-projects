@@ -63,7 +63,7 @@ import {
 # Token for OpenTofu code in ruzickap/my-git-projects/opentofu/cloudflare-github
 resource "cloudflare_account_token" "opentofu_cloudflare_github" {
   account_id = local.cloudflare_account_id
-  name       = var.opentofu_cloudflare_github_api_token_name
+  name       = local.opentofu_cloudflare_github_api_token_name
 
   # Specific permissions based on requirements
   policies = [
@@ -96,9 +96,9 @@ output "cloudflare_account_token_opentofu_cloudflare_github" {
   description = "opentofu_cloudflare_github API Token details"
   sensitive   = true
   value = {
-    OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN = var.opentofu_cloudflare_github_api_token
+    OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN = data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"]
     CLOUDFLARE_R2_ACCESS_KEY_ID          = cloudflare_account_token.opentofu_cloudflare_github.id
-    CLOUDFLARE_R2_SECRET_ACCESS_KEY      = sha256(var.opentofu_cloudflare_github_api_token)
+    CLOUDFLARE_R2_SECRET_ACCESS_KEY      = sha256(data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"])
     CLOUDFLARE_R2_ENDPOINT_URL_S3        = "https://${local.cloudflare_account_id}.r2.cloudflarestorage.com"
   }
 }

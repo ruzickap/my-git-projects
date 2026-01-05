@@ -20,16 +20,15 @@ This bucket is used to store OpenTofu state files.
 
 2. Fill in the **Create Custom Token** form:
 
-   - **Token name**:
+    | Token Name                                                                         |
+    |------------------------------------------------------------------------------------|
+    | `opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)` |
 
-     ```text
-     opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)
-     ```
-
-   - **Permissions**:
-     - `Account` → `Account Settings` → `Edit` (to list accounts)
-     - `Account` → `API Tokens` → `Edit` (to create/manage tokens)
-     - `Account` → `Workers R2 Storage` → `Edit` (to access R2 buckets)
+    | Permission | Access               | Purpose | Scope                   |
+    |------------|----------------------|---------|-------------------------|
+    | `Account`  | `Account Settings`   | `Edit`  | To list accounts        |
+    | `Account`  | `API Tokens`         | `Edit`  | To create/manage tokens |
+    | `Account`  | `Workers R2 Storage` | `Edit`  | To access R2 buckets    |
 
 3. Click **Continue to summary** to review and create the token
 
@@ -40,19 +39,18 @@ OpenTofu configuration and stores credentials as GitHub Actions secrets.
 
 ```bash
 # Use the API token from "Create Cloudflare Account API Token" section
-export TF_VAR_opentofu_cloudflare_github_api_token="opentofu-cloudflare-github-api-token-here"
+export OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN="opentofu-cloudflare-github-api-token-here"
+# Use the GitHub PAT
+export GITHUB_TOKEN="your-github-pat-here"
 
 # Generate R2 S3-compatible credentials from the Account API token
 # https://developers.cloudflare.com/r2/api/tokens/#get-s3-api-credentials-from-an-api-token
-ACCOUNT_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ${TF_VAR_opentofu_cloudflare_github_api_token}" | jq -r '.result[0].id')
-export TF_VAR_opentofu_cloudflare_github_api_token_name="opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)"
-AWS_ACCESS_KEY_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/tokens" -H "Authorization: Bearer ${TF_VAR_opentofu_cloudflare_github_api_token}" | jq -r --arg name "${TF_VAR_opentofu_cloudflare_github_api_token_name}" '.result[] | select(.name == $name) | .id')
-AWS_SECRET_ACCESS_KEY=$(echo -n "${TF_VAR_opentofu_cloudflare_github_api_token}" | sha256sum | cut -d' ' -f1)
+ACCOUNT_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r '.result[0].id')
+export OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME="opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)"
+AWS_ACCESS_KEY_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/tokens" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r --arg name "${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME}" '.result[] | select(.name == $name) | .id')
+AWS_SECRET_ACCESS_KEY=$(echo -n "${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | sha256sum | cut -d' ' -f1)
 AWS_S3_ENDPOINT="https://${ACCOUNT_ID}.r2.cloudflarestorage.com"
 export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_S3_ENDPOINT
-
-# Use the GitHub PAT
-export GITHUB_TOKEN="your-github-pat-here"
 
 tofu init
 tofu apply
@@ -92,15 +90,67 @@ sops edit .env.yaml
 
 ## Notes
 
-List all available Cloudflare API token permission names (useful when adding new
-permissions to `cloudflare_account_token.tf`):
+### List Cloudflare API Token Permissions
+
+Retrieve all available permission names when adding new permissions to
+`cloudflare_account_token.tf`:
 
 ```bash
-ACCOUNT_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ${TF_VAR_opentofu_cloudflare_github_api_token}" | jq -r '.result[0].id')
+ACCOUNT_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r '.result[0].id')
 
 # Account-scoped permissions
-curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/iam/permission_groups" -H "Authorization: Bearer ${TF_VAR_opentofu_cloudflare_github_api_token}" | jq '.result[] | select(.meta.scopes == "com.cloudflare.api.account")'
+curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/iam/permission_groups" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq '.result[] | select(.meta.scopes == "com.cloudflare.api.account")'
 
 # Zone-scoped permissions
-curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/iam/permission_groups" -H "Authorization: Bearer ${TF_VAR_opentofu_cloudflare_github_api_token}" | jq '.result[] | select(.meta.scopes == "com.cloudflare.api.account.zone")'
+curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/iam/permission_groups" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq '.result[] | select(.meta.scopes == "com.cloudflare.api.account.zone")'
+```
+
+### Container Testing (Clean Environment)
+
+Test the OpenTofu configuration in an isolated container to ensure it works
+from scratch without local dependencies:
+
+```console
+docker run -it --rm -v "${PWD}:/mnt" alpine
+
+cd /mnt || exit
+apk add --no-cache curl jq opentofu
+
+export TF_VAR_opentofu_encryption_passphrase="p...E"
+export SOPS_AGE_KEY="AGE-SECRET-KEY..."
+export OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN="opentofu-cloudflare-github-api-token-here"
+export GITHUB_TOKEN="gh...m"
+
+# Generate R2 S3-compatible credentials from the Account API token
+# https://developers.cloudflare.com/r2/api/tokens/#get-s3-api-credentials-from-an-api-token
+ACCOUNT_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r '.result[0].id')
+export OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME="opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)"
+AWS_ACCESS_KEY_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/tokens" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r --arg name "${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME}" '.result[] | select(.name == $name) | .id')
+AWS_SECRET_ACCESS_KEY=$(echo -n "${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | sha256sum | cut -d' ' -f1)
+AWS_S3_ENDPOINT="https://${ACCOUNT_ID}.r2.cloudflarestorage.com"
+export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_S3_ENDPOINT
+
+tofu init
+tofu plan
+```
+
+or
+
+```console
+docker run -it --rm -v "${PWD}:/mnt" alpine
+
+cd /mnt || exit
+apk add --no-cache bash mise
+# shellcheck disable=SC2016 # Single quotes intentional - expansion happens when .bashrc is sourced
+echo 'eval "$(/usr/bin/mise activate bash)"' >> ~/.bashrc
+bash
+
+mise trust --yes
+export MISE_SOPS_AGE_KEY="AGE-SECRET-KEY-1...X"
+export SOPS_AGE_KEY="AGE-SECRET-KEY-1...X" # Needed by Tofu + SOPS
+export GITHUB_TOKEN="gh...m"
+
+mise up
+tofu init
+tofu plan
 ```
