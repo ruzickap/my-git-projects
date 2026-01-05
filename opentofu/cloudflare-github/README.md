@@ -19,19 +19,16 @@ This bucket is used to store OpenTofu state files.
 1. Navigate to **Manage Account** → **Account API Tokens**
 
 2. Fill in the **Create Custom Token** form:
-   - **Token name**:
 
-     | Token Name                                                                         |
-     |------------------------------------------------------------------------------------|
-     | `opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)` |
+    | Token Name                                                                         |
+    |------------------------------------------------------------------------------------|
+    | `opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)` |
 
-   - **Permissions**:
-
-     | Permission |        Access        | Purpose | Scope                   |
-     |:----------:|:--------------------:|:-------:|-------------------------|
-     | `Account`  | `Account Settings`   | `Edit`  | To list accounts        |
-     | `Account`  | `API Tokens`         | `Edit`  | To create/manage tokens |
-     | `Account`  | `Workers R2 Storage` | `Edit`  | To access R2 buckets    |
+    | Permission |        Access        | Purpose | Scope                   |
+    |:----------:|:--------------------:|:-------:|-------------------------|
+    | `Account`  | `Account Settings`   | `Edit`  | To list accounts        |
+    | `Account`  | `API Tokens`         | `Edit`  | To create/manage tokens |
+    | `Account`  | `Workers R2 Storage` | `Edit`  | To access R2 buckets    |
 
 3. Click **Continue to summary** to review and create the token
 
@@ -140,10 +137,11 @@ tofu plan
 or
 
 ```bash
-docker run -it --rm -v "${PWD}:/mnt" alpine
+docker run -it --rm -v "${PWD}:/mnt" alpine sh
 
 cd /mnt || exit
 apk add --no-cache bash mise
+# shellcheck disable=SC2016 # Single quotes intentional - expansion happens when .bashrc is sourced
 echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
 bash
 
