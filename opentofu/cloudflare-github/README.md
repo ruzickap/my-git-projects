@@ -142,8 +142,13 @@ docker run -it --rm -v "${PWD}:/mnt" alpine
 cd /mnt || exit
 apk add --no-cache bash mise
 # shellcheck disable=SC2016 # Single quotes intentional - expansion happens when .bashrc is sourced
-echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
+echo 'eval "$(/usr/bin/mise activate bash)"' >> ~/.bashrc
 bash
+
+mise trust --yes
+export MISE_SOPS_AGE_KEY="AGE-SECRET-KEY-1...X"
+export SOPS_AGE_KEY="AGE-SECRET-KEY-1...X" # Needed by Tofu + SOPS
+export GITHUB_TOKEN="gh...m"
 
 mise up
 tofu init
