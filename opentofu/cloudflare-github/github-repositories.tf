@@ -3,7 +3,8 @@ locals {
   all_github_repositories = merge(local.github_repositories_existing, local.github_repositories)
   # Default secrets applied to all GitHub repositories
   github_action_default_secrets = {
-    "MY_RENOVATE_GITHUB_APP_ID"      = data.sops_file.env_yaml.data["MY_RENOVATE_GITHUB_APP_ID"]
+    "MY_RENOVATE_GITHUB_APP_ID" = data.sops_file.env_yaml.data["MY_RENOVATE_GITHUB_APP_ID"]
+    # kics-scan ignore-line - False positive: value comes from encrypted SOPS file, not hardcoded
     "MY_RENOVATE_GITHUB_PRIVATE_KEY" = data.sops_file.env_yaml.data["MY_RENOVATE_GITHUB_PRIVATE_KEY"]
     "MY_SLACK_BOT_TOKEN"             = data.sops_file.env_yaml.data["MY_SLACK_BOT_TOKEN"]
     "MY_SLACK_CHANNEL_ID"            = data.sops_file.env_yaml.data["MY_SLACK_CHANNEL_ID"]
