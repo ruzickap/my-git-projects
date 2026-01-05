@@ -110,7 +110,7 @@ curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/iam/permiss
 Test the OpenTofu configuration in an isolated container to ensure it works
 from scratch without local dependencies:
 
-```bash
+```console
 docker run -it --rm -v "${PWD}:/mnt" alpine
 
 cd /mnt || exit
@@ -137,7 +137,7 @@ tofu plan
 or
 
 ```console
-docker run -it --rm -v "${PWD}:/mnt" alpine sh
+docker run -it --rm -v "${PWD}:/mnt" alpine
 
 cd /mnt || exit
 apk add --no-cache bash mise
