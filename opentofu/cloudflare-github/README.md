@@ -24,8 +24,8 @@ This bucket is used to store OpenTofu state files.
     |------------------------------------------------------------------------------------|
     | `opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)` |
 
-    | Permission |        Access        | Purpose | Scope                   |
-    |:----------:|:--------------------:|:-------:|-------------------------|
+    | Permission | Access               | Purpose | Scope                   |
+    |------------|----------------------|---------|-------------------------|
     | `Account`  | `Account Settings`   | `Edit`  | To list accounts        |
     | `Account`  | `API Tokens`         | `Edit`  | To create/manage tokens |
     | `Account`  | `Workers R2 Storage` | `Edit`  | To access R2 buckets    |
@@ -136,7 +136,7 @@ tofu plan
 
 or
 
-```bash
+```console
 docker run -it --rm -v "${PWD}:/mnt" alpine sh
 
 cd /mnt || exit
