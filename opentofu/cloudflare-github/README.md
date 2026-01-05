@@ -21,19 +21,19 @@ This bucket is used to store OpenTofu state files.
 2. Fill in the **Create Custom Token** form:
    - **Token name**:
 
-   ```text
-opentofu-cloudflare-github (ruzickap/opentofu/cloudflare-github)
-   ```
+     | Token Name                                                                         |
+     |------------------------------------------------------------------------------------|
+     | `opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)` |
 
    - **Permissions**:
 
-    | Permission |        Access        | Purpose | Scope                   |
-    |:----------:|:--------------------:|:-------:|-------------------------|
-    | `Account`  | `Account Settings`   | `Edit`  | To list accounts        |
-    | `Account`  | `API Tokens`         | `Edit`  | To create/manage tokens |
-    | `Account`  | `Workers R2 Storage` | `Edit`  | To access R2 buckets    |
+     | Permission |        Access        | Purpose | Scope                   |
+     |:----------:|:--------------------:|:-------:|-------------------------|
+     | `Account`  | `Account Settings`   | `Edit`  | To list accounts        |
+     | `Account`  | `API Tokens`         | `Edit`  | To create/manage tokens |
+     | `Account`  | `Workers R2 Storage` | `Edit`  | To access R2 buckets    |
 
-1. Click **Continue to summary** to review and create the token
+3. Click **Continue to summary** to review and create the token
 
 ## Run OpenTofu
 
@@ -116,7 +116,7 @@ from scratch without local dependencies:
 ```bash
 docker run -it --rm -v "${PWD}:/mnt" alpine
 
-cd /mnt
+cd /mnt || exit
 apk add --no-cache curl jq opentofu
 
 export TF_VAR_opentofu_encryption_passphrase="p...E"
@@ -142,7 +142,7 @@ or
 ```bash
 docker run -it --rm -v "${PWD}:/mnt" alpine
 
-cd /mnt
+cd /mnt || exit
 apk add --no-cache bash mise
 echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
 bash
