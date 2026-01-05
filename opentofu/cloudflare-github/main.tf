@@ -37,6 +37,10 @@ terraform {
       source  = "Mastercard/restapi"
       version = "~> 2.0"
     }
+    sops = {
+      source  = "carlpett/sops"
+      version = "~> 1.3"
+    }
     uptimerobot = {
       source  = "uptimerobot/uptimerobot"
       version = "1.3.9"
@@ -56,7 +60,11 @@ data "restapi_object" "cloudflare_tokens" {
   results_key  = "result"
   id_attribute = "id"
   search_key   = "name"
-  search_value = var.opentofu_cloudflare_github_api_token_name
+  search_value = local.opentofu_cloudflare_github_api_token_name
+}
+
+data "sops_file" "env_yaml" {
+  source_file = ".env.yaml"
 }
 
 locals {
@@ -67,11 +75,13 @@ locals {
   my_email = "petr.ruzicka@gmail.com"
   # Extract the token ID from the REST API response
   opentofu_cloudflare_github_api_token_id = data.restapi_object.cloudflare_tokens.id
+  # Name of the Cloudflare API token to manage
+  opentofu_cloudflare_github_api_token_name = "opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)"
   # keep-sorted end
 }
 
 provider "cloudflare" {
-  api_token = var.opentofu_cloudflare_github_api_token
+  api_token = data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"]
 }
 
 provider "github" {}
@@ -80,13 +90,15 @@ provider "github" {}
 provider "restapi" {
   uri = "https://api.cloudflare.com/client/v4"
   headers = {
-    Authorization = "Bearer ${var.opentofu_cloudflare_github_api_token}"
+    Authorization = "Bearer ${data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"]}"
     Content-Type  = "application/json"
   }
   write_returns_object = true
 }
 
+provider "sops" {}
+
 provider "uptimerobot" {
-  api_key = var.uptimerobot_api_key
+  api_key = data.sops_file.env_yaml.data["uptimerobot_api_key"]
 }
 # keep-sorted end
