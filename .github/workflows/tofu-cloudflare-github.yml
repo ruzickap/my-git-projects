@@ -60,25 +60,25 @@ jobs:
       - name: Open issue on drift
         if: github.event_name == 'schedule' && steps.tofu.outputs.exitcode != 0
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          diff: ${{ steps.tofu.outputs.diff }}
-          run: ${{ steps.tofu.outputs.run-url }}
-          result: ${{ steps.tofu.outputs.result }}
-          summary: ${{ steps.tofu.outputs.summary }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOFU_OUTPUTS_DIFF: ${{ steps.tofu.outputs.diff }}
+          TOFU_OUTPUTS_RUN: ${{ steps.tofu.outputs.run-url }}
+          TOFU_OUTPUTS_RESULT: ${{ steps.tofu.outputs.result }}
+          TOFU_OUTPUTS_SUMMARY: ${{ steps.tofu.outputs.summary }}
         run: |
-          gh api /repos/{owner}/{repo}/issues \
+          gh api "/repos/{owner}/{repo}/issues" \
             --method POST \
             --field title="Configuration drift detected" \
-            --field body="[View log.]($run)
+            --field body="[View log.](${TOFU_OUTPUTS_RUN})
           <details><summary>Diff of changes.</summary>
 
           \`\`\`diff
-          $diff
+          ${TOFU_OUTPUTS_DIFF}
           \`\`\`
           </details>
           <details><summary>$summary</summary>
 
           \`\`\`hcl
-          $result
+          ${TOFU_OUTPUTS_RESULT}
           \`\`\`
           </details>"
