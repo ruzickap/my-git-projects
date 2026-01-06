@@ -25,13 +25,12 @@ jobs:
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
-      - uses: jdx/mise-action@v3
+      - uses: jdx/mise-action@146a28175021df8ca24f8ee1828cc2a60f980bd5 # v3
         with:
           working_directory: opentofu/cloudflare-github
-          reshim: true
 
       # Run plan by default, or apply on merge.
-      - uses: op5dev/tf-via-pr@v13
+      - uses: op5dev/tf-via-pr@a90a5e0eca088a36ed6bf75b5b4a6f7d07b750cc # v13
         with:
           working-directory: opentofu/cloudflare-github
           tool: tofu
