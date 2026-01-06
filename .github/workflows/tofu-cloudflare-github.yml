@@ -11,13 +11,16 @@ on:
 permissions: read-all
 
 env:
+  # keep-sorted start
   AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
   AWS_S3_ENDPOINT: ${{ secrets.CLOUDFLARE_R2_ENDPOINT_URL_S3 }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
   OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME: "opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)"
   OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN: ${{ secrets.OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN }}
   SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+  TF_VAR_gh_token_opentofu_cloudflare_github: ${{ secrets.TF_VAR_GH_TOKEN_OPENTOFU_CLOUDFLARE_GITHUB }}
   TF_VAR_opentofu_encryption_passphrase: ${{ secrets.TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE }}
+  # keep-sorted end
 
 jobs:
   provision:
