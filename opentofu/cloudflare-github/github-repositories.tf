@@ -123,13 +123,14 @@ locals {
       topics      = ["github", "projects", "templates"]
       secrets = {
         # keep-sorted start
-        "CLOUDFLARE_R2_ACCESS_KEY_ID"           = cloudflare_account_token.opentofu_cloudflare_github.id
-        "CLOUDFLARE_R2_ENDPOINT_URL_S3"         = "https://${local.cloudflare_account_id}.r2.cloudflarestorage.com"
-        "CLOUDFLARE_R2_SECRET_ACCESS_KEY"       = sha256(data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"])
-        "OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"  = data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"]
-        "RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"      = data.sops_file.env_yaml.data["RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"]
-        "SOPS_AGE_KEY"                          = data.sops_file.env_yaml.data["SOPS_AGE_KEY"]
-        "TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE" = data.sops_file.env_yaml.data["TF_VAR_opentofu_encryption_passphrase"]
+        "CLOUDFLARE_R2_ACCESS_KEY_ID"                = cloudflare_account_token.opentofu_cloudflare_github.id
+        "CLOUDFLARE_R2_ENDPOINT_URL_S3"              = "https://${local.cloudflare_account_id}.r2.cloudflarestorage.com"
+        "CLOUDFLARE_R2_SECRET_ACCESS_KEY"            = sha256(data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"])
+        "TF_VAR_GH_TOKEN_OPENTOFU_CLOUDFLARE_GITHUB" = data.sops_file.env_yaml.data["TF_VAR_gh_token_opentofu_cloudflare_github"]
+        "OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"       = data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"]
+        "RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"           = data.sops_file.env_yaml.data["RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"]
+        "SOPS_AGE_KEY"                               = data.sops_file.env_yaml.data["SOPS_AGE_KEY"]
+        "TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE"      = data.sops_file.env_yaml.data["TF_VAR_opentofu_encryption_passphrase"]
         # keep-sorted end
       }
     }
