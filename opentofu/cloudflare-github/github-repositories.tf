@@ -25,6 +25,10 @@ locals {
       name        = "pre-commit-wizcli"
       description = "pre-commit hook for WizCLI that checks your code"
       topics      = ["pre-commit", "wizcli", "wiz"]
+      secrets = {
+        "WIZ_CLIENT_ID"     = data.sops_file.env_yaml.data["WIZ_CLIENT_ID"]
+        "WIZ_CLIENT_SECRET" = data.sops_file.env_yaml.data["WIZ_CLIENT_SECRET"]
+      }
     },
   }
   #trivy:ignore:avd-git-0001 Repository is public
@@ -59,6 +63,10 @@ locals {
       name        = "ansible-raspberry-pi-os"
       description = "Configure Raspberry Pi OS (RPi) using Ansible"
       topics      = ["ansible", "grafana", "kodi", "node-exporter", "public", "prometheus", "raspberry-pi", "raspberry-pi-os", "rpi"]
+      secrets = {
+        "WIFI_PASSWORD" = data.sops_file.env_yaml.data["WIFI_PASSWORD"]
+        "WIFI_SSID"     = data.sops_file.env_yaml.data["WIFI_SSID"]
+      }
     }
     "cheatsheet_atom" = {
       name        = "cheatsheet-atom"
@@ -88,7 +96,7 @@ locals {
     }
     "gha_test" = {
       name         = "gha-test"
-      description  = "GitHub Action test repository"
+      description  = "GitHub Action Test repository"
       homepage_url = "https://petr.ruzicka.dev"
       topics       = ["actions", "ci", "github", "test", "github-action", "gha"]
     }
@@ -97,16 +105,29 @@ locals {
       description  = "Container image with malware and crypto miner for testing purposes"
       homepage_url = "https://artifacthub.io/packages/container/malware-cryptominer-container/malware-cryptominer-container"
       topics       = ["container", "crypto", "cryptominer", "dockerfile", "eicar", "image", "malware", "public", "test", "xmrig"]
+      secrets = {
+        # keep-sorted start
+        "DOCKERHUB_CONTAINER_REGISTRY_PASSWORD" = data.sops_file.env_yaml.data["DOCKERHUB_CONTAINER_REGISTRY_PASSWORD"]
+        "DOCKERHUB_CONTAINER_REGISTRY_USER"     = data.sops_file.env_yaml.data["DOCKERHUB_CONTAINER_REGISTRY_USER"]
+        "QUAY_CONTAINER_REGISTRY_PASSWORD"      = data.sops_file.env_yaml.data["QUAY_CONTAINER_REGISTRY_PASSWORD"]
+        "QUAY_CONTAINER_REGISTRY_USER"          = data.sops_file.env_yaml.data["QUAY_CONTAINER_REGISTRY_USER"]
+        # keep-sorted end
+      }
     }
     "my_git_projects" = {
       name        = "my-git-projects"
-      description = "My GitHub projects"
+      description = "My GitHub Projects"
       topics      = ["github", "projects", "templates"]
       secrets = {
-        "OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN" = data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"]
-        "CLOUDFLARE_R2_ACCESS_KEY_ID"          = cloudflare_account_token.opentofu_cloudflare_github.id
-        "CLOUDFLARE_R2_SECRET_ACCESS_KEY"      = sha256(data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"])
-        "CLOUDFLARE_R2_ENDPOINT_URL_S3"        = "https://${local.cloudflare_account_id}.r2.cloudflarestorage.com"
+        # keep-sorted start
+        "OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"  = data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"]
+        "CLOUDFLARE_R2_ACCESS_KEY_ID"           = cloudflare_account_token.opentofu_cloudflare_github.id
+        "CLOUDFLARE_R2_SECRET_ACCESS_KEY"       = sha256(data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"])
+        "CLOUDFLARE_R2_ENDPOINT_URL_S3"         = "https://${local.cloudflare_account_id}.r2.cloudflarestorage.com"
+        "RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"      = data.sops_file.env_yaml.data["RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"]
+        "SOPS_AGE_KEY"                          = data.sops_file.env_yaml.data["SOPS_AGE_KEY"]
+        "TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE" = data.sops_file.env_yaml.data["TF_VAR_opentofu_encryption_passphrase"]
+        # keep-sorted end
       }
     }
     "old_stuff" = {
@@ -149,8 +170,14 @@ locals {
       }]
       topics = ["blog", "github", "github-actions", "jekyll", "markdown", "personal-website", "public", "web", "website"]
       secrets = {
-        "CLOUDFLARE_ACCOUNT_ID" = local.cloudflare_account_id
-        "CLOUDFLARE_API_TOKEN"  = cloudflare_account_token.pages_ruzickap_github_io.value
+        # keep-sorted start
+        "AWS_ROLE_TO_ASSUME"          = data.sops_file.env_yaml.data["RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"]
+        "GOOGLE_CLIENT_ID"            = data.sops_file.env_yaml.data["GOOGLE_CLIENT_SECRET"]
+        "GOOGLE_CLIENT_SECRET"        = data.sops_file.env_yaml.data["RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"]
+        "CLOUDFLARE_ACCOUNT_ID"       = local.cloudflare_account_id
+        "CLOUDFLARE_API_TOKEN"        = cloudflare_account_token.pages_ruzickap_github_io.value
+        "MY_ATLASSIAN_PERSONAL_TOKEN" = data.sops_file.env_yaml.data["MY_ATLASSIAN_PERSONAL_TOKEN"]
+        # keep-sorted end
       }
     }
     "ruzickovabozena_xvx_cz" = {
