@@ -1,162 +1,84 @@
 ---
+# GitHub Actions workflow for OpenTofu infrastructure provisioning
+# Manages Cloudflare and GitHub resources via Infrastructure as Code
 name: tofu-cloudflare-github
 
-# Use-cases:
-# * Never label PR with more than two "tofu" labels because of concurrency:
-#   https://github.com/orgs/community/discussions/41518
-# * When a new commit with changes in the `opentofu/cloudflare-github`
-#   directory is pushed to the branch, run `tofu plan`
-# * When a PR with changes in the `opentofu/cloudflare-github` directory is
-#   merged, run `tofu apply`
-# * When a PR with changes in the `opentofu/cloudflare-github` directory is
-#   labeled `tofu-plan/apply/destroy`, run `tofu plan/apply/destroy`
-# * When scheduled, run `tofu apply`
-# * When manually called using `workflow_dispatch`, run `tofu plan/apply/destroy`
-
 on:
-  workflow_dispatch:
-    inputs:
-      tofu_command:
-        description: tofu main command
-        required: true
-        type: choice
-        options:
-          - plan
-          - apply
-          # Disable destroy
-          # - destroy
-        default: plan
-  # push:
-  #   # https://stackoverflow.com/questions/76037078/why-is-my-github-action-on-paths-also-triggered-when-pushing-a-new-tag
-  #   branches:
-  #     - "**"
-  #   paths:
-  #     - opentofu/cloudflare-github/**
   pull_request:
-    types: [labeled]
     paths:
       - opentofu/cloudflare-github/**
+      - "!opentofu/cloudflare-github/README.md"
+  push:
+    branches: [main]
+    paths:
+      - opentofu/cloudflare-github/**
+      - "!opentofu/cloudflare-github/README.md"
+  schedule:
+    - cron: "0 0 * * 1"
 
 permissions: read-all
 
 env:
   # keep-sorted start
   AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
-  AWS_REGION: eu-central-1
-  AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
   AWS_S3_ENDPOINT: ${{ secrets.CLOUDFLARE_R2_ENDPOINT_URL_S3 }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
-  CLOUDFLARE_API_TOKEN: ${{ secrets.OPENTOFU_CLOUDFLARE_API_TOKEN_ADMIN }}
-  TF_CLI_ARGS_apply: "-auto-approve"
-  TF_CLI_ARGS_destroy: "-auto-approve"
-  TF_CLI_ARGS_plan: "-lock=false"
-  TF_INPUT: "false"
-  TF_IN_AUTOMATION: "true"
-  TF_VAR_cloudflare_zero_trust_access_identity_provider_google_oauth_client_id: ${{ secrets.TF_VAR_CLOUDFLARE_ZERO_TRUST_ACCESS_IDENTITY_PROVIDER_GOOGLE_OAUTH_CLIENT_ID }}
-  TF_VAR_cloudflare_zero_trust_access_identity_provider_google_oauth_client_secret: ${{ secrets.TF_VAR_CLOUDFLARE_ZERO_TRUST_ACCESS_IDENTITY_PROVIDER_GOOGLE_OAUTH_CLIENT_SECRET }}
-  TF_VAR_my_renovate_github_app_id: ${{ secrets.MY_RENOVATE_GITHUB_APP_ID }}
-  TF_VAR_my_renovate_github_private_key: ${{ secrets.MY_RENOVATE_GITHUB_PRIVATE_KEY }}
-  TF_VAR_my_slack_bot_token: ${{ secrets.MY_SLACK_BOT_TOKEN }}
-  TF_VAR_my_slack_channel_id: ${{ secrets.MY_SLACK_CHANNEL_ID }}
+  OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME: "opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)"
+  OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN: ${{ secrets.OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN }}
+  SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+  TF_VAR_gh_token_opentofu_cloudflare_github: ${{ secrets.TF_VAR_GH_TOKEN_OPENTOFU_CLOUDFLARE_GITHUB }}
   TF_VAR_opentofu_encryption_passphrase: ${{ secrets.TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE }}
-  TF_VAR_uptimerobot_api_key: ${{ secrets.UPTIMEROBOT_API_KEY }}
-  TOFU_WORKING_DIRECTORY: opentofu/cloudflare-github
   # keep-sorted end
-
-# Use concurrency to prevent running tofu-cloudflare-github simultaneously
-concurrency:
-  group: tofu-cloudflare-github
-
-defaults:
-  run:
-    shell: bash -euxo pipefail {0}
 
 jobs:
   tofu-cloudflare-github:
-    # If the action is triggered by a pull request event then run it only
-    # for labels `tofu-plan/apply/destroy`
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     permissions:
-      actions: read # Required to identify workflow run
-      contents: read # Required to checkout repository
-      # kics-scan ignore-line
-      id-token: write # Required to identify workflow run
-      pull-requests: write # Required to add comment and label
-
+      actions: read # Required to identify workflow run.
+      checks: write # Required to add status summary.
+      contents: read # Required to checkout repository.
+      issues: write # Required to open issue on drift.
+      pull-requests: write # Required to add PR comment.
     steps:
-      - name: Debug
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - uses: opentofu/setup-opentofu@000eeb8522f0572907c393e8151076c205fdba1b # v1
+        with:
+          tofu_wrapper: false
+
+      - uses: op5dev/tf-via-pr@5a4229041e3c90818d85813d4e4a4d44f653d5e9 # v13.7.2
+        id: tofu
+        with:
+          arg-lock: ${{ github.event_name == 'push' }}
+          command: ${{ github.event_name == 'push' && 'apply' || 'plan' }}
+          comment-pr: ${{ github.event_name == 'schedule' && 'never' || 'always' }}
+          plan-encrypt: ${{ secrets.TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE }}
+          retention-days: 7
+          tool: tofu
+          working-directory: opentofu/cloudflare-github
+
+      - name: Open issue on drift
+        if: github.event_name == 'schedule' && steps.tofu.outputs.exitcode != 0
         env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOFU_OUTPUTS_DIFF: ${{ steps.tofu.outputs.diff }}
+          TOFU_OUTPUTS_RUN: ${{ steps.tofu.outputs.run-url }}
+          TOFU_OUTPUTS_RESULT: ${{ steps.tofu.outputs.result }}
+          TOFU_OUTPUTS_SUMMARY: ${{ steps.tofu.outputs.summary }}
         run: |
-          echo "${GITHUB_CONTEXT}"
-          env
+          gh api "/repos/{owner}/{repo}/issues" \
+            --method POST \
+            --field title="Configuration drift detected" \
+            --field body="[View log.](${TOFU_OUTPUTS_RUN})
+          <details><summary>Diff of changes.</summary>
 
-      - name: Set variables
-        env:
-          GITHUB_EVENT_NAME: ${{ github.event_name }}
-          PR_LABEL: ${{ github.event.label.name }}
-          INPUTS_TOFU_COMMAND: ${{ inputs.tofu_command }}
-          GITHUB_EVENT_REPOSITORY_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
-        run: |
-          # If `inputs.tofu_command` from `workflow_dispatch` is set,
-          # use it as `tofu_command`.
-          if [[ -z "${INPUTS_TOFU_COMMAND}" ]]; then
+          \`\`\`diff
+          ${TOFU_OUTPUTS_DIFF}
+          \`\`\`
+          </details>
+          <details><summary>$summary</summary>
 
-            if [[ "${GITHUB_EVENT_NAME}" = "push" ]]; then
-              echo "TOFU_COMMAND=plan" | tee -a "${GITHUB_ENV}"
-            fi
-
-            # Run after PR is merged
-            if [[ ( "${GITHUB_EVENT_NAME}" = "push" || "${GITHUB_EVENT_NAME}" = "schedule" ) && "${GITHUB_REF_NAME}" = "${GITHUB_EVENT_REPOSITORY_DEFAULT_BRANCH}" ]]; then
-              echo "TOFU_COMMAND=apply" | tee -a "${GITHUB_ENV}"
-            fi
-
-            case "${PR_LABEL}" in
-              tofu-apply)
-                echo "*** tofu-apply"
-                echo "TOFU_COMMAND=apply" | tee -a "${GITHUB_ENV}"
-                ;;
-              # Disable destroy
-              # tofu-destroy)
-              #   echo "*** tofu-destroy"
-              #   echo "TOFU_COMMAND=destroy" | tee -a "${GITHUB_ENV}"
-              #   ;;
-              tofu-plan)
-                echo "*** tofu-plan"
-                echo "TOFU_COMMAND=plan" | tee -a "${GITHUB_ENV}"
-                ;;
-            esac
-          else
-            echo "TOFU_COMMAND=${INPUTS_TOFU_COMMAND}" | tee -a "${GITHUB_ENV}"
-          fi
-
-      - name: Setup OpenTofu
-        if: ${{ env.TOFU_COMMAND != '' }}
-        uses: opentofu/setup-opentofu@e95ccdd20623115bfd7d47df14a3250d6066a9d0 # v1.0.7
-
-      - name: Checkout repository
-        if: ${{ env.TOFU_COMMAND != '' }}
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-
-      - name: 💡 Run tofu "${{ env.TOFU_COMMAND }}"
-        if: ${{ env.TOFU_COMMAND != '' }}
-        env:
-          TOFU_COMMAND: ${{ env.TOFU_COMMAND }}
-          TOFU_WORKING_DIRECTORY: ${{ env.TOFU_WORKING_DIRECTORY }}
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_OPENTOFU_GITHUB_REPOSITORIES }}
-        run: |
-          set -euxo pipefail
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          brew install tfcmt
-          tofu -chdir="${TOFU_WORKING_DIRECTORY}" init
-          tfcmt "${TOFU_COMMAND}" -- tofu -chdir="${TOFU_WORKING_DIRECTORY}" "${TOFU_COMMAND}"
-
-      - name: Remove label
-        if: ${{ github.event.label.name != '' && env.TOFU_COMMAND != '' }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.number }}
-          PR_LABEL: ${{ github.event.label.name }}
-        run: |
-          gh api "/repos/{owner}/{repo}/issues/${PR_NUMBER}/labels/${PR_LABEL}" \
-            --method DELETE
+          \`\`\`hcl
+          ${TOFU_OUTPUTS_RESULT}
+          \`\`\`
+          </details>"

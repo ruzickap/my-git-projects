@@ -41,7 +41,7 @@ OpenTofu configuration and stores credentials as GitHub Actions secrets.
 # Use the API token from "Create Cloudflare Account API Token" section
 export OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN="opentofu-cloudflare-github-api-token-here"
 # Use the GitHub PAT
-export GITHUB_TOKEN="your-github-pat-here"
+export TF_VAR_gh_token_opentofu_cloudflare_github="your-github-pat-here"
 
 # Generate R2 S3-compatible credentials from the Account API token
 # https://developers.cloudflare.com/r2/api/tokens/#get-s3-api-credentials-from-an-api-token
@@ -119,7 +119,7 @@ apk add --no-cache curl jq opentofu
 export TF_VAR_opentofu_encryption_passphrase="p...E"
 export SOPS_AGE_KEY="AGE-SECRET-KEY..."
 export OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN="opentofu-cloudflare-github-api-token-here"
-export GITHUB_TOKEN="gh...m"
+export TF_VAR_gh_token_opentofu_cloudflare_github="gh...m"
 
 # Generate R2 S3-compatible credentials from the Account API token
 # https://developers.cloudflare.com/r2/api/tokens/#get-s3-api-credentials-from-an-api-token
@@ -148,7 +148,7 @@ bash
 mise trust --yes
 export MISE_SOPS_AGE_KEY="AGE-SECRET-KEY-1...X"
 export SOPS_AGE_KEY="AGE-SECRET-KEY-1...X" # Needed by Tofu + SOPS
-export GITHUB_TOKEN="gh...m"
+export TF_VAR_gh_token_opentofu_cloudflare_github="gh...m"
 
 mise up
 tofu init

@@ -84,7 +84,9 @@ provider "cloudflare" {
   api_token = data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"]
 }
 
-provider "github" {}
+provider "github" {
+  token = var.gh_token_opentofu_cloudflare_github
+}
 
 # REST API provider for fetching Cloudflare token ID by name
 provider "restapi" {
