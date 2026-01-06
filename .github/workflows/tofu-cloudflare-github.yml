@@ -28,6 +28,7 @@ jobs:
       - uses: jdx/mise-action@v3
         with:
           working_directory: opentofu/cloudflare-github
+          reshim: true
 
       # Run plan by default, or apply on merge.
       - uses: op5dev/tf-via-pr@v13
