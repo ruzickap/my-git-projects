@@ -68,6 +68,7 @@ repos:
     rev: v0.0.209
     hooks:
       - id: rumdl # Lint only (fails on issues)
+        exclude: ^CHANGELOG\.md$
 
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.37.1
