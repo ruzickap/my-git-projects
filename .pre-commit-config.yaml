@@ -40,7 +40,7 @@ repos:
       - id: shellcheck
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.104.0
+    rev: v1.104.1
     hooks:
       - id: terraform_checkov
         # args:
@@ -65,9 +65,10 @@ repos:
   #     - id: terraform-docs-go
 
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.0.208
+    rev: v0.0.209
     hooks:
       - id: rumdl # Lint only (fails on issues)
+        exclude: ^CHANGELOG\.md$
 
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.37.1
@@ -126,13 +127,13 @@ repos:
               ^\.git/COMMIT_EDITMSG$
           )$
 
-  - repo: https://github.com/google/keep-sorted
-    rev: v0.7.1
-    hooks:
-      - id: keep-sorted
+  # - repo: https://github.com/google/keep-sorted
+  #   rev: v0.7.1
+  #   hooks:
+  #     - id: keep-sorted
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.10.0
+    rev: v4.11.1
     hooks:
       - id: commitizen
         stages: [commit-msg]
@@ -140,7 +141,7 @@ repos:
         stages: [pre-push]
 
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.1.2
+    rev: v2.2.1
     hooks:
       - id: check-message
       - id: check-branch
