@@ -5,8 +5,14 @@ name: tofu-cloudflare-github
 
 on:
   pull_request:
+    paths:
+      - opentofu/cloudflare-github/**
+      - "!opentofu/cloudflare-github/README.md"
   push:
     branches: [main]
+    paths:
+      - opentofu/cloudflare-github/**
+      - "!opentofu/cloudflare-github/README.md"
   schedule:
     - cron: "0 0 * * 1"
 
