@@ -58,16 +58,13 @@ tofu apply
 
 ## Get OpenTofu Outputs
 
-After applying, retrieve credentials and token values:
+After applying - retrieve credentials:
 
 ```bash
 # Get OpenTofu Cloudflare API token and R2 credentials
 tofu output cloudflare_account_token_opentofu_cloudflare_github
 # Format credentials as YAML (for copying to .env.yaml)
 tofu output -json cloudflare_account_token_opentofu_cloudflare_github | jq -r 'to_entries[] | "\(.key): \(.value)"'
-
-# Retrieve specific values
-tofu output -json cloudflare_web_analytics_site_ruzickap_github_io_token | jq -r
 ```
 
 The output contains the following environment variables:
