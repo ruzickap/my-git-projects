@@ -175,12 +175,13 @@ locals {
       topics = ["blog", "github", "github-actions", "jekyll", "markdown", "personal-website", "public", "web", "website"]
       secrets = {
         # keep-sorted start
-        "AWS_ROLE_TO_ASSUME"          = data.sops_file.env_yaml.data["RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"]
-        "CLOUDFLARE_ACCOUNT_ID"       = local.cloudflare_account_id
-        "CLOUDFLARE_API_TOKEN"        = cloudflare_account_token.pages_ruzickap_github_io.value
-        "GOOGLE_CLIENT_ID"            = data.sops_file.env_yaml.data["GOOGLE_CLIENT_ID"]
-        "GOOGLE_CLIENT_SECRET"        = data.sops_file.env_yaml.data["GOOGLE_CLIENT_SECRET"]
-        "MY_ATLASSIAN_PERSONAL_TOKEN" = data.sops_file.env_yaml.data["MY_ATLASSIAN_PERSONAL_TOKEN"]
+        "AWS_ROLE_TO_ASSUME"                  = data.sops_file.env_yaml.data["RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"]
+        "CLOUDFLARE_ACCOUNT_ID"               = local.cloudflare_account_id
+        "CLOUDFLARE_API_TOKEN"                = cloudflare_account_token.pages_ruzickap_github_io.value
+        "CLOUDFLARE_WEB_ANALYTICS_SITE_TOKEN" = cloudflare_web_analytics_site.ruzickap_github_io.site_token
+        "GOOGLE_CLIENT_ID"                    = data.sops_file.env_yaml.data["GOOGLE_CLIENT_ID"]
+        "GOOGLE_CLIENT_SECRET"                = data.sops_file.env_yaml.data["GOOGLE_CLIENT_SECRET"]
+        "MY_ATLASSIAN_PERSONAL_TOKEN"         = data.sops_file.env_yaml.data["MY_ATLASSIAN_PERSONAL_TOKEN"]
         # keep-sorted end
       }
     }
