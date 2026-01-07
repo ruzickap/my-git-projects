@@ -52,6 +52,7 @@ jobs:
           arg-lock: ${{ github.event_name == 'push' }}
           command: ${{ github.event_name == 'push' && 'apply' || 'plan' }}
           comment-pr: ${{ github.event_name == 'schedule' && 'never' || 'always' }}
+          expand-diff: true
           plan-encrypt: ${{ secrets.TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE }}
           retention-days: 7
           tool: tofu
