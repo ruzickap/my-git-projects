@@ -178,8 +178,8 @@ locals {
         "AWS_ROLE_TO_ASSUME"          = data.sops_file.env_yaml.data["RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"]
         "CLOUDFLARE_ACCOUNT_ID"       = local.cloudflare_account_id
         "CLOUDFLARE_API_TOKEN"        = cloudflare_account_token.pages_ruzickap_github_io.value
-        "GOOGLE_CLIENT_ID"            = data.sops_file.env_yaml.data["GOOGLE_CLIENT_SECRET"]
-        "GOOGLE_CLIENT_SECRET"        = data.sops_file.env_yaml.data["RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"]
+        "GOOGLE_CLIENT_ID"            = data.sops_file.env_yaml.data["GOOGLE_CLIENT_ID"]
+        "GOOGLE_CLIENT_SECRET"        = data.sops_file.env_yaml.data["GOOGLE_CLIENT_SECRET"]
         "MY_ATLASSIAN_PERSONAL_TOKEN" = data.sops_file.env_yaml.data["MY_ATLASSIAN_PERSONAL_TOKEN"]
         # keep-sorted end
       }
