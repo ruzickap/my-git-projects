@@ -33,23 +33,26 @@ locals {
     "Access: Apps and Policies Write",
     "Access: Organizations, Identity Providers, and Groups Write",
     "Access: Service Tokens Write",
-    "Account API Tokens Write", # create/manage API tokens via cloudflare_account_token
-    "Account Settings Read",    # read account settings for cloudflare_web_analytics_site (https://developers.cloudflare.com/api/python/resources/rum/subresources/site_info/)
-    "Account Settings Write",   # modify account settings and list accounts
-    "Cloudflare Tunnel Write",
-    "Email Routing Addresses Write",
-    "Pages Write",
-    "Workers R2 Storage Write", # access R2 buckets for OpenTofu state storage
-    "Zero Trust Write",
+    "Account API Tokens Write",      # create/manage API tokens via cloudflare_account_token
+    "Account Settings Read",         # read account settings for cloudflare_web_analytics_site (https://developers.cloudflare.com/api/python/resources/rum/subresources/site_info/)
+    "Account Settings Write",        # modify account settings and list accounts
+    "Cloudflare Tunnel Write",       # manage tunnels via cloudflare_zero_trust_tunnel_cloudflared
+    "Email Routing Addresses Write", # manage email routing via cloudflare_email_routing_address
+    "Pages Write",                   # deploy sites via cloudflare_pages_project
+    "Workers R2 Storage Write",      # access R2 buckets for OpenTofu state storage
+    "Zero Trust Write",              # manage Zero Trust settings via cloudflare_zero_trust_*
     # keep-sorted end
   ]
 
   # Zone-scoped permissions
   zone_permission_names = [
     # keep-sorted start
-    "DNS Write",
+    "Cache Settings Write",        # manage cache rules via cloudflare_ruleset
+    "DNS Write",                   # manage DNS records via cloudflare_dns_record
     "Dynamic URL Redirects Write", # manage dynamic redirect rules via cloudflare_ruleset
-    "Zone Write",
+    "Response Compression Write",  # manage compression rules via cloudflare_ruleset
+    "Zone Settings Write",         # manage zone settings via cloudflare_zone_setting
+    "Zone Write",                  # manage zones via cloudflare_zone
     # keep-sorted end
   ]
 }

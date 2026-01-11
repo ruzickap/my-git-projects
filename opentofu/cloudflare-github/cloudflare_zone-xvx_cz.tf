@@ -25,20 +25,23 @@ locals {
   xvx_cz_cname_records = {
     # keep-sorted start block=yes
     "" = {
-      content = "ruzickap.github.io"
-      comment = "Redirection for GitHub Pages: https://github.com/ruzickap/xvx.cz"
+      content                    = "ruzickap.github.io"
+      comment                    = "Redirection for GitHub Pages: https://github.com/ruzickap/xvx.cz"
+      observatory_scheduled_test = true
     }
     "byt" = {
-      content = "ghs.google.com"
-      comment = "Redirection for https://bytvujezdech1.blogspot.com"
+      content                    = "ghs.google.com"
+      comment                    = "Redirection for https://bytvujezdech1.blogspot.com"
+      observatory_scheduled_test = true
     }
     "cestovani" = {
       content = "ghs.google.com"
       comment = "Cestování"
     }
     "linux" = {
-      content = "ghs.google.com"
-      comment = "Redirection for https://linux-xvx-cz.blogspot.com"
+      content                    = "ghs.google.com"
+      comment                    = "Redirection for https://linux-xvx-cz.blogspot.com"
+      observatory_scheduled_test = true
     }
     "linux-old" = {
       content = "ruzickap.github.io"
@@ -151,6 +154,23 @@ resource "cloudflare_zone" "xvx_cz" {
   }
 }
 
+resource "cloudflare_zone_dnssec" "example_zone_dnssec" {
+  zone_id = cloudflare_zone.xvx_cz.id
+  status  = "active"
+}
+
+resource "cloudflare_zone_setting" "xvx_cz_min_tls_version" {
+  zone_id    = cloudflare_zone.xvx_cz.id
+  setting_id = "min_tls_version"
+  value      = "1.3"
+}
+
+resource "cloudflare_observatory_scheduled_test" "xvx_cz" {
+  for_each = { for k, v in local.xvx_cz_cname_records : k => v if try(v.observatory_scheduled_test, false) }
+  zone_id  = cloudflare_zone.xvx_cz.id
+  url      = each.key == "" ? "xvx.cz" : "${each.key}.xvx.cz"
+}
+
 # A Records for xvx.cz
 resource "cloudflare_dns_record" "xvx_cz_a_records" {
   for_each = local.xvx_cz_a_records
@@ -250,5 +270,45 @@ resource "cloudflare_ruleset" "stats_xvx_cz" {
     expression  = "(http.host eq \"stats.xvx.cz\")"
     description = "Redirect stats.xvx.cz to UptimeRobot status page"
     enabled     = true
+  }]
+}
+
+# Compression Rules - Enable Zstandard (Zstd) Compression
+resource "cloudflare_ruleset" "xvx_cz_compression" {
+  zone_id     = cloudflare_zone.xvx_cz.id
+  name        = "Compression Rules"
+  description = "Enable Zstandard compression with Brotli and Gzip fallbacks"
+  kind        = "zone"
+  phase       = "http_response_compression"
+  rules = [{
+    action      = "compress_response"
+    expression  = "true"
+    description = "Enable Zstd compression"
+    enabled     = true
+    action_parameters = {
+      algorithms = [
+        { name = "zstd" },
+        { name = "brotli" },
+        { name = "gzip" },
+      ]
+    }
+  }]
+}
+
+# Cache Rules - Cache default file extensions
+resource "cloudflare_ruleset" "xvx_cz_cache" {
+  zone_id     = cloudflare_zone.xvx_cz.id
+  name        = "Cache Rules"
+  description = "Cache default file extensions"
+  kind        = "zone"
+  phase       = "http_request_cache_settings"
+  rules = [{
+    action      = "set_cache_settings"
+    expression  = "(http.request.uri.path.extension in {\"7z\" \"avi\" \"avif\" \"apk\" \"bin\" \"bmp\" \"bz2\" \"class\" \"css\" \"csv\" \"doc\" \"docx\" \"dmg\" \"ejs\" \"eot\" \"eps\" \"exe\" \"flac\" \"gif\" \"gz\" \"ico\" \"iso\" \"jar\" \"jpg\" \"jpeg\" \"js\" \"mid\" \"midi\" \"mkv\" \"mp3\" \"mp4\" \"ogg\" \"otf\" \"pdf\" \"pict\" \"pls\" \"png\" \"ppt\" \"pptx\" \"ps\" \"rar\" \"svg\" \"svgz\" \"swf\" \"tar\" \"tif\" \"tiff\" \"ttf\" \"webm\" \"webp\" \"woff\" \"woff2\" \"xls\" \"xlsx\" \"zip\" \"zst\"})"
+    description = "Cache default file extensions"
+    enabled     = true
+    action_parameters = {
+      cache = true
+    }
   }]
 }
