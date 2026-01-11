@@ -89,16 +89,16 @@ jobs:
           gh api "/repos/{owner}/{repo}/issues" \
             --method POST \
             --field title="Configuration drift detected" \
-            --field body="[View log.](${TOFU_OUTPUTS_RUN})
-          <details><summary>Diff of changes.</summary>
+            --field body="
+          ### Diff of changes
+
+          [View log.](${TOFU_OUTPUTS_RUN})
 
           \`\`\`diff
           ${TOFU_OUTPUTS_DIFF}
           \`\`\`
-          </details>
-          <details><summary>$summary</summary>
 
           \`\`\`hcl
           ${TOFU_OUTPUTS_RESULT}
           \`\`\`
-          </details>"
+          "
