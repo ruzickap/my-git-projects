@@ -4,9 +4,10 @@ locals {
   mylabs_dev_cname_records = {
     # keep-sorted start block=yes
     "" = {
-      content = "petr.ruzicka.dev"
-      comment = "Personal page (https://github.com/ruzickap/petr.ruzicka.dev)"
-      proxied = true
+      content                    = "petr.ruzicka.dev"
+      comment                    = "Personal page (https://github.com/ruzickap/petr.ruzicka.dev)"
+      proxied                    = true
+      observatory_scheduled_test = true
     }
     "mt-link" = {
       content = "t.mailtrap.live"
@@ -125,6 +126,23 @@ resource "cloudflare_zone" "mylabs_dev" {
   }
 }
 
+resource "cloudflare_zone_dnssec" "mylabs_dev" {
+  zone_id = cloudflare_zone.mylabs_dev.id
+  status  = "active"
+}
+
+resource "cloudflare_zone_setting" "mylabs_dev_min_tls_version" {
+  zone_id    = cloudflare_zone.mylabs_dev.id
+  setting_id = "min_tls_version"
+  value      = "1.3"
+}
+
+resource "cloudflare_observatory_scheduled_test" "mylabs_dev" {
+  for_each = { for k, v in local.mylabs_dev_cname_records : k => v if try(v.observatory_scheduled_test, false) }
+  zone_id  = cloudflare_zone.mylabs_dev.id
+  url      = each.key == "" ? "mylabs.dev" : "${each.key}.mylabs.dev"
+}
+
 # CNAME Records for mylabs.dev
 resource "cloudflare_dns_record" "mylabs_dev_cname_records" {
   for_each = local.mylabs_dev_cname_records
@@ -202,4 +220,44 @@ resource "cloudflare_ruleset" "mylabs_dev_redirects" {
       enabled     = true
     }
   ]
+}
+
+# Compression Rules - Enable Zstandard (Zstd) Compression
+resource "cloudflare_ruleset" "mylabs_dev_compression" {
+  zone_id     = cloudflare_zone.mylabs_dev.id
+  name        = "Compression Rules"
+  description = "Enable Zstandard compression with Brotli and Gzip fallbacks"
+  kind        = "zone"
+  phase       = "http_response_compression"
+  rules = [{
+    action      = "compress_response"
+    expression  = "true"
+    description = "Enable Zstd compression"
+    enabled     = true
+    action_parameters = {
+      algorithms = [
+        { name = "zstd" },
+        { name = "brotli" },
+        { name = "gzip" },
+      ]
+    }
+  }]
+}
+
+# Cache Rules - Cache default file extensions
+resource "cloudflare_ruleset" "mylabs_dev_cache" {
+  zone_id     = cloudflare_zone.mylabs_dev.id
+  name        = "Cache Rules"
+  description = "Cache default file extensions"
+  kind        = "zone"
+  phase       = "http_request_cache_settings"
+  rules = [{
+    action      = "set_cache_settings"
+    expression  = "(http.request.uri.path.extension in {\"7z\" \"avi\" \"avif\" \"apk\" \"bin\" \"bmp\" \"bz2\" \"class\" \"css\" \"csv\" \"doc\" \"docx\" \"dmg\" \"ejs\" \"eot\" \"eps\" \"exe\" \"flac\" \"gif\" \"gz\" \"ico\" \"iso\" \"jar\" \"jpg\" \"jpeg\" \"js\" \"mid\" \"midi\" \"mkv\" \"mp3\" \"mp4\" \"ogg\" \"otf\" \"pdf\" \"pict\" \"pls\" \"png\" \"ppt\" \"pptx\" \"ps\" \"rar\" \"svg\" \"svgz\" \"swf\" \"tar\" \"tif\" \"tiff\" \"ttf\" \"webm\" \"webp\" \"woff\" \"woff2\" \"xls\" \"xlsx\" \"zip\" \"zst\"})"
+    description = "Cache default file extensions"
+    enabled     = true
+    action_parameters = {
+      cache = true
+    }
+  }]
 }

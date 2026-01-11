@@ -5,11 +5,6 @@ locals {
       name        = "Cloudflare Abuse Report Alert"
       description = "Get notifications when Cloudflare receives an abuse report regarding your domain"
     }
-    advanced_certificate = {
-      alert_type  = "dedicated_ssl_certificate_event_type"
-      name        = "Advanced Certificate Alert"
-      description = "Dedicated Certificate validation status, issuance, renewal, and expiration notices"
-    }
     expiring_access_service_token = {
       alert_type  = "expiring_service_token_alert"
       name        = "Expiring Access Service Token Alert"
@@ -19,11 +14,6 @@ locals {
       alert_type  = "real_origin_monitoring"
       name        = "Passive Origin Monitoring"
       description = "Cloudflare is unable to reach your origin"
-    }
-    universal_ssl = {
-      alert_type  = "universal_ssl_event_type"
-      name        = "Universal SSL Alert"
-      description = "Universal Certificate validation status, issuance, renewal, and expiration notices"
     }
     web_analytics = {
       alert_type  = "web_analytics_metrics_update"

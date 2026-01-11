@@ -4,6 +4,17 @@
 name: tofu-cloudflare-github
 
 on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Action to perform"
+        required: true
+        default: "plan"
+        type: choice
+        options:
+          - plan
+          - apply
+          - drift
   pull_request:
     types: [opened, reopened, synchronize, labeled]
     paths:
@@ -15,7 +26,7 @@ on:
       - opentofu/cloudflare-github/**
       - "!opentofu/cloudflare-github/README.md"
   schedule:
-    - cron: "0 0 * * 1"
+    - cron: "0 0 * * 0"
 
 permissions: read-all
 
@@ -57,9 +68,9 @@ jobs:
       - uses: op5dev/tf-via-pr@5a4229041e3c90818d85813d4e4a4d44f653d5e9 # v13.7.2
         id: tofu
         with:
-          arg-lock: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'tofu-apply') }}
-          command: ${{ (github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'tofu-apply')) && 'apply' || 'plan' }}
-          comment-pr: ${{ github.event_name == 'schedule' && 'never' || 'always' }}
+          arg-lock: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'tofu-apply') || inputs.action == 'apply' }}
+          command: ${{ (github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'tofu-apply') || inputs.action == 'apply') && 'apply' || 'plan' }}
+          comment-pr: ${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && 'never' || 'always' }}
           expand-diff: true
           plan-encrypt: ${{ secrets.TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE }}
           retention-days: 7
@@ -67,7 +78,7 @@ jobs:
           working-directory: opentofu/cloudflare-github
 
       - name: Open issue on drift
-        if: github.event_name == 'schedule' && steps.tofu.outputs.exitcode != 0
+        if: (github.event_name == 'schedule' || inputs.action == 'drift') && steps.tofu.outputs.exitcode != 0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TOFU_OUTPUTS_DIFF: ${{ steps.tofu.outputs.diff }}
