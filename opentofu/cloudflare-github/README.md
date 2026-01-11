@@ -142,8 +142,7 @@ apk add --no-cache bash mise
 echo 'eval "$(/usr/bin/mise activate bash)"' >> ~/.bashrc
 bash
 
-mise trust --yes
-export SOPS_AGE_KEY="AGE-SECRET-KEY-1...X" # Needed by Mise + Tofu + SOPS
+mise trust --yes && export SOPS_AGE_KEY="AGE-SECRET-KEY-1...X" # Needed by Mise + Tofu + SOPS
 export TF_VAR_gh_token_opentofu_cloudflare_github="gh...m"
 
 mise up
