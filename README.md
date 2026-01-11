@@ -1,5 +1,8 @@
 # GitHub
 
+[![tofu-cloudflare-github](https://github.com/ruzickap/my-git-projects/actions/workflows/tofu-cloudflare-github.yml/badge.svg)](https://github.com/ruzickap/my-git-projects/actions/workflows/tofu-cloudflare-github.yml)
+[![mega-linter](https://github.com/ruzickap/my-git-projects/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/ruzickap/my-git-projects/actions/workflows/mega-linter.yml)
+
 This README is a personal collection of useful Git and GitHub commands
 and workflows.
 

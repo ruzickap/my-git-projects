@@ -1,0 +1,97 @@
+---
+# GitHub Actions workflow for Hugo static site building and deployment
+# Builds Hugo site, checks for broken links, and deploys to GitHub Pages
+name: gh-pages-build
+
+on:
+  workflow_dispatch:
+    inputs:
+      skip_link_checker:
+        description: "Skip Link Checker"
+        type: boolean
+        required: false
+        default: false
+  push:
+    paths:
+      - content
+      - data
+      - hugo.toml
+      - layouts
+      - static
+      - themes
+
+permissions: read-all
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+jobs:
+  gh-pages-build:
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: write
+      deployments: write
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          submodules: true
+
+      - name: ⚙️ Install Hugo static site generator
+        uses: peaceiris/actions-hugo@75d2e84710de30f6ff7268e08f310b60ef14033f # v3.0.0
+
+      - name: 📝 Set CLOUDFLARE_PAGES_PROJECT variable
+        run: |
+          CLOUDFLARE_PAGES_PROJECT="${GITHUB_REPOSITORY#*/}"
+          echo "CLOUDFLARE_PAGES_PROJECT=${CLOUDFLARE_PAGES_PROJECT//./-}" | tee -a "${GITHUB_ENV}"
+
+      - name: 🔨 Build Hugo site
+        run: |
+          hugo build --minify --printPathWarnings --printPathWarnings --printI18nWarnings --panicOnWarning
+          cp LICENSE README.md public/
+          touch public/.nojekyll
+
+      - name: 📦 Restore link checker cache
+        id: restore-cache
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: .lycheecache
+          key: cache-lychee-${{ github.sha }}
+          restore-keys: cache-lychee-
+
+      - name: 🔗 Check for broken links
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: lycheeverse/lychee-action@a8c4c7cb88f0c7386610c35eb25108e448569cb0 # v2.7.0
+        with:
+          args: --root-dir "${PWD}/public" --no-progress public
+          fail: ${{ inputs.skip_link_checker && 'false' || 'true' }}
+
+      - name: 📄 Configure GitHub Pages
+        id: pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
+
+      - name: 🚀 Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          force_orphan: true
+          cname: ${{ steps.pages.outputs.host }}
+
+      - name: ☁️ Deploy preview to Cloudflare Pages
+        uses: cloudflare/wrangler-action@da0e0dfe58b7a431659754fdf3f186c529afbe65 # v3.14.1
+        if: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/gh-pages' }}
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./public --branch=dev --commit-dirty=true --project-name=${{ env.CLOUDFLARE_PAGES_PROJECT }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 💾 Save link checker cache
+        uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        if: always() && steps.restore-cache.outputs.cache-primary-key
+        with:
+          path: .lycheecache
+          key: ${{ steps.restore-cache.outputs.cache-primary-key }}
