@@ -25,6 +25,11 @@ locals {
       name        = "pre-commit-wizcli"
       description = "pre-commit hook for WizCLI that checks your code"
       topics      = ["pre-commit", "wizcli", "wiz"]
+      pages = [{
+        source = [{
+          branch = "gh-pages"
+        }]
+      }]
       secrets = {
         "WIZ_CLIENT_ID"     = data.sops_file.env_yaml.data["WIZ_CLIENT_ID"]
         "WIZ_CLIENT_SECRET" = data.sops_file.env_yaml.data["WIZ_CLIENT_SECRET"]

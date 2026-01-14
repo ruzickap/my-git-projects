@@ -33,7 +33,7 @@ jobs:
           no-fail-on-empty-changeset: 1
           capabilities: CAPABILITY_NAMED_IAM
           parameter-overrides: >-
-            tags: '[
+            tags='[
               {"Key": "Owner", "Value": "petr.ruzicka@gmail.com"},
               {"Key": "Environment", "Value": "dev"},
               {"Key": "Source", "Value": "${{ github.server_url }}/${{ github.repository }}/blob/main/cloudformation/gh-action-iam-role-oidc.yaml"}
