@@ -74,7 +74,7 @@ Resources:
               - "sts:AssumeRole"
       Description: Service Role for use in GitHub Actions
       RoleName: GitHubOidcFederatedRole
-      MaxSessionDuration: 36000
+      MaxSessionDuration: 7200
       ManagedPolicyArns: !Ref ManagedPolicyARNs
 
 Outputs:
