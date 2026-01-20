@@ -63,7 +63,7 @@ jobs:
             fi
           done
           echo "Found $(echo "${REPOS}" | jq 'length') repositories with .mega-linter.yml"
-          echo "repos=${REPOS}" >> "${GITHUB_OUTPUT}"
+          echo "repos=$(echo "${REPOS}" | jq -c '.')" >> "${GITHUB_OUTPUT}"
 
   megalinter-parallel:
     needs: fetch-repos
