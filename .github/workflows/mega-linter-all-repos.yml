@@ -39,6 +39,7 @@ defaults:
 jobs:
   megalinter:
     runs-on: ubuntu-latest
+    name: "megalinter-${{ inputs.megalinter_flavor || 'all' }}"
     timeout-minutes: 120
     steps:
       - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
