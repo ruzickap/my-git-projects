@@ -33,6 +33,10 @@ on:
         type: boolean
         description: Fail if a linter is missing in the selected flavor
         default: true
+      repository:
+        type: string
+        description: Specific repository name to scan (my-git-projects). Leave empty to scan all repos
+        default: ""
 
 permissions: read-all
 
@@ -52,22 +56,29 @@ jobs:
           app-id: ${{ secrets.MY_RENOVATE_GITHUB_APP_ID }}
           private-key: ${{ secrets.MY_RENOVATE_GITHUB_PRIVATE_KEY }}
 
-      - name: Fetch and clone all non-archived repositories
+      - name: Fetch and clone repositories
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           REPO_OWNER: ${{ github.repository_owner }}
+          INPUT_REPOSITORY: ${{ inputs.repository }}
         run: |
-          echo "Fetching non-archived repositories for user: ${REPO_OWNER}"
-
-          # Fetch all non-archived, non-empty repositories using GitHub CLI
-          REPOS=$(gh repo list "${REPO_OWNER}" --no-archived --source --limit 1000 --json nameWithOwner,isEmpty \
-            --jq '[.[] | select(.isEmpty == false) | .nameWithOwner]')
-
-          REPO_COUNT=$(echo "${REPOS}" | jq 'length')
-          echo "Found ${REPO_COUNT} non-archived, non-empty repositories"
-
           # Create repos directory
           mkdir -p repos
+
+          if [[ -n "${INPUT_REPOSITORY}" ]]; then
+            # Scan specific repository - prepend owner
+            FULL_REPO="${REPO_OWNER}/${INPUT_REPOSITORY}"
+            echo "Scanning specific repository: ${FULL_REPO}"
+            REPOS="[\"${FULL_REPO}\"]"
+          else
+            # Fetch all non-archived, non-empty repositories using GitHub CLI
+            echo "Fetching non-archived repositories for user: ${REPO_OWNER}"
+            REPOS=$(gh repo list "${REPO_OWNER}" --no-archived --source --limit 1000 --json nameWithOwner,isEmpty \
+              --jq '[.[] | select(.isEmpty == false) | .nameWithOwner]')
+          fi
+
+          REPO_COUNT=$(echo "${REPOS}" | jq 'length')
+          echo "Found ${REPO_COUNT} repositories to scan"
 
           # Clone each repository
           echo "${REPOS}" | jq -r '.[]' | while read -r REPO; do
