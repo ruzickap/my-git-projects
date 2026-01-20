@@ -29,6 +29,10 @@ on:
           - security
           - swift
           - terraform
+      fail_if_missing_linter_in_flavor:
+        type: boolean
+        description: Fail if a linter is missing in the selected flavor
+        default: true
 
 permissions: read-all
 
@@ -84,7 +88,7 @@ jobs:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           MEGALINTER_FLAVOR: ${{ inputs.megalinter_flavor || 'all' }}
           VALIDATE_ALL_CODEBASE: true
-          FAIL_IF_MISSING_LINTER_IN_FLAVOR: true
+          FAIL_IF_MISSING_LINTER_IN_FLAVOR: ${{ inputs.fail_if_missing_linter_in_flavor }}
           PRINT_ALPACA: false
 
       - name: Generate summary
@@ -103,10 +107,9 @@ jobs:
 
             # Extract file statistics from megalinter.log
             if [[ -f "${LOG_FILE}" ]]; then
-              FILE_STATS=$(grep -oP 'Kept \[\K[0-9]+\] files on \[[0-9]+' "${LOG_FILE}" | head -1 || true)
-              if [[ -n "${FILE_STATS}" ]]; then
-                KEPT_FILES=$(echo "${FILE_STATS}" | grep -oP '^[0-9]+')
-                TOTAL_FILES=$(echo "${FILE_STATS}" | grep -oP '[0-9]+$')
+              KEPT_FILES=$(grep -oP 'Kept \[\K\d+(?=\] files)' "${LOG_FILE}")
+              TOTAL_FILES=$(grep -oP 'files on \[\K\d+(?=\])' "${LOG_FILE}")
+              if [[ -n "${KEPT_FILES}" && -n "${TOTAL_FILES}" ]]; then
                 echo "- **Files analyzed**: ${KEPT_FILES} out of ${TOTAL_FILES} found"
                 echo ""
               fi
@@ -115,7 +118,7 @@ jobs:
               echo "### Matching Linters"
               echo ""
               echo '```'
-              sed -n '/+----MATCHING LINTERS/,/^+--.*--+$/p' "${LOG_FILE}" | head -60 || true
+              awk '/\+----MATCHING LINTERS/{found=1} found{print; if(/^\+-+\+-+\+-+\+-+\+-+\+$/ && seen++) exit}' "${LOG_FILE}"
               echo '```'
             else
               echo "⚠️ MegaLinter log file not found"
