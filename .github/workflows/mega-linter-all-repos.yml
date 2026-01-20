@@ -29,14 +29,14 @@ on:
           - security
           - swift
           - terraform
-      fail_if_missing_linter_in_flavor:
-        type: boolean
-        description: Fail if a linter is missing in the selected flavor
-        default: true
       repository:
         type: string
         description: Specific repository name to scan (my-git-projects). Leave empty to scan all repos
         default: ""
+      fail_if_missing_linter_in_flavor:
+        type: boolean
+        description: Fail if a linter is missing in the selected flavor
+        default: true
       parallel:
         type: boolean
         description: Run MegaLinter on each repository in parallel (separate jobs)
@@ -100,13 +100,12 @@ jobs:
         uses: oxsecurity/megalinter@42bb470545e359597e7f12156947c436e4e3fb9a # v9.3.0
         env:
           DEFAULT_WORKSPACE: repos
-          # GITHUB_COMMENT_REPORTER: false
-          # GITHUB_STATUS_REPORTER: false
+          DISABLE: all
+          FAIL_IF_MISSING_LINTER_IN_FLAVOR: ${{ inputs.fail_if_missing_linter_in_flavor }}
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           MEGALINTER_FLAVOR: ${{ inputs.megalinter_flavor || 'all' }}
-          VALIDATE_ALL_CODEBASE: true
-          FAIL_IF_MISSING_LINTER_IN_FLAVOR: ${{ inputs.fail_if_missing_linter_in_flavor }}
           PRINT_ALPACA: false
+          VALIDATE_ALL_CODEBASE: true
 
       - name: Generate summary
         if: always()
@@ -195,10 +194,9 @@ jobs:
       - name: 💡 MegaLinter
         uses: oxsecurity/megalinter@42bb470545e359597e7f12156947c436e4e3fb9a # v9.3.0
         env:
-          GITHUB_COMMENT_REPORTER: false
-          GITHUB_STATUS_REPORTER: false
+          DISABLE: all
+          FAIL_IF_MISSING_LINTER_IN_FLAVOR: ${{ inputs.fail_if_missing_linter_in_flavor }}
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           MEGALINTER_FLAVOR: ${{ inputs.megalinter_flavor || 'all' }}
-          VALIDATE_ALL_CODEBASE: true
-          FAIL_IF_MISSING_LINTER_IN_FLAVOR: ${{ inputs.fail_if_missing_linter_in_flavor }}
           PRINT_ALPACA: false
+          VALIDATE_ALL_CODEBASE: true
