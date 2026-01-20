@@ -1,7 +1,6 @@
 ---
-# GitHub Actions workflow to run MegaLinter on all non-archived repositories
-# Fetches all user's non-archived GitHub repositories, clones them into a
-# single directory, and runs MegaLinter once on the entire directory
+# GitHub Actions workflow to run MegaLinter on all public repositories
+# with .mega-linter.yml configuration file
 # https://megalinter.io/
 name: mega-linter-all-repos
 
@@ -29,18 +28,6 @@ on:
           - security
           - swift
           - terraform
-      repository:
-        type: string
-        description: Specific repository name to scan (my-git-projects). Leave empty to scan all repos
-        default: ""
-      fail_if_missing_linter_in_flavor:
-        type: boolean
-        description: Fail if a linter is missing in the selected flavor
-        default: true
-      parallel:
-        type: boolean
-        description: Run MegaLinter on each repository in parallel (separate jobs)
-        default: false
 
 permissions: read-all
 
@@ -49,101 +36,7 @@ defaults:
     shell: bash -euo pipefail {0}
 
 jobs:
-  # Single job mode - clone all repos into one directory and run MegaLinter once
-  megalinter:
-    if: ${{ inputs.parallel == false }}
-    runs-on: ubuntu-latest
-    name: "megalinter-${{ inputs.megalinter_flavor || 'all' }}-${{ inputs.repository || 'all_repos' }}"
-    timeout-minutes: 120
-    steps:
-      - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
-        id: app-token
-        with:
-          app-id: ${{ secrets.MY_RENOVATE_GITHUB_APP_ID }}
-          private-key: ${{ secrets.MY_RENOVATE_GITHUB_PRIVATE_KEY }}
-
-      - name: Fetch and clone repositories
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          REPO_OWNER: ${{ github.repository_owner }}
-          INPUT_REPOSITORY: ${{ inputs.repository }}
-        run: |
-          # Create repos directory
-          mkdir -p repos
-
-          if [[ -n "${INPUT_REPOSITORY}" ]]; then
-            # Scan specific repository - prepend owner
-            FULL_REPO="${REPO_OWNER}/${INPUT_REPOSITORY}"
-            echo "Scanning specific repository: ${FULL_REPO}"
-            REPOS="[\"${FULL_REPO}\"]"
-          else
-            # Fetch all non-archived, non-empty repositories using GitHub CLI
-            echo "Fetching non-archived repositories for user: ${REPO_OWNER}"
-            REPOS=$(gh repo list "${REPO_OWNER}" --no-archived --source --limit 1000 --json nameWithOwner,isEmpty \
-              --jq '[.[] | select(.isEmpty == false) | .nameWithOwner]')
-          fi
-
-          REPO_COUNT=$(echo "${REPOS}" | jq 'length')
-          echo "Found ${REPO_COUNT} repositories to scan"
-
-          # Clone each repository
-          echo "${REPOS}" | jq -r '.[]' | while read -r REPO; do
-            echo "Cloning ${REPO}..."
-            REPO_NAME="${REPO#*/}"
-            gh repo clone "${REPO}" "repos/${REPO_NAME}" -- --depth 1 --single-branch
-          done
-
-          # Save repo count for summary
-          echo "REPO_COUNT=${REPO_COUNT}" >> "${GITHUB_ENV}"
-
-      - name: 💡 MegaLinter
-        uses: oxsecurity/megalinter@42bb470545e359597e7f12156947c436e4e3fb9a # v9.3.0
-        env:
-          DEFAULT_WORKSPACE: repos
-          FAIL_IF_MISSING_LINTER_IN_FLAVOR: ${{ inputs.fail_if_missing_linter_in_flavor }}
-          FILTER_REGEX_EXCLUDE: ".*"
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-          MEGALINTER_FLAVOR: ${{ inputs.megalinter_flavor || 'all' }}
-          PRINT_ALPACA: false
-          VALIDATE_ALL_CODEBASE: true
-
-      - name: Generate summary
-        if: always()
-        env:
-          MEGALINTER_FLAVOR: ${{ inputs.megalinter_flavor || 'all' }}
-        run: |
-          LOG_FILE="megalinter-reports/megalinter.log"
-
-          {
-            echo "## MegaLinter All Repos Summary"
-            echo ""
-            echo "- **Total repositories processed**: ${REPO_COUNT:-unknown}"
-            echo "- **MegaLinter flavor**: ${MEGALINTER_FLAVOR}"
-            echo ""
-
-            # Extract file statistics from megalinter.log
-            if [[ -f "${LOG_FILE}" ]]; then
-              KEPT_FILES=$(grep -oP 'Kept \[\K\d+(?=\] files)' "${LOG_FILE}" || true)
-              TOTAL_FILES=$(grep -oP 'files on \[\K\d+(?=\])' "${LOG_FILE}" || true)
-              if [[ -n "${KEPT_FILES}" && -n "${TOTAL_FILES}" ]]; then
-                echo "- **Files analyzed**: ${KEPT_FILES} out of ${TOTAL_FILES} found"
-                echo ""
-              fi
-
-              # Extract matching linters table
-              echo "### Matching Linters"
-              echo ""
-              echo '```'
-              awk '/\+----MATCHING LINTERS/{found=1} found{print; if(/^\+-+\+-+\+-+\+-+\+-+\+$/ && seen++) exit}' "${LOG_FILE}"
-              echo '```'
-            else
-              echo "⚠️ MegaLinter log file not found"
-            fi
-          } >> "${GITHUB_STEP_SUMMARY}"
-
-  # Parallel mode - fetch repos first, then run MegaLinter on each in parallel
   fetch-repos:
-    if: ${{ inputs.parallel == true }}
     runs-on: ubuntu-24.04-arm
     outputs:
       repos: ${{ steps.get-repos.outputs.repos }}
@@ -161,13 +54,12 @@ jobs:
           REPO_OWNER: ${{ github.repository_owner }}
         run: |
           # Find public, non-archived repos with .mega-linter.yml
-          REPOS=$(gh search code "filename:.mega-linter.yml user:${REPO_OWNER}" \
-            --json repository --jq '[.[].repository | select(.isArchived == false and .visibility == "public") | .nameWithOwner] | unique')
+          REPOS=$(gh search code ".mega-linter.yml" --owner "${REPO_OWNER}" --limit 1000 \
+            --json repository --jq '[.[].repository | select(.isPrivate == false) | .nameWithOwner] | unique')
           echo "Found $(echo "${REPOS}" | jq 'length') repositories with .mega-linter.yml"
           echo "repos=${REPOS}" >> "${GITHUB_OUTPUT}"
 
   megalinter-parallel:
-    if: ${{ inputs.parallel == true }}
     needs: fetch-repos
     runs-on: ubuntu-latest
     name: "megalinter-${{ inputs.megalinter_flavor || 'all' }}-${{ matrix.repo }}"
