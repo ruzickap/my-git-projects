@@ -55,57 +55,68 @@ jobs:
           echo "Fetching non-archived repositories for user: ${REPO_OWNER}"
 
           # Fetch all non-archived, non-empty repositories using GitHub CLI
-          repos=$(gh repo list "${REPO_OWNER}" --no-archived --source --limit 1000 --json nameWithOwner,isEmpty \
+          REPOS=$(gh repo list "${REPO_OWNER}" --no-archived --source --limit 1000 --json nameWithOwner,isEmpty \
             --jq '[.[] | select(.isEmpty == false) | .nameWithOwner]')
 
-          repo_count=$(echo "${repos}" | jq 'length')
-          echo "Found ${repo_count} non-archived, non-empty repositories"
+          REPO_COUNT=$(echo "${REPOS}" | jq 'length')
+          echo "Found ${REPO_COUNT} non-archived, non-empty repositories"
 
           # Create repos directory
           mkdir -p repos
 
           # Clone each repository
-          echo "${repos}" | jq -r '.[]' | while read -r repo; do
-            echo "Cloning ${repo}..."
-            repo_name="${repo#*/}"
-            gh repo clone "${repo}" "repos/${repo_name}" -- --depth 1 --single-branch
+          echo "${REPOS}" | jq -r '.[]' | while read -r REPO; do
+            echo "Cloning ${REPO}..."
+            REPO_NAME="${REPO#*/}"
+            gh repo clone "${REPO}" "repos/${REPO_NAME}" -- --depth 1 --single-branch
           done
 
-          echo ""
-          echo "=== Cloned repositories ==="
-          ls -la repos/
-
           # Save repo count for summary
-          echo "${repo_count}" > repo_count.txt
+          echo "REPO_COUNT=${REPO_COUNT}" >> "${GITHUB_ENV}"
 
       - name: 💡 MegaLinter
         uses: oxsecurity/megalinter@42bb470545e359597e7f12156947c436e4e3fb9a # v9.3.0
         env:
           DEFAULT_WORKSPACE: repos
-          GITHUB_COMMENT_REPORTER: false
-          GITHUB_STATUS_REPORTER: false
+          # GITHUB_COMMENT_REPORTER: false
+          # GITHUB_STATUS_REPORTER: false
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           MEGALINTER_FLAVOR: ${{ inputs.megalinter_flavor || 'all' }}
           VALIDATE_ALL_CODEBASE: true
-
-      - name: Upload MegaLinter artifacts
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: megalinter-reports
-          path: |
-            megalinter-reports
-          retention-days: 1
+          FAIL_IF_MISSING_LINTER_IN_FLAVOR: true
+          PRINT_ALPACA: false
 
       - name: Generate summary
         if: always()
+        env:
+          MEGALINTER_FLAVOR: ${{ inputs.megalinter_flavor || 'all' }}
         run: |
-          repo_count=$(cat repo_count.txt 2>/dev/null || echo "unknown")
+          LOG_FILE="megalinter-reports/megalinter.log"
+
           {
             echo "## MegaLinter All Repos Summary"
             echo ""
-            echo "- **Total repositories processed**: ${repo_count}"
-            echo "- **MegaLinter flavor**: ${{ inputs.megalinter_flavor || 'all' }}"
+            echo "- **Total repositories processed**: ${REPO_COUNT:-unknown}"
+            echo "- **MegaLinter flavor**: ${MEGALINTER_FLAVOR}"
             echo ""
-            echo "Check the uploaded artifacts for detailed linting reports."
+
+            # Extract file statistics from megalinter.log
+            if [[ -f "${LOG_FILE}" ]]; then
+              FILE_STATS=$(grep -oP 'Kept \[\K[0-9]+\] files on \[[0-9]+' "${LOG_FILE}" | head -1 || true)
+              if [[ -n "${FILE_STATS}" ]]; then
+                KEPT_FILES=$(echo "${FILE_STATS}" | grep -oP '^[0-9]+')
+                TOTAL_FILES=$(echo "${FILE_STATS}" | grep -oP '[0-9]+$')
+                echo "- **Files analyzed**: ${KEPT_FILES} out of ${TOTAL_FILES} found"
+                echo ""
+              fi
+
+              # Extract matching linters table
+              echo "### Matching Linters"
+              echo ""
+              echo '```'
+              sed -n '/+----MATCHING LINTERS/,/^+--.*--+$/p' "${LOG_FILE}" | head -60 || true
+              echo '```'
+            else
+              echo "⚠️ MegaLinter log file not found"
+            fi
           } >> "${GITHUB_STEP_SUMMARY}"
