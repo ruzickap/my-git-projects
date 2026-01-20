@@ -95,7 +95,7 @@ jobs:
           name: megalinter-reports
           path: |
             megalinter-reports
-          retention-days: 7
+          retention-days: 1
 
       - name: Generate summary
         if: always()
