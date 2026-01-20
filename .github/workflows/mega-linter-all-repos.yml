@@ -53,7 +53,7 @@ jobs:
   megalinter:
     if: ${{ inputs.parallel == false }}
     runs-on: ubuntu-latest
-    name: "megalinter-${{ inputs.megalinter_flavor || 'all' }}"
+    name: "megalinter-${{ inputs.megalinter_flavor || 'all' }}-${{ inputs.repository || 'all' }}"
     timeout-minutes: 120
     steps:
       - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
@@ -100,7 +100,7 @@ jobs:
         uses: oxsecurity/megalinter@42bb470545e359597e7f12156947c436e4e3fb9a # v9.3.0
         env:
           DEFAULT_WORKSPACE: repos
-          DISABLE: all
+          ENABLE: ACTION_ACTIONLINT
           FAIL_IF_MISSING_LINTER_IN_FLAVOR: ${{ inputs.fail_if_missing_linter_in_flavor }}
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           MEGALINTER_FLAVOR: ${{ inputs.megalinter_flavor || 'all' }}
@@ -194,9 +194,6 @@ jobs:
       - name: 💡 MegaLinter
         uses: oxsecurity/megalinter@42bb470545e359597e7f12156947c436e4e3fb9a # v9.3.0
         env:
-          DISABLE: all
-          FAIL_IF_MISSING_LINTER_IN_FLAVOR: ${{ inputs.fail_if_missing_linter_in_flavor }}
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           MEGALINTER_FLAVOR: ${{ inputs.megalinter_flavor || 'all' }}
-          PRINT_ALPACA: false
           VALIDATE_ALL_CODEBASE: true
