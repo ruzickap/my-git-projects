@@ -35,6 +35,9 @@ on:
 
 permissions: read-all
 
+env:
+  REPO_OWNER: ${{ github.repository_owner }}
+
 defaults:
   run:
     shell: bash -euo pipefail {0}
@@ -55,21 +58,20 @@ jobs:
         id: get-repos
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          REPO_OWNER: ${{ github.repository_owner }}
           INPUT_REPOSITORY: ${{ inputs.repository }}
         run: |
           if [[ -n "${INPUT_REPOSITORY}" ]]; then
             # Scan specific repository
-            REPOS="[\"${REPO_OWNER}/${INPUT_REPOSITORY}\"]"
+            REPOS="[\"${INPUT_REPOSITORY}\"]"
             echo "Scanning specific repository: ${REPO_OWNER}/${INPUT_REPOSITORY}"
           else
             # Get all public, non-archived repos with .mega-linter.yml
             ALL_REPOS=$(gh repo list "${REPO_OWNER}" --no-archived --visibility public \
-              --source --limit 1000 --json nameWithOwner --jq '[.[].nameWithOwner]')
+              --source --limit 1000 --json name --jq '[.[].name]')
             REPOS="[]"
-            for REPO in $(echo "${ALL_REPOS}" | jq -r '.[]'); do
-              if gh api "repos/${REPO}/contents/.mega-linter.yml" --silent 2>/dev/null; then
-                REPOS=$(echo "${REPOS}" | jq --arg r "${REPO}" '. + [$r]')
+            for NAME in $(echo "${ALL_REPOS}" | jq -r '.[]'); do
+              if gh api "repos/${REPO_OWNER}/${NAME}/contents/.mega-linter.yml" --silent 2>/dev/null; then
+                REPOS=$(echo "${REPOS}" | jq --arg name "${NAME}" '. + [$name]')
               fi
             done
             echo "Found $(echo "${REPOS}" | jq 'length') repositories with .mega-linter.yml"
@@ -95,7 +97,7 @@ jobs:
       - name: Checkout ${{ matrix.repo }}
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
-          repository: ${{ matrix.repo }}
+          repository: ${{ env.REPO_OWNER }}/${{ matrix.repo }}
           token: ${{ steps.app-token.outputs.token }}
           fetch-depth: 1
 
