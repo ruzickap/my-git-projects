@@ -160,11 +160,10 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           REPO_OWNER: ${{ github.repository_owner }}
         run: |
-          echo "Fetching non-archived repositories for user: ${REPO_OWNER}"
-          REPOS=$(gh repo list "${REPO_OWNER}" --no-archived --source --limit 1000 --json nameWithOwner,isEmpty \
-            --jq '[.[] | select(.isEmpty == false) | .nameWithOwner]')
-
-          echo "Found $(echo "${REPOS}" | jq 'length') repositories to scan in parallel"
+          # Find public, non-archived repos with .mega-linter.yml
+          REPOS=$(gh search code "filename:.mega-linter.yml user:${REPO_OWNER}" \
+            --json repository --jq '[.[].repository | select(.isArchived == false and .visibility == "public") | .nameWithOwner] | unique')
+          echo "Found $(echo "${REPOS}" | jq 'length') repositories with .mega-linter.yml"
           echo "repos=${REPOS}" >> "${GITHUB_OUTPUT}"
 
   megalinter-parallel:
