@@ -7,6 +7,10 @@ name: mega-linter-all-repos
 on:
   workflow_dispatch:
     inputs:
+      repository:
+        type: string
+        description: Specific repository name to scan (my-git-projects). Leave empty to scan all repos
+        default: ""
       megalinter_flavor:
         type: choice
         description: MegaLinter flavor to use
@@ -52,17 +56,24 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           REPO_OWNER: ${{ github.repository_owner }}
+          INPUT_REPOSITORY: ${{ inputs.repository }}
         run: |
-          # Get all public, non-archived repos and filter those with .mega-linter.yml
-          ALL_REPOS=$(gh repo list "${REPO_OWNER}" --no-archived --visibility public \
-            --source --limit 1000 --json nameWithOwner --jq '[.[].nameWithOwner]')
-          REPOS="[]"
-          for REPO in $(echo "${ALL_REPOS}" | jq -r '.[]'); do
-            if gh api "repos/${REPO}/contents/.mega-linter.yml" --silent 2>/dev/null; then
-              REPOS=$(echo "${REPOS}" | jq --arg r "${REPO}" '. + [$r]')
-            fi
-          done
-          echo "Found $(echo "${REPOS}" | jq 'length') repositories with .mega-linter.yml"
+          if [[ -n "${INPUT_REPOSITORY}" ]]; then
+            # Scan specific repository
+            REPOS="[\"${REPO_OWNER}/${INPUT_REPOSITORY}\"]"
+            echo "Scanning specific repository: ${REPO_OWNER}/${INPUT_REPOSITORY}"
+          else
+            # Get all public, non-archived repos with .mega-linter.yml
+            ALL_REPOS=$(gh repo list "${REPO_OWNER}" --no-archived --visibility public \
+              --source --limit 1000 --json nameWithOwner --jq '[.[].nameWithOwner]')
+            REPOS="[]"
+            for REPO in $(echo "${ALL_REPOS}" | jq -r '.[]'); do
+              if gh api "repos/${REPO}/contents/.mega-linter.yml" --silent 2>/dev/null; then
+                REPOS=$(echo "${REPOS}" | jq --arg r "${REPO}" '. + [$r]')
+              fi
+            done
+            echo "Found $(echo "${REPOS}" | jq 'length') repositories with .mega-linter.yml"
+          fi
           echo "repos=$(echo "${REPOS}" | jq -c '.')" >> "${GITHUB_OUTPUT}"
 
   megalinter-parallel:
