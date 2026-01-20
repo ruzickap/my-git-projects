@@ -53,9 +53,15 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           REPO_OWNER: ${{ github.repository_owner }}
         run: |
-          # Find public, non-archived repos with .mega-linter.yml
-          REPOS=$(gh search code ".mega-linter.yml" --owner "${REPO_OWNER}" --limit 1000 \
-            --json repository --jq '[.[].repository | select(.isPrivate == false) | .nameWithOwner] | unique')
+          # Get all public, non-archived repos and filter those with .mega-linter.yml
+          ALL_REPOS=$(gh repo list "${REPO_OWNER}" --no-archived --visibility public \
+            --source --limit 1000 --json nameWithOwner --jq '[.[].nameWithOwner]')
+          REPOS="[]"
+          for REPO in $(echo "${ALL_REPOS}" | jq -r '.[]'); do
+            if gh api "repos/${REPO}/contents/.mega-linter.yml" --silent 2>/dev/null; then
+              REPOS=$(echo "${REPOS}" | jq --arg r "${REPO}" '. + [$r]')
+            fi
+          done
           echo "Found $(echo "${REPOS}" | jq 'length') repositories with .mega-linter.yml"
           echo "repos=${REPOS}" >> "${GITHUB_OUTPUT}"
 
