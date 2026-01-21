@@ -78,58 +78,58 @@ sed -i "s@/ruzickap/my-git-projects/@/${REPOSITORY}/@" ".github/ISSUE_TEMPLATE/c
 
 # Repository-specific handling
 case "${REPOSITORY}" in
-ruzickap/action-*)
-  copy_defaults "${GH_REPO_DEFAULTS_BASE}/action"
-  ;;
-ruzickap/ansible-*)
-  copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
-  ;;
-ansible-raspberry-pi-os)
-  copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
-  megalinter_flavor all
-  ;;
-ruzickap/cheatsheet-*)
-  copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
-  megalinter_flavor all
-  ;;
-ruzickap/cv)
-  copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
-  # arm64 is not supported in private repos
-  checkout_files "run.sh" ".github/workflows/commit-check.yml" ".github/workflows/release-please.yml" ".github/workflows/renovate.yml" ".github/workflows/semantic-pull-request.yml" ".github/workflows/stale.yml"
-  remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
-  megalinter_flavor all
-  ;;
-ruzickap/caisp-notes)
-  # arm64 is not supported in private repos
-  checkout_files ".github/workflows/commit-check.yml" ".github/workflows/release-please.yml" ".github/workflows/renovate.yml" ".github/workflows/semantic-pull-request.yml" ".github/workflows/stale.yml" ".mega-linter.yml"
-  remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
-  ;;
-ruzickap/gha_test)
-  remove_files ".github/workflows/pr-slack-notification.yml"
-  ;;
-ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
-  copy_defaults "${GH_REPO_DEFAULTS_BASE}/hugo"
-  ;;
-ruzickap/k8s-multicluster-gitops)
-  megalinter_flavor cupcake
-  ;;
-ruzickap/malware-cryptominer-container)
-  checkout_files ".checkov.yml" ".github/workflows/release-please.yml" ".github/renovate.json5"
-  megalinter_flavor cupcake
-  ;;
-ruzickap/my-git-projects)
-  megalinter_flavor cupcake
-  ;;
-ruzickap/pre-commit-wizcli)
-  megalinter_flavor cupcake
-  ;;
-ruzickap/ruzickap.github.io)
-  checkout_files ".github/renovate.json5" ".rumdl.toml" ".mega-linter.yml" "AGENTS.md"
-  megalinter_flavor ruby
-  ;;
-*)
-  log_info "Using default configuration for ${REPOSITORY}"
-  ;;
+  ruzickap/action-*)
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/action"
+    ;;
+  ruzickap/ansible-*)
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
+    ;;
+  ansible-raspberry-pi-os)
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
+    megalinter_flavor all
+    ;;
+  ruzickap/cheatsheet-*)
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
+    megalinter_flavor all
+    ;;
+  ruzickap/cv)
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
+    # arm64 is not supported in private repos
+    checkout_files "run.sh" ".github/workflows/commit-check.yml" ".github/workflows/release-please.yml" ".github/workflows/renovate.yml" ".github/workflows/semantic-pull-request.yml" ".github/workflows/stale.yml"
+    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
+    megalinter_flavor all
+    ;;
+  ruzickap/caisp-notes)
+    # arm64 is not supported in private repos
+    checkout_files ".github/workflows/commit-check.yml" ".github/workflows/release-please.yml" ".github/workflows/renovate.yml" ".github/workflows/semantic-pull-request.yml" ".github/workflows/stale.yml" ".mega-linter.yml"
+    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
+    ;;
+  ruzickap/gha_test)
+    remove_files ".github/workflows/pr-slack-notification.yml"
+    ;;
+  ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/hugo"
+    ;;
+  ruzickap/k8s-multicluster-gitops)
+    megalinter_flavor cupcake
+    ;;
+  ruzickap/malware-cryptominer-container)
+    checkout_files ".checkov.yml" ".github/workflows/release-please.yml" ".github/renovate.json5"
+    megalinter_flavor cupcake
+    ;;
+  ruzickap/my-git-projects)
+    megalinter_flavor cupcake
+    ;;
+  ruzickap/pre-commit-wizcli)
+    megalinter_flavor cupcake
+    ;;
+  ruzickap/ruzickap.github.io)
+    checkout_files ".github/renovate.json5" ".rumdl.toml" ".mega-linter.yml" "AGENTS.md"
+    megalinter_flavor ruby
+    ;;
+  *)
+    log_info "Using default configuration for ${REPOSITORY}"
+    ;;
 esac
 
 log_info "Completed processing ${REPOSITORY}"
