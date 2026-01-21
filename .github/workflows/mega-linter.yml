@@ -55,7 +55,7 @@ jobs:
           restore-keys: cache-lychee-
 
       - name: 💡 MegaLinter
-        uses: oxsecurity/megalinter/flavors/cupcake@42bb470545e359597e7f12156947c436e4e3fb9a # 9.3.0
+        uses: oxsecurity/megalinter/flavors/cupcake@42bb470545e359597e7f12156947c436e4e3fb9a # v9.3.0
         env:
           GITHUB_COMMENT_REPORTER: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
