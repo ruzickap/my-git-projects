@@ -33,12 +33,17 @@ jobs:
           key: cache-lychee-${{ github.sha }}
           restore-keys: cache-lychee-
 
+      # https://github.com/lycheeverse/lychee/issues/1734
+      - name: Remove unavailable URLs from cache to check them again
+        run: |
+          sed -i '/,,/d' .lycheecache
+
       - name: Link Checker
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: lycheeverse/lychee-action@a8c4c7cb88f0c7386610c35eb25108e448569cb0 # v2.7.0
         with:
-          args: --include-verbatim --no-progress ${{ steps.pages.outputs.base_url }}
+          args: --include-verbatim --no-progress ${{ steps.pages.outputs.base_url }} --root-dir "${PWD}"
 
       - name: Save lychee cache
         uses: actions/cache/save@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2

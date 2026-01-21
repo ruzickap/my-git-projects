@@ -67,6 +67,11 @@ locals {
       name    = "cf2024-1._domainkey"
       comment = "Cloudflare DKIM"
     }
+    "google-site-verification" = {
+      content = "\"google-site-verification=y45N8avw0zpYwbPL8ncwcQC79xOBMNZcvD0380LRsBU\""
+      name    = ""
+      comment = "Google Search Console site verification"
+    }
     "spf" = {
       content = "\"v=spf1 include:_spf.mx.cloudflare.net ~all\""
       name    = ""
