@@ -2,7 +2,7 @@
 # GitHub Actions workflow to run MegaLinter on all public repositories
 # with .mega-linter.yml configuration file
 # https://megalinter.io/
-name: mega-linter-all-repos
+name: mega-linter-repos
 
 on:
   workflow_dispatch:
@@ -16,6 +16,7 @@ on:
         description: MegaLinter flavor to use
         default: all
         options:
+          - <all-flavors>
           - all
           - cupcake
           - documentation
@@ -47,6 +48,7 @@ jobs:
     runs-on: ubuntu-24.04-arm
     outputs:
       repos: ${{ steps.get-repos.outputs.repos }}
+      flavors: ${{ steps.get-repos.outputs.flavors }}
     steps:
       - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
         id: app-token
@@ -59,9 +61,13 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           INPUT_REPOSITORY: ${{ inputs.repository }}
+          INPUT_FLAVOR: ${{ inputs.megalinter_flavor }}
         run: |
+          # Define all available MegaLinter flavors (sorted by image size, smallest first)
+          ALL_FLAVORS='["formatters","ci_light","security","documentation","ruby","rust","swift","go","java","php","terraform","c_cpp","salesforce","javascript","dotnet","python","dotnetweb","cupcake","all"]'
+
+          # Get repository list
           if [[ -n "${INPUT_REPOSITORY}" ]]; then
-            # Scan specific repository
             REPOS="[\"${INPUT_REPOSITORY}\"]"
             echo "Scanning specific repository: ${REPO_OWNER}/${INPUT_REPOSITORY}"
           else
@@ -71,22 +77,32 @@ jobs:
             REPOS="[]"
             for NAME in $(echo "${ALL_REPOS}" | jq -r '.[]'); do
               if gh api "repos/${REPO_OWNER}/${NAME}/contents/.mega-linter.yml" --silent 2>/dev/null; then
-                REPOS=$(echo "${REPOS}" | jq --arg name "${NAME}" '. + [$name]')
+                REPOS=$(echo "${REPOS}" | jq --arg name "${NAME}" '. + [$name] | sort')
               fi
             done
             echo "Found $(echo "${REPOS}" | jq 'length') repositories with .mega-linter.yml"
           fi
+
+          # Get flavor list
+          if [[ "${INPUT_FLAVOR}" == "<all-flavors>" ]]; then
+            FLAVORS="${ALL_FLAVORS}"
+            echo "Using all MegaLinter flavors"
+          else
+            FLAVORS="[\"${INPUT_FLAVOR:-all}\"]"
+          fi
           echo "repos=$(echo "${REPOS}" | jq -c '.')" >> "${GITHUB_OUTPUT}"
+          echo "flavors=$(echo "${FLAVORS}" | jq -c '.')" >> "${GITHUB_OUTPUT}"
 
   megalinter-parallel:
     needs: fetch-repos
     runs-on: ubuntu-latest
-    name: "megalinter-${{ inputs.megalinter_flavor || 'all' }}-${{ matrix.repo }}"
+    name: "megalinter-${{ matrix.flavor }}-${{ matrix.repo }}"
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
         repo: ${{ fromJson(needs.fetch-repos.outputs.repos) }}
+        flavor: ${{ fromJson(needs.fetch-repos.outputs.flavors) }}
     steps:
       - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
         id: app-token
@@ -101,9 +117,9 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           fetch-depth: 1
 
-      - name: 💡 MegaLinter
+      - name: 💡 MegaLinter (${{ matrix.flavor }})
         uses: oxsecurity/megalinter@42bb470545e359597e7f12156947c436e4e3fb9a # v9.3.0
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          MEGALINTER_FLAVOR: ${{ inputs.megalinter_flavor || 'all' }}
+          MEGALINTER_FLAVOR: ${{ matrix.flavor }}
           VALIDATE_ALL_CODEBASE: true
