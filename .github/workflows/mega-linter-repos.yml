@@ -64,7 +64,7 @@ jobs:
           INPUT_FLAVOR: ${{ inputs.megalinter_flavor }}
         run: |
           # Define all available MegaLinter flavors (sorted by image size, smallest first)
-          ALL_FLAVORS='["formatters","ci_light","security","documentation","ruby","rust","swift","go","java","php","terraform","c_cpp","salesforce","javascript","dotnet","python","dotnetweb","cupcake","all"]'
+          ALL_FLAVORS='["formatters","ci_light","security","documentation","ruby","terraform","c_cpp","javascript","python","cupcake","all"]'
 
           # Get repository list
           if [[ -n "${INPUT_REPOSITORY}" ]]; then
