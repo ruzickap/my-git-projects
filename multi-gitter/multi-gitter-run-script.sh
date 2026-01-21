@@ -17,8 +17,8 @@ die() {
 # Validation
 [[ -n "${REPOSITORY:-}" ]] || die "REPOSITORY environment variable required"
 [[ -d "${GH_REPO_DEFAULTS_BASE}" ]] || die "Defaults directory not found: ${GH_REPO_DEFAULTS_BASE}"
-command -v rclone >/dev/null || die "rclone not found"
-command -v git >/dev/null || die "git not found"
+command -v rclone > /dev/null || die "rclone not found"
+command -v git > /dev/null || die "git not found"
 
 # Core functions
 copy_defaults() {
@@ -39,7 +39,7 @@ copy_defaults() {
 
 checkout_files() {
   for FILE in "${@}"; do
-    if git checkout "${FILE}" 2>/dev/null; then
+    if git checkout "${FILE}" 2> /dev/null; then
       log_info "Checked out: ${FILE}"
     else
       log_info "Skipped: ${FILE}"

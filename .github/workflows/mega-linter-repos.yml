@@ -76,7 +76,7 @@ jobs:
               --source --limit 1000 --json name --jq '[.[].name]')
             REPOS="[]"
             for NAME in $(echo "${ALL_REPOS}" | jq -r '.[]'); do
-              if gh api "repos/${REPO_OWNER}/${NAME}/contents/.mega-linter.yml" --silent 2>/dev/null; then
+              if gh api "repos/${REPO_OWNER}/${NAME}/contents/.mega-linter.yml" --silent 2> /dev/null; then
                 REPOS=$(echo "${REPOS}" | jq --arg name "${NAME}" '. + [$name] | sort')
               fi
             done
