@@ -95,12 +95,17 @@ locals {
   # TXT Records for mylabs.dev
   mylabs_dev_txt_records = {
     "_dmarc" = {
-      content = "v=DMARC1; p=none; rua=mailto:dmarc@smtp.mailtrap.live; ruf=mailto:dmarc@smtp.mailtrap.live; rf=afrf; pct=100"
+      content = "\"v=DMARC1; p=none; rua=mailto:dmarc@smtp.mailtrap.live; ruf=mailto:dmarc@smtp.mailtrap.live; rf=afrf; pct=100\""
       comment = "mailtrap DMARC"
       name    = "_dmarc"
     }
+    "google-site-verification" = {
+      content = "\"google-site-verification=KO6pwLbmphUeSDtJoHvvtQSdY6sIAdxwx-HydF6gHCg\""
+      comment = "Google site verification"
+      name    = ""
+    }
     "spf" = {
-      content = "v=spf1 include:_spf.smtp.mailtrap.live ~all"
+      content = "\"v=spf1 include:_spf.smtp.mailtrap.live ~all\""
       comment = "Mailtrap SPF"
       name    = ""
     }

@@ -112,7 +112,7 @@ locals {
   xvx_cz_txt_records = {
     # keep-sorted start block=yes
     "_acme-challenge.auth.infra" = {
-      content = "_d-VJBZ8HF6-jVDYxoLZbWtNVksym1psIOjvijxdWUw"
+      content = "\"_d-VJBZ8HF6-jVDYxoLZbWtNVksym1psIOjvijxdWUw\""
       ttl     = 120
       name    = "_acme-challenge.auth.infra"
     }
@@ -122,17 +122,17 @@ locals {
       name    = "_dmarc"
     }
     "google-site-verification" = {
-      content = "google-site-verification=S7LT5KvxFLKml7e8cM5W5_4Ndf2HxhLcCKPTd2If2d8"
+      content = "\"google-site-verification=S7LT5KvxFLKml7e8cM5W5_4Ndf2HxhLcCKPTd2If2d8\""
       ttl     = 1
       name    = ""
     }
     "google._domainkey" = {
-      content = "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9lBTbndSVB2mw8nw8OjorEvroT0hEAsWdK3n5reYepnMx8EROpq4vd3uzM2xjyzxqx80xdiQ1Hz/tHiB1fv8i2sO1LzvHhjIkEKkPqzC6D0YV/+79Lm3+Sf7bci916JAibHA3ejWVdAGvbspuvcvELPr2aeTkVvPOei4Y+8/jjGzQvU1LIHIa86FJh9iFJIJec5Kme2ghhuOHOQpboi06gM58TrF8GC8NPv22n1qcMp6HLccl3qfkY15w88xw118KjCZRHnXecsxFCyGY7mDwsufRqbprixvDqq3+vG7Gb1LIbWP9DS0aWaHxRDSTq3H5+Bnm4mDQHA2BkC1ZrKxMQIDAQAB"
+      content = "\"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9lBTbndSVB2mw8nw8OjorEvroT0hEAsWdK3n5reYepnMx8EROpq4vd3uzM2xjyzxqx80xdiQ1Hz/tHiB1fv8i2sO1LzvHhjIkEKkPqzC6D0YV/+79Lm3+Sf7bci916JAibHA3ejWVdAGvbspuvcvELPr2aeTkVvPOei4Y+8/jjGzQvU1LIHIa86FJh9iFJIJec5Kme2ghhuOHOQpboi06gM58TrF8GC8NPv22n1qcMp6HLccl3qfkY15w88xw118KjCZRHnXecsxFCyGY7mDwsufRqbprixvDqq3+vG7Gb1LIbWP9DS0aWaHxRDSTq3H5+Bnm4mDQHA2BkC1ZrKxMQIDAQAB\""
       ttl     = 1
       name    = "google._domainkey"
     }
     "spf" = {
-      content = "v=spf1 include:_spf.google.com ~all"
+      content = "\"v=spf1 include:_spf.google.com ~all\""
       ttl     = 1
       name    = ""
     }
