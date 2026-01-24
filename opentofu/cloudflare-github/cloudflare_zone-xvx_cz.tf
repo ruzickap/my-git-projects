@@ -3,6 +3,11 @@ locals {
   # A Records for xvx.cz
   xvx_cz_a_records = {
     # keep-sorted start block=yes
+    "brewwatch" = {
+      content = "185.158.133.1"
+      comment = "brewwatch"
+      proxied = false
+    }
     "gate-bracha" = {
       content = "176.74.157.134"
       comment = "Gate/Router Bracha in Zebetin"
@@ -121,13 +126,18 @@ locals {
       ttl     = 1
       name    = "_dmarc"
     }
+    "_lovable.brewwatch" = {
+      content = "\"lovable_verify=62170c321a2f6ea0b72f7098d8ffbfaba6976c8c9c69d0d4e400b5acfa7956c9\""
+      ttl     = 1
+      name    = "_lovable.brewwatch"
+    }
     "google-site-verification" = {
       content = "\"google-site-verification=S7LT5KvxFLKml7e8cM5W5_4Ndf2HxhLcCKPTd2If2d8\""
       ttl     = 1
       name    = ""
     }
     "google._domainkey" = {
-      content = "\"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9lBTbndSVB2mw8nw8OjorEvroT0hEAsWdK3n5reYepnMx8EROpq4vd3uzM2xjyzxqx80xdiQ1Hz/tHiB1fv8i2sO1LzvHhjIkEKkPqzC6D0YV/+79Lm3+Sf7bci916JAibHA3ejWVdAGvbspuvcvELPr2aeTkVvPOei4Y+8/jjGzQvU1LIHIa86FJh9iFJIJec5Kme2ghhuOHOQpboi06gM58TrF8GC8NPv22n1qcMp6HLccl3qfkY15w88xw118KjCZRHnXecsxFCyGY7mDwsufRqbprixvDqq3+vG7Gb1LIbWP9DS0aWaHxRDSTq3H5+Bnm4mDQHA2BkC1ZrKxMQIDAQAB\""
+      content = "\"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9lBTbndSVB2mw8nw8OjorEvroT0hEAsWdK3n5reYepnMx8EROpq4vd3uzM2xjyzxqx80xdiQ1Hz/tHiB1fv8i2sO1LzvHhjIkEKkPqzC6D0YV/+79Lm3+Sf7bci916JAibHA3ejWVdAGvbspuvcvELPr2aeTkVvPOei4Y+8/jjGzQvU1LIHIa86FJh9iFJIJe\" \"c5Kme2ghhuOHOQpboi06gM58TrF8GC8NPv22n1qcMp6HLccl3qfkY15w88xw118KjCZRHnXecsxFCyGY7mDwsufRqbprixvDqq3+vG7Gb1LIbWP9DS0aWaHxRDSTq3H5+Bnm4mDQHA2BkC1ZrKxMQIDAQAB\""
       ttl     = 1
       name    = "google._domainkey"
     }
