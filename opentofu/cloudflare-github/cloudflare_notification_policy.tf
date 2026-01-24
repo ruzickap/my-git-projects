@@ -48,7 +48,7 @@ resource "cloudflare_notification_policy" "incident" {
     }]
   }
   filters = {
-    incident_impact = ["INCIDENT_IMPACT_MAJOR"]
+    incident_impact = ["INCIDENT_IMPACT_CRITICAL"]
   }
 }
 
