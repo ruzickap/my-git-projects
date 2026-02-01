@@ -65,6 +65,7 @@ skip-repo:
 
 # Private repositories (need to be specified explicitly)
 repo:
+  - ruzickap/brewwatch
   - ruzickap/cv
 
 # Branch configuration

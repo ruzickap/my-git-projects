@@ -26,7 +26,7 @@ jobs:
           [commit]
           subject_capitalized = false
           subject_imperative = false
-          subject_max_length = 80
+          subject_max_length = 72
           EOF
 
       - uses: commit-check/commit-check-action@be79b5cd5953c8afd4266004c5bbb1431f544df1 # v2.2.1
