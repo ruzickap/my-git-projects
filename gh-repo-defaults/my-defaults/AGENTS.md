@@ -36,7 +36,7 @@ and maintainability across all contributions.
 ### Markdown Best Practices
 
 - Use proper heading hierarchy (don't skip levels)
-- Wrap lines at 80 characters for readability
+- Wrap lines at 72 characters for readability
 - Use semantic HTML only when necessary
 - Prefer code fences over inline code for multi-line examples
 - Include language identifiers in code fences
@@ -56,7 +56,7 @@ and maintainability across all contributions.
 
 - **Conventional commit format**: Use standard types (`feat`, `fix`, `docs`,
   `chore`, `refactor`, `test`, `style`, `perf`, `ci`, `build`, `revert`)
-- **Line limits**: Subject ≤ 80 characters, body lines ≤ 80 characters
+- **Line limits**: Subject ≤ 72 characters, body lines ≤ 72 characters
 - **Single blank line**: Between subject and body, between body paragraphs
 
 #### Commit Message Structure
@@ -65,12 +65,12 @@ and maintainability across all contributions.
   - Imperative mood (e.g., "add" not "added" or "adds")
   - Use lower case (except for proper nouns and abbreviations)
   - No period at the end
-  - Maximum 80 characters
+  - Maximum 72 characters
   - Format: `<type>: <description>`
 
 - **Body** (optional but recommended for non-trivial changes):
   - Explain **what** changed and **why**
-  - Wrap lines at 80 characters
+  - Wrap lines at 72 characters
   - Use Markdown formatting
   - Separate paragraphs with blank lines
   - Reference issues using keywords: `Fixes`, `Closes`, `Resolves`

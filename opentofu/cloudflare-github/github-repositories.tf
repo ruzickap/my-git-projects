@@ -74,6 +74,12 @@ locals {
         "WIFI_SSID"     = data.sops_file.env_yaml.data["WIFI_SSID"]
       }
     }
+    "brewwatch" = {
+      name        = "brewwatch"
+      description = "A modern web app to discover and track newly added Homebrew packages and casks"
+      visibility  = "private"
+      topics      = ["brew", "casks", "formulae", "homebrew", "lovable", "packages", "tracker", "watch"]
+    }
     "cheatsheet_atom" = {
       name        = "cheatsheet-atom"
       description = "Atom Keyboard Shortcuts Cheatsheet"
