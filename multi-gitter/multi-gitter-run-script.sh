@@ -7,8 +7,8 @@ GH_REPO_DEFAULTS_BASE="${GH_REPO_DEFAULTS_BASE:-${HOME}/git/my-git-projects/gh-r
 
 # Simple logging
 log() { echo "[$(date +'%H:%M:%S')] ${*}" >&2; }
-log_info() { log "INFO: ${*}"; }
-log_error() { log "ERROR: ${*}"; }
+log_info() { log "❇️ INFO: ${*}"; }
+log_error() { log "❌ ERROR: ${*}"; }
 die() {
   log_error "${*}"
   exit 1
@@ -23,14 +23,13 @@ command -v git > /dev/null || die "git not found"
 # Core functions
 copy_defaults() {
   local SOURCE_DIR="${1}"
-  local DESCRIPTION="${2:-${SOURCE_DIR##*/}}"
 
   if [[ ! -d "${SOURCE_DIR}" ]]; then
-    log "ERROR: Source directory not found: ${SOURCE_DIR}"
+    log_error "Source directory not found: ${SOURCE_DIR}"
     return 1
   fi
 
-  log_info "${DESCRIPTION} | ${REPOSITORY}"
+  log_info "${SOURCE_DIR##*/} | ${REPOSITORY}"
   if ! rclone copyto --verbose --stats 0 --no-update-modtime --no-update-dir-modtime "${SOURCE_DIR}" .; then
     log_error "Failed to copy from: ${SOURCE_DIR}"
     return 1
@@ -42,7 +41,7 @@ checkout_files() {
     if git checkout "${FILE}" 2> /dev/null; then
       log_info "Checked out: ${FILE}"
     else
-      log_info "Skipped: ${FILE}"
+      log_error "Skipped: ${FILE}"
     fi
   done
 }
@@ -70,7 +69,7 @@ megalinter_flavor() {
 }
 
 # Main processing
-log_info "Processing ${REPOSITORY}"
+log_info "👉 Processing ${REPOSITORY}"
 
 # Always copy base defaults
 copy_defaults "${GH_REPO_DEFAULTS_BASE}/my-defaults"
@@ -88,20 +87,22 @@ case "${REPOSITORY}" in
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
     megalinter_flavor all
     ;;
+  ruzickap/brewwatch)
+    checkout_files ".mega-linter.yml"
+    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
+    megalinter_flavor all
+    ;;
   ruzickap/cheatsheet-*)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
     megalinter_flavor all
     ;;
   ruzickap/cv)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
-    # arm64 is not supported in private repos
-    checkout_files "run.sh" ".github/workflows/commit-check.yml" ".github/workflows/release-please.yml" ".github/workflows/renovate.yml" ".github/workflows/semantic-pull-request.yml" ".github/workflows/stale.yml"
+    checkout_files "run.sh" # Disable SVG
     remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
     megalinter_flavor all
     ;;
   ruzickap/caisp-notes)
-    # arm64 is not supported in private repos
-    checkout_files ".github/workflows/commit-check.yml" ".github/workflows/release-please.yml" ".github/workflows/renovate.yml" ".github/workflows/semantic-pull-request.yml" ".github/workflows/stale.yml" ".mega-linter.yml"
     remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
     ;;
   ruzickap/gha_test)
