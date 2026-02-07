@@ -29,6 +29,6 @@ jobs:
           subject_max_length = 80
           EOF
 
-      - uses: commit-check/commit-check-action@22372bc03ce3eadfa1d32279091609483240ab7a # v2.3.0
+      - uses: commit-check/commit-check-action@108aca470d4737070cc5416d7cfe82f64e23513d # v2.4.0
         env:
           GH_TOKEN: ${{ github.token }}
