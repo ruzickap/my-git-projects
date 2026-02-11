@@ -65,7 +65,7 @@ repos:
   #     - id: terraform-docs-go
 
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.1.9
+    rev: v0.1.11
     hooks:
       - id: rumdl # Lint only (fails on issues)
         exclude: ^CHANGELOG\.md$
@@ -133,7 +133,7 @@ repos:
   #     - id: keep-sorted
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.13.0
+    rev: v4.13.2
     hooks:
       - id: commitizen
         stages: [commit-msg]
@@ -141,11 +141,9 @@ repos:
         stages: [pre-push]
 
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.4.0
+    rev: v2.4.1
     hooks:
       - id: check-message
-      #   args:
-      #     - --subject-imperative=false
       - id: check-branch
       - id: check-author-name
       - id: check-author-email

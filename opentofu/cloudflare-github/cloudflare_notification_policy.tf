@@ -84,8 +84,7 @@ resource "cloudflare_notification_policy" "tunnel_health" {
   filters = {
     tunnel_id = [
       cloudflare_zero_trust_tunnel_cloudflared.tunnels["gate"].id,
-      # RPi is too noisy due to weak WiFi signal
-      # cloudflare_zero_trust_tunnel_cloudflared.tunnels["raspi"].id,
+      cloudflare_zero_trust_tunnel_cloudflared.tunnels["raspi"].id,
     ]
     new_status = [
       "TUNNEL_STATUS_TYPE_DEGRADED",

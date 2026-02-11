@@ -1,7 +1,7 @@
-resource "cloudflare_web_analytics_site" "brewwatch_xvx_cz" {
+resource "cloudflare_web_analytics_site" "brewwatch_lovable_app" {
   account_id   = local.cloudflare_account_id
   auto_install = false
-  host         = "brewwatch.xvx.cz"
+  host         = "brewwatch.lovable.app"
 }
 
 resource "cloudflare_web_analytics_site" "ruzickap_github_io" {

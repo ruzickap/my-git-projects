@@ -3,11 +3,6 @@ locals {
   # A Records for xvx.cz
   xvx_cz_a_records = {
     # keep-sorted start block=yes
-    "brewwatch" = {
-      content = "185.158.133.1"
-      comment = "brewwatch"
-      proxied = false
-    }
     "gate-bracha" = {
       content = "176.74.157.134"
       comment = "Gate/Router Bracha in Zebetin"
@@ -125,11 +120,6 @@ locals {
       content = "\"v=DMARC1; p=none; rua=mailto:petr.ruzicka@gmail.com\""
       ttl     = 1
       name    = "_dmarc"
-    }
-    "_lovable.brewwatch" = {
-      content = "\"lovable_verify=62170c321a2f6ea0b72f7098d8ffbfaba6976c8c9c69d0d4e400b5acfa7956c9\""
-      ttl     = 1
-      name    = "_lovable.brewwatch"
     }
     "google-site-verification" = {
       content = "\"google-site-verification=S7LT5KvxFLKml7e8cM5W5_4Ndf2HxhLcCKPTd2If2d8\""
