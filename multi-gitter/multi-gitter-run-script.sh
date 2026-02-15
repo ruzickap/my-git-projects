@@ -30,7 +30,7 @@ copy_defaults() {
   fi
 
   log_info "${SOURCE_DIR##*/} | ${REPOSITORY}"
-  if ! rclone copyto --verbose --stats 0 --no-update-modtime --no-update-dir-modtime "${SOURCE_DIR}" .; then
+  if ! rclone copyto --verbose --stats 0 --no-update-modtime --no-update-dir-modtime --exclude AGENTS.md "${SOURCE_DIR}" .; then
     log_error "Failed to copy from: ${SOURCE_DIR}"
     return 1
   fi
@@ -75,21 +75,24 @@ log_info "👉 Processing ${REPOSITORY}"
 copy_defaults "${GH_REPO_DEFAULTS_BASE}/my-defaults"
 sed -i "s@/ruzickap/my-git-projects/@/${REPOSITORY}/@" ".github/ISSUE_TEMPLATE/config.yml"
 
+# Upgrade all in GH Actions
+actions-up --yes
+
 # Repository-specific handling
 case "${REPOSITORY}" in
   ruzickap/action-*)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/action"
     ;;
-  ruzickap/ansible-*)
-    copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
-    ;;
-  ansible-raspberry-pi-os)
+  ruzickap/ansible-raspberry-pi-os)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
     megalinter_flavor all
     ;;
+  ruzickap/ansible-*)
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
+    ;;
   ruzickap/brewwatch)
     checkout_files ".mega-linter.yml"
-    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
+    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml" ".github/workflows/stale.yml"
     megalinter_flavor all
     ;;
   ruzickap/cheatsheet-*)
@@ -99,17 +102,14 @@ case "${REPOSITORY}" in
   ruzickap/cv)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
     checkout_files "run.sh" # Disable SVG
-    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
+    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml" ".github/workflows/stale.yml"
     megalinter_flavor all
     ;;
-  ruzickap/caisp-notes)
-    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
+  ruzickap/caisp-notes | ruzickap/wiz-certification-notes)
+    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml" ".github/workflows/stale.yml"
     ;;
   ruzickap/gha_test)
     remove_files ".github/workflows/pr-slack-notification.yml"
-    ;;
-  ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
-    copy_defaults "${GH_REPO_DEFAULTS_BASE}/hugo"
     ;;
   ruzickap/k8s-multicluster-gitops)
     megalinter_flavor cupcake
@@ -120,6 +120,9 @@ case "${REPOSITORY}" in
     ;;
   ruzickap/my-git-projects)
     megalinter_flavor cupcake
+    ;;
+  ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/hugo"
     ;;
   ruzickap/pre-commit-wizcli)
     megalinter_flavor cupcake
@@ -132,5 +135,17 @@ case "${REPOSITORY}" in
     log_info "Using default configuration for ${REPOSITORY}"
     ;;
 esac
+
+# # Remove after first init/run
+# log_info "Copying AGENTS.md from defaults and reinitializing with opencode"
+# cp "${GH_REPO_DEFAULTS_BASE}/my-defaults/AGENTS.md" AGENTS.md
+# opencode run --model="github-copilot/claude-opus-4.6" --command "init"
+
+# # Handle AGENTS.md: copy if missing, reinitialize if identical to default
+# if [[ ! -f "AGENTS.md" ]]; then
+#   log_info "Copying AGENTS.md from defaults and reinitializing with opencode"
+#   cp "${GH_REPO_DEFAULTS_BASE}/my-defaults/AGENTS.md" AGENTS.md
+#   opencode run --model="github-copilot/claude-opus-4.6" --command "init"
+# fi
 
 log_info "Completed processing ${REPOSITORY}"
