@@ -45,6 +45,7 @@ repos:
       - id: terraform_checkov
         # args:
         #   - --args=--config-file __GIT_WORKING_DIR__/.checkov.yml
+      - id: terraform_docs
       - id: terraform_fmt
       - id: terraform_tflint
       - id: terraform_trivy
@@ -59,16 +60,10 @@ repos:
           - --args=terraform
           - --args=--version "~> 1.11"
 
-  # - repo: https://github.com/terraform-docs/terraform-docs
-  #   rev: v0.20.0
-  #   hooks:
-  #     - id: terraform-docs-go
-
   - repo: https://github.com/rvben/rumdl-pre-commit
     rev: v0.1.11
     hooks:
-      - id: rumdl # Lint only (fails on issues)
-        exclude: ^CHANGELOG\.md$
+      - id: rumdl-fmt
 
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.38.0
@@ -164,17 +159,26 @@ repos:
             --msg-filename,
           ]
 
-  # - repo: https://github.com/tak-bro/aicommit2
-  #   rev: v2.4.14
-  #   hooks:
-  #     - id: aicommit2
-  #       name: AI Commit Message Generator
-  #       entry: aicommit2 --pre-commit
-  #       language: node
-  #       stages: [prepare-commit-msg]
-  #       always_run: true
-
   - repo: https://github.com/ruzickap/pre-commit-wizcli
     rev: v1.0.0
     hooks:
       - id: wizcli-scan-dir-secrets
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.10
+    hooks:
+      - id: actionlint-system
+
+  # - repo: https://github.com/hukkin/mdformat
+  #   rev: 1.0.0
+  #   hooks:
+  #     - id: mdformat
+  #       additional_dependencies:
+  #         - mdformat-gfm
+  #         - mdformat-config
+  #         # - mdformat-shfmt # disable until can pass args (ref: https://github.com/hukkin/mdformat-shfmt/issues/7)
+
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.43.4
+    hooks:
+      - id: typos

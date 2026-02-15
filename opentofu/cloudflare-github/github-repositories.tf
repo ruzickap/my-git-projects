@@ -35,6 +35,12 @@ locals {
         "WIZ_CLIENT_SECRET" = data.sops_file.env_yaml.data["WIZ_CLIENT_SECRET"]
       }
     },
+    "wiz_certification_notes" = {
+      name        = "wiz-certification-notes"
+      description = "Wiz Certified exams Notes"
+      visibility  = "private"
+      topics      = ["certification", "notes", "security", "wiz", "wiz-exam", "wiz-exam-preparation"]
+    }
   }
   #trivy:ignore:avd-git-0001 Repository is public
   github_repositories_existing = {
