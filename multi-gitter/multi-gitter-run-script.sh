@@ -17,6 +17,7 @@ die() {
 # Validation
 [[ -n "${REPOSITORY:-}" ]] || die "REPOSITORY environment variable required"
 [[ -d "${GH_REPO_DEFAULTS_BASE}" ]] || die "Defaults directory not found: ${GH_REPO_DEFAULTS_BASE}"
+command -v gh > /dev/null || die "gh not found"
 command -v rclone > /dev/null || die "rclone not found"
 command -v git > /dev/null || die "git not found"
 
@@ -52,6 +53,13 @@ remove_files() {
   done
 }
 
+private_repository() {
+  if gh repo view "${REPOSITORY}" --json isPrivate --jq '.isPrivate' 2> /dev/null | grep -q "true"; then
+    log_info "Private repository detected: ${REPOSITORY}"
+    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml" ".github/workflows/stale.yml"
+  fi
+}
+
 megalinter_flavor() {
   local FLAVOR="${1}"
   local MEGALINTER_FILE=".github/workflows/mega-linter.yml"
@@ -75,6 +83,9 @@ log_info "👉 Processing ${REPOSITORY}"
 copy_defaults "${GH_REPO_DEFAULTS_BASE}/my-defaults"
 sed -i "s@/ruzickap/my-git-projects/@/${REPOSITORY}/@" ".github/ISSUE_TEMPLATE/config.yml"
 
+# Remove workflows not applicable to private repositories
+private_repository
+
 # Upgrade all in GH Actions
 actions-up --yes
 
@@ -92,7 +103,6 @@ case "${REPOSITORY}" in
     ;;
   ruzickap/brewwatch)
     checkout_files ".mega-linter.yml"
-    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml" ".github/workflows/stale.yml"
     megalinter_flavor all
     ;;
   ruzickap/cheatsheet-*)
@@ -102,11 +112,7 @@ case "${REPOSITORY}" in
   ruzickap/cv)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
     checkout_files "run.sh" # Disable SVG
-    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml" ".github/workflows/stale.yml"
     megalinter_flavor all
-    ;;
-  ruzickap/caisp-notes | ruzickap/wiz-certification-notes)
-    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml" ".github/workflows/stale.yml"
     ;;
   ruzickap/gha_test)
     remove_files ".github/workflows/pr-slack-notification.yml"
