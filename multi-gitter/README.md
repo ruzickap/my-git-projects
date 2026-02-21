@@ -53,8 +53,7 @@ The script supports the following environment variables:
 Upgrade all in GH Actions
 
 ```bash
-# https://github.com/azat-io/actions-up/issues/30
-# actions-up --dir ../gh-repo-defaults/ --recursive --yes
+actions-up --dir ../gh-repo-defaults/ --recursive --yes
 ```
 
 ```bash
