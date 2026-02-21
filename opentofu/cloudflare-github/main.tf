@@ -33,6 +33,10 @@ terraform {
       source  = "hashicorp/http"
       version = "~> 3"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.6"
+    }
     restapi = {
       source  = "Mastercard/restapi"
       version = "~> 2.0"
@@ -40,6 +44,10 @@ terraform {
     sops = {
       source  = "carlpett/sops"
       version = "~> 1.3"
+    }
+    supabase = {
+      source  = "supabase/supabase"
+      version = "~> 1.7"
     }
     uptimerobot = {
       source  = "uptimerobot/uptimerobot"
@@ -99,6 +107,10 @@ provider "restapi" {
 }
 
 provider "sops" {}
+
+provider "supabase" {
+  access_token = data.sops_file.env_yaml.data["SUPABASE_ACCESS_TOKEN"]
+}
 
 provider "uptimerobot" {
   api_key = data.sops_file.env_yaml.data["uptimerobot_api_key"]

@@ -50,6 +50,12 @@ The script supports the following environment variables:
 
 ### Running Multi-Gitter
 
+Upgrade all in GH Actions
+
+```bash
+actions-up --dir ../gh-repo-defaults/ --recursive --yes
+```
+
 ```bash
 # Dry run (recommended first)
 multi-gitter run --config config.yaml --dry-run ./multi-gitter-run-script.sh

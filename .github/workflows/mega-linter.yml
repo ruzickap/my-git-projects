@@ -25,7 +25,7 @@ jobs:
 
       - name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@8cba46e29c11878d930bca7870bb54394d3e8b21 # v47.0.2
+        uses: tj-actions/changed-files@7dee1b0c1557f278e5c7dc244927139d78c0e22a # v47.0.4
         with:
           files: |
             **/*.md
@@ -53,6 +53,13 @@ jobs:
           path: .lycheecache
           key: cache-lychee-${{ github.sha }}
           restore-keys: cache-lychee-
+
+      # https://github.com/lycheeverse/lychee/issues/1734
+      - name: Remove unavailable URLs from cache to check them again
+        run: |
+          if [[ -f .lycheecache ]]; then
+            sed -i '/,,/d' .lycheecache
+          fi
 
       - name: 💡 MegaLinter
         uses: oxsecurity/megalinter/flavors/cupcake@42bb470545e359597e7f12156947c436e4e3fb9a # v9.3.0
