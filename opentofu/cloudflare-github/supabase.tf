@@ -3,8 +3,9 @@ resource "random_password" "supabase_project_container_image_scans" {
 }
 
 resource "supabase_project" "container_image_scans" {
-  organization_id   = "nejknhtshawlnwtrxyaj"
-  name              = "container-image-scans"
+  organization_id = "nejknhtshawlnwtrxyaj"
+  name            = "container-image-scans"
+  # kics-scan ignore-line
   database_password = random_password.supabase_project_container_image_scans.result
   region            = "us-east-1"
 }
