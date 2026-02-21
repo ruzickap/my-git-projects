@@ -16,11 +16,27 @@ locals {
       visibility  = "private"
       topics      = ["ai", "ai-security", "caisp", "caisp-exam", "caisp-exam-preparation", "devsecops", "notes", "security"]
     }
+    "container_image_scans" = {
+      name        = "container-image-scans"
+      description = "Container image scans"
+      topics      = ["container", "container-image", "container-security", "cve", "image", "public", "security", "vulnerability"]
+      pages = [{
+        source = [{
+          branch = "gh-pages"
+        }]
+      }]
+      secrets = {
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY" = data.supabase_apikeys.container_image_scans.anon_key
+        "NEXT_PUBLIC_SUPABASE_URL"      = "https://${supabase_project.container_image_scans.id}.supabase.co"
+        "SUPABASE_SERVICE_KEY"          = data.supabase_apikeys.container_image_scans.service_role_key
+        "SUPABASE_URL"                  = "https://${supabase_project.container_image_scans.id}.supabase.co"
+      }
+    }
     "k8s_multicluster_gitops" = {
       name        = "k8s-multicluster-gitops"
       description = "Infrastructure as Code for provisioning multiple Kubernetes clusters, managed using GitOps with ArgoCD"
       topics      = ["aks", "argocd", "eks", "gitops", "infrastructure-as-code", "k8s", "k8s-gitops", "kind", "kubernetes", "multi-cluster", "terraform", "vcluster"] # codespell:ignore
-    },
+    }
     "pre_commit_wizcli" = {
       name        = "pre-commit-wizcli"
       description = "pre-commit hook for WizCLI that checks your code"
@@ -34,7 +50,7 @@ locals {
         "WIZ_CLIENT_ID"     = data.sops_file.env_yaml.data["WIZ_CLIENT_ID"]
         "WIZ_CLIENT_SECRET" = data.sops_file.env_yaml.data["WIZ_CLIENT_SECRET"]
       }
-    },
+    }
     "wiz_certification_notes" = {
       name        = "wiz-certification-notes"
       description = "Wiz Certified exams Notes"

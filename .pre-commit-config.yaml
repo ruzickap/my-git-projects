@@ -168,17 +168,3 @@ repos:
     rev: v1.7.10
     hooks:
       - id: actionlint-system
-
-  # - repo: https://github.com/hukkin/mdformat
-  #   rev: 1.0.0
-  #   hooks:
-  #     - id: mdformat
-  #       additional_dependencies:
-  #         - mdformat-gfm
-  #         - mdformat-config
-  #         # - mdformat-shfmt # disable until can pass args (ref: https://github.com/hukkin/mdformat-shfmt/issues/7)
-
-  - repo: https://github.com/crate-ci/typos
-    rev: v1.43.4
-    hooks:
-      - id: typos

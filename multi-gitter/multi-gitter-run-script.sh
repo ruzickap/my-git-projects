@@ -56,7 +56,8 @@ remove_files() {
 private_repository() {
   if gh repo view "${REPOSITORY}" --json isPrivate --jq '.isPrivate' 2> /dev/null | grep -q "true"; then
     log_info "Private repository detected: ${REPOSITORY}"
-    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml" ".github/workflows/stale.yml"
+    remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
+    sed -i -E '/^[[:space:]]*schedule:[[:space:]]*$/ { N; /^[[:space:]]*schedule:[[:space:]]*\n[[:space:]]*-[[:space:]]*cron:[[:space:]]*.*$/d; }' .github/workflows/*.yml
   fi
 }
 
@@ -83,11 +84,11 @@ log_info "👉 Processing ${REPOSITORY}"
 copy_defaults "${GH_REPO_DEFAULTS_BASE}/my-defaults"
 sed -i "s@/ruzickap/my-git-projects/@/${REPOSITORY}/@" ".github/ISSUE_TEMPLATE/config.yml"
 
-# Remove workflows not applicable to private repositories
+# Remove code not applicable to private repositories
 private_repository
 
 # Upgrade all in GH Actions
-actions-up --yes
+actions-up --yes --min-age 3
 
 # Repository-specific handling
 case "${REPOSITORY}" in

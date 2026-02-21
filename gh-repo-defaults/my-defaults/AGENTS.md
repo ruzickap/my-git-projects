@@ -184,6 +184,7 @@ Resolves: #123
 
 - Pass pre-commit hooks
 - Follow project coding standards
+- Use two spaces for indentation instead of tabs
 - Include tests for new functionality
 - Update documentation for user-facing changes
 - Make atomic, focused commits
