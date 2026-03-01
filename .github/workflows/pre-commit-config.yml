@@ -46,13 +46,14 @@ jobs:
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           echo "/home/linuxbrew/.linuxbrew/bin" >> "${GITHUB_PATH}"
-          brew install gitleaks opentofu terrascan tflint tfupdate trivy
+          brew install gitleaks opentofu terraform-docs terrascan tflint tfupdate trivy
 
           gitleaks version
           terrascan version
           tflint --version
           tfupdate --version
           tofu -version
+          terraform-docs --version
           trivy version
 
       - uses: j178/prek-action@0bb87d7f00b0c99306c8bcb8b8beba1eb581c037 # v1.1.1

@@ -61,9 +61,9 @@ OpenTofu plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
 - Use `this` as the resource name when using `for_each`
 - Use `try()` for optional fields in `for_each` maps
 - Use `prevent_destroy = true` on critical resources
-- Use `# keep-sorted start` / `# keep-sorted end` to maintain
-  alphabetical ordering in blocks (providers, locals, variables)
-- Add `# keep-sorted start block=yes` for multi-line sorted blocks
+- Use `# keep-sorted` to maintain alphabetical ordering in blocks (providers,
+  locals, variables)
+- Add `# keep-sorted ... block=yes` for multi-line sorted blocks
 - Data-driven pattern: define resources as maps in `locals`, iterate
   with `for_each`
 - Security scanner ignore annotations inline:
@@ -86,7 +86,7 @@ OpenTofu plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
 - Start files with `---`; two-space indentation
 - Lint with `yamllint` (relaxed profile, line-length disabled)
 - Format with `prettier` (markdown excluded from prettier)
-- Use `# keep-sorted start` / `# keep-sorted end` for sorted lists
+- Use `# keep-sorted` for sorted lists
 
 ### Markdown
 
@@ -108,7 +108,7 @@ OpenTofu plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
   with minimal permissions and inline comments
 - Prefer `ubuntu-24.04-arm` runners
 - Set explicit `timeout-minutes` on jobs
-- Use `# keep-sorted start/end` for env blocks
+- Use `# keep-sorted` for env blocks
 
 ## Security
 

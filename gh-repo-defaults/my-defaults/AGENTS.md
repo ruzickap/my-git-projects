@@ -55,6 +55,7 @@ and maintainability across all contributions.
   - `--case-indent`: Indent case statements
   - `--indent 2`: Use 2 spaces for indentation
   - `--space-redirects`: Add space before redirection operators
+- **Variables**: Use uppercase for bash variables (`${MY_VARIABLE}`)
 - **Excluded checks**: SC2317 (unreachable command warning) is excluded
 
 **Code blocks in Markdown**: Shell code blocks (tagged as `bash`, `shell`,
