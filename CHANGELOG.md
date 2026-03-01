@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.1.0](https://github.com/ruzickap/my-git-projects/compare/v1.0.0...v1.1.0) (2026-03-01)
+
+
+### Features
+
+* add CLOUDFLARE_WEB_ANALYTICS_SITE_TOKEN to ruzickap.github.io repo ([#277](https://github.com/ruzickap/my-git-projects/issues/277)) ([d9180d4](https://github.com/ruzickap/my-git-projects/commit/d9180d439f1fa7a51e90ed06dfe6c81b0c6a31b4))
+* add lovable brewwatch analytics and dns configuration ([#290](https://github.com/ruzickap/my-git-projects/issues/290)) ([d3d6d66](https://github.com/ruzickap/my-git-projects/commit/d3d6d664647ce0271aa2256d83b2d8d9ce25b301))
+* add more secrets to tofu code ([#273](https://github.com/ruzickap/my-git-projects/issues/273)) ([2678540](https://github.com/ruzickap/my-git-projects/commit/26785407fe4c7d32ac89a6f3e1473cdc4ed708ed))
+* add workflow to run MegaLinter on all non-archived repositories ([#284](https://github.com/ruzickap/my-git-projects/issues/284)) ([c448f46](https://github.com/ruzickap/my-git-projects/commit/c448f46fd1aabe47788c5a75e879a50702a2fffb))
+* enhance tofu-cloudflare-github workflow with manual trigger ([#278](https://github.com/ruzickap/my-git-projects/issues/278)) ([d6d213a](https://github.com/ruzickap/my-git-projects/commit/d6d213acfe1349e21a6d3ab7da71dc105410f4fb))
+* enhance tofu-cloudflare-github workflow with PR label handling ([#276](https://github.com/ruzickap/my-git-projects/issues/276)) ([d261243](https://github.com/ruzickap/my-git-projects/commit/d2612435755eba91ed29d3a2ce18bf1ebb9875a6))
+* redesign tofu secrets ([#272](https://github.com/ruzickap/my-git-projects/issues/272)) ([0a0e583](https://github.com/ruzickap/my-git-projects/commit/0a0e5836805af17ca944c5232594c35e0cff684d))
+* redesign tofu-cloudflare-github workflow ([#274](https://github.com/ruzickap/my-git-projects/issues/274)) ([3667e14](https://github.com/ruzickap/my-git-projects/commit/3667e14d40da1422261889453e14be56f62ebcc6))
+* replace hugo-build workflow with gh-pages-build ([#280](https://github.com/ruzickap/my-git-projects/issues/280)) ([87ed836](https://github.com/ruzickap/my-git-projects/commit/87ed8369eb1bc16aef208a79079d7a1ad97f5aab))
+* use rumdl for markdown linting ([#269](https://github.com/ruzickap/my-git-projects/issues/269)) ([7e20618](https://github.com/ruzickap/my-git-projects/commit/7e206189269dc2b3d5a1f6a796be4ebec5ba1562))
+
+
+### Bug Fixes
+
+* aws-cloudformation-gh-action GH Action ([#282](https://github.com/ruzickap/my-git-projects/issues/282)) ([8b125c3](https://github.com/ruzickap/my-git-projects/commit/8b125c374ac47f32fe750ca122cefdb8096e18fd))
+* correct Google API credentials in terraform configuration ([#275](https://github.com/ruzickap/my-git-projects/issues/275)) ([5323b43](https://github.com/ruzickap/my-git-projects/commit/5323b433928d88749a539b7cee7b1a572903ccb8))
+* ensure .lycheecache is checked before modification in workflows ([#294](https://github.com/ruzickap/my-git-projects/issues/294)) ([e2ef093](https://github.com/ruzickap/my-git-projects/commit/e2ef0930354734ab25bc1c8c1f86521e906176b2))
+* update MaxSessionDuration for GitHub Actions IAM role to 2 hours ([#283](https://github.com/ruzickap/my-git-projects/issues/283)) ([19acc26](https://github.com/ruzickap/my-git-projects/commit/19acc260f31c865f2db0dbf902a1cde56430e652))
+
 ## [1.0.0](https://github.com/ruzickap/my-git-projects/compare/v0.6.0...v1.0.0) (2026-01-04)
 
 
