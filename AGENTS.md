@@ -16,11 +16,11 @@ security scanning, and CI validation.
 ### OpenTofu (run from `opentofu/cloudflare-github/`)
 
 ```bash
-tofu init                  # Initialize providers and backend
-tofu fmt -check -recursive # Check HCL formatting
-tofu validate              # Validate configuration
-tofu plan                  # Preview changes (requires secrets)
-tofu apply                 # Apply changes (requires secrets)
+tofu init                             # Initialize providers and backend
+tofu fmt -check -recursive            # Check HCL formatting
+tofu validate                         # Validate configuration
+tofu plan                             # Preview changes (requires secrets)
+tofu apply                            # Apply changes (requires secrets)
 ```
 
 OpenTofu version is pinned to `1.11.5` in `opentofu/cloudflare-github/mise.toml`.
@@ -28,8 +28,8 @@ OpenTofu version is pinned to `1.11.5` in `opentofu/cloudflare-github/mise.toml`
 ### Pre-commit (run from repo root)
 
 ```bash
-pre-commit run --all-files              # Run all hooks
-pre-commit run shellcheck --all-files   # Single linter example
+pre-commit run --all-files            # Run all hooks
+pre-commit run shellcheck --all-files # Single linter example
 pre-commit run shfmt --all-files
 pre-commit run actionlint-system --all-files
 pre-commit run terraform_fmt --all-files
