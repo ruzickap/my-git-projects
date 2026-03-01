@@ -40,14 +40,14 @@ Install: `pre-commit install && pre-commit install --hook-type commit-msg`
 ### Individual Linters
 
 ```bash
-shellcheck script.sh               # Lint shell script
-shfmt -ci -i 2 -sr script.sh      # Format shell script
-actionlint                         # Validate GH Actions workflows
-rumdl file.md                      # Lint markdown
-lychee --cache .                   # Check URLs
-tflint                             # Lint Terraform
-checkov --quiet -d .               # IaC security scan
-trivy fs --severity HIGH,CRITICAL .  # Vulnerability scan
+shellcheck script.sh                # Lint shell script
+shfmt -ci -i 2 -sr script.sh        # Format shell script
+actionlint                          # Validate GH Actions workflows
+rumdl file.md                       # Lint markdown
+lychee --cache .                    # Check URLs
+tflint                              # Lint Terraform
+checkov --quiet -d .                # IaC security scan
+trivy fs --severity HIGH,CRITICAL . # Vulnerability scan
 ```
 
 CI: MegaLinter (cupcake flavor) in `.github/workflows/mega-linter.yml`;
