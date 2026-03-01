@@ -1,117 +1,156 @@
 # AI Agent Guidelines
 
-## Overview
+## Project Overview
 
-This document provides guidelines and best practices for AI agents working
-on this repository. Follow these standards to ensure consistency, quality,
-and maintainability across all contributions.
+Infrastructure-as-code repository (`ruzickap/my-git-projects`) managing
+Cloudflare, GitHub, Supabase, and UptimeRobot resources via OpenTofu.
+Also contains GitHub Actions workflows, multi-gitter scripts, and
+repository default templates distributed to ~40+ repos.
 
-## Table of Contents
+**Tech stack**: HCL (OpenTofu/Terraform), Bash, YAML, JSON5
+**No application code or tests** -- quality is enforced through linting,
+security scanning, and CI validation.
 
-- [AI Agent Guidelines](#ai-agent-guidelines)
-  - [Overview](#overview)
-  - [Table of Contents](#table-of-contents)
-  - [Markdown Files](#markdown-files)
-    - [Linting and Formatting](#linting-and-formatting)
-    - [Markdown Best Practices](#markdown-best-practices)
-  - [Version Control](#version-control)
-    - [Commit Messages](#commit-messages)
-      - [Format Rules](#format-rules)
-      - [Commit Message Structure](#commit-message-structure)
-        - [Example](#example)
-    - [Branching](#branching)
-    - [Pull Requests](#pull-requests)
-  - [Quality \& Best Practices](#quality--best-practices)
+## Build / Lint / Test Commands
 
-## Markdown Files
+### OpenTofu (run from `opentofu/cloudflare-github/`)
 
-### Linting and Formatting
+```bash
+tofu init                             # Initialize providers and backend
+tofu fmt -check -recursive            # Check HCL formatting
+tofu validate                         # Validate configuration
+tofu plan                             # Preview changes (requires secrets)
+tofu apply                            # Apply changes (requires secrets)
+```
 
-- **Markdown compliance**: Ensure all Markdown files pass `rumdl` checks
-- **Code blocks**: For `bash`/`shell` code blocks:
-  - Verify they pass `shellcheck` validation
-  - Format with `shfmt` for consistency
-- Check if URL links are accessible using `lychee`
+OpenTofu version is pinned to `1.11.5` in `opentofu/cloudflare-github/mise.toml`.
 
-### Markdown Best Practices
+### Pre-commit (run from repo root)
 
-- Use proper heading hierarchy (don't skip levels)
-- Wrap lines at 80 characters for readability
-- Use semantic HTML only when necessary
-- Prefer code fences over inline code for multi-line examples
-- Include language identifiers in code fences
+```bash
+pre-commit run --all-files            # Run all hooks
+pre-commit run shellcheck --all-files # Single linter example
+pre-commit run shfmt --all-files
+pre-commit run actionlint-system --all-files
+pre-commit run terraform_fmt --all-files
+```
 
-## GitHub Actions
+Install: `pre-commit install && pre-commit install --hook-type commit-msg`
 
-- **Validation after changes**: Each time you modify a GitHub Action workflow
-  file or a composite action file:
-  - Validate the file using `actionlint` to ensure it is compliant and
-    correctly formatted
+### Individual Linters
+
+```bash
+shellcheck script.sh                # Lint shell script
+shfmt -ci -i 2 -sr script.sh        # Format shell script
+actionlint                          # Validate GH Actions workflows
+rumdl file.md                       # Lint markdown
+lychee --cache .                    # Check URLs
+tflint                              # Lint Terraform
+checkov --quiet -d .                # IaC security scan
+trivy fs --severity HIGH,CRITICAL . # Vulnerability scan
+```
+
+CI: MegaLinter (cupcake flavor) in `.github/workflows/mega-linter.yml`;
+OpenTofu plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
+
+## Code Style Guidelines
+
+### HCL / OpenTofu Files
+
+- Use `snake_case` for all resource names, variables, and locals
+- Use `this` as the resource name when using `for_each`
+- Use `try()` for optional fields in `for_each` maps
+- Use `prevent_destroy = true` on critical resources
+- Use `# keep-sorted start` / `# keep-sorted end` to maintain
+  alphabetical ordering in blocks (providers, locals, variables)
+- Add `# keep-sorted start block=yes` for multi-line sorted blocks
+- Data-driven pattern: define resources as maps in `locals`, iterate
+  with `for_each`
+- Security scanner ignore annotations inline:
+  `# kics-scan ignore-line`, `# checkov:skip=CKV_...`
+- Format: `tofu fmt` (canonical HCL formatting)
+- Two-space indentation, align `=` signs within blocks
+
+### Shell Scripts
+
+- Shebang: `#!/usr/bin/env bash`; always start with `set -euo pipefail`
+- UPPERCASE variables with braces: `${MY_VARIABLE}`
+- Format with `shfmt`: `--case-indent --indent 2 --space-redirects`
+- Lint with `shellcheck` (SC2317 excluded); two-space indentation
+- Use functions for reusable logic
+- Redirect stderr for logging: `echo "msg" >&2`
+- Validate dependencies early: `command -v tool > /dev/null || die "..."`
+
+### YAML
+
+- Start files with `---`; two-space indentation
+- Lint with `yamllint` (relaxed profile, line-length disabled)
+- Format with `prettier` (markdown excluded from prettier)
+- Use `# keep-sorted start` / `# keep-sorted end` for sorted lists
+
+### Markdown
+
+- Lint with `rumdl` (not markdownlint); wrap at 72 characters
+- Proper heading hierarchy, language identifiers in code fences
+- `CHANGELOG.md` is auto-generated and excluded from linting
+
+### JSON
+
+- Lint with `jsonlint --comments` (comments allowed)
+- Excluded: `.devcontainer/devcontainer.json`
+
+### GitHub Actions Workflows
+
+- **Always validate with `actionlint`** after modifications
+- Pin all actions to full SHA with version comment:
+  `uses: actions/checkout@<full-sha> # v4.2.0`
+- Set `permissions: read-all` at workflow level, override per-job
+  with minimal permissions and inline comments
+- Prefer `ubuntu-24.04-arm` runners
+- Set explicit `timeout-minutes` on jobs
+- Use `# keep-sorted start/end` for env blocks
+
+## Security
+
+- **Secrets**: Managed via SOPS with AGE encryption (`.env.yaml`);
+  never commit secrets
+- **Security scanners** (all run in CI):
+  Checkov (skip `CKV_GHA_7`), DevSkim (ignore DS162092, DS137138),
+  KICS (HIGH only), Trivy (HIGH/CRITICAL, ignores unfixed),
+  Gitleaks (pre-commit hook)
 
 ## Version Control
 
 ### Commit Messages
 
-#### Format Rules
+Conventional commits enforced by commitizen, gitlint, and commit-check.
 
-- **Conventional commit format**: Use standard types (`feat`, `fix`, `docs`,
-  `chore`, `refactor`, `test`, `style`, `perf`, `ci`, `build`, `revert`)
-- **Line limits**: Subject ≤ 80 characters, body lines ≤ 80 characters
-- **Single blank line**: Between subject and body, between body paragraphs
-
-#### Commit Message Structure
-
-- **Subject line**:
-  - Imperative mood (e.g., "add" not "added" or "adds")
-  - Use lower case (except for proper nouns and abbreviations)
-  - No period at the end
-  - Maximum 80 characters
-  - Format: `<type>: <description>`
-
-- **Body** (optional but recommended for non-trivial changes):
-  - Explain **what** changed and **why**
-  - Wrap lines at 80 characters
-  - Use Markdown formatting
-  - Separate paragraphs with blank lines
-  - Reference issues using keywords: `Fixes`, `Closes`, `Resolves`
-
-##### Example
-
-```markdown
-feat: add automated dependency updates
-
-- Implement Dependabot configuration
-- Configure weekly security updates
-- Add auto-merge for patch/minor updates
-
-Resolves: #123
-```
+- Format: `<type>: <description>` (lowercase, no period)
+- Types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `style`,
+  `perf`, `ci`, `build`, `revert`
+- Subject: imperative mood, max 72 characters
+- Body: wrap at 72 chars, explain what/why, reference issues with
+  `Fixes`, `Closes`, `Resolves`
+- Direct commits to `main`/`master` blocked by pre-commit hook
 
 ### Branching
 
-- **Naming convention**: Follow the
-  [Conventional Branch](https://conventional-branch.github.io/)
-  specification
-
-- **Naming guidelines**:
-  - Keep branch names concise and descriptive
-  - Use kebab-case (lower case with hyphens)
-  - Include issue number when applicable: `feat/123-add-feature-name`
+Conventional branch format: `<type>/<description>` --
+`feature/`, `feat/`, `bugfix/`, `fix/`, `hotfix/`, `release/`,
+`chore/`. Use lowercase, hyphens, no consecutive/leading/trailing
+hyphens.
 
 ### Pull Requests
 
-- **Always create draft PR** - Create pull requests as drafts initially
-- **Title format** - Use conventional commit format (`feat: add new feature`)
-- **Description** - Include clear explanation of changes and motivation
-- **Link issues** - Reference related issues using keywords (Fixes, Closes,
-  Resolves)
+- Create as **draft**; title must follow conventional commit format
+- Link related issues with keywords; CI must pass before merge
 
-## Quality & Best Practices
+## Quality Checklist
 
-- Pass pre-commit hooks
-- Follow project coding standards
-- Include tests for new functionality
-- Update documentation for user-facing changes
-- Make atomic, focused commits
-- Explain reasoning behind changes
-- Maintain consistent formatting
+- [ ] `pre-commit run --all-files` passes
+- [ ] HCL formatted with `tofu fmt`
+- [ ] Shell scripts pass `shellcheck` and `shfmt`
+- [ ] GitHub Actions validated with `actionlint`; pinned to full SHA
+- [ ] Markdown wrapped at 72 characters
+- [ ] `# keep-sorted` blocks remain sorted
+- [ ] No secrets or credentials in code; two-space indentation (no tabs)
