@@ -1,41 +1,94 @@
-# OpenTofu - Cloudflare - Github
+# OpenTofu - Cloudflare - GitHub
+
+OpenTofu Infrastructure as Code project managing personal
+infrastructure across Cloudflare, GitHub, Supabase, and
+UptimeRobot.
+
+## Overview
+
+This project provisions and manages:
+
+- **Cloudflare** -- DNS zones (`mylabs.dev`, `ruzicka.dev`,
+  `xvx.cz`), DNS records, page rules, Zero Trust tunnels and
+  access applications, API tokens, notification policies,
+  Web Analytics sites, and Pages projects
+- **GitHub** -- 27 repositories (settings, branch protection
+  rulesets, Actions secrets, topics, workflow permissions)
+- **Supabase** -- Database project for container image scanning
+- **UptimeRobot** -- HTTP monitors for all public domains and
+  Zero Trust tunnel applications, plus a public status page
+
+State is stored **encrypted** (AES-GCM with PBKDF2 key) in a
+Cloudflare R2 bucket. Secrets are managed via **SOPS** (AGE
+encryption) in `.env.yaml`.
+
+## Architecture
+
+### Backend
+
+- **Type**: S3-compatible (Cloudflare R2)
+- **Bucket**: `ruzickap-my-git-projects-opentofu-state-files`
+- **Encryption**: AES-GCM with PBKDF2-derived key (enforced)
+
+### Variables
+
+| Name                                | Type     | Description                               |
+| ----------------------------------- | -------- | ----------------------------------------- |
+| `opentofu_encryption_passphrase`    | `string` | OpenTofu encryption passphrase (required) |
+| `gh_token_opentofu_cloudflare_github` | `string` | GitHub PAT for managing resources (required) |
+
+Both variables are marked as sensitive.
+
+### Outputs
+
+| Name                                                  | Sensitive |
+| ----------------------------------------------------- | --------- |
+| `cloudflare_account_token_opentofu_cloudflare_github` | yes       |
+| `supabase_container_image_scans_apikeys`              | yes       |
+| `supabase_container_image_scans_endpoint`             | no        |
+| `supabase_container_image_scans_database_password`    | yes       |
+| `supabase_container_image_scans_env_yaml`             | yes       |
 
 ## Prerequisites
 
-### Create CloudFlare R2 Bucket (Manual Step)
+### Create Cloudflare R2 Bucket (Manual Step)
 
 This bucket is used to store OpenTofu state files.
 
-1. Navigate to **R2 Object Storage** → **Create bucket**
+1. Navigate to **R2 Object Storage** -> **Create bucket**
 
 2. Configure the bucket:
 
-   - **Bucket name**: `ruzickap-my-git-projects-opentofu-state-files`
+   - **Bucket name**:
+     `ruzickap-my-git-projects-opentofu-state-files`
 
 3. Click **Create bucket**
 
 ### Create Cloudflare Account API Token
 
-1. Navigate to **Manage Account** → **Account API Tokens**
+1. Navigate to **Manage Account** ->
+   **Account API Tokens**
 
 2. Fill in the **Create Custom Token** form:
 
-    | Token Name                                                                         |
-    |------------------------------------------------------------------------------------|
-    | `opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)` |
+   | Token Name                               |
+   | ---------------------------------------- |
+   | `opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)` |
 
-    | Permission | Access               | Purpose | Scope                   |
-    |------------|----------------------|---------|-------------------------|
-    | `Account`  | `Account Settings`   | `Edit`  | To list accounts        |
-    | `Account`  | `API Tokens`         | `Edit`  | To create/manage tokens |
-    | `Account`  | `Workers R2 Storage` | `Edit`  | To access R2 buckets    |
+   | Permission | Access             | Purpose |
+   | ---------- | ------------------ | ------- |
+   | `Account`  | `Account Settings` | `Edit`  |
+   | `Account`  | `API Tokens`       | `Edit`  |
+   | `Account`  | `Workers R2 Storage` | `Edit` |
 
-3. Click **Continue to summary** to review and create the token
+3. Click **Continue to summary** to review and create
+   the token
 
 ## Run OpenTofu
 
-This creates scoped API tokens with permissions for the main `cloudflare`
-OpenTofu configuration and stores credentials as GitHub Actions secrets.
+This creates scoped API tokens with permissions for the
+main `cloudflare` OpenTofu configuration and stores
+credentials as GitHub Actions secrets.
 
 ```bash
 # Use the API token from "Create Cloudflare Account API Token" section
@@ -58,7 +111,7 @@ tofu apply
 
 ## Get OpenTofu Outputs
 
-After applying - retrieve credentials:
+After applying -- retrieve credentials:
 
 ```bash
 # Get OpenTofu Cloudflare API token and R2 credentials
@@ -69,12 +122,12 @@ tofu output -json cloudflare_account_token_opentofu_cloudflare_github | jq -r 't
 
 The output contains the following environment variables:
 
-| Variable                               | Description                        |
-|----------------------------------------|------------------------------------|
-| `CLOUDFLARE_R2_ACCESS_KEY_ID`          | R2 S3-compatible Access Key ID     |
-| `CLOUDFLARE_R2_ENDPOINT_URL_S3`        | R2 S3-compatible endpoint URL      |
-| `CLOUDFLARE_R2_SECRET_ACCESS_KEY`      | R2 S3-compatible Secret Access Key |
-| `OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN` | Cloudflare API token for OpenTofu  |
+| Variable                             | Description                    |
+| ------------------------------------ | ------------------------------ |
+| `CLOUDFLARE_R2_ACCESS_KEY_ID`        | R2 S3-compatible Access Key ID |
+| `CLOUDFLARE_R2_ENDPOINT_URL_S3`      | R2 S3-compatible endpoint URL  |
+| `CLOUDFLARE_R2_SECRET_ACCESS_KEY`    | R2 S3-compatible Secret Access Key |
+| `OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN` | Cloudflare API token for OpenTofu |
 
 ## Update `.env.yaml`
 
@@ -89,8 +142,8 @@ sops edit .env.yaml
 
 ### List Cloudflare API Token Permissions
 
-Retrieve all available permission names when adding new permissions to
-`cloudflare_account_token.tf`:
+Retrieve all available permission names when adding new
+permissions to `cloudflare_account_token.tf`:
 
 ```bash
 ACCOUNT_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r '.result[0].id')
@@ -104,8 +157,8 @@ curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/iam/permiss
 
 ### Container Testing (Clean Environment)
 
-Test the OpenTofu configuration in an isolated container to ensure it works
-from scratch without local dependencies:
+Test the OpenTofu configuration in an isolated container
+to ensure it works from scratch without local dependencies:
 
 ```console
 docker run -it --rm -v "${PWD}:/mnt" alpine

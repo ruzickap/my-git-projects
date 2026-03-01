@@ -138,21 +138,19 @@ case "${REPOSITORY}" in
     checkout_files ".github/renovate.json5" ".rumdl.toml" ".mega-linter.yml" "AGENTS.md"
     megalinter_flavor ruby
     ;;
+  ruzickap/wiz-certification-notes)
+    checkout_files ".rumdl.toml"
+    ;;
   *)
     log_info "Using default configuration for ${REPOSITORY}"
     ;;
 esac
 
-# # Remove after first init/run
-# log_info "Copying AGENTS.md from defaults and reinitializing with opencode"
-# cp "${GH_REPO_DEFAULTS_BASE}/my-defaults/AGENTS.md" AGENTS.md
-# opencode run --model="github-copilot/claude-opus-4.6" --command "init"
-
-# # Handle AGENTS.md: copy if missing, reinitialize if identical to default
-# if [[ ! -f "AGENTS.md" ]]; then
-#   log_info "Copying AGENTS.md from defaults and reinitializing with opencode"
-#   cp "${GH_REPO_DEFAULTS_BASE}/my-defaults/AGENTS.md" AGENTS.md
-#   opencode run --model="github-copilot/claude-opus-4.6" --command "init"
-# fi
+# Handle AGENTS.md: copy if missing, reinitialize if identical to default
+if [[ ! -f "AGENTS.md" ]]; then
+  log_info "Copying AGENTS.md from defaults and reinitializing with opencode"
+  cp "${GH_REPO_DEFAULTS_BASE}/my-defaults/AGENTS.md" AGENTS.md
+  opencode run --model="github-copilot/claude-opus-4.6" --command "init"
+fi
 
 log_info "Completed processing ${REPOSITORY}"

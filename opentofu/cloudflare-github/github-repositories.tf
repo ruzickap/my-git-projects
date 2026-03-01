@@ -25,12 +25,9 @@ locals {
           branch = "gh-pages"
         }]
       }]
-      secrets = {
-        "NEXT_PUBLIC_SUPABASE_ANON_KEY" = data.supabase_apikeys.container_image_scans.anon_key
-        "NEXT_PUBLIC_SUPABASE_URL"      = "https://${supabase_project.container_image_scans.id}.supabase.co"
-        "SUPABASE_SERVICE_KEY"          = data.supabase_apikeys.container_image_scans.service_role_key
-        "SUPABASE_URL"                  = "https://${supabase_project.container_image_scans.id}.supabase.co"
-      }
+      # secrets = {
+      #   "SOPS_AGE_KEY" = data.sops_file.env_yaml.data["SOPS_AGE_KEY_CONTAINER_IMAGE_SCANS"]
+      # }
     }
     "k8s_multicluster_gitops" = {
       name        = "k8s-multicluster-gitops"
