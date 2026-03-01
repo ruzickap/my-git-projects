@@ -32,9 +32,9 @@ encryption) in `.env.yaml`.
 
 ### Variables
 
-| Name                                | Type     | Description                               |
-| ----------------------------------- | -------- | ----------------------------------------- |
-| `opentofu_encryption_passphrase`    | `string` | OpenTofu encryption passphrase (required) |
+| Name                                  | Type     | Description                                  |
+|---------------------------------------|----------|----------------------------------------------|
+| `opentofu_encryption_passphrase`      | `string` | OpenTofu encryption passphrase (required)    |
 | `gh_token_opentofu_cloudflare_github` | `string` | GitHub PAT for managing resources (required) |
 
 Both variables are marked as sensitive.
@@ -42,7 +42,7 @@ Both variables are marked as sensitive.
 ### Outputs
 
 | Name                                                  | Sensitive |
-| ----------------------------------------------------- | --------- |
+|-------------------------------------------------------|-----------|
 | `cloudflare_account_token_opentofu_cloudflare_github` | yes       |
 | `supabase_container_image_scans_apikeys`              | yes       |
 | `supabase_container_image_scans_endpoint`             | no        |
@@ -71,15 +71,15 @@ This bucket is used to store OpenTofu state files.
 
 2. Fill in the **Create Custom Token** form:
 
-   | Token Name                               |
-   | ---------------------------------------- |
+   | Token Name                                                                         |
+   |------------------------------------------------------------------------------------|
    | `opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)` |
 
-   | Permission | Access             | Purpose |
-   | ---------- | ------------------ | ------- |
-   | `Account`  | `Account Settings` | `Edit`  |
-   | `Account`  | `API Tokens`       | `Edit`  |
-   | `Account`  | `Workers R2 Storage` | `Edit` |
+   | Permission | Access               | Purpose |
+   |------------|----------------------|---------|
+   | `Account`  | `Account Settings`   | `Edit`  |
+   | `Account`  | `API Tokens`         | `Edit`  |
+   | `Account`  | `Workers R2 Storage` | `Edit`  |
 
 3. Click **Continue to summary** to review and create
    the token
@@ -122,12 +122,12 @@ tofu output -json cloudflare_account_token_opentofu_cloudflare_github | jq -r 't
 
 The output contains the following environment variables:
 
-| Variable                             | Description                    |
-| ------------------------------------ | ------------------------------ |
-| `CLOUDFLARE_R2_ACCESS_KEY_ID`        | R2 S3-compatible Access Key ID |
-| `CLOUDFLARE_R2_ENDPOINT_URL_S3`      | R2 S3-compatible endpoint URL  |
-| `CLOUDFLARE_R2_SECRET_ACCESS_KEY`    | R2 S3-compatible Secret Access Key |
-| `OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN` | Cloudflare API token for OpenTofu |
+| Variable                               | Description                        |
+|----------------------------------------|------------------------------------|
+| `CLOUDFLARE_R2_ACCESS_KEY_ID`          | R2 S3-compatible Access Key ID     |
+| `CLOUDFLARE_R2_ENDPOINT_URL_S3`        | R2 S3-compatible endpoint URL      |
+| `CLOUDFLARE_R2_SECRET_ACCESS_KEY`      | R2 S3-compatible Secret Access Key |
+| `OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN` | Cloudflare API token for OpenTofu  |
 
 ## Update `.env.yaml`
 
