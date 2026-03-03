@@ -110,6 +110,9 @@ case "${REPOSITORY}" in
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
     megalinter_flavor all
     ;;
+  ruzickap/container-image-scans)
+    megalinter_flavor all
+    ;;
   ruzickap/cv)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
     checkout_files "run.sh" # Disable SVG

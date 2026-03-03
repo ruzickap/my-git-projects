@@ -3,3 +3,8 @@ opentofu = "1.11.5"
 
 [env]
 _.file = ".env.yaml"
+SOPS_AGE_KEY_FILE = "{{env.HOME}}/Documents/secrets/age.txt"
+
+[settings]
+experimental = true
+sops.age_key_file = "~/Documents/secrets/age.txt"
