@@ -25,9 +25,9 @@ locals {
           branch = "gh-pages"
         }]
       }]
-      # secrets = {
-      #   "SOPS_AGE_KEY" = data.sops_file.env_yaml.data["SOPS_AGE_KEY_CONTAINER_IMAGE_SCANS"]
-      # }
+      secrets = {
+        "MISE_SOPS_AGE_KEY" = data.sops_file.env_yaml.data["MISE_SOPS_AGE_KEY_CONTAINER_IMAGE_SCANS"]
+      }
     }
     "k8s_multicluster_gitops" = {
       name        = "k8s-multicluster-gitops"
