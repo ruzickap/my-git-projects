@@ -90,7 +90,7 @@ OpenTofu plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
 
 ### Markdown
 
-- Lint with `rumdl` (not markdownlint); wrap at 72 characters
+- Lint with `rumdl` (not markdownlint); wrap at 80 characters
 - Proper heading hierarchy, language identifiers in code fences
 - `CHANGELOG.md` is auto-generated and excluded from linting
 
@@ -151,6 +151,6 @@ hyphens.
 - [ ] HCL formatted with `tofu fmt`
 - [ ] Shell scripts pass `shellcheck` and `shfmt`
 - [ ] GitHub Actions validated with `actionlint`; pinned to full SHA
-- [ ] Markdown wrapped at 72 characters
+- [ ] Markdown wrapped at 80 characters
 - [ ] `# keep-sorted` blocks remain sorted
 - [ ] No secrets or credentials in code; two-space indentation (no tabs)

@@ -61,7 +61,7 @@ repos:
           - --args=--version "~> 1.11"
 
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.1.33
+    rev: v0.1.36
     hooks:
       - id: rumdl-fmt
 
@@ -158,11 +158,6 @@ repos:
             --ignore=body-is-missing,
             --msg-filename,
           ]
-
-  - repo: https://github.com/ruzickap/pre-commit-wizcli
-    rev: v1.0.0
-    hooks:
-      - id: wizcli-scan-dir-secrets
 
   - repo: https://github.com/rhysd/actionlint
     rev: v1.7.11

@@ -1,10 +1,11 @@
 [tools]
 opentofu = "1.11.5"
+sops = "latest"
 
 [env]
 _.file = ".env.yaml"
-SOPS_AGE_KEY_FILE = "{{env.HOME}}/Documents/secrets/age.txt"
+SOPS_AGE_KEY_FILE = "{{env.HOME}}/Documents/secrets/age-my-git-projects.txt"
 
 [settings]
 experimental = true
-sops.age_key_file = "~/Documents/secrets/age.txt"
+sops.age_key_file = "~/Documents/secrets/age-my-git-projects.txt"

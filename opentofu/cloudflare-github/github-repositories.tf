@@ -158,7 +158,7 @@ locals {
         "CLOUDFLARE_R2_SECRET_ACCESS_KEY"            = sha256(data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"])
         "OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"       = data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"]
         "RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"           = data.sops_file.env_yaml.data["RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"]
-        "SOPS_AGE_KEY"                               = data.sops_file.env_yaml.data["SOPS_AGE_KEY"]
+        "SOPS_AGE_KEY"                               = data.sops_file.env_yaml.data["SOPS_AGE_KEY_MY_GIT_PROJECTS"]
         "TF_VAR_GH_TOKEN_OPENTOFU_CLOUDFLARE_GITHUB" = data.sops_file.env_yaml.data["TF_VAR_gh_token_opentofu_cloudflare_github"]
         "TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE"      = data.sops_file.env_yaml.data["TF_VAR_opentofu_encryption_passphrase"]
         # keep-sorted end
