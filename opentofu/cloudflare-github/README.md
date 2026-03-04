@@ -54,7 +54,7 @@ resolved differently depending on the environment:
 ### Variables
 
 | Name                                  | Type     | Description                                                        |
-| ------------------------------------- | -------- | ------------------------------------------------------------------ |
+|---------------------------------------|----------|--------------------------------------------------------------------|
 | `opentofu_encryption_passphrase`      | `string` | OpenTofu encryption passphrase (required)                          |
 | `gh_token_opentofu_cloudflare_github` | `string` | GitHub PAT for managing Cloudflare and GitHub resources (required) |
 
@@ -63,7 +63,7 @@ Both variables are marked as sensitive.
 ### Outputs
 
 | Name                                                  | Sensitive |
-| ----------------------------------------------------- | --------- |
+|-------------------------------------------------------|-----------|
 | `cloudflare_account_token_opentofu_cloudflare_github` | yes       |
 | `supabase_container_image_scans_apikeys`              | yes       |
 | `supabase_container_image_scans_endpoint`             | no        |
@@ -79,7 +79,7 @@ compression (with Brotli and Gzip fallbacks), and cache rules for static
 file extensions.
 
 | Zone          | Email Provider           | Features                                                                             |
-| ------------- | ------------------------ | ------------------------------------------------------------------------------------ |
+|---------------|--------------------------|--------------------------------------------------------------------------------------|
 | `mylabs.dev`  | Mailtrap                 | Redirect to `petr.ruzicka.dev`, AWS Route 53 NS delegation (`aws`, `k8s` subdomains) |
 | `ruzicka.dev` | Cloudflare Email Routing | Blog redirect (`blog.ruzicka.dev` to `ruzickap.github.io`), GoatCounter analytics    |
 | `xvx.cz`      | Google Workspace         | Zero Trust tunnel CNAME records, UptimeRobot status page redirect (`stats.xvx.cz`)   |
@@ -90,7 +90,7 @@ Two tunnels (`gate`, `raspi`) hosting 14 applications on the `xvx.cz`
 domain:
 
 | Tunnel  | Application       | Service                  | Tags                      |
-| ------- | ----------------- | ------------------------ | ------------------------- |
+|---------|-------------------|--------------------------|---------------------------|
 | `gate`  | `gate`            | `https://127.0.0.1`      | lan, router, wan          |
 | `gate`  | `gate-ssh`        | `ssh://127.0.0.1:22`     | lan, router, ssh, wan     |
 | `gate`  | `msr-2`           | `http://192.168.1.4`     | iot, wifi                 |
@@ -115,7 +115,7 @@ Access policies:
 ### Cloudflare API Tokens
 
 | Token Name                                          | Permissions                     |
-| --------------------------------------------------- | ------------------------------- |
+|-----------------------------------------------------|---------------------------------|
 | `opentofu-cloudflare-github`                        | 11 account + 6 zone permissions |
 | `cloudflare-account-token-pages-xvx-cz`             | Pages Write                     |
 | `cloudflare-account-token-pages-petr-ruzicka-dev`   | Pages Write                     |
@@ -132,7 +132,7 @@ Redirects, Response Compression, Zone Settings, Zone.
 ### Cloudflare Notification Policies
 
 | Alert                               | Type                           |
-| ----------------------------------- | ------------------------------ |
+|-------------------------------------|--------------------------------|
 | Abuse Report Alert                  | `abuse_report_alert`           |
 | Expiring Access Service Token Alert | `expiring_service_token_alert` |
 | Passive Origin Monitoring           | `real_origin_monitoring`       |
@@ -144,7 +144,7 @@ Redirects, Response Compression, Zone Settings, Zone.
 ### Cloudflare Pages Projects
 
 | Project              | Production Branch |
-| -------------------- | ----------------- |
+|----------------------|-------------------|
 | `petr-ruzicka-dev`   | `main`            |
 | `ruzickap-github-io` | `main`            |
 | `xvx-cz`             | `main`            |
@@ -152,7 +152,7 @@ Redirects, Response Compression, Zone Settings, Zone.
 ### Cloudflare Web Analytics
 
 | Site                    | Auto Install |
-| ----------------------- | ------------ |
+|-------------------------|--------------|
 | `brewwatch.lovable.app` | no           |
 | `ruzickap.github.io`    | no           |
 
@@ -208,11 +208,11 @@ This bucket is used to store OpenTofu state files.
 2. Fill in the **Create Custom Token** form:
 
    | Token Name                                                                         |
-   | ---------------------------------------------------------------------------------- |
+   |------------------------------------------------------------------------------------|
    | `opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)` |
 
    | Permission | Access               | Purpose |
-   | ---------- | -------------------- | ------- |
+   |------------|----------------------|---------|
    | `Account`  | `Account Settings`   | `Edit`  |
    | `Account`  | `API Tokens`         | `Edit`  |
    | `Account`  | `Workers R2 Storage` | `Edit`  |
@@ -257,7 +257,7 @@ tofu output -json cloudflare_account_token_opentofu_cloudflare_github | jq -r 't
 The output contains the following environment variables:
 
 | Variable                               | Description                        |
-| -------------------------------------- | ---------------------------------- |
+|----------------------------------------|------------------------------------|
 | `CLOUDFLARE_R2_ACCESS_KEY_ID`          | R2 S3-compatible Access Key ID     |
 | `CLOUDFLARE_R2_ENDPOINT_URL_S3`        | R2 S3-compatible endpoint URL      |
 | `CLOUDFLARE_R2_SECRET_ACCESS_KEY`      | R2 S3-compatible Secret Access Key |
