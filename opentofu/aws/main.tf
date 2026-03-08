@@ -115,13 +115,13 @@ resource "terraform_data" "aws_profile" {
 # S3 Bucket — OpenTofu State Files
 ################################################################################
 
-#checkov:skip=CKV_AWS_18:Personal account — access logging not needed for state bucket
-#checkov:skip=CKV_AWS_144:Personal account — cross-region replication not needed for state bucket
-#checkov:skip=CKV_AWS_145:Personal account — SSE-S3 (AWS default) is sufficient, KMS CMK not needed
-#checkov:skip=CKV2_AWS_62:Personal account — S3 event notifications not needed for state bucket
 #trivy:ignore:AVD-AWS-0089 Personal account — access logging not needed for state bucket
 #trivy:ignore:AVD-AWS-0132 Personal account — SSE-S3 (AWS default) is sufficient, KMS CMK not needed
 resource "aws_s3_bucket" "opentofu_state" {
+  # checkov:skip=CKV_AWS_18:Personal account — access logging not needed for state bucket
+  # checkov:skip=CKV_AWS_144:Personal account — cross-region replication not needed for state bucket
+  # checkov:skip=CKV_AWS_145:Personal account — SSE-S3 (AWS default) is sufficient, KMS CMK not needed
+  # checkov:skip=CKV2_AWS_62:Personal account — S3 event notifications not needed for state bucket
   bucket = local.s3_bucket_name
 
   lifecycle {
