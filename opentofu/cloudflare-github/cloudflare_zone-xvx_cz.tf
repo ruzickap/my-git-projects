@@ -117,7 +117,7 @@ locals {
       name    = "_acme-challenge.auth.infra"
     }
     "_dmarc" = {
-      content = "\"v=DMARC1; p=none; rua=mailto:petr.ruzicka@gmail.com\""
+      content = "\"v=DMARC1; p=none; rua=mailto:${local.my_email}\""
       ttl     = 1
       name    = "_dmarc"
     }

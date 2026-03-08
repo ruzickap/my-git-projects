@@ -3,11 +3,11 @@ locals {
   all_github_repositories = merge(local.github_repositories_existing, local.github_repositories)
   # Default secrets applied to all GitHub repositories
   github_action_default_secrets = {
-    "MY_RENOVATE_GITHUB_APP_ID" = data.sops_file.env_yaml.data["MY_RENOVATE_GITHUB_APP_ID"]
+    "MY_RENOVATE_GITHUB_APP_ID" = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_ID.value
     # kics-scan ignore-line - False positive: value comes from encrypted SOPS file, not hardcoded
-    "MY_RENOVATE_GITHUB_PRIVATE_KEY" = data.sops_file.env_yaml.data["MY_RENOVATE_GITHUB_PRIVATE_KEY"]
-    "MY_SLACK_BOT_TOKEN"             = data.sops_file.env_yaml.data["MY_SLACK_BOT_TOKEN"]
-    "MY_SLACK_CHANNEL_ID"            = data.sops_file.env_yaml.data["MY_SLACK_CHANNEL_ID"]
+    "MY_RENOVATE_GITHUB_PRIVATE_KEY" = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_PRIVATE_KEY.value
+    "MY_SLACK_BOT_TOKEN"             = data.aws_ssm_parameter.github_shared_actions_secrets_MY_SLACK_BOT_TOKEN.value
+    "MY_SLACK_CHANNEL_ID"            = data.aws_ssm_parameter.github_shared_actions_secrets_MY_SLACK_CHANNEL_ID.value
   }
   github_repositories = {
     "caisp_notes" = {
@@ -26,7 +26,13 @@ locals {
         }]
       }]
       secrets = {
-        "MISE_SOPS_AGE_KEY" = data.sops_file.env_yaml.data["MISE_SOPS_AGE_KEY_CONTAINER_IMAGE_SCANS"]
+        NEXT_PUBLIC_SUPABASE_ANON_KEY = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_ANON_KEY.value
+        NEXT_PUBLIC_SUPABASE_URL      = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_URL.value
+        SUPABASE_SERVICE_ROLE_KEY     = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_SERVICE_ROLE_KEY.value
+        SUPABASE_URL                  = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_URL.value
+        SUPABASE_ACCESS_TOKEN         = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_ACCESS_TOKEN.value
+        SUPABASE_DB_PASSWORD          = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_DB_PASSWORD.value
+        SUPABASE_PROJECT_REF          = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_PROJECT_REF.value
       }
     }
     "k8s_multicluster_gitops" = {
@@ -44,8 +50,8 @@ locals {
         }]
       }]
       secrets = {
-        "WIZ_CLIENT_ID"     = data.sops_file.env_yaml.data["WIZ_CLIENT_ID"]
-        "WIZ_CLIENT_SECRET" = data.sops_file.env_yaml.data["WIZ_CLIENT_SECRET"]
+        "WIZ_CLIENT_ID"     = data.aws_ssm_parameter.github_ruzickap_pre_commit_wizcli_actions_secrets_WIZ_CLIENT_ID.value
+        "WIZ_CLIENT_SECRET" = data.aws_ssm_parameter.github_ruzickap_pre_commit_wizcli_actions_secrets_WIZ_CLIENT_SECRET.value
       }
     }
     "wiz_certification_notes" = {
@@ -88,9 +94,8 @@ locals {
       description = "Configure Raspberry Pi OS (RPi) using Ansible"
       topics      = ["ansible", "grafana", "kodi", "node-exporter", "public", "prometheus", "raspberry-pi", "raspberry-pi-os", "rpi"]
       secrets = {
-        # kics-scan ignore-line - False positive: value comes from encrypted SOPS file, not hardcoded
-        "WIFI_PASSWORD" = data.sops_file.env_yaml.data["WIFI_PASSWORD"]
-        "WIFI_SSID"     = data.sops_file.env_yaml.data["WIFI_SSID"]
+        "WIFI_PASSWORD" = data.aws_ssm_parameter.github_shared_actions_secrets_WIFI_PASSWORD.value
+        "WIFI_SSID"     = data.aws_ssm_parameter.github_shared_actions_secrets_WIFI_SSID.value
       }
     }
     "brewwatch" = {
@@ -138,12 +143,10 @@ locals {
       topics       = ["container", "crypto", "cryptominer", "dockerfile", "eicar", "image", "malware", "public", "test", "xmrig"]
       secrets = {
         # keep-sorted start
-        # kics-scan ignore-line - False positive: value comes from encrypted SOPS file, not hardcoded
-        "DOCKERHUB_CONTAINER_REGISTRY_PASSWORD" = data.sops_file.env_yaml.data["DOCKERHUB_CONTAINER_REGISTRY_PASSWORD"]
-        "DOCKERHUB_CONTAINER_REGISTRY_USER"     = data.sops_file.env_yaml.data["DOCKERHUB_CONTAINER_REGISTRY_USER"]
-        # kics-scan ignore-line - False positive: value comes from encrypted SOPS file, not hardcoded
-        "QUAY_CONTAINER_REGISTRY_PASSWORD" = data.sops_file.env_yaml.data["QUAY_CONTAINER_REGISTRY_PASSWORD"]
-        "QUAY_CONTAINER_REGISTRY_USER"     = data.sops_file.env_yaml.data["QUAY_CONTAINER_REGISTRY_USER"]
+        "DOCKERHUB_CONTAINER_REGISTRY_PASSWORD" = data.aws_ssm_parameter.github_ruzickap_malware_cryptominer_container_actions_secrets_DOCKERHUB_CONTAINER_REGISTRY_PASSWORD.value
+        "DOCKERHUB_CONTAINER_REGISTRY_USER"     = data.aws_ssm_parameter.github_ruzickap_malware_cryptominer_container_actions_secrets_DOCKERHUB_CONTAINER_REGISTRY_USER.value
+        "QUAY_CONTAINER_REGISTRY_PASSWORD"      = data.aws_ssm_parameter.github_ruzickap_malware_cryptominer_container_actions_secrets_QUAY_CONTAINER_REGISTRY_PASSWORD.value
+        "QUAY_CONTAINER_REGISTRY_USER"          = data.aws_ssm_parameter.github_ruzickap_malware_cryptominer_container_actions_secrets_QUAY_CONTAINER_REGISTRY_USER.value
         # keep-sorted end
       }
     }
@@ -153,14 +156,9 @@ locals {
       topics      = ["github", "projects", "templates"]
       secrets = {
         # keep-sorted start
-        "CLOUDFLARE_R2_ACCESS_KEY_ID"                = cloudflare_account_token.opentofu_cloudflare_github.id
-        "CLOUDFLARE_R2_ENDPOINT_URL_S3"              = "https://${local.cloudflare_account_id}.r2.cloudflarestorage.com"
-        "CLOUDFLARE_R2_SECRET_ACCESS_KEY"            = sha256(data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"])
-        "OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"       = data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"]
-        "RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"           = data.sops_file.env_yaml.data["RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"]
-        "SOPS_AGE_KEY"                               = data.sops_file.env_yaml.data["SOPS_AGE_KEY_MY_GIT_PROJECTS"]
-        "TF_VAR_GH_TOKEN_OPENTOFU_CLOUDFLARE_GITHUB" = data.sops_file.env_yaml.data["TF_VAR_gh_token_opentofu_cloudflare_github"]
-        "TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE"      = data.sops_file.env_yaml.data["TF_VAR_opentofu_encryption_passphrase"]
+        "AWS_ROLE_TO_ASSUME"                    = data.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_AWS_ROLE_TO_ASSUME.value
+        "RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"      = data.aws_ssm_parameter.github_shared_actions_secrets_RUZICKA_SBX01_AWS_ROLE_TO_ASSUME.value
+        "TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE" = var.opentofu_encryption_passphrase
         # keep-sorted end
       }
     }
@@ -205,13 +203,13 @@ locals {
       topics = ["blog", "github", "github-actions", "jekyll", "markdown", "personal-website", "public", "web", "website"]
       secrets = {
         # keep-sorted start
-        "AWS_ROLE_TO_ASSUME"                  = data.sops_file.env_yaml.data["RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"]
+        "AWS_ROLE_TO_ASSUME"                  = data.aws_ssm_parameter.github_shared_actions_secrets_RUZICKA_SBX01_AWS_ROLE_TO_ASSUME.value
         "CLOUDFLARE_ACCOUNT_ID"               = local.cloudflare_account_id
         "CLOUDFLARE_API_TOKEN"                = cloudflare_account_token.pages_ruzickap_github_io.value
         "CLOUDFLARE_WEB_ANALYTICS_SITE_TOKEN" = cloudflare_web_analytics_site.ruzickap_github_io.site_token
-        "GOOGLE_CLIENT_ID"                    = data.sops_file.env_yaml.data["GOOGLE_CLIENT_ID"]
-        "GOOGLE_CLIENT_SECRET"                = data.sops_file.env_yaml.data["GOOGLE_CLIENT_SECRET"]
-        "MY_ATLASSIAN_PERSONAL_TOKEN"         = data.sops_file.env_yaml.data["MY_ATLASSIAN_PERSONAL_TOKEN"]
+        "GOOGLE_CLIENT_ID"                    = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_GOOGLE_CLIENT_ID.value
+        "GOOGLE_CLIENT_SECRET"                = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_GOOGLE_CLIENT_SECRET.value
+        "MY_ATLASSIAN_PERSONAL_TOKEN"         = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_MY_ATLASSIAN_PERSONAL_TOKEN.value
         # keep-sorted end
       }
     }

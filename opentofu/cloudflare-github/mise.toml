@@ -1,11 +1,14 @@
 [tools]
 opentofu = "1.11.5"
-sops = "latest"
+fnox = "latest"
+
+[plugins]
+fnox-env = "https://github.com/jdx/mise-env-fnox"
 
 [env]
-_.file = ".env.yaml"
-SOPS_AGE_KEY_FILE = "{{env.HOME}}/Documents/secrets/age-my-git-projects.txt"
+_.fnox-env = { tools = true }
+AWS_PROFILE = "my-aws"
+AWS_REGION = "eu-central-1"
 
 [settings]
-experimental = true
-sops.age_key_file = "~/Documents/secrets/age-my-git-projects.txt"
+trusted_config_paths = ["/"]

@@ -45,7 +45,7 @@ output "supabase_container_image_scans_env_yaml" {
     SUPABASE_URL: "${"https://${supabase_project.container_image_scans.id}.supabase.co"}"
 
     # Supabase - schema migrations
-    SUPABASE_ACCESS_TOKEN: "${data.sops_file.env_yaml.data["SUPABASE_ACCESS_TOKEN"]}"
+    SUPABASE_ACCESS_TOKEN: "${data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_ACCESS_TOKEN.value}"
     SUPABASE_DB_PASSWORD: "${random_password.supabase_project_container_image_scans.result}"
     SUPABASE_PROJECT_REF: "${supabase_project.container_image_scans.id}"
   EOT

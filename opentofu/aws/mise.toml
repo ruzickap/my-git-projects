@@ -1,0 +1,5 @@
+[tools]
+opentofu = "1.11.5"
+
+[settings]
+trusted_config_paths = ["/"]
