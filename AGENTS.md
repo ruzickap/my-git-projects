@@ -45,7 +45,7 @@ pre-commit run shellcheck --all-files # Lint shell scripts
 pre-commit run shfmt --all-files      # Format shell scripts
 pre-commit run actionlint-system --all-files
 pre-commit run terraform_fmt --all-files
-pre-commit run rumdl-fmt --all-files  # Lint + format markdown
+pre-commit run rumdl-fmt --all-files # Lint + format markdown
 pre-commit run keep-sorted --all-files
 ```
 
@@ -54,15 +54,15 @@ Install: `pre-commit install && pre-commit install --hook-type commit-msg`
 ### Individual Linters
 
 ```bash
-shellcheck script.sh                # Lint shell script
-shfmt --indent=2 --space-redirects script.sh  # Format shell script
-actionlint                          # Validate GH Actions workflows
-rumdl file.md                       # Lint markdown
-lychee --cache .                    # Check URLs
-tflint                              # Lint Terraform/OpenTofu
-checkov --quiet -d .                # IaC security scan
-trivy fs --severity HIGH,CRITICAL . # Vulnerability scan
-codespell                           # Spell check (config: .codespellrc)
+shellcheck script.sh                         # Lint shell script
+shfmt --indent=2 --space-redirects script.sh # Format shell script
+actionlint                                   # Validate GH Actions workflows
+rumdl file.md                                # Lint markdown
+lychee --cache .                             # Check URLs
+tflint                                       # Lint Terraform/OpenTofu
+checkov --quiet -d .                         # IaC security scan
+trivy fs --severity HIGH,CRITICAL .          # Vulnerability scan
+codespell                                    # Spell check (config: .codespellrc)
 ```
 
 CI: MegaLinter (cupcake flavor) in `.github/workflows/mega-linter.yml`;

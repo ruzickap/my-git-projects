@@ -85,7 +85,6 @@ locals {
 }
 
 provider "aws" {
-  profile = "my-aws"
   default_tags {
     tags = {
       managed-by = "opentofu"

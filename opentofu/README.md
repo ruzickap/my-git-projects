@@ -8,10 +8,10 @@ state, backend, and provider configuration.
 
 ## Modules
 
-| Directory                                 | Description                                                                  |
-|-------------------------------------------|------------------------------------------------------------------------------|
+| Directory                                 | Description                                                                 |
+|-------------------------------------------|-----------------------------------------------------------------------------|
 | [`aws`](aws/)                             | AWS IAM: `aws-cli` user, S3 state bucket, GitHub Actions OIDC (local state) |
-| [`cloudflare-github`](cloudflare-github/) | Cloudflare, GitHub, Supabase, UptimeRobot, and AWS OIDC/IAM role             |
+| [`cloudflare-github`](cloudflare-github/) | Cloudflare, GitHub, Supabase, UptimeRobot, and AWS OIDC/IAM role            |
 
 The `cloudflare-github` module stores state **encrypted** (AES-GCM with
 PBKDF2 key) in an AWS S3 bucket
