@@ -17,8 +17,8 @@ This project provisions and manages:
   notifications at 50% actual and 100% actual spend
 - **GitHub Actions OIDC** -- OpenID Connect identity provider and
   `GitHubOidc-ruzickap-my-git-projects` IAM role for keyless CI
-  authentication with SSM Parameter Store read/write, IAM role
-  management, and OIDC provider management permissions
+  authentication with `AdministratorAccess` for full infrastructure
+  management
 
 State is stored in a **local** file (`terraform.tfstate`).
 
@@ -58,14 +58,14 @@ flowchart TD
         oidc_provider["aws_iam_openid_connect_provider<br/><i>token.actions.githubusercontent.com</i>"]
         assume_doc["data.aws_iam_policy_document<br/><i>assume_role (OIDC + aws-cli)</i>"]
         role["aws_iam_role.github_actions<br/><i>GitHubOidc-ruzickap-my-git-projects</i>"]
-        role_policy["aws_iam_role_policy<br/><i>GitHubActionsPolicy</i>"]
+        role_policy_attach["aws_iam_role_policy_attachment<br/><i>AdministratorAccess</i>"]
         ssm_param["aws_ssm_parameter<br/><i>MY_AWS_AWS_ROLE_TO_ASSUME</i>"]
     end
 
     oidc_provider --> assume_doc
     user -.->|trust policy| assume_doc
     assume_doc --> role
-    role --> role_policy
+    role --> role_policy_attach
     role --> ssm_param
 
     budget["aws_budgets_budget.monthly<br/><i>$5 USD</i>"]
@@ -77,7 +77,7 @@ flowchart TD
 
     class user,key,policy_attach,profile iam
     class bucket,versioning,public_access,ownership,lifecycle,bucket_policy storage
-    class oidc_provider,assume_doc,role,role_policy,ssm_param oidcStyle
+    class oidc_provider,assume_doc,role,role_policy_attach,ssm_param oidcStyle
     class budget standalone
 ```
 
@@ -180,18 +180,10 @@ OpenID Connect identity provider
 (`token.actions.githubusercontent.com`) and a single IAM role for
 keyless GitHub Actions authentication from `ruzickap/my-git-projects`.
 
-The role's inline policy (`GitHubActionsPolicy`) grants:
-
-- **SSM Parameter Store** -- read/write access scoped to
-  `/github/ruzickap/my-git-projects/*` and
-  `/github/shared/actions-secrets/*`
-- **IAM Role Management** -- create, update, and delete IAM roles
-  matching `GitHubOidc-*` (used by the `cloudflare-github` module to
-  provision OIDC roles for other repositories)
-- **OIDC Provider Management** -- read access to the GitHub Actions
-  OIDC provider
-- **IAM User Read** -- read the `aws-cli` IAM user (referenced in
-  assume-role trust policies)
+The role has the `AdministratorAccess` AWS managed policy attached,
+granting full access to all AWS services. This is intentional for a
+personal account where the CI/CD pipeline manages the complete
+infrastructure (IAM, S3, SSM, OIDC, budgets, etc.).
 
 The role is assumable via OIDC federation by
 `repo:ruzickap/my-git-projects:*` and via `sts:AssumeRole` by the

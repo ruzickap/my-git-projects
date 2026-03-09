@@ -19,7 +19,9 @@ locals {
   aws_profile          = "my-aws"
   aws_region           = "eu-central-1"
   # Dollars — set a low budget limit for personal account to get notified of any unexpected costs immediately
-  budget_limit_amount = "5"
+  budget_limit_amount   = "5"
+  github_oidc_repo      = "ruzickap/my-git-projects"
+  github_oidc_role_name = "GitHubOidc-${replace(local.github_oidc_repo, "/", "-")}"
   # Policies to attach to the IAM user for AWS CLI access
   iam_managed_policy_arns = ["arn:${data.aws_partition.current.partition}:iam::aws:policy/AdministratorAccess"]
   # User name for the IAM user
@@ -42,7 +44,6 @@ provider "aws" {
   }
 }
 
-data "aws_caller_identity" "current" {}
 data "aws_partition" "current" {}
 
 #trivy:ignore:AVD-AWS-0143 Personal account — single IAM user, groups/roles overhead not warranted
@@ -237,15 +238,6 @@ resource "aws_budgets_budget" "monthly" {
 # AWS IAM roles and policies for GitHub Actions OIDC federation
 ################################################################################
 
-locals {
-  # keep-sorted start
-  aws_iam_user_name     = "aws-cli"
-  github_oidc_repo      = "ruzickap/my-git-projects"
-  github_oidc_role_name = "GitHubOidc-${replace(local.github_oidc_repo, "/", "-")}"
-  ssm_arn_prefix        = "arn:${data.aws_partition.current.partition}:ssm:${local.aws_region}:${data.aws_caller_identity.current.account_id}:parameter"
-  # keep-sorted end
-}
-
 resource "aws_iam_openid_connect_provider" "github_actions" {
   url             = "https://token.actions.githubusercontent.com"
   client_id_list  = ["sts.amazonaws.com"]
@@ -289,83 +281,11 @@ resource "aws_iam_role" "github_actions" {
   max_session_duration = 7200
 }
 
-data "aws_iam_policy_document" "github_actions" {
-  # checkov:skip=CKV_AWS_356:OIDC provider ARNs are not predictable — wildcard resource required for iam:ListOpenIDConnectProviders
-  # checkov:skip=CKV_AWS_109:OIDC provider management requires wildcard resource — ARNs are generated at creation time
-  statement {
-    sid    = "AllowSSMParameterStore"
-    effect = "Allow"
-    actions = [
-      # keep-sorted start
-      "ssm:DeleteParameter",
-      "ssm:DescribeParameters",
-      "ssm:GetParameter",
-      "ssm:GetParameters",
-      "ssm:GetParametersByPath",
-      "ssm:PutParameter",
-      # keep-sorted end
-    ]
-    resources = [
-      "${local.ssm_arn_prefix}/github/ruzickap/my-git-projects/*",
-      "${local.ssm_arn_prefix}/github/shared/actions-secrets/*",
-    ]
-  }
-
-  statement {
-    sid    = "AllowIAMRoleManagement"
-    effect = "Allow"
-    actions = [
-      # keep-sorted start
-      "iam:CreateRole",
-      "iam:DeleteRole",
-      "iam:DeleteRolePolicy",
-      "iam:GetRole",
-      "iam:ListAttachedRolePolicies",
-      "iam:ListInstanceProfilesForRole",
-      "iam:ListRolePolicies",
-      "iam:PutRolePolicy",
-      "iam:TagRole",
-      "iam:UntagRole",
-      "iam:UpdateAssumeRolePolicy",
-      "iam:UpdateRole",
-      # keep-sorted end
-    ]
-    resources = ["arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/GitHubOidc-*"]
-  }
-
-  statement {
-    sid    = "AllowOIDCProviderManagement"
-    effect = "Allow"
-    actions = [
-      # keep-sorted start
-      "iam:AddClientIDToOpenIDConnectProvider",
-      "iam:CreateOpenIDConnectProvider",
-      "iam:DeleteOpenIDConnectProvider",
-      "iam:GetOpenIDConnectProvider",
-      "iam:ListOpenIDConnectProviders",
-      "iam:RemoveClientIDFromOpenIDConnectProvider",
-      "iam:TagOpenIDConnectProvider",
-      "iam:UntagOpenIDConnectProvider",
-      "iam:UpdateOpenIDConnectProviderThumbprint",
-      # keep-sorted end
-    ]
-    resources = ["*"]
-  }
-
-  statement {
-    sid    = "AllowIAMUserRead"
-    effect = "Allow"
-    actions = [
-      "iam:GetUser",
-    ]
-    resources = ["arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:user/${local.aws_iam_user_name}"]
-  }
-}
-
-resource "aws_iam_role_policy" "github_actions" {
-  name   = "GitHubActionsPolicy"
-  role   = aws_iam_role.github_actions.name
-  policy = data.aws_iam_policy_document.github_actions.json
+#trivy:ignore:AVD-AWS-0057 Personal account — admin privileges intentional for CI/CD full infrastructure management
+resource "aws_iam_role_policy_attachment" "github_actions" {
+  # checkov:skip=CKV_AWS_274:Personal account — admin privileges intentional for CI/CD full infrastructure management
+  role       = aws_iam_role.github_actions.name
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AdministratorAccess"
 }
 
 resource "aws_ssm_parameter" "github_oidc_role_arn" {
