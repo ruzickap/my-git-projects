@@ -23,14 +23,14 @@ This project provisions and manages:
   Store read-only access, and SSM Parameter Store data sources for
   GitHub Actions secrets
 
-State is stored **encrypted** (AES-GCM with PBKDF2 key) in a Cloudflare R2
+State is stored **encrypted** (AES-GCM with PBKDF2 key) in an AWS S3
 bucket. Secrets are passed via `TF_VAR_*` environment variables.
 
 ## Architecture
 
 ### Backend
 
-- **Type**: S3-compatible (Cloudflare R2)
+- **Type**: AWS S3
 - **Bucket**: `ruzickap-my-git-projects-opentofu-state-files`
 - **Encryption**: AES-GCM with PBKDF2-derived key (enforced)
 - **Lock file**: Enabled (`use_lockfile = true`)
@@ -361,7 +361,7 @@ Access policies:
 
 | Token Name                                          | Permissions                     |
 |-----------------------------------------------------|---------------------------------|
-| `opentofu-cloudflare-github`                        | 11 account + 6 zone permissions |
+| `opentofu-cloudflare-github`                        | 10 account + 6 zone permissions |
 | `cloudflare-account-token-pages-xvx-cz`             | Pages Write                     |
 | `cloudflare-account-token-pages-petr-ruzicka-dev`   | Pages Write                     |
 | `cloudflare-account-token-pages-ruzickap-github-io` | Pages Write                     |
@@ -369,7 +369,7 @@ Access policies:
 Main token account-scoped permissions: Access (Apps and Policies,
 Organizations/Identity Providers/Groups, Service Tokens), Account API
 Tokens, Account Settings, Cloudflare Tunnel, Email Routing Addresses,
-Pages, Workers R2 Storage, Zero Trust.
+Pages, Zero Trust.
 
 Main token zone-scoped permissions: Cache Settings, DNS, Dynamic URL
 Redirects, Response Compression, Zone Settings, Zone.
@@ -383,7 +383,6 @@ Redirects, Response Compression, Zone Settings, Zone.
 | Passive Origin Monitoring           | `real_origin_monitoring`       |
 | Web Analytics Metrics Update        | `web_analytics_metrics_update` |
 | Incident Alert                      | `incident_alert` (critical)    |
-| Usage Based Billing (R2 > 100 MB)   | `billing_usage_alert`          |
 | Tunnel Health Alert                 | `tunnel_health_event`          |
 
 ### Cloudflare Pages Projects
@@ -478,19 +477,6 @@ Error: failed to get shared config profile, my-aws
 See the [`opentofu/aws` README](../aws/README.md) for bootstrap
 instructions.
 
-### Create Cloudflare R2 Bucket (Manual Step)
-
-This bucket is used to store OpenTofu state files.
-
-1. Navigate to **R2 Object Storage** -> **Create bucket**
-
-2. Configure the bucket:
-
-   - **Bucket name**:
-     `ruzickap-my-git-projects-opentofu-state-files`
-
-3. Click **Create bucket**
-
 ### Create Cloudflare Account API Token
 
 1. Navigate to **Manage Account** -> **Account API Tokens**
@@ -501,11 +487,10 @@ This bucket is used to store OpenTofu state files.
    |------------------------------------------------------------------------------------|
    | `opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)` |
 
-   | Permission | Access               | Purpose |
-   |------------|----------------------|---------|
-   | `Account`  | `Account Settings`   | `Edit`  |
-   | `Account`  | `API Tokens`         | `Edit`  |
-   | `Account`  | `Workers R2 Storage` | `Edit`  |
+   | Permission | Access             | Purpose |
+   |------------|--------------------|---------|
+   | `Account`  | `Account Settings` | `Edit`  |
+   | `Account`  | `API Tokens`       | `Edit`  |
 
 3. Click **Continue to summary** to review and create the token
 
@@ -544,16 +529,6 @@ export TF_VAR_my_atlassian_personal_token="..."
 
 # Ensure the my-aws profile exists (created by opentofu/aws)
 export AWS_PROFILE=my-aws
-
-# Generate R2 S3-compatible credentials from the Account API token
-# https://developers.cloudflare.com/r2/api/tokens/#get-s3-api-credentials-from-an-api-token
-OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN="${TF_VAR_opentofu_cloudflare_github_api_token}"
-ACCOUNT_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r '.result[0].id')
-export OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME="opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)"
-AWS_ACCESS_KEY_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/tokens" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r --arg name "${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME}" '.result[] | select(.name == $name) | .id')
-AWS_SECRET_ACCESS_KEY=$(echo -n "${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | sha256sum | cut -d' ' -f1)
-AWS_S3_ENDPOINT="https://${ACCOUNT_ID}.r2.cloudflarestorage.com"
-export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_S3_ENDPOINT
 
 tofu init
 tofu apply
@@ -612,16 +587,6 @@ export TF_VAR_gh_token_opentofu_cloudflare_github="..."
 
 # Ensure the my-aws profile exists (created by opentofu/aws)
 export AWS_PROFILE=my-aws
-
-# Generate R2 S3-compatible credentials from the Account API token
-# https://developers.cloudflare.com/r2/api/tokens/#get-s3-api-credentials-from-an-api-token
-OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN="${TF_VAR_opentofu_cloudflare_github_api_token}"
-ACCOUNT_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r '.result[0].id')
-export OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME="opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)"
-AWS_ACCESS_KEY_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/tokens" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r --arg name "${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME}" '.result[] | select(.name == $name) | .id')
-AWS_SECRET_ACCESS_KEY=$(echo -n "${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | sha256sum | cut -d' ' -f1)
-AWS_S3_ENDPOINT="https://${ACCOUNT_ID}.r2.cloudflarestorage.com"
-export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_S3_ENDPOINT
 
 tofu init
 tofu plan

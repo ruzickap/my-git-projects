@@ -39,7 +39,6 @@ locals {
     "Cloudflare Tunnel Write",       # manage tunnels via cloudflare_zero_trust_tunnel_cloudflared
     "Email Routing Addresses Write", # manage email routing via cloudflare_email_routing_address
     "Pages Write",                   # deploy sites via cloudflare_pages_project
-    "Workers R2 Storage Write",      # access R2 buckets for OpenTofu state storage
     "Zero Trust Write",              # manage Zero Trust settings via cloudflare_zero_trust_*
     # keep-sorted end
   ]

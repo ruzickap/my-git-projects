@@ -52,24 +52,6 @@ resource "cloudflare_notification_policy" "incident" {
   }
 }
 
-# Billing: Billing usage exceeds your configured threshold for a specific product
-# Available products depend on your account: R2 Storage, R2 Storage Class A/B Operations
-resource "cloudflare_notification_policy" "billing_usage" {
-  account_id  = local.cloudflare_account_id
-  alert_type  = "billing_usage_alert"
-  name        = "Usage Based Billing"
-  description = "Alert when R2 Storage usage exceeds 100 MB"
-  mechanisms = {
-    email = [{
-      id = local.my_email
-    }]
-  }
-  filters = {
-    limit   = ["104857600"] # 100 MB in bytes
-    product = ["r2_storage"]
-  }
-}
-
 # Tunnel Health: Receive an alert for the health of a Tunnel
 resource "cloudflare_notification_policy" "tunnel_health" {
   account_id  = local.cloudflare_account_id

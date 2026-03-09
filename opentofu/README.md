@@ -14,7 +14,7 @@ state, backend, and provider configuration.
 | [`cloudflare-github`](cloudflare-github/) | Cloudflare, GitHub, Supabase, UptimeRobot, and AWS OIDC/IAM role |
 
 The `cloudflare-github` module stores state **encrypted** (AES-GCM with
-PBKDF2 key) in a Cloudflare R2 bucket
+PBKDF2 key) in an AWS S3 bucket
 (`ruzickap-my-git-projects-opentofu-state-files`). The `aws` module uses
 a **local** state file.
 

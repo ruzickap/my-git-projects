@@ -92,7 +92,7 @@ flowchart LR
         aws_profile["~/.aws/credentials<br/><b>[my-aws] profile</b>"]
     end
 
-    subgraph cf_module ["opentofu/cloudflare-github (R2 remote state)"]
+    subgraph cf_module ["opentofu/cloudflare-github (S3 remote state)"]
         aws_provider["AWS Provider<br/><i>profile = my-aws</i>"]
         data_oidc["data.aws_iam_openid_connect_provider"]
         data_user["data.aws_iam_user.aws_cli"]
