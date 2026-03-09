@@ -59,7 +59,7 @@ flowchart TD
         assume_doc["data.aws_iam_policy_document<br/><i>assume_role (OIDC + aws-cli)</i>"]
         role["aws_iam_role.github_actions<br/><i>GitHubOidc-ruzickap-my-git-projects</i>"]
         role_policy["aws_iam_role_policy<br/><i>GitHubActionsPolicy</i>"]
-        ssm_param["aws_ssm_parameter<br/><i>AWS_ROLE_TO_ASSUME</i>"]
+        ssm_param["aws_ssm_parameter<br/><i>MY_AWS_AWS_ROLE_TO_ASSUME</i>"]
     end
 
     oidc_provider --> assume_doc

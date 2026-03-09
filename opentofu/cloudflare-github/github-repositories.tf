@@ -3,11 +3,13 @@ locals {
   all_github_repositories = merge(local.github_repositories_existing, local.github_repositories)
   # Default secrets applied to all GitHub repositories
   github_action_default_secrets = {
+    # keep-sorted start
     "MY_RENOVATE_GITHUB_APP_ID" = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_ID.value
     # kics-scan ignore-line - False positive: value comes from encrypted SOPS file, not hardcoded
     "MY_RENOVATE_GITHUB_PRIVATE_KEY" = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_PRIVATE_KEY.value
     "MY_SLACK_BOT_TOKEN"             = data.aws_ssm_parameter.github_shared_actions_secrets_MY_SLACK_BOT_TOKEN.value
     "MY_SLACK_CHANNEL_ID"            = data.aws_ssm_parameter.github_shared_actions_secrets_MY_SLACK_CHANNEL_ID.value
+    # keep-sorted end
   }
   github_repositories = {
     "caisp_notes" = {
@@ -26,13 +28,16 @@ locals {
         }]
       }]
       secrets = {
-        NEXT_PUBLIC_SUPABASE_ANON_KEY = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_ANON_KEY.value
-        NEXT_PUBLIC_SUPABASE_URL      = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_URL.value
-        SUPABASE_SERVICE_ROLE_KEY     = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_SERVICE_ROLE_KEY.value
-        SUPABASE_URL                  = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_URL.value
-        SUPABASE_ACCESS_TOKEN         = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_ACCESS_TOKEN.value
-        SUPABASE_DB_PASSWORD          = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_DB_PASSWORD.value
-        SUPABASE_PROJECT_REF          = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_PROJECT_REF.value
+        # keep-sorted start
+        "MY_AWS_AWS_ROLE_TO_ASSUME"     = aws_ssm_parameter.github_oidc_role_arn["ruzickap/container-image-scans"].name
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY" = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_ANON_KEY.value
+        "NEXT_PUBLIC_SUPABASE_URL"      = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_URL.value
+        "SUPABASE_ACCESS_TOKEN"         = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_ACCESS_TOKEN.value
+        "SUPABASE_DB_PASSWORD"          = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_DB_PASSWORD.value
+        "SUPABASE_PROJECT_REF"          = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_PROJECT_REF.value
+        "SUPABASE_SERVICE_ROLE_KEY"     = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_SERVICE_ROLE_KEY.value
+        "SUPABASE_URL"                  = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_URL.value
+        # keep-sorted end
       }
     }
     "k8s_multicluster_gitops" = {
@@ -156,7 +161,8 @@ locals {
       topics      = ["github", "projects", "templates"]
       secrets = {
         # keep-sorted start
-        "AWS_ROLE_TO_ASSUME"                    = data.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_AWS_ROLE_TO_ASSUME.value
+        "MY_AWS_AWS_ROLE_TO_ASSUME" = data.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_MY_AWS_AWS_ROLE_TO_ASSUME.value
+        # Needed for aws-cloudformation-gh-action.yml
         "RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"      = data.aws_ssm_parameter.github_shared_actions_secrets_RUZICKA_SBX01_AWS_ROLE_TO_ASSUME.value
         "TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE" = var.opentofu_encryption_passphrase
         # keep-sorted end
@@ -203,13 +209,14 @@ locals {
       topics = ["blog", "github", "github-actions", "jekyll", "markdown", "personal-website", "public", "web", "website"]
       secrets = {
         # keep-sorted start
-        "AWS_ROLE_TO_ASSUME"                  = data.aws_ssm_parameter.github_shared_actions_secrets_RUZICKA_SBX01_AWS_ROLE_TO_ASSUME.value
         "CLOUDFLARE_ACCOUNT_ID"               = local.cloudflare_account_id
         "CLOUDFLARE_API_TOKEN"                = cloudflare_account_token.pages_ruzickap_github_io.value
         "CLOUDFLARE_WEB_ANALYTICS_SITE_TOKEN" = cloudflare_web_analytics_site.ruzickap_github_io.site_token
         "GOOGLE_CLIENT_ID"                    = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_GOOGLE_CLIENT_ID.value
         "GOOGLE_CLIENT_SECRET"                = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_GOOGLE_CLIENT_SECRET.value
         "MY_ATLASSIAN_PERSONAL_TOKEN"         = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_MY_ATLASSIAN_PERSONAL_TOKEN.value
+        "MY_AWS_AWS_ROLE_TO_ASSUME"           = aws_ssm_parameter.github_oidc_role_arn["ruzickap/ruzickap.github.io"].name
+        "RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"    = data.aws_ssm_parameter.github_shared_actions_secrets_RUZICKA_SBX01_AWS_ROLE_TO_ASSUME.value
         # keep-sorted end
       }
     }

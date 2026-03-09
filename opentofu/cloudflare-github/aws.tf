@@ -64,8 +64,8 @@ data "aws_ssm_parameter" "github_ruzickap_malware_cryptominer_container_actions_
   with_decryption = true
 }
 
-data "aws_ssm_parameter" "github_ruzickap_my_git_projects_actions_secrets_AWS_ROLE_TO_ASSUME" {
-  name            = "/github/ruzickap/my-git-projects/actions-secrets/AWS_ROLE_TO_ASSUME"
+data "aws_ssm_parameter" "github_ruzickap_my_git_projects_actions_secrets_MY_AWS_AWS_ROLE_TO_ASSUME" {
+  name            = "/github/ruzickap/my-git-projects/actions-secrets/MY_AWS_AWS_ROLE_TO_ASSUME"
   with_decryption = true
 }
 
@@ -247,7 +247,7 @@ resource "aws_iam_role_policy" "this" {
 resource "aws_ssm_parameter" "github_oidc_role_arn" {
   # checkov:skip=CKV_AWS_337:Personal account — AWS-managed key is sufficient for non-critical SSM parameters
   for_each = local.github_oidc_roles
-  name     = "/github/${each.key}/actions-secrets/AWS_ROLE_TO_ASSUME"
+  name     = "/github/${each.key}/actions-secrets/MY_AWS_AWS_ROLE_TO_ASSUME"
   type     = "SecureString"
   value    = aws_iam_role.this[each.key].arn
 }

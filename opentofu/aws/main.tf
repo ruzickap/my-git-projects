@@ -370,7 +370,7 @@ resource "aws_iam_role_policy" "github_actions" {
 
 resource "aws_ssm_parameter" "github_oidc_role_arn" {
   # checkov:skip=CKV_AWS_337:Personal account — AWS-managed key is sufficient for non-critical SSM parameters
-  name  = "/github/ruzickap/my-git-projects/actions-secrets/AWS_ROLE_TO_ASSUME"
+  name  = "/github/ruzickap/my-git-projects/actions-secrets/MY_AWS_AWS_ROLE_TO_ASSUME"
   type  = "SecureString"
   value = aws_iam_role.github_actions.arn
 }
