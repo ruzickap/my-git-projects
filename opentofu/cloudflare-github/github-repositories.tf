@@ -29,7 +29,6 @@ locals {
       }]
       secrets = {
         # keep-sorted start
-        "MY_AWS_AWS_ROLE_TO_ASSUME"     = aws_ssm_parameter.github_oidc_role_arn["ruzickap/container-image-scans"].name
         "NEXT_PUBLIC_SUPABASE_ANON_KEY" = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_ANON_KEY.value
         "NEXT_PUBLIC_SUPABASE_URL"      = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_URL.value
         "SUPABASE_ACCESS_TOKEN"         = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_ACCESS_TOKEN.value
@@ -215,7 +214,6 @@ locals {
         "GOOGLE_CLIENT_ID"                    = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_GOOGLE_CLIENT_ID.value
         "GOOGLE_CLIENT_SECRET"                = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_GOOGLE_CLIENT_SECRET.value
         "MY_ATLASSIAN_PERSONAL_TOKEN"         = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_MY_ATLASSIAN_PERSONAL_TOKEN.value
-        "MY_AWS_AWS_ROLE_TO_ASSUME"           = aws_ssm_parameter.github_oidc_role_arn["ruzickap/ruzickap.github.io"].name
         "RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"    = data.aws_ssm_parameter.github_shared_actions_secrets_RUZICKA_SBX01_AWS_ROLE_TO_ASSUME.value
         # keep-sorted end
       }

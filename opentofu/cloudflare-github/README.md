@@ -18,10 +18,7 @@ This project provisions and manages:
   image scanning
 - **UptimeRobot** -- HTTP monitors for all public domains and Zero Trust
   tunnel applications, plus a public status page (`stats.xvx.cz`)
-- **AWS** -- GitHub Actions OIDC IAM roles for
-  `container-image-scans` and `ruzickap.github.io` with SSM Parameter
-  Store read-only access, and SSM Parameter Store data sources for
-  GitHub Actions secrets
+- **AWS** -- SSM Parameter Store data sources for GitHub Actions secrets
 
 State is stored **encrypted** (AES-GCM with PBKDF2 key) in an AWS S3
 bucket. Secrets are passed via `TF_VAR_*` environment variables.
@@ -58,7 +55,7 @@ flowchart LR
     aws_profile -->|authenticates| aws_prov
 
     subgraph ssm ["AWS SSM Parameter Store"]
-        ssm_params["28 data sources<br/><i>/github/.../actions-secrets/*</i>"]
+        ssm_params["29 data sources<br/><i>/github/.../actions-secrets/*</i>"]
     end
 
     aws_prov --> ssm_params
@@ -171,19 +168,6 @@ flowchart TD
     ur_zt_mon --> ur_psp
     ur_domain_mon --> ur_psp
 
-    subgraph aws_iam ["AWS IAM (OIDC)"]
-        data_oidc["data.aws_iam_openid_connect_provider"]
-        data_user["data.aws_iam_user<br/><b>aws-cli</b>"]
-        iam_roles["aws_iam_role<br/><i>2 repos (for_each)</i>"]
-        role_policy["aws_iam_role_policy<br/><b>SSMParameterStoreReadOnly</b>"]
-        ssm_role_arn["aws_ssm_parameter<br/><b>AWS_ROLE_TO_ASSUME</b>"]
-    end
-
-    data_oidc -->|trust policy| iam_roles
-    data_user -->|assume role| iam_roles
-    iam_roles --> role_policy
-    iam_roles --> ssm_role_arn
-
     classDef cfZone fill:#fff3e0,stroke:#f57c00
     classDef cfZt fill:#e8f0fe,stroke:#4285f4
     classDef cfToken fill:#fce4ec,stroke:#c62828
@@ -191,7 +175,6 @@ flowchart TD
     classDef ghStyle fill:#e8f5e9,stroke:#2e7d32
     classDef supaStyle fill:#e0f2f1,stroke:#00695c
     classDef urStyle fill:#fef7e0,stroke:#f9ab00
-    classDef awsStyle fill:#e8f0fe,stroke:#4285f4
 
     class zone_xvx,zone_ruzicka,zone_mylabs,zone_common cfZone
     class tunnels,tunnel_configs,zt_apps,google_idp,policy_google,policy_ur,policy_all,ur_ip_list,http_ur_ips,zt_tags cfZt
@@ -200,7 +183,6 @@ flowchart TD
     class repos,wf_perms,secrets,topics,rulesets ghStyle
     class rng_pw,supa_proj,supa_keys supaStyle
     class ur_zt_mon,ur_domain_mon,ur_psp urStyle
-    class data_oidc,data_user,iam_roles,role_policy,ssm_role_arn awsStyle
 ```
 
 ### Cross-Provider Data Flows
@@ -309,7 +291,6 @@ For local development, export them in your shell before running
 
 | Name                                               | Sensitive |
 |----------------------------------------------------|-----------|
-| `github_oidc_role_arns`                            | no        |
 | `supabase_container_image_scans_apikeys`           | yes       |
 | `supabase_container_image_scans_endpoint`          | no        |
 | `supabase_container_image_scans_database_password` | yes       |
@@ -430,23 +411,7 @@ Public status page: `stats.xvx.cz`
 - **Project**: `container-image-scans` (us-east-1)
 - Random 16-character database password
 
-### AWS IAM (GitHub Actions OIDC)
-
-IAM roles for keyless GitHub Actions authentication from two
-repositories. The OIDC identity provider
-(`token.actions.githubusercontent.com`) is created by the
-[`opentofu/aws`](../aws/) module and referenced here via a data source.
-
-Each role has an inline `SSMParameterStoreReadOnly` policy scoped to
-the repository's SSM parameter path:
-
-| Repository                       | IAM Role Name                               | SSM Path                                   |
-|----------------------------------|---------------------------------------------|--------------------------------------------|
-| `ruzickap/container-image-scans` | `GitHubOidc-ruzickap-container-image-scans` | `/github/ruzickap/container-image-scans/*` |
-| `ruzickap/ruzickap.github.io`    | `GitHubOidc-ruzickap-ruzickap.github.io`    | `/github/ruzickap/ruzickap.github.io/*`    |
-
-Each role is assumable via OIDC federation by the corresponding
-repository and via `sts:AssumeRole` by the `aws-cli` IAM user.
+### AWS
 
 GitHub Actions secrets are read from AWS SSM Parameter Store at
 `/github/<repo>/actions-secrets/<secret>` (per-repo) and
@@ -541,9 +506,6 @@ After applying - retrieve outputs:
 ```bash
 # List all outputs
 tofu output
-
-# Get GitHub Actions OIDC role ARNs
-tofu output github_oidc_role_arns
 
 # Get Supabase endpoint
 tofu output supabase_container_image_scans_endpoint

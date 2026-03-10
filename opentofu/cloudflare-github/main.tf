@@ -71,8 +71,6 @@ data "restapi_object" "cloudflare_tokens" {
 
 locals {
   # keep-sorted start
-  # IAM user with admin privileges, provisioned in ../aws/main.tf
-  aws_iam_user_name = "aws-cli"
   # Automatically get the first account ID from the API token's associated accounts
   cloudflare_account_id = data.cloudflare_accounts.all.result[0].id
   # Account email address used for notifications and ownership

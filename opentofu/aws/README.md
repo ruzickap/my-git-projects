@@ -94,17 +94,10 @@ flowchart LR
 
     subgraph cf_module ["opentofu/cloudflare-github (S3 remote state)"]
         aws_provider["AWS Provider<br/><i>profile = my-aws</i>"]
-        data_oidc["data.aws_iam_openid_connect_provider"]
-        data_user["data.aws_iam_user.aws_cli"]
-        oidc_roles["IAM Roles<br/><b>container-image-scans</b><br/><b>ruzickap.github.io</b>"]
     end
 
     iam_user_mod -->|creates| aws_profile
     aws_profile -->|used by| aws_provider
-    oidc_prov -->|referenced by| data_oidc
-    iam_user_mod -->|referenced by| data_user
-    data_oidc -->|trust policy| oidc_roles
-    data_user -->|assume role| oidc_roles
 
     apply_order(["Apply order:<br/>opentofu/aws → opentofu/cloudflare-github"])
 
@@ -113,7 +106,7 @@ flowchart LR
     classDef note fill:#f5f5f5,stroke:#9e9e9e
 
     class iam_user_mod,oidc_prov,s3_mod,aws_profile awsMod
-    class aws_provider,data_oidc,data_user,oidc_roles cfMod
+    class aws_provider cfMod
     class apply_order note
 ```
 
