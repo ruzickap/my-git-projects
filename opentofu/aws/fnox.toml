@@ -1,0 +1,8 @@
+[providers]
+ps = { type = "aws-ps", profile = "my-aws", region = "eu-central-1" }
+
+[secrets]
+TF_VAR_opentofu_encryption_passphrase = { provider = "ps", value = "/github/ruzickap/my-git-projects/actions-secrets/TF_VAR_opentofu_encryption_passphrase" }
+TF_VAR_aws_default_access_key_id = { provider = "ps", value = "/account/aws/ruzicka_sbx01/aws-cli/aws_access_key_id" }
+TF_VAR_aws_default_secret_access_key = { provider = "ps", value = "/account/aws/ruzicka_sbx01/aws-cli/aws_secret_access_key" }
+TF_VAR_aws_default_role_arn = { provider = "ps", value = "/github/shared/actions-secrets/RUZICKA_SBX01_AWS_ROLE_TO_ASSUME" }

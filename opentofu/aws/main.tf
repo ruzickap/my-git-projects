@@ -6,6 +6,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 6.0"
     }
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 2.0"
+    }
     # keep-sorted end
   }
 }
@@ -13,7 +17,7 @@ terraform {
 locals {
   # keep-sorted start
   # File paths for AWS CLI configuration — standard locations, profile
-  # sections managed by inline local-exec provisioners
+  # sections managed by local_sensitive_file resources
   aws_config_file      = "${pathexpand("~")}/.aws/config"
   aws_credentials_file = "${pathexpand("~")}/.aws/credentials"
   aws_profile          = "my-aws"
@@ -31,6 +35,23 @@ locals {
   # S3 bucket name for OpenTofu state files
   s3_bucket_name = "ruzickap-my-git-projects-opentofu-state-files"
   # keep-sorted end
+}
+
+variable "aws_default_access_key_id" {
+  description = "Access key ID for the [default] AWS CLI profile (different account, not managed by this module)"
+  type        = string
+  sensitive   = true
+}
+
+variable "aws_default_role_arn" {
+  description = "Role ARN for the [default] AWS CLI config profile (different account, not managed by this module)"
+  type        = string
+}
+
+variable "aws_default_secret_access_key" {
+  description = "Secret access key for the [default] AWS CLI profile (different account, not managed by this module)"
+  type        = string
+  sensitive   = true
 }
 
 provider "aws" {
@@ -63,53 +84,37 @@ resource "aws_iam_user_policy_attachment" "this" {
   policy_arn = each.value
 }
 
-resource "terraform_data" "aws_profile" {
-  input = {
-    aws_access_key_id     = aws_iam_access_key.this.id
-    aws_secret_access_key = aws_iam_access_key.this.secret
-    aws_profile           = local.aws_profile
-    aws_region            = local.aws_region
-    aws_credentials_file  = local.aws_credentials_file
-    aws_config_file       = local.aws_config_file
-  }
+resource "local_sensitive_file" "aws_credentials" {
+  filename             = local.aws_credentials_file
+  file_permission      = "0600"
+  directory_permission = "0700"
+  content = join("\n", [
+    "# Managed by OpenTofu — ~/git/my-git-projects/opentofu/aws",
+    "[default]",
+    "aws_access_key_id = ${var.aws_default_access_key_id}",
+    "aws_secret_access_key = ${var.aws_default_secret_access_key}",
+    "",
+    "[${local.aws_profile}]",
+    "aws_access_key_id = ${aws_iam_access_key.this.id}",
+    "aws_secret_access_key = ${aws_iam_access_key.this.secret}",
+    "",
+  ])
+}
 
-  provisioner "local-exec" {
-    command     = <<-EOT
-      set -euo pipefail
-      mkdir -p "$$(dirname "$${AWS_CREDENTIALS_FILE}")"
-      chmod 700 "$$(dirname "$${AWS_CREDENTIALS_FILE}")"
-      touch "$${AWS_CREDENTIALS_FILE}" "$${AWS_CONFIG_FILE}"
-      chmod 600 "$${AWS_CREDENTIALS_FILE}" "$${AWS_CONFIG_FILE}"
-      sed -i'' -e "/^\[$${AWS_PROFILE}\]$$/,/^\[/{ /^\[$${AWS_PROFILE}\]$$/d; /^\[/!d; }" "$${AWS_CREDENTIALS_FILE}"
-      sed -i'' -e "/^\[profile $${AWS_PROFILE}\]$$/,/^\[/{ /^\[profile $${AWS_PROFILE}\]$$/d; /^\[/!d; }" "$${AWS_CONFIG_FILE}"
-      printf '\n[%s]\naws_access_key_id = %s\naws_secret_access_key = %s\n' "$${AWS_PROFILE}" "$${AWS_ACCESS_KEY_ID}" "$${AWS_SECRET_ACCESS_KEY}" >> "$${AWS_CREDENTIALS_FILE}"
-      printf '\n[profile %s]\nregion = %s\n' "$${AWS_PROFILE}" "$${AWS_REGION}" >> "$${AWS_CONFIG_FILE}"
-    EOT
-    interpreter = ["bash", "-c"]
-    environment = {
-      AWS_PROFILE           = self.input.aws_profile
-      AWS_CREDENTIALS_FILE  = self.input.aws_credentials_file
-      AWS_CONFIG_FILE       = self.input.aws_config_file
-      AWS_ACCESS_KEY_ID     = self.input.aws_access_key_id
-      AWS_SECRET_ACCESS_KEY = self.input.aws_secret_access_key
-      AWS_REGION            = self.input.aws_region
-    }
-  }
-
-  provisioner "local-exec" {
-    when        = destroy
-    command     = <<-EOT
-      set -euo pipefail
-      [ -f "$${AWS_CREDENTIALS_FILE}" ] && sed -i'' -e "/^\[$${AWS_PROFILE}\]$$/,/^\[/{ /^\[$${AWS_PROFILE}\]$$/d; /^\[/!d; }" "$${AWS_CREDENTIALS_FILE}"
-      [ -f "$${AWS_CONFIG_FILE}" ] && sed -i'' -e "/^\[profile $${AWS_PROFILE}\]$$/,/^\[/{ /^\[profile $${AWS_PROFILE}\]$$/d; /^\[/!d; }" "$${AWS_CONFIG_FILE}"
-    EOT
-    interpreter = ["bash", "-c"]
-    environment = {
-      AWS_PROFILE          = self.input.aws_profile
-      AWS_CREDENTIALS_FILE = self.input.aws_credentials_file
-      AWS_CONFIG_FILE      = self.input.aws_config_file
-    }
-  }
+resource "local_sensitive_file" "aws_config" {
+  filename             = local.aws_config_file
+  file_permission      = "0600"
+  directory_permission = "0700"
+  content = join("\n", [
+    "# Managed by OpenTofu — ~/git/my-git-projects/opentofu/aws",
+    "[default]",
+    "role_arn = ${var.aws_default_role_arn}",
+    "source_profile = default",
+    "",
+    "[profile ${local.aws_profile}]",
+    "region = ${local.aws_region}",
+    "",
+  ])
 }
 
 ################################################################################

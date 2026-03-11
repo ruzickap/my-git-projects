@@ -25,6 +25,15 @@ IAM user and writes the `my-aws` profile to the standard
 `~/.aws/credentials` and `~/.aws/config` files. The `cloudflare-github`
 module depends on this profile (`AWS_PROFILE` is set in `mise.toml`).
 
+The `aws` module requires three input variables for the `[default]` AWS
+CLI profile (a separate account not managed by the module):
+
+```bash
+export TF_VAR_aws_default_access_key_id="..."
+export TF_VAR_aws_default_secret_access_key="..."
+export TF_VAR_aws_default_role_arn="arn:aws:iam::ACCOUNT:role/ROLE"
+```
+
 ```text
 opentofu/aws  ──►  opentofu/cloudflare-github
 ```

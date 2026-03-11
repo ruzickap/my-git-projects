@@ -10,6 +10,9 @@ This project provisions and manages:
 - **IAM User** -- `aws-cli` with programmatic access and
   `AdministratorAccess`; access key credentials written to the
   `[my-aws]` profile in `~/.aws/credentials`
+- **AWS CLI Files** -- `~/.aws/credentials` and `~/.aws/config` are
+  fully managed by `local_sensitive_file` resources; any external
+  drift is detected and corrected on the next `tofu apply`
 - **S3 Bucket** -- `ruzickap-my-git-projects-opentofu-state-files`
   for OpenTofu remote state storage (used by `cloudflare-github`
   module)
@@ -32,12 +35,17 @@ flowchart TD
         user["aws_iam_user.this<br/><i>aws-cli</i>"]
         key["aws_iam_access_key.this"]
         policy_attach["aws_iam_user_policy_attachment.this<br/><i>AdministratorAccess</i>"]
-        profile["terraform_data.aws_profile<br/><i>~/.aws/credentials + config</i>"]
+    end
+
+    subgraph aws_files ["AWS CLI Files"]
+        creds["local_sensitive_file.aws_credentials<br/><i>~/.aws/credentials</i>"]
+        config["local_sensitive_file.aws_config<br/><i>~/.aws/config</i>"]
     end
 
     user --> key
     user --> policy_attach
-    key --> profile
+    key --> creds
+    key --> config
 
     subgraph s3 ["S3 Bucket (OpenTofu State)"]
         bucket["aws_s3_bucket.opentofu_state<br/><i>prevent_destroy = true</i>"]
@@ -71,11 +79,13 @@ flowchart TD
     budget["aws_budgets_budget.monthly<br/><i>$5 USD</i>"]
 
     classDef iam fill:#e8f0fe,stroke:#4285f4
+    classDef files fill:#f3e8fd,stroke:#9334e6
     classDef storage fill:#e6f4ea,stroke:#34a853
     classDef oidcStyle fill:#fef7e0,stroke:#f9ab00
     classDef standalone fill:#fce8e6,stroke:#ea4335
 
-    class user,key,policy_attach,profile iam
+    class user,key,policy_attach iam
+    class creds,config files
     class bucket,versioning,public_access,ownership,lifecycle,bucket_policy storage
     class oidc_provider,assume_doc,role,role_policy_attach,ssm_param oidcStyle
     class budget standalone
@@ -114,20 +124,24 @@ flowchart LR
 
 - **Type**: Local (default)
 
-### AWS Credentials
+### AWS CLI Files
 
-Credentials are written to the **standard** AWS CLI files using inline
-`local-exec` provisioners that preserve other profiles already present
-in the files:
+Both `~/.aws/credentials` and `~/.aws/config` are **fully managed**
+by `local_sensitive_file` resources. OpenTofu owns the entire file
+content, so any external modification (manual edits, other tools) is
+detected via content hash comparison and corrected on the next
+`tofu apply`.
 
-- `~/.aws/credentials` -- access key ID and secret access key under
-  the `[my-aws]` profile
-- `~/.aws/config` -- region under `[profile my-aws]`
+Each file contains two profiles:
+
+- **`[default]`** -- credentials and role ARN for a separate AWS
+  account, passed via input variables (`var.aws_default_*`)
+- **`[my-aws]`** / **`[profile my-aws]`** -- credentials from the
+  `aws-cli` IAM user managed by this module, plus the region
 
 The `~/.aws/` directory is created automatically with `0700`
-permissions if it does not exist. The provisioners use `sed` to
-remove any existing `[my-aws]` section before appending the updated
-one, leaving all other profiles untouched.
+permissions if it does not exist. Both files are written with `0600`
+permissions.
 
 `opentofu/cloudflare-github/` uses `mise.toml` to set:
 
@@ -142,8 +156,8 @@ Since the credentials are in the standard `~/.aws/credentials` and
 ### IAM User (`aws-cli`)
 
 Programmatic access user with `AdministratorAccess`. An access key is
-generated and the `[my-aws]` profile is upserted into
-`~/.aws/credentials` and `~/.aws/config`.
+generated and written to the `[my-aws]` profile in
+`~/.aws/credentials`.
 
 ### S3 Bucket (`ruzickap-my-git-projects-opentofu-state-files`)
 
@@ -182,6 +196,18 @@ The role is assumable via OIDC federation by
 `repo:ruzickap/my-git-projects:*` and via `sts:AssumeRole` by the
 `aws-cli` IAM user.
 
+### Inputs
+
+| Name                            | Sensitive | Description                                         |
+|---------------------------------|-----------|-----------------------------------------------------|
+| `aws_default_access_key_id`     | yes       | Access key ID for the `[default]` AWS CLI profile   |
+| `aws_default_role_arn`          | no        | Role ARN for the `[default]` AWS CLI config profile |
+| `aws_default_secret_access_key` | yes       | Secret access key for the `[default]` AWS CLI profile |
+
+All three variables belong to a different AWS account and are **not**
+managed by this module. Pass them via `TF_VAR_*` environment
+variables.
+
 ### Outputs
 
 | Name                   | Sensitive | Description                             |
@@ -190,10 +216,19 @@ The role is assumable via OIDC federation by
 
 ## Prerequisites
 
+### Tooling
+
+This module uses [mise](https://mise.jdx.dev/) for tool version
+management and [fnox](https://github.com/jdx/mise-env-fnox) for
+secret injection. `mise.toml` pins OpenTofu `1.11.5`, installs
+`fnox`, sets `AWS_PROFILE=my-aws` and `AWS_REGION=eu-central-1`,
+and loads `TF_VAR_*` secrets from SSM Parameter Store via
+`fnox.toml`.
+
 ### Initialize the AWS (Chicken-and-Egg)
 
 OpenTofu provisions the `aws-cli` IAM user with an access key and
-upserts the `[my-aws]` profile into `~/.aws/credentials` and
+writes the `[my-aws]` profile into `~/.aws/credentials` and
 `~/.aws/config`. However, the AWS provider needs valid credentials
 for the first run. To break this circular dependency:
 
@@ -205,40 +240,55 @@ for the first run. To break this circular dependency:
      key**)
    - Save the Access Key ID and Secret Access Key
 
-2. **Run the first `tofu apply`** using the temporary credentials:
+2. **Run the first `tofu apply`** using the temporary credentials.
+   `fnox` cannot retrieve secrets yet (SSM parameters do not exist),
+   so pass all variables manually:
 
    ```bash
    export AWS_ACCESS_KEY_ID="temporary-access-key-id"
    export AWS_SECRET_ACCESS_KEY="temporary-secret-access-key"
+   export TF_VAR_aws_default_access_key_id="default-profile-access-key-id"
+   export TF_VAR_aws_default_secret_access_key="default-profile-secret"
+   export TF_VAR_aws_default_role_arn="arn:aws:iam::ACCOUNT:role/ROLE"
    tofu init
    tofu apply
    ```
 
    This provisions the `aws-cli` IAM user, generates its access key,
-   and upserts the `[my-aws]` profile into `~/.aws/credentials` and
-   `~/.aws/config`. Existing profiles in these files are preserved.
+   and writes both `~/.aws/credentials` and `~/.aws/config` with the
+   `[default]` and `[my-aws]` profiles.
 
-3. **Verify the profile** was created:
+3. **Verify the files** were created:
 
    ```bash
-   grep -A2 '\[my-aws\]' ~/.aws/credentials
+   cat ~/.aws/credentials
    ```
 
    Expected output:
 
    ```ini
+   # Managed by OpenTofu — ~/git/my-git-projects/opentofu/aws
+   [default]
+   aws_access_key_id = AKIA...
+   aws_secret_access_key = ...
+
    [my-aws]
    aws_access_key_id = AKIA...
    aws_secret_access_key = ...
    ```
 
    ```bash
-   grep -A1 '\[profile my-aws\]' ~/.aws/config
+   cat ~/.aws/config
    ```
 
    Expected output:
 
    ```ini
+   # Managed by OpenTofu — ~/git/my-git-projects/opentofu/aws
+   [default]
+   role_arn = arn:aws:iam::ACCOUNT:role/ROLE
+   source_profile = default
+
    [profile my-aws]
    region = eu-central-1
    ```
@@ -248,19 +298,33 @@ for the first run. To break this circular dependency:
    - Delete the access key, then delete the user
 
    Subsequent `tofu apply` runs use the `aws-cli` credentials from
-   the `[my-aws]` profile in `~/.aws/credentials`:
+   the `[my-aws]` profile in `~/.aws/credentials`.
+
+5. **Create SSM parameters** for the `[default]` profile credentials
+   manually. These are **not** managed by OpenTofu and must exist
+   in SSM Parameter Store so that `fnox` can retrieve them for
+   subsequent runs:
 
    ```bash
-   export AWS_PROFILE=my-aws
+   aws ssm put-parameter --region eu-central-1 --profile my-aws \
+     --name "/account/aws/ruzicka_sbx01/aws-cli/aws_access_key_id" \
+     --description "AWS access key ID for Ruzicka SBX01 account" \
+     --type "SecureString" --value "AxxxxxU"
+   aws ssm put-parameter --region eu-central-1 --profile my-aws \
+     --name "/account/aws/ruzicka_sbx01/aws-cli/aws_secret_access_key" \
+     --description "AWS secret access key for Ruzicka SBX01 account" \
+     --type "SecureString" --value "WPxxxxxxS"
    ```
 
 ## Run OpenTofu
 
 After the initial bootstrap (see above), subsequent runs use the
-`[my-aws]` profile from the standard `~/.aws/credentials`:
+`[my-aws]` profile from the standard `~/.aws/credentials`.
+`mise.toml` sets `AWS_PROFILE=my-aws` and `AWS_REGION=eu-central-1`
+automatically, and `fnox` retrieves `TF_VAR_*` secrets from SSM
+Parameter Store (configured in `fnox.toml`):
 
 ```bash
-export AWS_PROFILE=my-aws
 tofu init
 tofu apply
 ```

@@ -22,11 +22,6 @@ locals {
       name        = "container-image-scans"
       description = "Container image scans"
       topics      = ["container", "container-image", "container-security", "cve", "image", "public", "security", "vulnerability"]
-      pages = [{
-        source = [{
-          branch = "gh-pages"
-        }]
-      }]
       secrets = {
         # keep-sorted start
         "NEXT_PUBLIC_SUPABASE_ANON_KEY" = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_ANON_KEY.value
