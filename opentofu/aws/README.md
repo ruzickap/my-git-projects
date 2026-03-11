@@ -198,10 +198,10 @@ The role is assumable via OIDC federation by
 
 ### Inputs
 
-| Name                            | Sensitive | Description                                         |
-|---------------------------------|-----------|-----------------------------------------------------|
-| `aws_default_access_key_id`     | yes       | Access key ID for the `[default]` AWS CLI profile   |
-| `aws_default_role_arn`          | no        | Role ARN for the `[default]` AWS CLI config profile |
+| Name                            | Sensitive | Description                                           |
+|---------------------------------|-----------|-------------------------------------------------------|
+| `aws_default_access_key_id`     | yes       | Access key ID for the `[default]` AWS CLI profile     |
+| `aws_default_role_arn`          | no        | Role ARN for the `[default]` AWS CLI config profile   |
 | `aws_default_secret_access_key` | yes       | Secret access key for the `[default]` AWS CLI profile |
 
 All three variables belong to a different AWS account and are **not**
