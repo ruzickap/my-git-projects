@@ -1,7 +1,7 @@
 # OpenTofu - Cloudflare - GitHub
 
-OpenTofu Infrastructure as Code project managing personal infrastructure
-across Cloudflare, GitHub, Supabase, and UptimeRobot.
+OpenTofu Infrastructure as Code project managing personal infrastructure across
+Cloudflare, GitHub, Supabase, and UptimeRobot.
 
 ## Overview
 
@@ -9,19 +9,18 @@ This project provisions and manages:
 
 - **Cloudflare** -- DNS zones with DNSSEC, DNS records, redirect rulesets,
   compression rules, cache rules, Observatory scheduled tests, Zero Trust
-  tunnels and access policies, API tokens, email routing, notification
-  policies, Web Analytics, and Pages projects
-- **GitHub** -- repositories with settings, branch protection rulesets,
-  Actions secrets, topics, workflow permissions, and GitHub Pages
-  configuration
-- **Supabase** -- Database project (`container-image-scans`) for container
-  image scanning
-- **UptimeRobot** -- HTTP monitors for all public domains and Zero Trust
-  tunnel applications, plus a public status page (`stats.xvx.cz`)
+  tunnels and access policies, API tokens, email routing, notification policies,
+  Web Analytics, and Pages projects
+- **GitHub** -- repositories with settings, branch protection rulesets, Actions
+  secrets, topics, workflow permissions, and GitHub Pages configuration
+- **Supabase** -- Database project (`container-image-scans`) for container image
+  scanning
+- **UptimeRobot** -- HTTP monitors for all public domains and Zero Trust tunnel
+  applications, plus a public status page (`stats.xvx.cz`)
 - **AWS** -- SSM Parameter Store data sources for GitHub Actions secrets
 
-State is stored **encrypted** (AES-GCM with PBKDF2 key) in an AWS S3
-bucket. Secrets are passed via `TF_VAR_*` environment variables.
+State is stored **encrypted** (AES-GCM with PBKDF2 key) in an AWS S3 bucket.
+Secrets are passed via `TF_VAR_*` environment variables.
 
 ## Architecture
 
@@ -230,16 +229,16 @@ flowchart LR
 
 ### Secrets Management
 
-All secrets are passed via `TF_VAR_*` environment variables -- there is
-no encrypted secrets file. The single variable defined in
-`variables.tf` (`opentofu_encryption_passphrase`) and all provider
-credentials are set as environment variables prefixed with `TF_VAR_`
-before running `tofu plan` or `tofu apply`.
+All secrets are passed via `TF_VAR_*` environment variables -- there is no
+encrypted secrets file. The single variable defined in `variables.tf`
+(`opentofu_encryption_passphrase`) and all provider credentials are set as
+environment variables prefixed with `TF_VAR_` before running `tofu plan` or
+`tofu apply`.
 
-- **Local development** -- export `TF_VAR_*` variables in your shell
-  (or use a secrets manager like 1Password, `pass`, etc.)
-- **GitHub Actions CI** -- the workflow sets `TF_VAR_*` environment
-  variables from repository secrets
+- **Local development** -- export `TF_VAR_*` variables in your shell (or use
+  a secrets manager like 1Password, `pass`, etc.)
+- **GitHub Actions CI** -- the workflow sets `TF_VAR_*` environment variables
+  from repository secrets
 
 ### Variables
 
@@ -253,12 +252,11 @@ Set it via `TF_VAR_opentofu_encryption_passphrase`.
 
 ### Environment Variables (`TF_VAR_*`)
 
-The remaining secrets are **not** OpenTofu variables -- they are read
-from AWS SSM Parameter Store via `data "aws_ssm_parameter"` data
-sources. In the GitHub Actions CI workflow they are passed as
-`TF_VAR_*` environment variables (sourced from repository secrets).
-For local development, export them in your shell before running
-`tofu plan` or `tofu apply`.
+The remaining secrets are **not** OpenTofu variables -- they are read from AWS
+SSM Parameter Store via `data "aws_ssm_parameter"` data sources. In the GitHub
+Actions CI workflow they are passed as `TF_VAR_*` environment variables (sourced
+from repository secrets). For local development, export them in your shell
+before running `tofu plan` or `tofu apply`.
 
 | Name                                                                        | Description                                                |
 |-----------------------------------------------------------------------------|------------------------------------------------------------|
@@ -300,9 +298,8 @@ For local development, export them in your shell before running
 
 ### Cloudflare DNS Zones
 
-Each zone has DNSSEC enabled, minimum TLS 1.3 enforced, Zstandard
-compression (with Brotli and Gzip fallbacks), and cache rules for static
-file extensions.
+Each zone has DNSSEC enabled, minimum TLS 1.3 enforced, Zstandard compression
+(with Brotli and Gzip fallbacks), and cache rules for static file extensions.
 
 | Zone          | Email Provider           | Features                                                                             |
 |---------------|--------------------------|--------------------------------------------------------------------------------------|
@@ -312,8 +309,7 @@ file extensions.
 
 ### Cloudflare Zero Trust
 
-Two tunnels (`gate`, `raspi`) hosting 14 applications on the `xvx.cz`
-domain:
+Two tunnels (`gate`, `raspi`) hosting 14 applications on the `xvx.cz` domain:
 
 | Tunnel  | Application       | Service                  | Tags                      |
 |---------|-------------------|--------------------------|---------------------------|
@@ -348,12 +344,11 @@ Access policies:
 | `cloudflare-account-token-pages-ruzickap-github-io` | Pages Write                     |
 
 Main token account-scoped permissions: Access (Apps and Policies,
-Organizations/Identity Providers/Groups, Service Tokens), Account API
-Tokens, Account Settings, Cloudflare Tunnel, Email Routing Addresses,
-Pages, Zero Trust.
+Organizations/Identity Providers/Groups, Service Tokens), Account API Tokens,
+Account Settings, Cloudflare Tunnel, Email Routing Addresses, Pages, Zero Trust.
 
-Main token zone-scoped permissions: Cache Settings, DNS, Dynamic URL
-Redirects, Response Compression, Zone Settings, Zone.
+Main token zone-scoped permissions: Cache Settings, DNS, Dynamic URL Redirects,
+Response Compression, Zone Settings, Zone.
 
 ### Cloudflare Notification Policies
 
@@ -393,8 +388,8 @@ Redirects, Response Compression, Zone Settings, Zone.
 - Branch protection rulesets on default branch (public repos): 2 required
   reviews, code owner review, linear history, status checks
 - Renovate bot bypass for direct update branches
-- Default Actions secrets applied to all repositories (Renovate app
-  credentials, Slack bot token)
+- Default Actions secrets applied to all repositories (Renovate app credentials,
+  Slack bot token)
 
 ### UptimeRobot
 
@@ -418,29 +413,26 @@ GitHub Actions secrets are read from AWS SSM Parameter Store at
 `/github/shared/actions-secrets/<secret>` (shared defaults).
 
 The AWS provider uses the `my-aws` profile from the standard
-`~/.aws/credentials` and `~/.aws/config` files (the `AWS_PROFILE` env
-var is set in `mise.toml`), provisioned by the
-[`opentofu/aws`](../aws/) module.
+`~/.aws/credentials` and `~/.aws/config` files (the `AWS_PROFILE` env var is
+set in `mise.toml`), provisioned by the [`opentofu/aws`](../aws/) module.
 
-The `aws-cli` IAM user is managed in the separate
-[`opentofu/aws`](../aws/) module.
+The `aws-cli` IAM user is managed in the separate [`opentofu/aws`](../aws/) module.
 
 ## Prerequisites
 
 ### Apply the `opentofu/aws` Module First
 
-The AWS provider in this module uses the `my-aws` profile from the
-standard `~/.aws/credentials` file (the `AWS_PROFILE` env var is set
-in `mise.toml`). The profile is created by the
-[`opentofu/aws`](../aws/) module. You **must** run `tofu apply` there
-before initializing this module, otherwise the AWS provider fails with:
+The AWS provider in this module uses the `my-aws` profile from the standard
+`~/.aws/credentials` file (the `AWS_PROFILE` env var is set in `mise.toml`).
+The profile is created by the [`opentofu/aws`](../aws/) module. You **must**
+run `tofu apply` there before initializing this module, otherwise the AWS
+provider fails with:
 
 ```text
 Error: failed to get shared config profile, my-aws
 ```
 
-See the [`opentofu/aws` README](../aws/README.md) for bootstrap
-instructions.
+See the [`opentofu/aws` README](../aws/README.md) for bootstrap instructions.
 
 ### Create Cloudflare Account API Token
 
@@ -533,8 +525,8 @@ curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/iam/permiss
 
 ### Container Testing (Clean Environment)
 
-Test the OpenTofu configuration in an isolated container to ensure it
-works from scratch without local dependencies:
+Test the OpenTofu configuration in an isolated container to ensure it works from
+scratch without local dependencies:
 
 ```console
 docker run -it --rm -v "${PWD}:/mnt" alpine

@@ -60,7 +60,7 @@ locals {
       topics      = ["certification", "notes", "security", "wiz", "wiz-exam", "wiz-exam-preparation"]
     }
   }
-  #trivy:ignore:avd-git-0001 Repository is public
+  # trivy:ignore:avd-git-0001 Repository is public
   github_repositories_existing = {
     # keep-sorted start block=yes
     "action_my_broken_link_checker" = {
@@ -276,7 +276,7 @@ resource "github_repository" "this" {
   name         = each.value.name
   description  = try(each.value.description, "")
   homepage_url = try(each.value.homepage_url, "")
-  visibility   = try(each.value.visibility, "public") #trivy:ignore:AVD-GIT-0001
+  visibility   = try(each.value.visibility, "public") # trivy:ignore:AVD-GIT-0001
 
   # Repository features
   has_discussions = try(each.value.has_discussions, false)

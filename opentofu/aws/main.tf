@@ -16,8 +16,7 @@ terraform {
 
 locals {
   # keep-sorted start
-  # File paths for AWS CLI configuration — standard locations, profile
-  # sections managed by local_sensitive_file resources
+  # File paths for AWS CLI configuration — standard locations, profile sections managed by local_sensitive_file resources
   aws_config_file      = "${pathexpand("~")}/.aws/config"
   aws_credentials_file = "${pathexpand("~")}/.aws/credentials"
   aws_profile          = "my-aws"
@@ -70,7 +69,7 @@ provider "aws" {
 
 data "aws_partition" "current" {}
 
-#trivy:ignore:AVD-AWS-0143 Personal account — single IAM user, groups/roles overhead not warranted
+# trivy:ignore:AVD-AWS-0143 Personal account — single IAM user, groups/roles overhead not warranted
 resource "aws_iam_user" "this" {
   # checkov:skip=CKV_AWS_273:SSO not available — personal account uses IAM user for programmatic access
   name = local.iam_user_name
@@ -91,41 +90,39 @@ resource "local_sensitive_file" "aws_credentials" {
   filename             = local.aws_credentials_file
   file_permission      = "0600"
   directory_permission = "0700"
-  content = join("\n", [
-    "# Managed by OpenTofu — ~/git/my-git-projects/opentofu/aws",
-    "[default]",
-    "aws_access_key_id = ${var.aws_default_access_key_id}",
-    "aws_secret_access_key = ${var.aws_default_secret_access_key}",
-    "",
-    "[${local.aws_profile}]",
-    "aws_access_key_id = ${aws_iam_access_key.this.id}",
-    "aws_secret_access_key = ${aws_iam_access_key.this.secret}",
-    "",
-  ])
+  content              = <<-EOT
+    # Managed by OpenTofu — ~/git/my-git-projects/opentofu/aws
+    [default]
+    aws_access_key_id = ${var.aws_default_access_key_id}
+    aws_secret_access_key = ${var.aws_default_secret_access_key}
+
+    [${local.aws_profile}]
+    aws_access_key_id = ${aws_iam_access_key.this.id}
+    aws_secret_access_key = ${aws_iam_access_key.this.secret}
+  EOT
 }
 
 resource "local_sensitive_file" "aws_config" {
   filename             = local.aws_config_file
   file_permission      = "0600"
   directory_permission = "0700"
-  content = join("\n", [
-    "# Managed by OpenTofu — ~/git/my-git-projects/opentofu/aws",
-    "[default]",
-    "role_arn = ${var.aws_default_role_arn}",
-    "source_profile = default",
-    "",
-    "[profile ${local.aws_profile}]",
-    "region = ${local.aws_region}",
-    "",
-  ])
+  content              = <<-EOT
+    # Managed by OpenTofu — ~/git/my-git-projects/opentofu/aws
+    [default]
+    role_arn = ${var.aws_default_role_arn}
+    source_profile = default
+
+    [profile ${local.aws_profile}]
+    region = ${local.aws_region}
+  EOT
 }
 
 ################################################################################
 # S3 Bucket — OpenTofu State Files
 ################################################################################
 
-#trivy:ignore:AVD-AWS-0089 Personal account — access logging not needed for state bucket
-#trivy:ignore:AVD-AWS-0132 Personal account — SSE-S3 (AWS default) is sufficient, KMS CMK not needed
+# trivy:ignore:AVD-AWS-0089 Personal account — access logging not needed for state bucket
+# trivy:ignore:AVD-AWS-0132 Personal account — SSE-S3 (AWS default) is sufficient, KMS CMK not needed
 resource "aws_s3_bucket" "opentofu_state" {
   # checkov:skip=CKV_AWS_18:Personal account — access logging not needed for state bucket
   # checkov:skip=CKV_AWS_144:Personal account — cross-region replication not needed for state bucket
@@ -177,14 +174,12 @@ resource "aws_s3_bucket_lifecycle_configuration" "opentofu_state" {
 
   rule {
     id     = "expire-noncurrent-versions"
-    status = "Enabled"
+    status = aws_s3_bucket_versioning.opentofu_state.versioning_configuration[0].status == "Enabled" ? "Enabled" : "Disabled"
 
     noncurrent_version_expiration {
       noncurrent_days = 90
     }
   }
-
-  depends_on = [aws_s3_bucket_versioning.opentofu_state]
 }
 
 resource "aws_s3_bucket_policy" "opentofu_state" {
@@ -283,13 +278,12 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
 }
 
 resource "aws_iam_role" "github_actions" {
-  name                 = local.github_oidc_role_name
-  description          = "Service Role for ${local.github_oidc_repo} GitHub Actions"
-  assume_role_policy   = data.aws_iam_policy_document.github_actions_assume_role.json
-  max_session_duration = 7200
+  name               = local.github_oidc_role_name
+  description        = "Service Role for ${local.github_oidc_repo} GitHub Actions"
+  assume_role_policy = data.aws_iam_policy_document.github_actions_assume_role.json
 }
 
-#trivy:ignore:AVD-AWS-0057 Personal account — admin privileges intentional for CI/CD full infrastructure management
+# trivy:ignore:AVD-AWS-0057 Personal account — admin privileges intentional for CI/CD full infrastructure management
 resource "aws_iam_role_policy_attachment" "github_actions" {
   # checkov:skip=CKV_AWS_274:Personal account — admin privileges intentional for CI/CD full infrastructure management
   role       = aws_iam_role.github_actions.name

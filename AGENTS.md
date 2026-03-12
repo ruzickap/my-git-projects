@@ -4,8 +4,8 @@
 
 Infrastructure-as-code repository (`ruzickap/my-git-projects`) managing
 Cloudflare, GitHub, Supabase, and UptimeRobot resources via OpenTofu.
-Also contains GitHub Actions workflows, multi-gitter scripts, and
-repository default templates distributed to ~40+ repos.
+Also contains GitHub Actions workflows, multi-gitter scripts, and repository
+default templates distributed to ~40+ repos.
 
 **Tech stack**: HCL (OpenTofu/Terraform), Bash, YAML, JSON5
 **No application code or tests** -- quality is enforced through linting,
@@ -33,8 +33,8 @@ tofu plan                             # Preview changes (requires secrets)
 tofu apply                            # Apply changes (requires secrets)
 ```
 
-OpenTofu `1.11.5` is pinned in `opentofu/cloudflare-github/mise.toml`
-(managed by [mise](https://mise.jdx.dev/)).
+OpenTofu `1.11.5` is pinned in `opentofu/cloudflare-github/mise.toml` (managed
+by [mise](https://mise.jdx.dev/)).
 
 ### Pre-commit (run from repo root)
 
@@ -65,8 +65,8 @@ trivy fs --severity HIGH,CRITICAL .          # Vulnerability scan
 codespell                                    # Spell check (config: .codespellrc)
 ```
 
-CI: MegaLinter (cupcake flavor) in `.github/workflows/mega-linter.yml`;
-OpenTofu plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
+CI: MegaLinter (cupcake flavor) in `.github/workflows/mega-linter.yml`; OpenTofu
+plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
 
 ## Code Style Guidelines
 
@@ -74,18 +74,18 @@ OpenTofu plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
 
 - **Naming**: `snake_case` for all resource names, variables, locals
 - **Resource naming**: use `this` as the resource name with `for_each`
-- **Data-driven pattern**: define resources as maps in `locals`, iterate
-  with `for_each`; use `try()` for optional fields
+- **Data-driven pattern**: define resources as maps in `locals`, iterate with
+  `for_each`; use `try()` for optional fields
 - **Lifecycle**: use `prevent_destroy = true` on critical resources
-- **Format**: `tofu fmt` (canonical HCL formatting); two-space indent;
-  align `=` signs within blocks
+- **Format**: `tofu fmt` (canonical HCL formatting); two-space indent; align
+  `=` signs within blocks
 - **Sorted blocks**: use `# keep-sorted` for alphabetical ordering; add
   `block=yes` for multi-line blocks and `newline_separated=yes` when blocks are
   separated by blank lines
 - **Security annotations** (inline suppression):
   - `# kics-scan ignore-line`
   - `# checkov:skip=CKV_...`
-  - `#trivy:ignore:avd-git-0001 <reason>`
+  - `# trivy:ignore:avd-git-0001 <reason>`
   - `# codespell:ignore` (end-of-line, for false-positive words)
 
 ### Shell Scripts
@@ -107,8 +107,8 @@ OpenTofu plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
 
 ### Markdown
 
-- Lint: `rumdl` (not markdownlint); line-length applies to prose only
-  (code blocks excluded via `.rumdl.toml`)
+- Lint: `rumdl` (not markdownlint); line-length applies to prose only (code
+  blocks excluded via `.rumdl.toml`)
 - Wrap at 80 characters; proper heading hierarchy
 - Language identifiers required in code fences
 - `CHANGELOG.md` is auto-generated -- excluded from all linting
@@ -124,16 +124,16 @@ OpenTofu plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
 - **Always validate with `actionlint`** after modifications
 - Pin all actions to full SHA with version comment:
   `uses: actions/checkout@<full-sha> # v4.2.0`
-- Set `permissions: read-all` at workflow level, override per-job
-  with minimal permissions and inline comments explaining each
+- Set `permissions: read-all` at workflow level, override per-job with minimal
+  permissions and inline comments explaining each
 - Prefer `ubuntu-24.04-arm` runners
 - Set explicit `timeout-minutes` on jobs
 - Use `# keep-sorted` for env blocks
 
 ### Spell Checking
 
-- `codespell` (pre-commit): config in `.codespellrc`; custom ignores
-  for abbreviations like `aks`
+- `codespell` (pre-commit): config in `.codespellrc`; custom ignores for
+  abbreviations like `aks`
 - `typos` (optional): config in `_typos.toml`
 
 ## Security
@@ -141,9 +141,8 @@ OpenTofu plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
 - **Secrets**: passed as `TF_VAR_*` environment variables; never in code
 - **Secrets in CI**: stored as GitHub repository secrets
 - **Security scanners** (all in CI):
-  Checkov (skip `CKV_GHA_7`), DevSkim (ignore DS162092, DS137138),
-  KICS (HIGH only), Trivy (HIGH/CRITICAL, ignores unfixed),
-  Gitleaks (pre-commit hook)
+  Checkov (skip `CKV_GHA_7`), DevSkim (ignore DS162092, DS137138), KICS (HIGH
+  only), Trivy (HIGH/CRITICAL, ignores unfixed), Gitleaks (pre-commit hook)
 
 ## Version Control
 
@@ -152,19 +151,18 @@ OpenTofu plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
 Conventional commits enforced by commitizen, gitlint, and commit-check.
 
 - Format: `<type>: <description>` (lowercase, no period)
-- Types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `style`,
-  `perf`, `ci`, `build`, `revert`
+- Types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `style`, `perf`,
+  `ci`, `build`, `revert`
 - Subject: imperative mood, max 72 characters
-- Body: wrap at 72 chars, explain what/why, reference issues with
-  `Fixes`, `Closes`, `Resolves`
+- Body: wrap at 72 chars, explain what/why, reference issues with `Fixes`,
+  `Closes`, `Resolves`
 - Direct commits to `main`/`master` blocked by pre-commit hook
 
 ### Branching
 
-Conventional branch format: `<type>/<description>` --
-`feature/`, `feat/`, `bugfix/`, `fix/`, `hotfix/`, `release/`,
-`chore/`. Use lowercase, hyphens, no consecutive/leading/trailing
-hyphens.
+Conventional branch format: `<type>/<description>` -- `feature/`, `feat/`,
+`bugfix/`, `fix/`, `hotfix/`, `release/`, `chore/`. Use lowercase, hyphens, no
+consecutive/leading/trailing hyphens.
 
 ### Pull Requests
 

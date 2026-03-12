@@ -2,9 +2,9 @@
 
 ## Overview
 
-This document provides guidelines and best practices for AI agents working
-on this repository. Follow these standards to ensure consistency, quality,
-and maintainability across all contributions.
+This document provides guidelines and best practices for AI agents working on
+this repository. Follow these standards to ensure consistency, quality, and
+maintainability across all contributions.
 
 ## Table of Contents
 
@@ -58,14 +58,14 @@ and maintainability across all contributions.
 - **Variables**: Use uppercase for bash variables (`${MY_VARIABLE}`)
 - **Excluded checks**: SC2317 (unreachable command warning) is excluded
 
-**Code blocks in Markdown**: Shell code blocks (tagged as `bash`, `shell`,
-or `sh`) are extracted and validated during CI.
+**Code blocks in Markdown**: Shell code blocks (tagged as `bash`, `shell`, or
+`sh`) are extracted and validated during CI.
 
 ### JSON Files
 
 - **Linting**: Must pass `jsonlint` validation
-- **Comments**: JSON files may include comments (supported via
-  `--comments` flag)
+- **Comments**: JSON files may include comments (supported via `--comments`
+  flag)
 - **Excluded files**: `.devcontainer/devcontainer.json` is excluded
 
 ### Terraform Files
@@ -173,8 +173,8 @@ Resolves: #123
 ### Pull Requests
 
 - **Always create draft PR** - Create pull requests as drafts initially
-- **Title format** - Must follow conventional commit format
-  (validated by `semantic-pull-request` action)
+- **Title format** - Must follow conventional commit format (validated by
+  `semantic-pull-request` action)
 - **Description** - Include clear explanation of changes and motivation
 - **Link issues** - Reference related issues using keywords (Fixes, Closes,
   Resolves)
