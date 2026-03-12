@@ -31,202 +31,6 @@ Secrets are passed via `TF_VAR_*` environment variables.
 - **Encryption**: AES-GCM with PBKDF2-derived key (enforced)
 - **Lock file**: Enabled (`use_lockfile = true`)
 
-### Provider and Secrets Flow
-
-```mermaid
-flowchart LR
-    subgraph aws_module ["opentofu/aws (applied first)"]
-        iam_user["IAM User<br/><b>aws-cli</b>"]
-        aws_profile["~/.aws/credentials<br/><b>[my-aws] profile</b>"]
-    end
-
-    iam_user -->|creates| aws_profile
-
-    subgraph providers ["Providers (this module)"]
-        aws_prov["AWS Provider<br/><i>profile = my-aws</i>"]
-        cf_prov["Cloudflare Provider"]
-        gh_prov["GitHub Provider"]
-        rest_prov["REST API Provider"]
-        supa_prov["Supabase Provider"]
-        ur_prov["UptimeRobot Provider"]
-    end
-
-    aws_profile -->|authenticates| aws_prov
-
-    subgraph ssm ["AWS SSM Parameter Store"]
-        ssm_params["29 data sources<br/><i>/github/.../actions-secrets/*</i>"]
-    end
-
-    aws_prov --> ssm_params
-    ssm_params -->|api_token| cf_prov
-    ssm_params -->|token| gh_prov
-    ssm_params -->|api_token| rest_prov
-    ssm_params -->|access_token| supa_prov
-    ssm_params -->|api_key| ur_prov
-
-    classDef awsMod fill:#e8f0fe,stroke:#4285f4
-    classDef provStyle fill:#e6f4ea,stroke:#34a853
-    classDef ssmStyle fill:#fef7e0,stroke:#f9ab00
-
-    class iam_user,aws_profile awsMod
-    class aws_prov,cf_prov,gh_prov,rest_prov,supa_prov,ur_prov provStyle
-    class ssm_params ssmStyle
-```
-
-### Resource Dependency Graph
-
-```mermaid
-flowchart TD
-    subgraph cf_zones ["Cloudflare DNS Zones"]
-        zone_xvx["cloudflare_zone<br/><b>xvx.cz</b>"]
-        zone_ruzicka["cloudflare_zone<br/><b>ruzicka.dev</b>"]
-        zone_mylabs["cloudflare_zone<br/><b>mylabs.dev</b>"]
-        zone_common["Per-zone resources:<br/><i>DNSSEC, DNS records, zone settings,<br/>rulesets (compression, cache, redirects),<br/>email routing</i>"]
-    end
-
-    zone_xvx --> zone_common
-    zone_ruzicka --> zone_common
-    zone_mylabs --> zone_common
-
-    subgraph cf_zt ["Cloudflare Zero Trust"]
-        tunnels["cloudflare_zero_trust_tunnel_cloudflared<br/><b>gate, raspi</b>"]
-        tunnel_configs["cloudflare_zero_trust_tunnel_cloudflared_config"]
-        zt_apps["cloudflare_zero_trust_access_application<br/><i>12 non-SSH apps</i>"]
-        google_idp["cloudflare_zero_trust_access_identity_provider<br/><b>Google OAuth</b>"]
-        policy_google["access_policy<br/><b>Google SSO Access</b>"]
-        policy_ur["access_policy<br/><b>UptimeRobot Direct Access</b>"]
-        policy_all["access_policy<br/><b>Allow All</b>"]
-        ur_ip_list["cloudflare_zero_trust_list<br/><b>UptimeRobot IPs</b>"]
-        http_ur_ips["data.http<br/><i>UptimeRobot IPv4/IPv6</i>"]
-        zt_tags["cloudflare_zero_trust_access_tag<br/><i>7 tags</i>"]
-    end
-
-    tunnels --> tunnel_configs
-    zone_xvx -.->|hostname domain| tunnel_configs
-    zone_xvx -.->|app domain| zt_apps
-    google_idp -->|allowed_idps| zt_apps
-    policy_google -->|default policy| zt_apps
-    policy_ur -->|default policy| zt_apps
-    policy_all -->|hass-rpi only| zt_apps
-    http_ur_ips --> ur_ip_list
-    ur_ip_list --> policy_ur
-
-    subgraph cf_tokens ["Cloudflare API Tokens"]
-        perm_groups["data.cloudflare_account_api_token_permission_groups_list"]
-        token_main["cloudflare_account_token<br/><b>opentofu-cloudflare-github</b>"]
-        token_xvx["cloudflare_account_token<br/><b>pages-xvx-cz</b>"]
-        token_petr["cloudflare_account_token<br/><b>pages-petr-ruzicka-dev</b>"]
-        token_ruzickap["cloudflare_account_token<br/><b>pages-ruzickap-github-io</b>"]
-    end
-
-    perm_groups --> token_main
-    perm_groups --> token_xvx
-    perm_groups --> token_petr
-    perm_groups --> token_ruzickap
-
-    subgraph cf_other ["Cloudflare (other)"]
-        pages["cloudflare_pages_project<br/><i>3 projects</i>"]
-        analytics["cloudflare_web_analytics_site<br/><i>2 sites</i>"]
-        notif["cloudflare_notification_policy<br/><i>7 policies</i>"]
-    end
-
-    tunnels -.->|tunnel_id filter| notif
-
-    subgraph github ["GitHub"]
-        repos["github_repository<br/><i>27 repos (for_each)</i>"]
-        wf_perms["github_workflow_repository_permissions"]
-        secrets["github_actions_secret<br/><i>defaults + per-repo</i>"]
-        topics["github_repository_topics"]
-        rulesets["github_repository_ruleset<br/><i>public repos only</i>"]
-    end
-
-    repos --> wf_perms
-    repos --> secrets
-    repos --> topics
-    repos --> rulesets
-
-    subgraph supa ["Supabase"]
-        rng_pw["random_password"]
-        supa_proj["supabase_project<br/><b>container-image-scans</b>"]
-        supa_keys["data.supabase_apikeys"]
-    end
-
-    rng_pw --> supa_proj
-    supa_proj --> supa_keys
-
-    subgraph ur ["UptimeRobot"]
-        ur_zt_mon["uptimerobot_monitor<br/><b>zero_trust_applications</b>"]
-        ur_domain_mon["uptimerobot_monitor<br/><b>domain_monitors</b>"]
-        ur_psp["uptimerobot_psp<br/><b>My Services Status</b>"]
-    end
-
-    zt_apps -.->|app URLs| ur_zt_mon
-    zone_xvx -.->|DNS records| ur_domain_mon
-    zone_ruzicka -.->|DNS records| ur_domain_mon
-    zone_mylabs -.->|DNS records| ur_domain_mon
-    ur_zt_mon --> ur_psp
-    ur_domain_mon --> ur_psp
-
-    classDef cfZone fill:#fff3e0,stroke:#f57c00
-    classDef cfZt fill:#e8f0fe,stroke:#4285f4
-    classDef cfToken fill:#fce4ec,stroke:#c62828
-    classDef cfOther fill:#f3e5f5,stroke:#7b1fa2
-    classDef ghStyle fill:#e8f5e9,stroke:#2e7d32
-    classDef supaStyle fill:#e0f2f1,stroke:#00695c
-    classDef urStyle fill:#fef7e0,stroke:#f9ab00
-
-    class zone_xvx,zone_ruzicka,zone_mylabs,zone_common cfZone
-    class tunnels,tunnel_configs,zt_apps,google_idp,policy_google,policy_ur,policy_all,ur_ip_list,http_ur_ips,zt_tags cfZt
-    class perm_groups,token_main,token_xvx,token_petr,token_ruzickap cfToken
-    class pages,analytics,notif cfOther
-    class repos,wf_perms,secrets,topics,rulesets ghStyle
-    class rng_pw,supa_proj,supa_keys supaStyle
-    class ur_zt_mon,ur_domain_mon,ur_psp urStyle
-```
-
-### Cross-Provider Data Flows
-
-```mermaid
-flowchart LR
-    subgraph sources ["Resource Outputs"]
-        cf_tokens["Cloudflare Pages Tokens<br/><i>pages-xvx-cz<br/>pages-petr-ruzicka-dev<br/>pages-ruzickap-github-io</i>"]
-        cf_analytics["Cloudflare Web Analytics<br/><i>ruzickap.github.io site_token</i>"]
-        cf_account_id["Cloudflare Account ID"]
-        supa_keys["Supabase API Keys<br/><i>anon_key, service_role_key,<br/>url, project_ref, db_password</i>"]
-        ssm_secrets["AWS SSM Parameters<br/><i>shared + per-repo secrets</i>"]
-        cf_zones["Cloudflare DNS Zones<br/><i>xvx.cz, ruzicka.dev, mylabs.dev</i>"]
-        cf_tunnels["Zero Trust Tunnel Apps<br/><i>12 non-SSH applications</i>"]
-        ur_ips["UptimeRobot IP List<br/><i>data.http response</i>"]
-    end
-
-    subgraph targets ["Consuming Resources"]
-        gh_secrets["GitHub Actions Secrets<br/><i>per-repo + defaults</i>"]
-        ur_monitors["UptimeRobot Monitors"]
-        zt_policy["Zero Trust Access Policy<br/><b>UptimeRobot Direct Access</b>"]
-        zt_apps["Zero Trust Applications<br/><i>hostname = app.xvx.cz</i>"]
-        tunnel_cfg["Tunnel Configs<br/><i>hostname = app.xvx.cz</i>"]
-    end
-
-    cf_tokens -->|CLOUDFLARE_API_TOKEN| gh_secrets
-    cf_analytics -->|CLOUDFLARE_WEB_ANALYTICS_SITE_TOKEN| gh_secrets
-    cf_account_id -->|CLOUDFLARE_ACCOUNT_ID| gh_secrets
-    supa_keys -->|SUPABASE_* secrets| gh_secrets
-    ssm_secrets -->|defaults + per-repo| gh_secrets
-
-    cf_zones -->|DNS records| ur_monitors
-    cf_tunnels -->|app URLs| ur_monitors
-
-    ur_ips -->|IP list| zt_policy
-    cf_zones -->|zone name| zt_apps
-    cf_zones -->|zone name| tunnel_cfg
-
-    classDef source fill:#e8f0fe,stroke:#4285f4
-    classDef target fill:#e6f4ea,stroke:#34a853
-
-    class cf_tokens,cf_analytics,cf_account_id,supa_keys,ssm_secrets,cf_zones,cf_tunnels,ur_ips source
-    class gh_secrets,ur_monitors,zt_policy,zt_apps,tunnel_cfg target
-```
-
 ### Secrets Management
 
 All secrets are passed via `TF_VAR_*` environment variables -- there is no
@@ -252,11 +56,12 @@ Set it via `TF_VAR_opentofu_encryption_passphrase`.
 
 ### Environment Variables (`TF_VAR_*`)
 
-The remaining secrets are **not** OpenTofu variables -- they are read from AWS
-SSM Parameter Store via `data "aws_ssm_parameter"` data sources. In the GitHub
-Actions CI workflow they are passed as `TF_VAR_*` environment variables (sourced
-from repository secrets). For local development, export them in your shell
-before running `tofu plan` or `tofu apply`.
+The remaining secrets are **not** OpenTofu variables -- they are stored in AWS
+SSM Parameter Store and read at plan/apply time via `data "aws_ssm_parameter"`
+data sources. For local development, export them as `TF_VAR_*` environment
+variables in your shell before running `tofu plan` or `tofu apply`. In GitHub
+Actions CI, the workflow assumes an AWS role via OIDC, so OpenTofu reads the
+secrets directly from SSM.
 
 | Name                                                                        | Description                                                |
 |-----------------------------------------------------------------------------|------------------------------------------------------------|
@@ -267,8 +72,8 @@ before running `tofu plan` or `tofu apply`.
 | `gh_token_opentofu_cloudflare_github`                                       | GitHub PAT for managing Cloudflare and GitHub resources    |
 | `google_client_id`                                                          | Google client ID                                           |
 | `google_client_secret`                                                      | Google client secret                                       |
-| `mise_sops_age_key_container_image_scans`                                   | SOPS AGE key for container-image-scans repository          |
 | `my_atlassian_personal_token`                                               | Atlassian personal access token                            |
+| `my_aws_aws_role_to_assume`                                                 | AWS role ARN for OIDC in GitHub Actions CI                 |
 | `my_renovate_github_app_id`                                                 | Renovate GitHub App ID                                     |
 | `my_renovate_github_private_key`                                            | Renovate GitHub App private key                            |
 | `my_slack_bot_token`                                                        | Slack bot token                                            |
@@ -277,7 +82,6 @@ before running `tofu plan` or `tofu apply`.
 | `quay_container_registry_password`                                          | Quay container registry password                           |
 | `quay_container_registry_user`                                              | Quay container registry username                           |
 | `ruzicka_sbx01_aws_role_to_assume`                                          | AWS role ARN to assume for ruzicka-sbx01 account           |
-| `sops_age_key_my_git_projects`                                              | SOPS AGE key for my-git-projects repository                |
 | `supabase_access_token`                                                     | Supabase access token                                      |
 | `uptimerobot_api_key`                                                       | UptimeRobot API key                                        |
 | `wifi_password`                                                             | WiFi password for Raspberry Pi configuration               |
@@ -354,7 +158,7 @@ Response Compression, Zone Settings, Zone.
 
 | Alert                               | Type                           |
 |-------------------------------------|--------------------------------|
-| Abuse Report Alert                  | `abuse_report_alert`           |
+| Cloudflare Abuse Report Alert       | `abuse_report_alert`           |
 | Expiring Access Service Token Alert | `expiring_service_token_alert` |
 | Passive Origin Monitoring           | `real_origin_monitoring`       |
 | Web Analytics Metrics Update        | `web_analytics_metrics_update` |
@@ -378,7 +182,7 @@ Response Compression, Zone Settings, Zone.
 
 ### GitHub Repositories
 
-27 repositories managed with consistent settings:
+26 repositories managed with consistent settings:
 
 - Squash/rebase merge only (merge commits disabled)
 - Auto-delete head branches on merge
@@ -389,7 +193,7 @@ Response Compression, Zone Settings, Zone.
   reviews, code owner review, linear history, status checks
 - Renovate bot bypass for direct update branches
 - Default Actions secrets applied to all repositories (Renovate app credentials,
-  Slack bot token)
+  Slack bot token and channel ID)
 
 ### UptimeRobot
 
@@ -465,11 +269,11 @@ export TF_VAR_supabase_access_token="..."
 export TF_VAR_uptimerobot_api_key="..."
 export TF_VAR_cloudflare_zero_trust_access_identity_provider_google_oauth_client_id="..."
 export TF_VAR_cloudflare_zero_trust_access_identity_provider_google_oauth_client_secret="..."
+export TF_VAR_my_aws_aws_role_to_assume="..."
 export TF_VAR_my_renovate_github_app_id="..."
 export TF_VAR_my_renovate_github_private_key="..."
 export TF_VAR_my_slack_bot_token="..."
 export TF_VAR_my_slack_channel_id="..."
-export TF_VAR_mise_sops_age_key_container_image_scans="..."
 export TF_VAR_wiz_client_id="..."
 export TF_VAR_wiz_client_secret="..."
 export TF_VAR_wifi_password="..."
@@ -479,7 +283,6 @@ export TF_VAR_dockerhub_container_registry_user="..."
 export TF_VAR_quay_container_registry_password="..."
 export TF_VAR_quay_container_registry_user="..."
 export TF_VAR_ruzicka_sbx01_aws_role_to_assume="..."
-export TF_VAR_sops_age_key_my_git_projects="..."
 export TF_VAR_google_client_id="..."
 export TF_VAR_google_client_secret="..."
 export TF_VAR_my_atlassian_personal_token="..."
