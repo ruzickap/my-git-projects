@@ -1,7 +1,7 @@
 # OpenTofu - Cloudflare - GitHub
 
-OpenTofu Infrastructure as Code project managing personal infrastructure
-across Cloudflare, GitHub, Supabase, and UptimeRobot.
+OpenTofu Infrastructure as Code project managing personal infrastructure across
+Cloudflare, GitHub, Supabase, and UptimeRobot.
 
 ## Overview
 
@@ -9,74 +9,101 @@ This project provisions and manages:
 
 - **Cloudflare** -- DNS zones with DNSSEC, DNS records, redirect rulesets,
   compression rules, cache rules, Observatory scheduled tests, Zero Trust
-  tunnels and access policies, API tokens, email routing, notification
-  policies, Web Analytics, and Pages projects
-- **GitHub** -- repositories with settings, branch protection rulesets,
-  Actions secrets, topics, workflow permissions, and GitHub Pages
-  configuration
-- **Supabase** -- Database project (`container-image-scans`) for container
-  image scanning
-- **UptimeRobot** -- HTTP monitors for all public domains and Zero Trust
-  tunnel applications, plus a public status page (`stats.xvx.cz`)
+  tunnels and access policies, API tokens, email routing, notification policies,
+  Web Analytics, and Pages projects
+- **GitHub** -- repositories with settings, branch protection rulesets, Actions
+  secrets, topics, workflow permissions, and GitHub Pages configuration
+- **Supabase** -- Database project (`container-image-scans`) for container image
+  scanning
+- **UptimeRobot** -- HTTP monitors for all public domains and Zero Trust tunnel
+  applications, plus a public status page (`stats.xvx.cz`)
+- **AWS** -- SSM Parameter Store data sources for GitHub Actions secrets
 
-State is stored **encrypted** (AES-GCM with PBKDF2 key) in a Cloudflare R2
-bucket. Secrets are managed via **SOPS** (AGE encryption) in `.env.yaml`.
+State is stored **encrypted** (AES-GCM with PBKDF2 key) in an AWS S3 bucket.
+Secrets are passed via `TF_VAR_*` environment variables.
 
 ## Architecture
 
 ### Backend
 
-- **Type**: S3-compatible (Cloudflare R2)
+- **Type**: AWS S3
 - **Bucket**: `ruzickap-my-git-projects-opentofu-state-files`
 - **Encryption**: AES-GCM with PBKDF2-derived key (enforced)
 - **Lock file**: Enabled (`use_lockfile = true`)
 
-### Secrets Management (SOPS + AGE)
+### Secrets Management
 
-Secrets are stored in `.env.yaml`, encrypted with
-[SOPS](https://github.com/getsops/sops) using
-[AGE](https://age-encryption.org/) encryption. The AGE private key is
-resolved differently depending on the environment:
+Only one OpenTofu variable (`opentofu_encryption_passphrase`) is set via
+`TF_VAR_*`. All other secrets are stored in AWS SSM Parameter Store and read
+at plan/apply time through `data "aws_ssm_parameter"` data sources in
+`aws.tf`.
 
-- **Local development (mise)** -- mise reads the key from a file on disk.
-  Two settings in `mise.toml` control this:
-  - `SOPS_AGE_KEY_FILE` env var points to
-    `~/Documents/secrets/age-my-git-projects.txt` (used by the `sops` CLI
-    and OpenTofu `sops` provider)
-  - `sops.age_key_file` setting points to the same file (used by mise's
-    built-in SOPS integration to decrypt `.env.yaml` via
-    `_.file = ".env.yaml"`)
-- **GitHub Actions CI** -- the workflow sets the `SOPS_AGE_KEY` environment
-  variable directly from `${{ secrets.SOPS_AGE_KEY }}`. SOPS prefers the
-  inline key (`SOPS_AGE_KEY`) over the file path (`SOPS_AGE_KEY_FILE`)
-  when both are present.
+- **Local development** -- ensure the `my-aws` AWS CLI profile has permission
+  to read SSM parameters, and export
+  `TF_VAR_opentofu_encryption_passphrase`
+- **GitHub Actions CI** -- the workflow assumes an AWS role via OIDC (so
+  OpenTofu reads SSM directly) and sets
+  `TF_VAR_opentofu_encryption_passphrase` from a repository secret
 
 ### Variables
 
-| Name                                  | Type     | Description                                                        |
-|---------------------------------------|----------|--------------------------------------------------------------------|
-| `opentofu_encryption_passphrase`      | `string` | OpenTofu encryption passphrase (required)                          |
-| `gh_token_opentofu_cloudflare_github` | `string` | GitHub PAT for managing Cloudflare and GitHub resources (required) |
+Only one OpenTofu variable is defined in `variables.tf`:
 
-Both variables are marked as sensitive.
+| Name                             | Sensitive | Description                    |
+|----------------------------------|-----------|--------------------------------|
+| `opentofu_encryption_passphrase` | yes       | OpenTofu encryption passphrase |
+
+Set it via `TF_VAR_opentofu_encryption_passphrase`.
+
+### AWS SSM Parameters
+
+The remaining secrets are **not** OpenTofu variables -- they are stored in
+AWS SSM Parameter Store and read at plan/apply time via
+`data "aws_ssm_parameter"` data sources in `aws.tf`. No `TF_VAR_*` export
+is needed for these; the AWS provider reads them directly from SSM using
+the `my-aws` profile (local) or OIDC role (CI).
+
+| Name                                                                        | Description                                                |
+|-----------------------------------------------------------------------------|------------------------------------------------------------|
+| `cloudflare_zero_trust_access_identity_provider_google_oauth_client_id`     | Google OAuth client ID for Cloudflare Zero Trust           |
+| `cloudflare_zero_trust_access_identity_provider_google_oauth_client_secret` | Google OAuth client secret for Cloudflare Zero Trust       |
+| `dockerhub_container_registry_password`                                     | DockerHub container registry password                      |
+| `dockerhub_container_registry_user`                                         | DockerHub container registry username                      |
+| `gh_token_opentofu_cloudflare_github`                                       | GitHub PAT for managing Cloudflare and GitHub resources    |
+| `google_client_id`                                                          | Google client ID                                           |
+| `google_client_secret`                                                      | Google client secret                                       |
+| `my_atlassian_personal_token`                                               | Atlassian personal access token                            |
+| `my_aws_aws_role_to_assume`                                                 | AWS role ARN for OIDC in GitHub Actions CI                 |
+| `my_renovate_github_app_id`                                                 | Renovate GitHub App ID                                     |
+| `my_renovate_github_private_key`                                            | Renovate GitHub App private key                            |
+| `my_slack_bot_token`                                                        | Slack bot token                                            |
+| `my_slack_channel_id`                                                       | Slack channel ID                                           |
+| `opentofu_cloudflare_github_api_token`                                      | Cloudflare API token for OpenTofu cloudflare-github module |
+| `quay_container_registry_password`                                          | Quay container registry password                           |
+| `quay_container_registry_user`                                              | Quay container registry username                           |
+| `ruzicka_sbx01_aws_role_to_assume`                                          | AWS role ARN to assume for ruzicka-sbx01 account           |
+| `supabase_access_token`                                                     | Supabase access token                                      |
+| `uptimerobot_api_key`                                                       | UptimeRobot API key                                        |
+| `wifi_password`                                                             | WiFi password for Raspberry Pi configuration               |
+| `wifi_ssid`                                                                 | WiFi SSID for Raspberry Pi configuration                   |
+| `wiz_client_id`                                                             | Wiz client ID                                              |
+| `wiz_client_secret`                                                         | Wiz client secret                                          |
 
 ### Outputs
 
-| Name                                                  | Sensitive |
-|-------------------------------------------------------|-----------|
-| `cloudflare_account_token_opentofu_cloudflare_github` | yes       |
-| `supabase_container_image_scans_apikeys`              | yes       |
-| `supabase_container_image_scans_endpoint`             | no        |
-| `supabase_container_image_scans_database_password`    | yes       |
-| `supabase_container_image_scans_env_yaml`             | yes       |
+| Name                                               | Sensitive |
+|----------------------------------------------------|-----------|
+| `supabase_container_image_scans_apikeys`           | yes       |
+| `supabase_container_image_scans_endpoint`          | no        |
+| `supabase_container_image_scans_database_password` | yes       |
+| `supabase_container_image_scans_env_yaml`          | yes       |
 
 ## Managed Resources
 
 ### Cloudflare DNS Zones
 
-Each zone has DNSSEC enabled, minimum TLS 1.3 enforced, Zstandard
-compression (with Brotli and Gzip fallbacks), and cache rules for static
-file extensions.
+Each zone has DNSSEC enabled, minimum TLS 1.3 enforced, Zstandard compression
+(with Brotli and Gzip fallbacks), and cache rules for static file extensions.
 
 | Zone          | Email Provider           | Features                                                                             |
 |---------------|--------------------------|--------------------------------------------------------------------------------------|
@@ -86,8 +113,7 @@ file extensions.
 
 ### Cloudflare Zero Trust
 
-Two tunnels (`gate`, `raspi`) hosting 14 applications on the `xvx.cz`
-domain:
+Two tunnels (`gate`, `raspi`) hosting 14 applications on the `xvx.cz` domain:
 
 | Tunnel  | Application       | Service                  | Tags                      |
 |---------|-------------------|--------------------------|---------------------------|
@@ -116,29 +142,27 @@ Access policies:
 
 | Token Name                                          | Permissions                     |
 |-----------------------------------------------------|---------------------------------|
-| `opentofu-cloudflare-github`                        | 11 account + 6 zone permissions |
+| `opentofu-cloudflare-github`                        | 10 account + 6 zone permissions |
 | `cloudflare-account-token-pages-xvx-cz`             | Pages Write                     |
 | `cloudflare-account-token-pages-petr-ruzicka-dev`   | Pages Write                     |
 | `cloudflare-account-token-pages-ruzickap-github-io` | Pages Write                     |
 
 Main token account-scoped permissions: Access (Apps and Policies,
-Organizations/Identity Providers/Groups, Service Tokens), Account API
-Tokens, Account Settings, Cloudflare Tunnel, Email Routing Addresses,
-Pages, Workers R2 Storage, Zero Trust.
+Organizations/Identity Providers/Groups, Service Tokens), Account API Tokens,
+Account Settings, Cloudflare Tunnel, Email Routing Addresses, Pages, Zero Trust.
 
-Main token zone-scoped permissions: Cache Settings, DNS, Dynamic URL
-Redirects, Response Compression, Zone Settings, Zone.
+Main token zone-scoped permissions: Cache Settings, DNS, Dynamic URL Redirects,
+Response Compression, Zone Settings, Zone.
 
 ### Cloudflare Notification Policies
 
 | Alert                               | Type                           |
 |-------------------------------------|--------------------------------|
-| Abuse Report Alert                  | `abuse_report_alert`           |
+| Cloudflare Abuse Report Alert       | `abuse_report_alert`           |
 | Expiring Access Service Token Alert | `expiring_service_token_alert` |
 | Passive Origin Monitoring           | `real_origin_monitoring`       |
 | Web Analytics Metrics Update        | `web_analytics_metrics_update` |
 | Incident Alert                      | `incident_alert` (critical)    |
-| Usage Based Billing (R2 > 100 MB)   | `billing_usage_alert`          |
 | Tunnel Health Alert                 | `tunnel_health_event`          |
 
 ### Cloudflare Pages Projects
@@ -158,7 +182,7 @@ Redirects, Response Compression, Zone Settings, Zone.
 
 ### GitHub Repositories
 
-27 repositories managed with consistent settings:
+26 repositories managed with consistent settings:
 
 - Squash/rebase merge only (merge commits disabled)
 - Auto-delete head branches on merge
@@ -168,8 +192,8 @@ Redirects, Response Compression, Zone Settings, Zone.
 - Branch protection rulesets on default branch (public repos): 2 required
   reviews, code owner review, linear history, status checks
 - Renovate bot bypass for direct update branches
-- Default Actions secrets applied to all repositories (Renovate app
-  credentials, Slack bot token)
+- Default Actions secrets applied to all repositories (Renovate app credentials,
+  Slack bot token and channel ID)
 
 ### UptimeRobot
 
@@ -186,20 +210,33 @@ Public status page: `stats.xvx.cz`
 - **Project**: `container-image-scans` (us-east-1)
 - Random 16-character database password
 
+### AWS
+
+GitHub Actions secrets are read from AWS SSM Parameter Store at
+`/github/<repo>/actions-secrets/<secret>` (per-repo) and
+`/github/shared/actions-secrets/<secret>` (shared defaults).
+
+The AWS provider uses the `my-aws` profile from the standard
+`~/.aws/credentials` and `~/.aws/config` files (the `AWS_PROFILE` env var is
+set in `mise.toml`), provisioned by the [`opentofu/aws`](../aws/) module.
+
+The `aws-cli` IAM user is managed in the separate [`opentofu/aws`](../aws/) module.
+
 ## Prerequisites
 
-### Create Cloudflare R2 Bucket (Manual Step)
+### Apply the `opentofu/aws` Module First
 
-This bucket is used to store OpenTofu state files.
+The AWS provider in this module uses the `my-aws` profile from the standard
+`~/.aws/credentials` file (the `AWS_PROFILE` env var is set in `mise.toml`).
+The profile is created by the [`opentofu/aws`](../aws/) module. You **must**
+run `tofu apply` there before initializing this module, otherwise the AWS
+provider fails with:
 
-1. Navigate to **R2 Object Storage** -> **Create bucket**
+```text
+Error: failed to get shared config profile, my-aws
+```
 
-2. Configure the bucket:
-
-   - **Bucket name**:
-     `ruzickap-my-git-projects-opentofu-state-files`
-
-3. Click **Create bucket**
+See the [`opentofu/aws` README](../aws/README.md) for bootstrap instructions.
 
 ### Create Cloudflare Account API Token
 
@@ -211,33 +248,26 @@ This bucket is used to store OpenTofu state files.
    |------------------------------------------------------------------------------------|
    | `opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)` |
 
-   | Permission | Access               | Purpose |
-   |------------|----------------------|---------|
-   | `Account`  | `Account Settings`   | `Edit`  |
-   | `Account`  | `API Tokens`         | `Edit`  |
-   | `Account`  | `Workers R2 Storage` | `Edit`  |
+   | Permission | Access             | Purpose |
+   |------------|--------------------|---------|
+   | `Account`  | `Account Settings` | `Edit`  |
+   | `Account`  | `API Tokens`       | `Edit`  |
 
 3. Click **Continue to summary** to review and create the token
 
 ## Run OpenTofu
 
-This creates scoped API tokens with permissions for the main `cloudflare`
-OpenTofu configuration and stores credentials as GitHub Actions secrets.
+Provision all managed resources (Cloudflare zones, DNS, Zero Trust, API
+tokens, GitHub repositories with Actions secrets, Supabase, UptimeRobot).
+All provider credentials are read from AWS SSM Parameter Store at
+plan/apply time -- only the encryption passphrase must be exported.
 
 ```bash
-# Use the API token from "Create Cloudflare Account API Token" section
-export OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN="opentofu-cloudflare-github-api-token-here"
-# Use the GitHub PAT
-export TF_VAR_gh_token_opentofu_cloudflare_github="your-github-pat-here"
+# The only TF_VAR_* variable required
+export TF_VAR_opentofu_encryption_passphrase="..."
 
-# Generate R2 S3-compatible credentials from the Account API token
-# https://developers.cloudflare.com/r2/api/tokens/#get-s3-api-credentials-from-an-api-token
-ACCOUNT_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r '.result[0].id')
-export OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME="opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)"
-AWS_ACCESS_KEY_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/tokens" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r --arg name "${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME}" '.result[] | select(.name == $name) | .id')
-AWS_SECRET_ACCESS_KEY=$(echo -n "${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | sha256sum | cut -d' ' -f1)
-AWS_S3_ENDPOINT="https://${ACCOUNT_ID}.r2.cloudflarestorage.com"
-export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_S3_ENDPOINT
+# Ensure the my-aws profile exists (created by opentofu/aws)
+export AWS_PROFILE=my-aws
 
 tofu init
 tofu apply
@@ -245,31 +275,17 @@ tofu apply
 
 ## Get OpenTofu Outputs
 
-After applying -- retrieve credentials:
+After applying - retrieve outputs:
 
 ```bash
-# Get OpenTofu Cloudflare API token and R2 credentials
-tofu output cloudflare_account_token_opentofu_cloudflare_github
-# Format credentials as YAML (for copying to .env.yaml)
-tofu output -json cloudflare_account_token_opentofu_cloudflare_github | jq -r 'to_entries[] | "\(.key): \(.value)"'
-```
+# List all outputs
+tofu output
 
-The output contains the following environment variables:
+# Get Supabase endpoint
+tofu output supabase_container_image_scans_endpoint
 
-| Variable                               | Description                        |
-|----------------------------------------|------------------------------------|
-| `CLOUDFLARE_R2_ACCESS_KEY_ID`          | R2 S3-compatible Access Key ID     |
-| `CLOUDFLARE_R2_ENDPOINT_URL_S3`        | R2 S3-compatible endpoint URL      |
-| `CLOUDFLARE_R2_SECRET_ACCESS_KEY`      | R2 S3-compatible Secret Access Key |
-| `OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN` | Cloudflare API token for OpenTofu  |
-
-## Update `.env.yaml`
-
-Export the credentials to `.env.yaml`:
-
-```bash
-tofu output -json cloudflare_account_token_opentofu_cloudflare_github | jq -r 'to_entries[] | "\(.key): \(.value)"'
-sops edit .env.yaml
+# Get sensitive outputs (e.g., Supabase API keys)
+tofu output -json supabase_container_image_scans_apikeys | jq -r 'to_entries[] | "\(.key): \(.value)"'
 ```
 
 ## Notes
@@ -291,8 +307,8 @@ curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/iam/permiss
 
 ### Container Testing (Clean Environment)
 
-Test the OpenTofu configuration in an isolated container to ensure it
-works from scratch without local dependencies:
+Test the OpenTofu configuration in an isolated container to ensure it works from
+scratch without local dependencies:
 
 ```console
 docker run -it --rm -v "${PWD}:/mnt" alpine
@@ -300,19 +316,10 @@ docker run -it --rm -v "${PWD}:/mnt" alpine
 cd /mnt || exit
 apk add --no-cache curl jq opentofu
 
-export TF_VAR_opentofu_encryption_passphrase="p...E"
-export SOPS_AGE_KEY="AGE-SECRET-KEY..."
-export OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN="opentofu-cloudflare-github-api-token-here"
-export TF_VAR_gh_token_opentofu_cloudflare_github="gh...m"
+export TF_VAR_opentofu_encryption_passphrase="..."
 
-# Generate R2 S3-compatible credentials from the Account API token
-# https://developers.cloudflare.com/r2/api/tokens/#get-s3-api-credentials-from-an-api-token
-ACCOUNT_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r '.result[0].id')
-export OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME="opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)"
-AWS_ACCESS_KEY_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/tokens" -H "Authorization: Bearer ${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | jq -r --arg name "${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN_NAME}" '.result[] | select(.name == $name) | .id')
-AWS_SECRET_ACCESS_KEY=$(echo -n "${OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN}" | sha256sum | cut -d' ' -f1)
-AWS_S3_ENDPOINT="https://${ACCOUNT_ID}.r2.cloudflarestorage.com"
-export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_S3_ENDPOINT
+# Ensure the my-aws profile exists (created by opentofu/aws)
+export AWS_PROFILE=my-aws
 
 tofu init
 tofu plan
@@ -329,8 +336,8 @@ apk add --no-cache bash mise
 echo 'eval "$(/usr/bin/mise activate bash)"' >> ~/.bashrc
 bash
 
-mise trust --yes && export SOPS_AGE_KEY="AGE-SECRET-KEY-1...X" # Needed by Mise + Tofu + SOPS
-export TF_VAR_gh_token_opentofu_cloudflare_github="gh...m"
+mise trust --yes
+export TF_VAR_opentofu_encryption_passphrase="..."
 
 mise up
 tofu init

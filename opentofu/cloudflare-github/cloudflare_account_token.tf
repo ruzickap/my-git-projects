@@ -39,7 +39,6 @@ locals {
     "Cloudflare Tunnel Write",       # manage tunnels via cloudflare_zero_trust_tunnel_cloudflared
     "Email Routing Addresses Write", # manage email routing via cloudflare_email_routing_address
     "Pages Write",                   # deploy sites via cloudflare_pages_project
-    "Workers R2 Storage Write",      # access R2 buckets for OpenTofu state storage
     "Zero Trust Write",              # manage Zero Trust settings via cloudflare_zero_trust_*
     # keep-sorted end
   ]
@@ -93,17 +92,6 @@ resource "cloudflare_account_token" "opentofu_cloudflare_github" {
       ]
     },
   ]
-}
-
-output "cloudflare_account_token_opentofu_cloudflare_github" {
-  description = "opentofu_cloudflare_github API Token details"
-  sensitive   = true
-  value = {
-    OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN = data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"]
-    CLOUDFLARE_R2_ACCESS_KEY_ID          = cloudflare_account_token.opentofu_cloudflare_github.id
-    CLOUDFLARE_R2_SECRET_ACCESS_KEY      = sha256(data.sops_file.env_yaml.data["OPENTOFU_CLOUDFLARE_GITHUB_API_TOKEN"])
-    CLOUDFLARE_R2_ENDPOINT_URL_S3        = "https://${local.cloudflare_account_id}.r2.cloudflarestorage.com"
-  }
 }
 
 ################################################################################

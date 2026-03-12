@@ -3,8 +3,8 @@
 [![tofu-cloudflare-github](https://github.com/ruzickap/my-git-projects/actions/workflows/tofu-cloudflare-github.yml/badge.svg)](https://github.com/ruzickap/my-git-projects/actions/workflows/tofu-cloudflare-github.yml)
 [![mega-linter](https://github.com/ruzickap/my-git-projects/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/ruzickap/my-git-projects/actions/workflows/mega-linter.yml)
 
-This README is a personal collection of useful Git and GitHub commands
-and workflows.
+This README is a personal collection of useful Git and GitHub commands and
+workflows.
 
 ## Table of Contents
 
@@ -123,9 +123,9 @@ git mergetool
 git rebase --continue
 ```
 
-The second method is more explicit, ensuring `main` is up-to-date first,
-then checking out the feature branch and rebasing it. It also includes steps
-for resolving conflicts manually if they occur during the rebase.
+The second method is more explicit, ensuring `main` is up-to-date first, then
+checking out the feature branch and rebasing it. It also includes steps for
+resolving conflicts manually if they occur during the rebase.
 
 ```bash
 # Switch to the main branch
@@ -153,8 +153,8 @@ git push -f ruzickap feature/improve_documentation
 ### Squash 2 last commits
 
 This command sequence is used to combine the last two commits into a single
-commit. `HEAD~2` refers to the last two commits from the current HEAD.
-The `-i` flag starts an interactive rebase session.
+commit. `HEAD~2` refers to the last two commits from the current HEAD. The
+`-i` flag starts an interactive rebase session.
 
 ```bash
 git add some_file
@@ -173,11 +173,11 @@ To change the message of an older commit:
    to amend.
 2. Start an interactive rebase. The `^` on the commit hash means you're
    starting the rebase from the parent of that commit, allowing you to edit
-   the commit itself. Change `pick` to `reword` (or `r`) for the commit
-   you want to change, then save and exit.
+   the commit itself. Change `pick` to `reword` (or `r`) for the commit you
+   want to change, then save and exit.
 
-You'll be prompted to enter the new commit message.
-Since this rewrites history, a force push (`git push --force`) is required.
+You'll be prompted to enter the new commit message. Since this rewrites history,
+a force push (`git push --force`) is required.
 
 ```bash
 git log
@@ -203,8 +203,8 @@ git push --force
 To rename a Git tag (e.g., from "old" to "new"):
 
 1. Create a new annotated tag `new` pointing to the same commit as `old`.
-   `old^{}` dereferences the old tag to the commit it points to, ensuring
-   the new tag points to the commit itself, not the old tag object.
+   `old^{}` dereferences the old tag to the commit it points to, ensuring the
+   new tag points to the commit itself, not the old tag object.
 2. Delete the old local tag `old`.
 3. Delete the old remote tag `old`.
 4. Push the new tag `new` to the remote.
@@ -233,9 +233,9 @@ git tag -d my-tag-name
 
 ### Update git submodules
 
-This command initializes any uninitialized submodules and updates existing
-ones to the commit specified in the parent repository. The `--recursive`
-flag ensures that any nested submodules are also initialized and updated.
+This command initializes any uninitialized submodules and updates existing ones
+to the commit specified in the parent repository. The `--recursive` flag
+ensures that any nested submodules are also initialized and updated.
 
 ```bash
 git submodule update --init --recursive
@@ -245,11 +245,11 @@ git submodule update --init --recursive
 
 ### Update GitHub Action with tag @1
 
-This section deals with managing tags, often for versioning GitHub Actions
-or releases.
+This section deals with managing tags, often for versioning GitHub Actions or
+releases.
 
-To list existing tags formatted with their subject (often the release title
-or version) in a table:
+To list existing tags formatted with their subject (often the release title or
+version) in a table:
 
 ```bash
 git for-each-ref --format="%(refname:short) | %(subject)" refs/tags | column -t
@@ -262,8 +262,8 @@ v1      |  Release  v1.0.0
 v1.0.0  |  Release  1.0.0
 ```
 
-Delete the `v1` tag (e.g., if `v1` was a moving tag and you want to
-replace it with a specific version like `v1.0.0`):
+Delete the `v1` tag (e.g., if `v1` was a moving tag and you want to replace it
+with a specific version like `v1.0.0`):
 
 ```bash
 git push --delete origin v1
@@ -303,12 +303,12 @@ git pull -r
 
 ### List all GitHub actions in my repos
 
-This command searches for all GitHub Actions workflow files (`*.yml`) within
-a specified directory structure (`~/git/` up to 4 levels deep). It then uses
-`awk` to extract the `uses:` lines (which specify the action being used,
-e.g., `actions/checkout@v2`) from these files, sorts them, and shows unique
-entries. This is useful for getting an overview of common actions used across
-your repositories.
+This command searches for all GitHub Actions workflow files (`*.yml`) within a
+specified directory structure (`~/git/` up to 4 levels deep). It then uses
+`awk` to extract the `uses:` lines (which specify the action being used, e.g.,
+`actions/checkout@v2`) from these files, sorts them, and shows unique entries.
+This is useful for getting an overview of common actions used across your
+repositories.
 
 ```bash
 find ~/git/ -maxdepth 4 -path "*/.github/workflows/*.yml" -type f -exec awk -F' uses: ' '/^\s*uses: \w/ || /^\s*- uses: \w/ { print "      - uses: " $2 }' {} \; | sort | uniq

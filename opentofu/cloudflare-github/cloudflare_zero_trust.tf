@@ -112,8 +112,8 @@ resource "cloudflare_zero_trust_access_identity_provider" "google_oauth" {
   type       = "google"
   account_id = local.cloudflare_account_id
   config = {
-    client_id     = data.sops_file.env_yaml.data["cloudflare_zero_trust_access_identity_provider_google_oauth_client_id"]
-    client_secret = data.sops_file.env_yaml.data["cloudflare_zero_trust_access_identity_provider_google_oauth_client_secret"]
+    client_id     = data.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_cloudflare_zero_trust_access_identity_provider_google_oauth_client_id.value
+    client_secret = data.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_cloudflare_zero_trust_access_identity_provider_google_oauth_client_secret.value
   }
 }
 

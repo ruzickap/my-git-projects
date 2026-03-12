@@ -1,6 +1,6 @@
 [tools]
-opentofu = "1.11.5"
 fnox = "latest"
+opentofu = "1.11.5"
 
 [plugins]
 fnox-env = "https://github.com/jdx/mise-env-fnox"
