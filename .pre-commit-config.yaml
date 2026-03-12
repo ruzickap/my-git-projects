@@ -61,7 +61,7 @@ repos:
           - --args=--version "~> 1.11"
 
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.1.36
+    rev: v0.1.46
     hooks:
       - id: rumdl-fmt
 
@@ -123,7 +123,7 @@ repos:
           )$
 
   - repo: https://github.com/google/keep-sorted
-    rev: v0.7.1
+    rev: v0.8.0
     hooks:
       - id: keep-sorted
 
@@ -144,7 +144,7 @@ repos:
       - id: check-author-email
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
+    rev: v2.4.2
     hooks:
       - id: codespell
 
