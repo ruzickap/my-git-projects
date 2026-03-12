@@ -37,17 +37,20 @@ locals {
   # keep-sorted end
 }
 
+# Access to RUZICKA_SBX01 AWS Account (/github/shared/actions-secrets/RUZICKA_SBX01_AWS_ROLE_TO_ASSUME)
 variable "aws_default_access_key_id" {
   description = "Access key ID for the [default] AWS CLI profile (different account, not managed by this module)"
   type        = string
   sensitive   = true
 }
 
+# Access to RUZICKA_SBX01 AWS Account (/github/shared/actions-secrets/RUZICKA_SBX01_AWS_ROLE_TO_ASSUME) (arn:aws:iam::7xxxxx7:role/GitHubOidcFederatedRole)
 variable "aws_default_role_arn" {
   description = "Role ARN for the [default] AWS CLI config profile (different account, not managed by this module)"
   type        = string
 }
 
+# Access to RUZICKA_SBX01 AWS Account (/github/shared/actions-secrets/RUZICKA_SBX01_AWS_ROLE_TO_ASSUME)
 variable "aws_default_secret_access_key" {
   description = "Secret access key for the [default] AWS CLI profile (different account, not managed by this module)"
   type        = string
