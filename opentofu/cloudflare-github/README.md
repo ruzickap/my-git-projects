@@ -33,16 +33,17 @@ Secrets are passed via `TF_VAR_*` environment variables.
 
 ### Secrets Management
 
-All secrets are passed via `TF_VAR_*` environment variables -- there is no
-encrypted secrets file. The single variable defined in `variables.tf`
-(`opentofu_encryption_passphrase`) and all provider credentials are set as
-environment variables prefixed with `TF_VAR_` before running `tofu plan` or
-`tofu apply`.
+Only one OpenTofu variable (`opentofu_encryption_passphrase`) is set via
+`TF_VAR_*`. All other secrets are stored in AWS SSM Parameter Store and read
+at plan/apply time through `data "aws_ssm_parameter"` data sources in
+`aws.tf`.
 
-- **Local development** -- export `TF_VAR_*` variables in your shell (or use
-  a secrets manager like 1Password, `pass`, etc.)
-- **GitHub Actions CI** -- the workflow sets `TF_VAR_*` environment variables
-  from repository secrets
+- **Local development** -- ensure the `my-aws` AWS CLI profile has permission
+  to read SSM parameters, and export
+  `TF_VAR_opentofu_encryption_passphrase`
+- **GitHub Actions CI** -- the workflow assumes an AWS role via OIDC (so
+  OpenTofu reads SSM directly) and sets
+  `TF_VAR_opentofu_encryption_passphrase` from a repository secret
 
 ### Variables
 
@@ -54,14 +55,13 @@ Only one OpenTofu variable is defined in `variables.tf`:
 
 Set it via `TF_VAR_opentofu_encryption_passphrase`.
 
-### Environment Variables (`TF_VAR_*`)
+### AWS SSM Parameters
 
-The remaining secrets are **not** OpenTofu variables -- they are stored in AWS
-SSM Parameter Store and read at plan/apply time via `data "aws_ssm_parameter"`
-data sources. For local development, export them as `TF_VAR_*` environment
-variables in your shell before running `tofu plan` or `tofu apply`. In GitHub
-Actions CI, the workflow assumes an AWS role via OIDC, so OpenTofu reads the
-secrets directly from SSM.
+The remaining secrets are **not** OpenTofu variables -- they are stored in
+AWS SSM Parameter Store and read at plan/apply time via
+`data "aws_ssm_parameter"` data sources in `aws.tf`. No `TF_VAR_*` export
+is needed for these; the AWS provider reads them directly from SSM using
+the `my-aws` profile (local) or OIDC role (CI).
 
 | Name                                                                        | Description                                                |
 |-----------------------------------------------------------------------------|------------------------------------------------------------|
@@ -257,35 +257,14 @@ See the [`opentofu/aws` README](../aws/README.md) for bootstrap instructions.
 
 ## Run OpenTofu
 
-This creates scoped API tokens with permissions for the main `cloudflare`
-OpenTofu configuration and stores credentials as GitHub Actions secrets.
+Provision all managed resources (Cloudflare zones, DNS, Zero Trust, API
+tokens, GitHub repositories with Actions secrets, Supabase, UptimeRobot).
+All provider credentials are read from AWS SSM Parameter Store at
+plan/apply time -- only the encryption passphrase must be exported.
 
 ```bash
-# Set all TF_VAR_* secrets (see Environment Variables table above)
+# The only TF_VAR_* variable required
 export TF_VAR_opentofu_encryption_passphrase="..."
-export TF_VAR_opentofu_cloudflare_github_api_token="..."
-export TF_VAR_gh_token_opentofu_cloudflare_github="..."
-export TF_VAR_supabase_access_token="..."
-export TF_VAR_uptimerobot_api_key="..."
-export TF_VAR_cloudflare_zero_trust_access_identity_provider_google_oauth_client_id="..."
-export TF_VAR_cloudflare_zero_trust_access_identity_provider_google_oauth_client_secret="..."
-export TF_VAR_my_aws_aws_role_to_assume="..."
-export TF_VAR_my_renovate_github_app_id="..."
-export TF_VAR_my_renovate_github_private_key="..."
-export TF_VAR_my_slack_bot_token="..."
-export TF_VAR_my_slack_channel_id="..."
-export TF_VAR_wiz_client_id="..."
-export TF_VAR_wiz_client_secret="..."
-export TF_VAR_wifi_password="..."
-export TF_VAR_wifi_ssid="..."
-export TF_VAR_dockerhub_container_registry_password="..."
-export TF_VAR_dockerhub_container_registry_user="..."
-export TF_VAR_quay_container_registry_password="..."
-export TF_VAR_quay_container_registry_user="..."
-export TF_VAR_ruzicka_sbx01_aws_role_to_assume="..."
-export TF_VAR_google_client_id="..."
-export TF_VAR_google_client_secret="..."
-export TF_VAR_my_atlassian_personal_token="..."
 
 # Ensure the my-aws profile exists (created by opentofu/aws)
 export AWS_PROFILE=my-aws
@@ -338,9 +317,6 @@ cd /mnt || exit
 apk add --no-cache curl jq opentofu
 
 export TF_VAR_opentofu_encryption_passphrase="..."
-export TF_VAR_opentofu_cloudflare_github_api_token="..."
-export TF_VAR_gh_token_opentofu_cloudflare_github="..."
-# ... set remaining TF_VAR_* variables (see Environment Variables table above)
 
 # Ensure the my-aws profile exists (created by opentofu/aws)
 export AWS_PROFILE=my-aws
@@ -362,9 +338,6 @@ bash
 
 mise trust --yes
 export TF_VAR_opentofu_encryption_passphrase="..."
-export TF_VAR_opentofu_cloudflare_github_api_token="..."
-export TF_VAR_gh_token_opentofu_cloudflare_github="..."
-# ... set remaining TF_VAR_* variables (see Environment Variables table above)
 
 mise up
 tofu init
