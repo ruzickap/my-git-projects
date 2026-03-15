@@ -61,7 +61,7 @@ repos:
           - --args=--version "~> 1.11"
 
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.1.46
+    rev: v0.1.51
     hooks:
       - id: rumdl-fmt
 
@@ -90,7 +90,7 @@ repos:
       - id: fix-smartquotes
 
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.30.0
+    rev: v8.30.1
     hooks:
       - id: gitleaks
 

@@ -50,7 +50,7 @@ jobs:
       repos: ${{ steps.get-repos.outputs.repos }}
       flavors: ${{ steps.get-repos.outputs.flavors }}
     steps:
-      - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+      - uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
         id: app-token
         with:
           app-id: ${{ secrets.MY_RENOVATE_GITHUB_APP_ID }}
@@ -104,7 +104,7 @@ jobs:
         repo: ${{ fromJson(needs.fetch-repos.outputs.repos) }}
         flavor: ${{ fromJson(needs.fetch-repos.outputs.flavors) }}
     steps:
-      - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+      - uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
         id: app-token
         with:
           app-id: ${{ secrets.MY_RENOVATE_GITHUB_APP_ID }}
