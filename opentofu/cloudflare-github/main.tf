@@ -56,6 +56,10 @@ terraform {
 }
 
 # keep-sorted start block=yes newline_separated=yes
+data "aws_caller_identity" "current" {}
+
+data "aws_region" "current" {}
+
 data "cloudflare_accounts" "all" {
   max_items = 1
 }
@@ -79,6 +83,8 @@ locals {
   opentofu_cloudflare_github_api_token_id = data.restapi_object.cloudflare_tokens.id
   # Name of the Cloudflare API token to manage
   opentofu_cloudflare_github_api_token_name = "opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)"
+  # ARN prefix for SSM parameters — used by ephemeral resources which require ARN instead of name (https://github.com/hashicorp/terraform-provider-aws/issues/40623)
+  ssm_parameter_arn_prefix = "arn:aws:ssm:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:parameter"
   # keep-sorted end
 }
 
@@ -93,18 +99,18 @@ provider "aws" {
 }
 
 provider "cloudflare" {
-  api_token = data.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_opentofu_cloudflare_github_api_token.value
+  api_token = ephemeral.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_opentofu_cloudflare_github_api_token.value
 }
 
 provider "github" {
-  token = data.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_gh_token_opentofu_cloudflare_github.value
+  token = ephemeral.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_gh_token_opentofu_cloudflare_github.value
 }
 
 # REST API provider for fetching Cloudflare token ID by name
 provider "restapi" {
   uri = "https://api.cloudflare.com/client/v4"
   headers = {
-    Authorization = "Bearer ${data.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_opentofu_cloudflare_github_api_token.value}"
+    Authorization = "Bearer ${ephemeral.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_opentofu_cloudflare_github_api_token.value}"
     Content-Type  = "application/json"
   }
   write_returns_object = true
@@ -115,6 +121,6 @@ provider "supabase" {
 }
 
 provider "uptimerobot" {
-  api_key = data.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_uptimerobot_api_key.value
+  api_key = ephemeral.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_uptimerobot_api_key.value
 }
 # keep-sorted end
