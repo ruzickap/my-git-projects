@@ -149,9 +149,6 @@ case "${REPOSITORY}" in
     ;;
 esac
 
-# Remove after first run
-opencode run "Make sure the ./AGENTS.md file contain the message regarding wrap lines at 80 characters for markdown files and then quit"
-
 # Handle AGENTS.md: copy if missing, reinitialize if identical to default
 if [[ ! -f "AGENTS.md" ]]; then
   log_info "Copying AGENTS.md from defaults and reinitializing with opencode"

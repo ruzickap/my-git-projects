@@ -69,21 +69,6 @@ data "aws_ssm_parameter" "github_ruzickap_my_git_projects_actions_secrets_cloudf
   with_decryption = true
 }
 
-data "aws_ssm_parameter" "github_ruzickap_my_git_projects_actions_secrets_gh_token_opentofu_cloudflare_github" {
-  name            = "/github/ruzickap/my-git-projects/actions-secrets/gh_token_opentofu_cloudflare_github"
-  with_decryption = true
-}
-
-data "aws_ssm_parameter" "github_ruzickap_my_git_projects_actions_secrets_opentofu_cloudflare_github_api_token" {
-  name            = "/github/ruzickap/my-git-projects/actions-secrets/opentofu_cloudflare_github_api_token"
-  with_decryption = true
-}
-
-data "aws_ssm_parameter" "github_ruzickap_my_git_projects_actions_secrets_uptimerobot_api_key" {
-  name            = "/github/ruzickap/my-git-projects/actions-secrets/uptimerobot_api_key"
-  with_decryption = true
-}
-
 data "aws_ssm_parameter" "github_ruzickap_pre_commit_wizcli_actions_secrets_WIZ_CLIENT_ID" {
   name            = "/github/ruzickap/pre-commit-wizcli/actions-secrets/WIZ_CLIENT_ID"
   with_decryption = true
@@ -141,6 +126,21 @@ data "aws_ssm_parameter" "github_shared_actions_secrets_WIFI_PASSWORD" {
 
 data "aws_ssm_parameter" "github_shared_actions_secrets_WIFI_SSID" {
   name            = "/github/shared/actions-secrets/WIFI_SSID"
+  with_decryption = true
+}
+
+ephemeral "aws_ssm_parameter" "github_ruzickap_my_git_projects_actions_secrets_gh_token_opentofu_cloudflare_github" {
+  arn             = "${local.ssm_parameter_arn_prefix}/github/ruzickap/my-git-projects/actions-secrets/gh_token_opentofu_cloudflare_github"
+  with_decryption = true
+}
+
+ephemeral "aws_ssm_parameter" "github_ruzickap_my_git_projects_actions_secrets_opentofu_cloudflare_github_api_token" {
+  arn             = "${local.ssm_parameter_arn_prefix}/github/ruzickap/my-git-projects/actions-secrets/opentofu_cloudflare_github_api_token"
+  with_decryption = true
+}
+
+ephemeral "aws_ssm_parameter" "github_ruzickap_my_git_projects_actions_secrets_uptimerobot_api_key" {
+  arn             = "${local.ssm_parameter_arn_prefix}/github/ruzickap/my-git-projects/actions-secrets/uptimerobot_api_key"
   with_decryption = true
 }
 # keep-sorted end
