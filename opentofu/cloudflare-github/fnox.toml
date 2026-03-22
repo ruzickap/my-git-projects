@@ -2,4 +2,4 @@
 ps = { type = "aws-ps", profile = "my-aws", region = "eu-central-1" }
 
 [secrets]
-TF_VAR_opentofu_encryption_passphrase = { provider = "ps", value = "/github/ruzickap/my-git-projects/actions-secrets/TF_VAR_opentofu_encryption_passphrase" }
+TF_VAR_opentofu_encryption_passphrase = { provider = "ps", value = "/github/ruzickap/my-git-projects/actions-secrets/TF_VAR_opentofu_encryption_passphrase", if_missing = "error" }
