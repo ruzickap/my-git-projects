@@ -325,6 +325,13 @@ resource "github_workflow_repository_permissions" "this" {
   repository                       = github_repository.this[each.key].name
 }
 
+resource "github_actions_repository_permissions" "this" {
+  for_each             = local.all_github_repositories
+  allowed_actions      = "all"
+  repository           = github_repository.this[each.key].name
+  sha_pinning_required = true
+}
+
 resource "github_actions_secret" "this" {
   # checkov:skip=CKV_GIT_4:GitHub encrypts secrets automatically when stored via plaintext_value
   for_each = {
