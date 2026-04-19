@@ -61,7 +61,7 @@ repos:
           - --args=--version "~> 1.11"
 
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.1.66
+    rev: v0.1.74
     hooks:
       - id: rumdl-fmt
 
@@ -95,7 +95,7 @@ repos:
       - id: gitleaks
 
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.13.0-1
+    rev: v3.13.1-1
     hooks:
       - id: shfmt
         args:
@@ -128,7 +128,7 @@ repos:
       - id: keep-sorted
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.13.9
+    rev: v4.13.10
     hooks:
       - id: commitizen
         stages: [commit-msg]
