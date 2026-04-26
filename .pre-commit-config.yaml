@@ -61,7 +61,7 @@ repos:
           - --args=--version "~> 1.11"
 
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.1.74
+    rev: v0.1.82
     hooks:
       - id: rumdl-fmt
 
@@ -136,7 +136,7 @@ repos:
         stages: [pre-push]
 
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.5.0
+    rev: v2.6.0
     hooks:
       - id: check-message
       - id: check-branch

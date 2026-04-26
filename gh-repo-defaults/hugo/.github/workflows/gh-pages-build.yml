@@ -13,12 +13,12 @@ on:
         default: false
   push:
     paths:
-      - content
-      - data
+      - content/**
+      - data/**
       - hugo.toml
-      - layouts
-      - static
-      - themes
+      - layouts/**
+      - static/**
+      - themes/**
 
 permissions: read-all
 

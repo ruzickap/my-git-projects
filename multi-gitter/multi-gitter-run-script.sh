@@ -153,7 +153,7 @@ esac
 if [[ ! -f "AGENTS.md" ]]; then
   log_info "Copying AGENTS.md from defaults and reinitializing with opencode"
   cp "${GH_REPO_DEFAULTS_BASE}/my-defaults/AGENTS.md" AGENTS.md
-  opencode run --model="github-copilot/claude-opus-4.6" --command "init"
+  opencode run --model="github-copilot/claude-opus-4.7" --command "init"
 fi
 
 log_info "Completed processing ${REPOSITORY}"
