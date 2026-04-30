@@ -319,7 +319,7 @@ resource "github_actions_repository_permissions" "this" {
 }
 
 resource "github_actions_secret" "this" {
-  # checkov:skip=CKV_GIT_4:GitHub encrypts secrets automatically when stored via plaintext_value
+  # checkov:skip=CKV_GIT_4:GitHub encrypts secrets automatically when stored via value
   for_each = {
     for item in flatten([
       for repo_key, repo in local.all_github_repositories : [
@@ -333,9 +333,9 @@ resource "github_actions_secret" "this" {
       ]
     ]) : item.key => item
   }
-  repository      = each.value.repository
-  secret_name     = each.value.secret_name
-  plaintext_value = each.value.secret_value
+  repository  = each.value.repository
+  secret_name = each.value.secret_name
+  value       = each.value.secret_value
 }
 
 # Import existing GitHub Repositories
