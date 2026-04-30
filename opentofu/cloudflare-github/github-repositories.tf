@@ -43,11 +43,9 @@ locals {
       name        = "pre-commit-wizcli"
       description = "pre-commit hook for WizCLI that checks your code"
       topics      = ["pre-commit", "wizcli", "wiz"]
-      pages = [{
-        source = [{
-          branch = "gh-pages"
-        }]
-      }]
+      pages = {
+        branch = "gh-pages"
+      }
       secrets = {
         "WIZ_CLIENT_ID"     = data.aws_ssm_parameter.github_ruzickap_pre_commit_wizcli_actions_secrets_WIZ_CLIENT_ID.value
         "WIZ_CLIENT_SECRET" = data.aws_ssm_parameter.github_ruzickap_pre_commit_wizcli_actions_secrets_WIZ_CLIENT_SECRET.value
@@ -171,13 +169,10 @@ locals {
       name         = "petr.ruzicka.dev"
       description  = "Personal page"
       homepage_url = "https://petr.ruzicka.dev/"
-      pages = [{
-        cname    = "petr.ruzicka.dev"
-        html_url = "https://petr.ruzicka.dev/"
-        source = [{
-          branch = "gh-pages"
-        }]
-      }]
+      pages = {
+        cname  = "petr.ruzicka.dev"
+        branch = "gh-pages"
+      }
       topics = ["personal", "personal-website", "public", "web", "website"]
       secrets = {
         "CLOUDFLARE_ACCOUNT_ID" = local.cloudflare_account_id
@@ -194,12 +189,9 @@ locals {
       description     = "ruzickap.github.io - personal blog 🏠"
       has_discussions = true
       homepage_url    = "https://ruzickap.github.io/"
-      pages = [{
-        html_url = "https://ruzickap.github.io"
-        source = [{
-          branch = "gh-pages"
-        }]
-      }]
+      pages = {
+        branch = "gh-pages"
+      }
       topics = ["blog", "github", "github-actions", "jekyll", "markdown", "personal-website", "public", "web", "website"]
       secrets = {
         # keep-sorted start
@@ -217,13 +209,10 @@ locals {
       name         = "ruzickovabozena.xvx.cz"
       description  = "ruzickovabozena.xvx.cz"
       homepage_url = "https://ruzickovabozena.xvx.cz"
-      pages = [{
-        cname    = "ruzickovabozena.xvx.cz"
-        html_url = "https://ruzickovabozena.xvx.cz"
-        source = [{
-          branch = "gh-pages"
-        }]
-      }]
+      pages = {
+        cname  = "ruzickovabozena.xvx.cz"
+        branch = "gh-pages"
+      }
       topics = ["personal-site", "personal-website", "web", "website"]
     }
     "test_usb_stick_for_tv" = {
@@ -235,13 +224,10 @@ locals {
       name         = "xvx.cz"
       description  = "xvx.cz"
       homepage_url = "https://xvx.cz/"
-      pages = [{
-        cname    = "xvx.cz"
-        html_url = "https://xvx.cz"
-        source = [{
-          branch = "gh-pages"
-        }]
-      }]
+      pages = {
+        cname  = "xvx.cz"
+        branch = "gh-pages"
+      }
       topics = ["personal", "personal-website", "public", "web", "website", "xvx", "xvx-cz"]
       secrets = {
         "CLOUDFLARE_ACCOUNT_ID" = local.cloudflare_account_id
@@ -259,6 +245,7 @@ import {
   to       = github_repository.this[each.key]
 }
 
+# trivy:ignore:AVD-GIT-0003 vulnerability_alerts managed by github_repository_vulnerability_alerts resource
 resource "github_repository" "this" {
   #checkov:skip=CKV_GIT_1:Ensure GitHub repository is Private
   #checkov:skip=CKV2_GIT_1:Ensure each Repository has branch protection associated
@@ -284,23 +271,6 @@ resource "github_repository" "this" {
   has_projects    = false # disable GitHub Projects
   has_wiki        = false # disable wiki (prefer docs in repo)
 
-  # Security
-  vulnerability_alerts = true # enable Dependabot vulnerability alerts
-
-  dynamic "pages" {
-    for_each = try(each.value.pages, [])
-    content {
-      cname = try(pages.value.cname, null)
-      dynamic "source" {
-        for_each = try(pages.value.source, [])
-        content {
-          branch = source.value.branch
-          path   = try(source.value.path, null)
-        }
-      }
-    }
-  }
-
   dynamic "security_and_analysis" {
     for_each = try(each.value.visibility, "") != "private" ? [1] : []
     content {
@@ -315,6 +285,22 @@ resource "github_repository" "this" {
 
   lifecycle {
     prevent_destroy = true
+  }
+}
+
+resource "github_repository_vulnerability_alerts" "this" {
+  for_each   = local.all_github_repositories
+  repository = github_repository.this[each.key].name
+}
+
+resource "github_repository_pages" "this" {
+  for_each   = { for k, v in local.all_github_repositories : k => v if try(v.pages, null) != null }
+  repository = github_repository.this[each.key].name
+  build_type = "legacy"
+  cname      = try(each.value.pages.cname, null)
+
+  source {
+    branch = each.value.pages.branch
   }
 }
 
