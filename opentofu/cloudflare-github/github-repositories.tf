@@ -246,6 +246,7 @@ import {
 }
 
 resource "github_repository" "this" {
+  # trivy:ignore:AVD-GIT-0003 vulnerability_alerts managed by github_repository_vulnerability_alerts resource
   #checkov:skip=CKV_GIT_1:Ensure GitHub repository is Private
   #checkov:skip=CKV2_GIT_1:Ensure each Repository has branch protection associated
   for_each = local.all_github_repositories
