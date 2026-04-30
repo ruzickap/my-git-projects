@@ -1,10 +1,5 @@
 locals {
   notification_policies = {
-    abuse_report = {
-      alert_type  = "abuse_report_alert"
-      name        = "Cloudflare Abuse Report Alert"
-      description = "Get notifications when Cloudflare receives an abuse report regarding your domain"
-    }
     expiring_access_service_token = {
       alert_type  = "expiring_service_token_alert"
       name        = "Expiring Access Service Token Alert"
