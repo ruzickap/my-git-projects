@@ -64,7 +64,7 @@ jobs:
         with:
           tofu_wrapper: false
 
-      - uses: op5dev/tf-via-pr@8d74c69c2863bcb3bb87c8313ca46bc2fc89b98a # v13.7.3
+      - uses: op5dev/tf-via-pr@39ed2635c056ca408ed24cc5c2baf0ef4381a7a5 # v13.7.4
         id: tofu
         with:
           arg-lock: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'tofu-apply') || inputs.action == 'apply' }}
