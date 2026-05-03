@@ -163,3 +163,8 @@ repos:
     rev: v1.7.12
     hooks:
       - id: actionlint-system
+
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.24.1
+    hooks:
+      - id: zizmor
