@@ -75,6 +75,16 @@
       matchDatasources: ["terraform-provider"],
     },
     {
+      description: "Group all GitHub Actions updates into a single PR",
+      groupName: "github actions",
+      matchManagers: ["github-actions"],
+    },
+    {
+      description: "Group all mise updates into a single PR",
+      groupName: "mise",
+      matchManagers: ["mise"],
+    },
+    {
       description: "Ignore frequent renovate updates",
       enabled: false,
       matchPackageNames: ["renovatebot/github-action"],
