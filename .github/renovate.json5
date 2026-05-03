@@ -70,6 +70,11 @@
       automerge: false,
     },
     {
+      description: "Group all Terraform provider updates into a single PR",
+      groupName: "terraform providers",
+      matchDatasources: ["terraform-provider"],
+    },
+    {
       description: "Ignore frequent renovate updates",
       enabled: false,
       matchPackageNames: ["renovatebot/github-action"],

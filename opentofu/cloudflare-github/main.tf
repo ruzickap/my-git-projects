@@ -21,35 +21,35 @@ terraform {
     # keep-sorted start block=yes
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 6"
+      version = "6.43.0"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "~> 5"
+      version = "5.19.0"
     }
     github = {
       source  = "integrations/github"
-      version = "~> 6"
+      version = "6.12.1"
     }
     http = {
       source  = "hashicorp/http"
-      version = "~> 3"
+      version = "3.5.0"
     }
     random = {
       source  = "hashicorp/random"
-      version = "~> 3"
+      version = "3.8.1"
     }
     restapi = {
       source  = "Mastercard/restapi"
-      version = "~> 3"
+      version = "3.0.0"
     }
     supabase = {
       source  = "supabase/supabase"
-      version = "~> 1"
+      version = "1.9.0"
     }
     uptimerobot = {
       source  = "uptimerobot/uptimerobot"
-      version = "~> 1"
+      version = "1.4.4"
     }
     # keep-sorted end
   }
