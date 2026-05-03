@@ -1,0 +1,10 @@
+---
+# zizmor configuration
+# https://docs.zizmor.sh/configuration/
+rules:
+  dangerous-triggers:
+    ignore:
+      # pull_request_target is intentionally used here to validate PR titles
+      # from forks - this is safe because no code checkout or script execution
+      # happens in the workflow
+      - semantic-pull-request.yml
