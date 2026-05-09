@@ -398,6 +398,10 @@ resource "github_repository_ruleset" "main" {
       required_review_thread_resolution = true                 # all conversations must be resolved
     }
 
+    # Copilot code review
+    copilot_code_review {
+    }
+
     # CI/CD status checks
     required_status_checks {
       strict_required_status_checks_policy = true # branch must be up-to-date before merging
