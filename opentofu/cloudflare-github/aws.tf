@@ -144,6 +144,13 @@ ephemeral "aws_ssm_parameter" "github_ruzickap_my_git_projects_actions_secrets_u
   with_decryption = true
 }
 
+resource "aws_ssm_parameter" "github_ruzickap_ansible_openwrt_gate_bracha_xvx_cz_CLOUDFLARE_API_KEY" {
+  #checkov:skip=CKV_AWS_337:Using default AWS-managed KMS key for SecureString is sufficient
+  name  = "/github/ruzickap/ansible-openwrt/gate-bracha.xvx.cz/CLOUDFLARE_API_KEY"
+  type  = "SecureString"
+  value = data.cloudflare_zero_trust_tunnel_cloudflared_token.gate_bracha.token
+}
+
 resource "aws_ssm_parameter" "github_ruzickap_ansible_openwrt_gate_xvx_cz_CLOUDFLARE_API_KEY" {
   #checkov:skip=CKV_AWS_337:Using default AWS-managed KMS key for SecureString is sufficient
   name  = "/github/ruzickap/ansible-openwrt/gate.xvx.cz/CLOUDFLARE_API_KEY"
