@@ -1,7 +1,7 @@
 locals {
   uptimerobot_ips_url = "https://uptimerobot.com/inc/files/ips/IPv4andIPv6.txt"
   uptimerobot_ips     = [for item in distinct(compact(split("\n", data.http.my_file.response_body))) : { "value" = item, "description" = "Dallas-USA" }]
-  tags                = ["container", "iot", "lan", "router", "rpi", "wan", "wifi"]
+  tags                = ["container", "iot", "lan", "nas", "router", "rpi", "wan", "wifi"]
   allowed_emails = [
     {
       email = {
@@ -37,6 +37,26 @@ locals {
           logo_url = "https://avatars.githubusercontent.com/u/5508130?v=4.png"
           service  = "http://192.168.1.3"
           tags     = ["iot", "lan"]
+        }
+        # keep-sorted end
+      }
+    },
+    "gate-bracha" = {
+      applications = {
+        # keep-sorted start block=yes
+        "gate-bracha" = {
+          logo_url = "https://raw.githubusercontent.com/openwrt/branding/master/logo/openwrt_logo_blue_and_dark_blue.png"
+          service  = "https://127.0.0.1"
+          tags     = ["lan", "router", "wan"]
+        }
+        "gate-bracha-ssh" = {
+          service = "ssh://127.0.0.1:22"
+          tags    = ["lan", "router", "ssh", "wan"]
+        }
+        "truenas-bracha" = {
+          logo_url = "https://raw.githubusercontent.com/truenas/webui/master/src/assets/icons/custom/truenas-logo-mark-color.svg"
+          service  = "https://192.168.1.2"
+          tags     = ["lan", "nas"]
         }
         # keep-sorted end
       }
@@ -174,6 +194,11 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "tunnels" {
 data "cloudflare_zero_trust_tunnel_cloudflared_token" "gate" {
   account_id = local.cloudflare_account_id
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.tunnels["gate"].id
+}
+
+data "cloudflare_zero_trust_tunnel_cloudflared_token" "gate_bracha" {
+  account_id = local.cloudflare_account_id
+  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.tunnels["gate-bracha"].id
 }
 
 resource "cloudflare_zero_trust_tunnel_cloudflared_config" "configs" {
