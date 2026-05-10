@@ -171,6 +171,11 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "tunnels" {
   config_src = "cloudflare"
 }
 
+data "cloudflare_zero_trust_tunnel_cloudflared_token" "gate" {
+  account_id = local.cloudflare_account_id
+  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.tunnels["gate"].id
+}
+
 resource "cloudflare_zero_trust_tunnel_cloudflared_config" "configs" {
   for_each   = local.cloudflare_zero_trust_tunnels_applications
   account_id = local.cloudflare_account_id
