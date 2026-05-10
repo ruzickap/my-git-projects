@@ -3,7 +3,7 @@ locals {
   # A Records for xvx.cz
   xvx_cz_a_records = {
     # keep-sorted start block=yes
-    "gate-bracha" = {
+    "gate2" = {
       content = "176.74.157.134"
       comment = "Gate/Router Bracha in Zebetin"
       proxied = false
