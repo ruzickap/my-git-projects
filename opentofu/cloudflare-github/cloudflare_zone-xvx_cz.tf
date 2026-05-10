@@ -157,6 +157,13 @@ resource "cloudflare_zone" "xvx_cz" {
 resource "cloudflare_zone_dnssec" "example_zone_dnssec" {
   zone_id = cloudflare_zone.xvx_cz.id
   status  = "active"
+
+  # Workaround: Cloudflare API returns "pending" until DS records propagate,
+  # causing perpetual drift against the desired "active" status.
+  # https://github.com/cloudflare/terraform-provider-cloudflare/issues/6237
+  lifecycle {
+    ignore_changes = [status]
+  }
 }
 
 resource "cloudflare_zone_setting" "xvx_cz_min_tls_version" {

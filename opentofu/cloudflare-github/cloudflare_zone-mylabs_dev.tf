@@ -134,6 +134,13 @@ resource "cloudflare_zone" "mylabs_dev" {
 resource "cloudflare_zone_dnssec" "mylabs_dev" {
   zone_id = cloudflare_zone.mylabs_dev.id
   status  = "active"
+
+  # Workaround: Cloudflare API returns "pending" until DS records propagate,
+  # causing perpetual drift against the desired "active" status.
+  # https://github.com/cloudflare/terraform-provider-cloudflare/issues/6237
+  lifecycle {
+    ignore_changes = [status]
+  }
 }
 
 resource "cloudflare_zone_setting" "mylabs_dev_min_tls_version" {
