@@ -1,5 +1,5 @@
 [tools]
-fnox = "1.23.1"
+fnox = "1.24.0"
 opentofu = "1.11.6"
 
 [plugins]
