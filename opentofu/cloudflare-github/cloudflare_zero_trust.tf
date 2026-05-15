@@ -111,7 +111,7 @@ locals {
         }
         "zigbee2mqtt-rpi" = {
           logo_url = "https://raw.githubusercontent.com/Koenkk/zigbee2mqtt/9c505fd75f503a91a61244d6f0efa0e37d81a7b0/images/logo_vector.svg"
-          service  = "http://localhost:8082"
+          service  = "http://localhost:8090"
           tags     = ["container", "iot", "rpi", "wifi"]
         }
         # keep-sorted end
