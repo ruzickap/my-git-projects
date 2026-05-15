@@ -61,7 +61,7 @@ repos:
           - --args=--version "~> 1.11"
 
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.1.82
+    rev: v0.1.93
     hooks:
       - id: rumdl-fmt
 
@@ -128,7 +128,7 @@ repos:
       - id: keep-sorted
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.13.10
+    rev: v4.16.2
     hooks:
       - id: commitizen
         stages: [commit-msg]
@@ -136,7 +136,7 @@ repos:
         stages: [pre-push]
 
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.6.0
+    rev: v2.7.0
     hooks:
       - id: check-message
       - id: check-branch
