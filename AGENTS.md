@@ -83,7 +83,6 @@ plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
   `block=yes` for multi-line blocks and `newline_separated=yes` when blocks are
   separated by blank lines
 - **Security annotations** (inline suppression):
-  - `# kics-scan ignore-line`
   - `# checkov:skip=CKV_...`
   - `# trivy:ignore:avd-git-0001 <reason>`
   - `# codespell:ignore` (end-of-line, for false-positive words)
@@ -141,8 +140,8 @@ plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
 - **Secrets**: passed as `TF_VAR_*` environment variables; never in code
 - **Secrets in CI**: stored as GitHub repository secrets
 - **Security scanners** (all in CI):
-  Checkov (skip `CKV_GHA_7`), DevSkim (ignore DS162092, DS137138), KICS (HIGH
-  only), Trivy (HIGH/CRITICAL, ignores unfixed), Gitleaks (pre-commit hook)
+  Checkov (skip `CKV_GHA_7`), DevSkim (ignore DS162092, DS137138),
+  Trivy (HIGH/CRITICAL, ignores unfixed), Gitleaks (pre-commit hook)
 
 ## Version Control
 

@@ -70,21 +70,6 @@
       automerge: false,
     },
     {
-      description: "Group all Terraform provider updates into a single PR",
-      groupName: "terraform providers",
-      matchDatasources: ["terraform-provider"],
-    },
-    {
-      description: "Group all GitHub Actions updates into a single PR",
-      groupName: "github actions",
-      matchManagers: ["github-actions"],
-    },
-    {
-      description: "Group all mise updates into a single PR",
-      groupName: "mise",
-      matchManagers: ["mise"],
-    },
-    {
       description: "Ignore frequent renovate updates",
       enabled: false,
       matchPackageNames: ["renovatebot/github-action"],
@@ -95,6 +80,16 @@
       matchPackageNames: ["renovatebot/github-action"],
       matchUpdateTypes: ["minor"],
       schedule: ["* * * * 0"],
+    },
+    {
+      description: "Group all GitHub Actions updates into a single PR",
+      groupName: "github actions",
+      matchManagers: ["github-actions"],
+    },
+    {
+      description: "Group all mise updates into a single PR",
+      groupName: "mise",
+      matchManagers: ["mise"],
     },
   ],
   prBodyTemplate: "{{{table}}}{{{notes}}}{{{changelogs}}}",

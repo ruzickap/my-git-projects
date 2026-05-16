@@ -4,8 +4,7 @@ locals {
   # Default secrets applied to all GitHub repositories
   github_action_default_secrets = {
     # keep-sorted start
-    "MY_RENOVATE_GITHUB_APP_ID" = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_ID.value
-    # kics-scan ignore-line - False positive: value comes from encrypted SOPS file, not hardcoded
+    "MY_RENOVATE_GITHUB_APP_ID"      = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_ID.value
     "MY_RENOVATE_GITHUB_PRIVATE_KEY" = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_PRIVATE_KEY.value
     "MY_SLACK_BOT_TOKEN"             = data.aws_ssm_parameter.github_shared_actions_secrets_MY_SLACK_BOT_TOKEN.value
     "MY_SLACK_CHANNEL_ID"            = data.aws_ssm_parameter.github_shared_actions_secrets_MY_SLACK_CHANNEL_ID.value
@@ -324,10 +323,9 @@ resource "github_actions_secret" "this" {
     for item in flatten([
       for repo_key, repo in local.all_github_repositories : [
         for secret_name, secret_value in merge(local.github_action_default_secrets, try(repo.secrets, {})) : {
-          key         = "${repo_key}-${secret_name}"
-          repository  = repo.name
-          secret_name = secret_name
-          # kics-scan ignore-line
+          key          = "${repo_key}-${secret_name}"
+          repository   = repo.name
+          secret_name  = secret_name
           secret_value = secret_value
         }
       ]

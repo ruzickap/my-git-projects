@@ -71,9 +71,8 @@ maintainability across all contributions.
 ### Terraform Files
 
 - **Linting**: Must pass `tflint` checks
-- **Security**: Must pass `checkov`, `kics`, and `trivy` security scans
+- **Security**: Must pass `checkov` and `trivy` security scans
 - **Trivy severity**: Only HIGH and CRITICAL vulnerabilities fail the build
-- **KICS severity**: Only HIGH severity issues fail the build
 
 ### TypeScript/JavaScript Files
 
@@ -100,7 +99,6 @@ Multiple security scanners run during CI:
 - **DevSkim**: Security pattern scanner
   - Ignored rules: DS162092 (debug code), DS137138 (insecure URL)
   - Excluded files: `CHANGELOG.md`
-- **KICS**: Security scanner (fails only on HIGH severity)
 - **Trivy**: Vulnerability scanner (HIGH/CRITICAL only, ignores unfixed)
 
 ## GitHub Actions

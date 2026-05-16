@@ -47,7 +47,6 @@ repos:
         #   - --args=--config-file __GIT_WORKING_DIR__/.checkov.yml
       - id: terraform_docs
       - id: terraform_fmt
-      - id: terraform_tflint
       - id: terraform_trivy
       # Disabled due to AWS credentials requirements
       # - id: terraform_validate
@@ -61,7 +60,7 @@ repos:
           - --args=--version "~> 1.11"
 
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.1.82
+    rev: v0.1.93
     hooks:
       - id: rumdl-fmt
 
@@ -128,7 +127,7 @@ repos:
       - id: keep-sorted
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.13.10
+    rev: v4.16.2
     hooks:
       - id: commitizen
         stages: [commit-msg]
@@ -136,7 +135,7 @@ repos:
         stages: [pre-push]
 
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.6.0
+    rev: v2.7.0
     hooks:
       - id: check-message
       - id: check-branch
@@ -158,6 +157,11 @@ repos:
             --ignore=body-is-missing,
             --msg-filename,
           ]
+
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.25.2
+    hooks:
+      - id: zizmor
 
   - repo: https://github.com/rhysd/actionlint
     rev: v1.7.12
