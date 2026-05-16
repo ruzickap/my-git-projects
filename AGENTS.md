@@ -59,6 +59,7 @@ shfmt --indent=2 --space-redirects script.sh # Format shell script
 actionlint                                   # Validate GH Actions workflows
 rumdl file.md                                # Lint markdown
 lychee --cache .                             # Check URLs
+tflint                                       # Lint Terraform/OpenTofu
 checkov --quiet -d .                         # IaC security scan
 trivy fs --severity HIGH,CRITICAL .          # Vulnerability scan
 codespell                                    # Spell check (config: .codespellrc)

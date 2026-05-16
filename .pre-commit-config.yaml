@@ -47,6 +47,7 @@ repos:
         #   - --args=--config-file __GIT_WORKING_DIR__/.checkov.yml
       - id: terraform_docs
       - id: terraform_fmt
+      - id: terraform_tflint
       - id: terraform_trivy
       # Disabled due to AWS credentials requirements
       # - id: terraform_validate
