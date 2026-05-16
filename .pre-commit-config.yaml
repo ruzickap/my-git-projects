@@ -158,6 +158,11 @@ repos:
             --msg-filename,
           ]
 
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.25.2
+    hooks:
+      - id: zizmor
+
   - repo: https://github.com/rhysd/actionlint
     rev: v1.7.12
     hooks:
