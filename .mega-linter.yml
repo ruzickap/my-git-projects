@@ -6,10 +6,6 @@
 # and in individual linters documentation
 
 # keep-sorted start newline_separated=yes
-# Allow zizmor (GitHub Actions security scanner) to access GitHub token
-ACTION_ZIZMOR_UNSECURED_ENV_VARIABLES:
-  - GITHUB_TOKEN
-
 # ShellCheck configuration - exclude SC2317 (unreachable command warning)
 BASH_SHELLCHECK_ARGUMENTS: --exclude=SC2317
 
