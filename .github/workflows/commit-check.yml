@@ -20,7 +20,6 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
-          persist-credentials: false
 
       - uses: commit-check/commit-check-action@2239d8980732e84a380552fdd71e1d49e149baf3 # v2.6.1
         env:

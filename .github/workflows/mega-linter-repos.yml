@@ -34,7 +34,7 @@ on:
           - swift
           - terraform
 
-permissions: read-all # zizmor: ignore[excessive-permissions]
+permissions: read-all
 
 env:
   REPO_OWNER: ${{ github.repository_owner }}
@@ -50,11 +50,13 @@ jobs:
       repos: ${{ steps.get-repos.outputs.repos }}
       flavors: ${{ steps.get-repos.outputs.flavors }}
     steps:
-      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0 # zizmor: ignore[github-app]
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
         with:
           client-id: ${{ secrets.MY_RENOVATE_GITHUB_APP_ID }}
           private-key: ${{ secrets.MY_RENOVATE_GITHUB_PRIVATE_KEY }}
+          permission-contents: read
+          permission-metadata: read
 
       - name: Get repository list
         id: get-repos
@@ -104,11 +106,12 @@ jobs:
         repo: ${{ fromJson(needs.fetch-repos.outputs.repos) }}
         flavor: ${{ fromJson(needs.fetch-repos.outputs.flavors) }}
     steps:
-      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0 # zizmor: ignore[github-app]
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
         with:
           client-id: ${{ secrets.MY_RENOVATE_GITHUB_APP_ID }}
           private-key: ${{ secrets.MY_RENOVATE_GITHUB_PRIVATE_KEY }}
+          permission-contents: read
 
       - name: Checkout ${{ matrix.repo }}
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -116,7 +119,6 @@ jobs:
           repository: ${{ env.REPO_OWNER }}/${{ matrix.repo }}
           token: ${{ steps.app-token.outputs.token }}
           fetch-depth: 1
-          persist-credentials: false
 
       - name: 💡 MegaLinter (${{ matrix.flavor }})
         uses: oxsecurity/megalinter@0e3ce9b9c8c10effb9b269509cc47ca17cae31c7 # v9.5.0
