@@ -34,7 +34,8 @@ on:
           - swift
           - terraform
 
-permissions: read-all
+permissions:
+  contents: read
 
 env:
   REPO_OWNER: ${{ github.repository_owner }}
