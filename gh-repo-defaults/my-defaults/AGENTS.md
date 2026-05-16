@@ -70,7 +70,6 @@ maintainability across all contributions.
 
 ### Terraform Files
 
-- **Linting**: Must pass `tflint` checks
 - **Security**: Must pass `checkov` and `trivy` security scans
 - **Trivy severity**: Only HIGH and CRITICAL vulnerabilities fail the build
 
