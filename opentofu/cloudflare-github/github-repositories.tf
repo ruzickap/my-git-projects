@@ -4,7 +4,8 @@ locals {
   # Default secrets applied to all GitHub repositories
   github_action_default_secrets = {
     # keep-sorted start
-    "MY_RENOVATE_GITHUB_APP_ID"      = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_ID.value
+    "MY_RENOVATE_GITHUB_APP_ID"      = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_ID.value # TODO: delete in July, replaced by MY_RENOVATE_GITHUB_CLIENT_ID
+    "MY_RENOVATE_GITHUB_CLIENT_ID"   = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_CLIENT_ID.value
     "MY_RENOVATE_GITHUB_PRIVATE_KEY" = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_PRIVATE_KEY.value
     "MY_SLACK_BOT_TOKEN"             = data.aws_ssm_parameter.github_shared_actions_secrets_MY_SLACK_BOT_TOKEN.value
     "MY_SLACK_CHANNEL_ID"            = data.aws_ssm_parameter.github_shared_actions_secrets_MY_SLACK_CHANNEL_ID.value
@@ -250,7 +251,9 @@ resource "github_repository" "this" {
   #checkov:skip=CKV2_GIT_1:Ensure each Repository has branch protection associated
   for_each = local.all_github_repositories
   # Merge settings
-  allow_merge_commit     = false # disable merge commits, use squash/rebase only
+  allow_auto_merge       = true  # enable auto-merge for PRs
+  allow_merge_commit     = false # disable merge commits, use squash only
+  allow_rebase_merge     = false # disable rebase merging
   allow_update_branch    = true  # allow updating PR branches from base branch
   delete_branch_on_merge = true  # auto-delete head branches after merge
 
@@ -388,12 +391,12 @@ resource "github_repository_ruleset" "main" {
 
     # Pull request requirements
     pull_request {
-      allowed_merge_methods             = ["squash", "rebase"] # only allow squash and rebase merges
-      dismiss_stale_reviews_on_push     = true                 # invalidate approvals when new commits are pushed
-      require_code_owner_review         = true                 # require approval from code owners
-      require_last_push_approval        = true                 # last pusher cannot self-approve
-      required_approving_review_count   = 2                    # minimum number of approving reviews
-      required_review_thread_resolution = true                 # all conversations must be resolved
+      allowed_merge_methods             = ["squash"] # only allow squash merges
+      dismiss_stale_reviews_on_push     = true       # invalidate approvals when new commits are pushed
+      require_code_owner_review         = true       # require approval from code owners
+      require_last_push_approval        = true       # last pusher cannot self-approve
+      required_approving_review_count   = 2          # minimum number of approving reviews
+      required_review_thread_resolution = true       # all conversations must be resolved
     }
 
     # Copilot code review
