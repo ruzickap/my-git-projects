@@ -41,7 +41,7 @@ jobs:
       - name: Install checkov using pip3
         run: |
           # renovate: datasource=pypi depName=checkov
-          pip3 install checkov==3.2.527
+          pip3 install checkov==3.2.529
 
       - name: Install dependencies
         run: |
