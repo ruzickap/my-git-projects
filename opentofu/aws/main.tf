@@ -100,6 +100,10 @@ resource "local_sensitive_file" "aws_credentials" {
     aws_access_key_id = ${aws_iam_access_key.this.id}
     aws_secret_access_key = ${aws_iam_access_key.this.secret}
   EOT
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "local_sensitive_file" "aws_config" {
