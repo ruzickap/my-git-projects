@@ -79,7 +79,7 @@ jobs:
           # Write Renovate logs to a file (JSON format by default) for post-processing
           # https://docs.renovatebot.com/config-overview/#special-environment-variables
           LOG_FILE: /tmp/renovate-log.txt
-          LOG_FILE_LEVEL: info
+          LOG_FILE_LEVEL: debug
 
       - name: Install Copilot CLI
         if: always()
