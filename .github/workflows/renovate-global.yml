@@ -75,12 +75,28 @@ jobs:
           # https://docs.renovatebot.com/config-overview/#special-environment-variables
           LOG_FILE: /tmp/renovate-log.json
 
-      - name: Generate Renovate report summary
+      - name: 📝 Summarize Renovate output
         if: always()
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.MY_COPILOT_TOKEN }}
         run: |
-          if [[ -f /tmp/renovate-report.json ]]; then
-            python3 scripts/renovate-report-summary.py /tmp/renovate-report.json >> "${GITHUB_STEP_SUMMARY}"
-          fi
+          copilot --prompt "
+            Read /tmp/renovate-report.json (Renovate report, keys: problems, repositories).
+            Write a GitHub-flavored Markdown summary to /tmp/summary.md with these sections:
+
+            1. Global stats table: total repos, repos with activity, automerged, PRs, pending, errors, warnings
+            2. Errors/Warnings table (deduplicated): Repository | Branch/File | Message
+            3. Per-repo details (skip repos with only no-work/not-scheduled branches):
+               - H3 heading linked to GitHub, dependency managers from packageFiles keys
+               - Table: Branch | Update Type | Status | Dependencies | Files
+               - Status emojis: automerged=checkmark, error=X, pending=hourglass, done+BranchAutomerge=hourglass
+               - Link branches to /tree/<branch>, PRs to /pull/<prNo>, github-tags deps to their repos
+               - Show depName currentValue->newValue (max 5), packageFile names (max 3)
+            4. Merged branches summary table with total count
+
+            Key fields: branches[].{branchName,result,prNo,prBlockedBy,upgrades[]},
+            problems[].{branch,file,msg}, upgrades[].{depName,currentValue,newValue,updateType,datasource,packageFile}
+            " --yolo --no-ask-user --no-custom-instruction
 
       - name: Upload Renovate log
         if: always()
