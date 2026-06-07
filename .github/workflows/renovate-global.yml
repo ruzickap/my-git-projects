@@ -74,8 +74,7 @@ jobs:
           GH_TOKEN: ${{ secrets.MY_COPILOT_TOKEN }}
         run: |
           # Fetch the Renovate step log from the current workflow run
-          gh run view "${{ github.run_id }}" --repo "${{ github.repository }}" --log 2>&1 \
-            | grep -E "(DRY-RUN|WARN|INFO.*Would|Autodiscovered|error in)" > /tmp/renovate-log.txt || true
+          gh run view "${{ github.run_id }}" --repo "${{ github.repository }}" --log > /tmp/renovate-log.txt 2>&1 || true
 
           copilot -p "Read the file /tmp/renovate-log.txt which contains Renovate bot output logs.
           Create a markdown summary organized by repository showing:
