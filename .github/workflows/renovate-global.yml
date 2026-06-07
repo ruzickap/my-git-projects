@@ -57,7 +57,33 @@ jobs:
           permission-workflows: write
 
       - name: 💡 Self-hosted Renovate
+        id: renovate
         uses: renovatebot/github-action@693b9ef15eec82123529a37c782242f091365961 # v46.1.14
         with:
           configurationFile: .github/renovate-global.json5
           token: ${{ steps.app-token.outputs.token }}
+
+      - name: Install Copilot CLI
+        if: always()
+        run: npm install -g @github/copilot
+
+      - name: Summarize Renovate output
+        if: always()
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.MY_COPILOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.MY_COPILOT_TOKEN }}
+        run: |
+          # Fetch the Renovate step log from the current workflow run
+          gh run view "${{ github.run_id }}" --repo "${{ github.repository }}" --log 2>&1 \
+            | grep -E "(DRY-RUN|WARN|INFO.*Would|Autodiscovered|error in)" > /tmp/renovate-log.txt || true
+
+          copilot -p "Read the file /tmp/renovate-log.txt which contains Renovate bot output logs.
+          Create a markdown summary organized by repository showing:
+          - Which repositories were processed
+          - What updates would be applied (or were applied) in each repo (branches created, PRs, automerges)
+          - Any errors or warnings encountered
+          Group updates by type: automerge, PR creation, branch commits, orphan branch cleanup, onboarding.
+          Format as clear markdown with tables and bullet lists.
+          Write the result to summary.md" \
+            --allow-tool='shell(cat:*,grep:*,wc:*)' --allow-tool=read --allow-tool=write --no-ask-user
+          cat summary.md >> "${GITHUB_STEP_SUMMARY}"
