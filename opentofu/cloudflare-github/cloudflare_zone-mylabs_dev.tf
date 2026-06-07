@@ -70,22 +70,22 @@ locals {
       comment = "AWS Route 53 domain delegation to ruzicka-sbx01"
     }
     "k8s-ns1" = {
-      content = "ns-302.awsdns-37.com"
+      content = "ns-1421.awsdns-49.org"
       name    = "k8s"
       comment = "AWS Route 53 domain delegation to ruzicka-sbx01"
     }
     "k8s-ns2" = {
-      content = "ns-971.awsdns-57.net"
+      content = "ns-41.awsdns-05.com"
       name    = "k8s"
       comment = "AWS Route 53 domain delegation to ruzicka-sbx01"
     }
     "k8s-ns3" = {
-      content = "ns-1154.awsdns-16.org"
+      content = "ns-693.awsdns-22.net"
       name    = "k8s"
       comment = "AWS Route 53 domain delegation to ruzicka-sbx01"
     }
     "k8s-ns4" = {
-      content = "ns-1874.awsdns-42.co.uk"
+      content = "ns-1600.awsdns-08.co.uk"
       name    = "k8s"
       comment = "AWS Route 53 domain delegation to ruzicka-sbx01"
     }
