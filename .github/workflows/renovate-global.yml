@@ -9,30 +9,26 @@ on:
       dryRun:
         type: boolean
         description: Dry-Run
-      logLevel:
-        type: choice
-        description: Log-Level
-        default: debug
-        options:
-          - info
-          - debug
-          - trace
   # schedule:
   #   - cron: 0 4-6 * * 0
 
 env:
   # keep-sorted start
-  # Set log level for debugging (info, debug, or trace) https://docs.renovatebot.com/troubleshooting/#log-debug-levels
-  LOG_LEVEL: ${{ inputs.logLevel || 'debug' }}
   # Automatically discover all repositories accessible by the token
   # https://docs.renovatebot.com/self-hosted-configuration/#autodiscover
   RENOVATE_AUTODISCOVER: "true"
-  # Filter out archived repositories from autodiscovery
+  # Filter autodiscovery to only ${{ github.repository_owner }} repositories, with a few explicit exclusions
   # https://docs.renovatebot.com/self-hosted-configuration/#autodiscoverfilter
-  RENOVATE_AUTODISCOVER_FILTER: "/^${{ github.repository_owner }}\\/.*/"
+  RENOVATE_AUTODISCOVER_FILTER: >-
+    [
+    "!/^${{ github.repository_owner }}/old_stuff$/",
+    "!/^${{ github.repository_owner }}/ruzickovabozena\\.xvx\\.cz$/",
+    "!/^${{ github.repository_owner }}/wizcli-terraform-test$/",
+    "/^${{ github.repository_owner }}\\/.*/"
+    ]
   # Enable dry-run mode for non-main branches to preview changes (https://docs.renovatebot.com/self-hosted-configuration/#dryrun)
   # Run renovate in dry-run mode if executed in branches other than main to prevent updating versions in PRs/branches
-  RENOVATE_DRY_RUN: ${{ inputs.dryRun || ( github.head_ref || github.ref_name ) != 'main' || false }}
+  RENOVATE_DRY_RUN: ${{ (inputs.dryRun || ( github.head_ref || github.ref_name ) != 'main') && 'full' || 'off' }}
   # Skip archived repositories
   # https://docs.renovatebot.com/self-hosted-configuration/#ignorearchived
   RENOVATE_IGNORE_ARCHIVED: "true"
@@ -50,20 +46,68 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
         with:
           client-id: ${{ secrets.MY_RENOVATE_GITHUB_CLIENT_ID }}
           private-key: ${{ secrets.MY_RENOVATE_GITHUB_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }} # zizmor: ignore[github-app]
           permission-contents: write
           permission-pull-requests: write
           permission-issues: write
           permission-checks: read
           permission-metadata: read
           permission-statuses: write
+          permission-vulnerability-alerts: read
           permission-workflows: write
 
       - name: 💡 Self-hosted Renovate
+        id: renovate
         uses: renovatebot/github-action@693b9ef15eec82123529a37c782242f091365961 # v46.1.14
         with:
+          configurationFile: .github/renovate-global.json5
           token: ${{ steps.app-token.outputs.token }}
+          # Override default env-regex to pass LOG_FILE* vars to the Docker container
+          # Default only passes LOG_LEVEL; LOG_FILE and LOG_FILE_LEVEL need LOG_\w+
+          # https://github.com/renovatebot/github-action#env-regex
+          env-regex: "^(?:RENOVATE_\\w+|LOG_\\w+|GITHUB_COM_TOKEN|NODE_OPTIONS|(?:HTTPS?|NO)_PROXY|(?:https?|no)_proxy)$"
+        env:
+          # Write Renovate logs to a file (JSON format by default) for post-processing
+          # https://docs.renovatebot.com/config-overview/#special-environment-variables
+          LOG_FILE: /tmp/renovate-log.txt
+          LOG_FILE_LEVEL: debug
+
+      - name: Install Copilot CLI
+        if: always()
+        run: npm install -g @github/copilot
+
+      - name: 📝 Summarize Renovate output
+        if: always()
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.MY_COPILOT_TOKEN }}
+        run: |
+          copilot --prompt "
+            Read the file /tmp/renovate-log.txt which contains Renovate bot output logs.
+
+            Create a markdown summary organized by repository showing:
+            - Which repositories were processed
+            - What updates would be applied (or were applied) in each repo (branches created, PRs, automerges)
+            - Any errors or warnings encountered
+
+            Group updates by type: automerge, PR creation, branch commits, orphan branch cleanup, onboarding.
+            Format as clear markdown with tables and bullet lists.
+            Write the result to /tmp/summary.md" --yolo --no-ask-user --no-custom-instructions
+
+          cat /tmp/summary.md >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Upload Renovate log
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: renovate-log
+          path: /tmp/renovate-log.txt
+          retention-days: 1

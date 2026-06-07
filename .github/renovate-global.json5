@@ -1,0 +1,187 @@
+{
+  /**
+   * Renovate Global Configuration
+   *
+   * This configuration is used by the renovate-global workflow to manage
+   * dependency updates across all repositories. It extends the base config
+   * and adds repository-specific rules.
+   *
+   * Documentation: https://docs.renovatebot.com/configuration-options/
+   */
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+
+  // # keep-sorted start block=yes
+  "git-submodules": {
+    enabled: true,
+  },
+  // Automatically merge PRs when all tests pass
+  // https://docs.renovatebot.com/configuration-options/#automerge
+  automerge: true,
+  // Merge directly to the base branch without creating a PR
+  // https://docs.renovatebot.com/configuration-options/#automergetype
+  automergeType: "branch",
+  // Custom prefix for Renovate branches
+  // https://docs.renovatebot.com/configuration-options/#branchprefix
+  branchPrefix: "chore/renovate/",
+  // Custom datasource for Grafana dashboard revisions (for ruzickap.github.io)
+  customDatasources: {
+    "grafana-dashboards": {
+      defaultRegistryUrlTemplate: "https://grafana.com/api/dashboards/{{packageName}}",
+      format: "json",
+      transformTemplates: ['{"releases":[{"version": $string(revision)}]}'],
+    },
+  },
+  // This allows Renovate to detect and update dependencies that aren't in standard package files
+  customManagers: [
+    {
+      customType: "regex",
+      // Template for extracting version numbers from custom patterns
+      extractVersionTemplate: "{{#if extractVersion}}{{{extractVersion}}}{{else}}^v?(?<version>.+)${{/if}}",
+
+      // File types to scan for custom dependency patterns
+      managerFilePatterns: [
+        "/\\.ya?ml$/",
+        "/\\.md$/",
+        "/^Dockerfile$/",
+        "/^entrypoint\\.sh$/",
+      ],
+
+      // Regex pattern to match custom dependency declarations
+      // Format: # renovate: datasource=<source> depName=<name> [versioning=<type>] [extractVersion=<regex>] [registryUrl=<url>]
+      // Example: # renovate: datasource=github-releases depName=helm/helm versioning=semver
+      matchStrings: [
+        '# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)( versioning=(?<versioning>.+?))?( extractVersion=(?<extractVersion>.+?))?( registryUrl=(?<registryUrl>.+?))?\\s.*[=:]\\s*"?(?<currentValue>.+?)"?\\s',
+      ],
+
+      // Default to semantic versioning unless specified otherwise
+      versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+    },
+    // Custom manager for Grafana dashboard revisions (for ruzickap.github.io)
+    {
+      datasourceTemplate: "custom.grafana-dashboards",
+      customType: "regex",
+      managerFilePatterns: ["/\\.md$/"],
+      matchStrings: [
+        '# renovate: depName="(?<depName>.*)"\\n\\s+gnetId:\\s+(?<packageName>.*?)\\n\\s+revision:\\s+(?<currentValue>.*)',
+      ],
+      versioningTemplate: "regex:^(?<major>\\d+)$",
+    },
+    // Custom manager for raw.githubusercontent.com URLs (for ruzickap.github.io)
+    {
+      currentValueTemplate: "{{#if currentValue}}{{{currentValue}}}{{else}}main{{/if}}",
+      customType: "regex",
+      datasourceTemplate: "git-refs",
+      packageNameTemplate: "https://github.com/{{depName}}",
+      managerFilePatterns: ["/\\.md$/"],
+      matchStrings: [
+        "# renovate:( currentValue=(?<currentValue>.+?))?\\n.*https:\\/\\/raw.githubusercontent.com\\/(?<depName>[^\\/]+\\/[^\\/]+)\\/(?<currentDigest>[^\\/]+)\\/",
+      ],
+    },
+  ],
+  // Base Configuration Presets
+  // Keep the extends started with ":" at the end of the list to allow overriding
+  extends: [
+    "config:recommended", // Renovate's recommended configuration preset
+    "docker:pinDigests", // Pin Docker image digests for security
+    "helpers:pinGitHubActionDigestsToSemver", // Pin GitHub Actions to specific versions with semantic versioning
+    "security:openssf-scorecard", // Add OpenSSF Scorecard security insights
+    ":disableDependencyDashboard", // Don't create dependency dashboard issues
+    ":disableRateLimiting", // Disable rate limiting for faster updates
+    ":enableVulnerabilityAlertsWithLabel(security)", // Add security label to vulnerability alerts
+    ":pinSkipCi", // Pin dependencies and skip CI for pin-only updates
+  ],
+  // Scan Kubernetes manifests in deploy directory (for malware-cryptominer-container)
+  kubernetes: {
+    managerFilePatterns: ["/^deploy/.+\\.ya?ml$/"],
+  },
+  // Pull Request Labeling
+  labels: [
+    "renovate",
+    "renovate/{{replace '.*/' '' depName}}",
+    "renovate/{{updateType}}",
+  ],
+  // Lock File Maintenance
+  lockFileMaintenance: {
+    enabled: true,
+    schedule: ["before 6am on Sunday"],
+  },
+  // Wait for releases to be at least 3 days old before creating PRs (reduces risk of buggy releases)
+  minimumReleaseAge: "3 days",
+  // Package-specific Update Rules
+  packageRules: [
+    {
+      description: "Disable auto-merge for major updates",
+      matchUpdateTypes: ["major"],
+      automerge: false,
+    },
+    {
+      description: "Ignore frequent renovate updates",
+      enabled: false,
+      matchPackageNames: ["renovatebot/github-action"],
+      matchUpdateTypes: ["patch"],
+    },
+    {
+      description: "Update renovatebot/github-action minor updates on Sundays",
+      matchPackageNames: ["renovatebot/github-action"],
+      matchUpdateTypes: ["minor"],
+      schedule: ["* * * * 0"],
+    },
+    {
+      description: "Group all GitHub Actions updates into a single PR",
+      groupName: "github actions",
+      matchManagers: ["github-actions"],
+    },
+    {
+      description: "Group all mise updates into a single PR",
+      groupName: "mise",
+      matchManagers: ["mise"],
+    },
+    {
+      description: "Only update GitHub Actions in brewwatch repo",
+      matchRepositories: ["ruzickap/brewwatch"],
+      matchManagers: ["!github-actions"],
+      enabled: false,
+    },
+    {
+      description: "Auto-merge digest updates for malware-cryptominer-container",
+      matchRepositories: ["ruzickap/malware-cryptominer-container"],
+      matchUpdateTypes: ["digest"],
+      automerge: true,
+      minimumReleaseAge: "3 days",
+    },
+    {
+      description: "Skip pinning for slsa-framework/slsa-github-generator",
+      matchRepositories: ["ruzickap/malware-cryptominer-container"],
+      matchPackageNames: ["slsa-framework/slsa-github-generator"],
+      pinDigests: false,
+    },
+    {
+      description: "Grafana Dashboards automerge for ruzickap.github.io",
+      matchRepositories: ["ruzickap/ruzickap.github.io"],
+      matchDatasources: ["custom.grafana-dashboards"],
+      matchUpdateTypes: ["major"],
+      automerge: true,
+      commitBody: "[skip ci]",
+      ignoreTests: true,
+    },
+    {
+      description: "Automerge all patch, pin and digest updates for custom.regex in ruzickap.github.io",
+      matchRepositories: ["ruzickap/ruzickap.github.io"],
+      matchManagers: ["custom.regex"],
+      matchUpdateTypes: ["patch", "pin", "digest"],
+      automerge: true,
+      commitBody: "[skip ci]",
+      ignoreTests: true,
+    },
+  ],
+  // PR body template showing dependency table, notes, and changelogs
+  // https://docs.renovatebot.com/configuration-options/#prbodytemplate
+  prBodyTemplate: "{{{table}}}{{{notes}}}{{{changelogs}}}",
+  // Rebase branches when they fall behind the base branch
+  // https://docs.renovatebot.com/configuration-options/#rebasewhen
+  rebaseWhen: "behind-base-branch",
+  // Create separate branches for minor and patch updates
+  // https://docs.renovatebot.com/configuration-options/#separateminorpatch
+  separateMinorPatch: true,
+  // # keep-sorted end
+}

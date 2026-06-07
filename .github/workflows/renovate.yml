@@ -59,6 +59,7 @@ jobs:
           permission-checks: read
           permission-metadata: read
           permission-statuses: write
+          permission-vulnerability-alerts: read
           permission-workflows: write
 
       - name: 💡 Self-hosted Renovate
