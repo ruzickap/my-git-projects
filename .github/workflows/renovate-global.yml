@@ -70,84 +70,17 @@ jobs:
         with:
           configurationFile: .github/renovate-global.json5
           token: ${{ steps.app-token.outputs.token }}
-          # Override default env-regex to pass LOG_FILE* vars to the Docker container
-          # Default only passes LOG_LEVEL; LOG_FILE and LOG_FILE_LEVEL need LOG_\w+
-          # https://github.com/renovatebot/github-action#env-regex
-          env-regex: "^(?:RENOVATE_\\w+|LOG_\\w+|GITHUB_COM_TOKEN|NODE_OPTIONS|(?:HTTPS?|NO)_PROXY|(?:https?|no)_proxy)$"
         env:
-          # Write Renovate logs to a file (JSON format by default) for post-processing
+          # Write Renovate logs to a file (JSON format by default)
           # https://docs.renovatebot.com/config-overview/#special-environment-variables
-          LOG_FILE: /tmp/renovate-log.txt
-          LOG_FILE_LEVEL: debug
-
-      - name: Install Copilot CLI
-        if: always()
-        run: npm install -g @github/copilot
-
-      - name: 📝 Summarize Renovate output
-        if: always()
-        env:
-          COPILOT_GITHUB_TOKEN: ${{ secrets.MY_COPILOT_TOKEN }}
-        run: |
-          copilot --prompt "
-            Read the file /tmp/renovate-log.txt which contains Renovate bot JSON logs (one JSON object per line).
-
-            Parse the logs and produce a structured Markdown summary written to /tmp/summary.md with these sections:
-
-            ## 1. Header with global statistics
-            - Total repositories processed
-            - Repositories with activity (any branch created/updated/automerged or errors)
-            - Counts: Branches created | Updated | Merged (automerged) | PRs opened | Orphan branches deleted
-            - Error count (if any)
-
-            ## 2. Errors and Warnings section (if any exist)
-            Table with columns: Repository | Branch | Message
-            - Include all log entries with level >= 40
-            - Link repository names to https://github.com/<repo>
-
-            ## 3. Repository Details section
-            For each repository that had activity (skip repos with no actionable branches):
-            - H3 heading linked to the GitHub repo
-            - Show dependency managers detected (from msg='Dependency extraction complete' -> stats.managers)
-            - Table with columns: Branch | Update Type | Status | Dependencies | Files
-              - Branch: link to https://github.com/<repo>/tree/<branch>
-              - Update Type: major/minor/patch/digest/mixed (derived from upgrades[].updateType). Link to commit if branchSha available
-              - Status with emoji:
-                - automerged -> checkmark merged
-                - error -> X error
-                - pending -> hourglass pending
-                - created -> NEW created
-                - updated -> arrows updated
-                - If PR exists, link to https://github.com/<repo>/pull/<prNo>
-                - If prBlockedBy='BranchAutomerge', show 'automerge pending'
-              - Dependencies: list each depName with currentValue -> newValue transition. Link GitHub Actions deps to their repos
-              - Files: list packageFile names, link to commit diff if branchSha available
-            - Show deleted orphan branches (from msg='Deleting orphan branch')
-            - Show per-repo errors
-
-            ## 4. Merged Branches summary (if any automerges occurred)
-            Table: Repository | Branch (with checkmark emoji)
-            Total merged count
-
-            Key log fields to look for:
-            - 'repository': which repo the entry belongs to
-            - 'msg': event type (e.g., 'Branch automerged', 'Branch created', 'Branch updated', 'Deleting orphan branch', 'PR created', 'Branch summary', 'Dependency extraction complete')
-            - 'branch': branch name
-            - 'branchesInformation': array with branchName, result, prBlockedBy, prTitle, prNo, upgrades[]
-            - 'branches': array in 'Branch summary' messages with branchName, branchSha
-            - 'level': log level (>= 40 means error/warning)
-            - upgrades[]: contains depName, currentValue, newValue, updateType, datasource, packageFile
-
-            Format as clear GitHub-flavored Markdown. Write the result to /tmp/github_step_summary.md" --yolo --no-ask-user --no-custom-instructions
-
-          cat /tmp/github_step_summary.md >> "${GITHUB_STEP_SUMMARY}"
+          LOG_FILE: /tmp/renovate-log.json
 
       - name: Upload Renovate log
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: renovate-log
-          path: /tmp/renovate-log.txt
+          path: /tmp/renovate-log.json
           retention-days: 1
 
       - name: Upload Renovate report
