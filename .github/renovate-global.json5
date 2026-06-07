@@ -14,12 +14,6 @@
   "git-submodules": {
     enabled: true,
   },
-  // Automatically discover all repositories accessible by the token
-  // https://docs.renovatebot.com/self-hosted-configuration/#autodiscover
-  autodiscover: true,
-  // Filter autodiscovery to only ruzickap repositories
-  // https://docs.renovatebot.com/self-hosted-configuration/#autodiscoverfilter
-  autodiscoverFilter: ["/^ruzickap\\/.*/"],
   // Automatically merge PRs when all tests pass
   // https://docs.renovatebot.com/configuration-options/#automerge
   automerge: true,
@@ -29,6 +23,14 @@
   // Custom prefix for Renovate branches
   // https://docs.renovatebot.com/configuration-options/#branchprefix
   branchPrefix: "chore/renovate/",
+  // Custom datasource for Grafana dashboard revisions (for ruzickap.github.io)
+  customDatasources: {
+    "grafana-dashboards": {
+      defaultRegistryUrlTemplate: "https://grafana.com/api/dashboards/{{packageName}}",
+      format: "json",
+      transformTemplates: ['{"releases":[{"version": $string(revision)}]}'],
+    },
+  },
   // This allows Renovate to detect and update dependencies that aren't in standard package files
   customManagers: [
     {
@@ -49,6 +51,27 @@
       // Default to semantic versioning unless specified otherwise
       versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
     },
+    // Custom manager for Grafana dashboard revisions (for ruzickap.github.io)
+    {
+      datasourceTemplate: "custom.grafana-dashboards",
+      customType: "regex",
+      fileMatch: ["\\.md$"],
+      matchStrings: [
+        '# renovate: depName="(?<depName>.*)"\\n\\s+gnetId:\\s+(?<packageName>.*?)\\n\\s+revision:\\s+(?<currentValue>.*)',
+      ],
+      versioningTemplate: "regex:^(?<major>\\d+)$",
+    },
+    // Custom manager for raw.githubusercontent.com URLs (for ruzickap.github.io)
+    {
+      currentValueTemplate: "{{#if currentValue}}{{{currentValue}}}{{else}}main{{/if}}",
+      customType: "regex",
+      datasourceTemplate: "git-refs",
+      packageNameTemplate: "https://github.com/{{depName}}",
+      fileMatch: ["\\.md$"],
+      matchStrings: [
+        "# renovate:( currentValue=(?<currentValue>.+?))?\\n.*https:\\/\\/raw.githubusercontent.com\\/(?<depName>[^\\/]+\\/[^\\/]+)\\/(?<currentDigest>[^\\/]+)\\/",
+      ],
+    },
   ],
   // Base Configuration Presets
   // Keep the extends started with ":" at the end of the list to allow overriding
@@ -62,9 +85,10 @@
     ":enableVulnerabilityAlertsWithLabel(security)", // Add security label to vulnerability alerts
     ":pinSkipCi", // Pin dependencies and skip CI for pin-only updates
   ],
-  // Skip archived repositories
-  // https://docs.renovatebot.com/self-hosted-configuration/#ignorearchived
-  ignoreArchived: true,
+  // Scan Kubernetes manifests in deploy directory (for malware-cryptominer-container)
+  kubernetes: {
+    fileMatch: ["^deploy/.+\\.ya?ml$"],
+  },
   // Pull Request Labeling
   labels: [
     "renovate",
@@ -107,6 +131,43 @@
       groupName: "mise",
       matchManagers: ["mise"],
     },
+    {
+      description: "Only update GitHub Actions in brewwatch repo",
+      matchRepositories: ["ruzickap/brewwatch"],
+      matchManagers: ["!github-actions"],
+      enabled: false,
+    },
+    {
+      description: "Auto-merge digest updates for malware-cryptominer-container",
+      matchRepositories: ["ruzickap/malware-cryptominer-container"],
+      matchUpdateTypes: ["digest"],
+      automerge: true,
+      minimumReleaseAge: "3 days",
+    },
+    {
+      description: "Skip pinning for slsa-framework/slsa-github-generator",
+      matchRepositories: ["ruzickap/malware-cryptominer-container"],
+      matchPackageNames: ["slsa-framework/slsa-github-generator"],
+      pinDigests: false,
+    },
+    {
+      description: "Grafana Dashboards automerge for ruzickap.github.io",
+      matchRepositories: ["ruzickap/ruzickap.github.io"],
+      matchDatasources: ["custom.grafana-dashboards"],
+      matchUpdateTypes: ["major"],
+      automerge: true,
+      commitBody: "[skip ci]",
+      ignoreTests: true,
+    },
+    {
+      description: "Automerge all patch, pin and digest updates for custom.regex in ruzickap.github.io",
+      matchRepositories: ["ruzickap/ruzickap.github.io"],
+      matchManagers: ["custom.regex"],
+      matchUpdateTypes: ["patch", "pin", "digest"],
+      automerge: true,
+      commitBody: "[skip ci]",
+      ignoreTests: true,
+    },
   ],
   // PR body template showing dependency table, notes, and changelogs
   // https://docs.renovatebot.com/configuration-options/#prbodytemplate
@@ -114,92 +175,8 @@
   // Rebase branches when they fall behind the base branch
   // https://docs.renovatebot.com/configuration-options/#rebasewhen
   rebaseWhen: "behind-base-branch",
-  // Repository-specific rules for the global Renovate workflow
-  // https://docs.renovatebot.com/configuration-options/#repositoryrules
-  repositoryRules: [
-    {
-      description: "Only update GitHub Actions in brewwatch repo",
-      matchRepositories: ["ruzickap/brewwatch"],
-      enabledManagers: ["github-actions"],
-    },
-    {
-      description: "Repo-specific config for malware-cryptominer-container",
-      matchRepositories: ["ruzickap/malware-cryptominer-container"],
-      kubernetes: {
-        fileMatch: ["^deploy/.+\\.ya?ml$"],
-      },
-      packageRules: [
-        {
-          description: "Auto-merge digest updates after a 3 day age gate",
-          matchUpdateTypes: ["digest"],
-          automerge: true,
-          minimumReleaseAge: "3 days",
-        },
-        {
-          description: "Skip pinning for slsa-framework/slsa-github-generator",
-          matchPackageNames: ["slsa-framework/slsa-github-generator"],
-          pinDigests: false,
-        },
-      ],
-    },
-    {
-      description: "Repo-specific config for ruzickap.github.io",
-      matchRepositories: ["ruzickap/ruzickap.github.io"],
-      customDatasources: {
-        "grafana-dashboards": {
-          defaultRegistryUrlTemplate: "https://grafana.com/api/dashboards/{{packageName}}",
-          format: "json",
-          transformTemplates: ['{"releases":[{"version": $string(revision)}]}'],
-        },
-      },
-      customManagers: [
-        {
-          datasourceTemplate: "custom.grafana-dashboards",
-          customType: "regex",
-          fileMatch: ["\\.md$"],
-          matchStrings: [
-            '# renovate: depName="(?<depName>.*)"\\n\\s+gnetId:\\s+(?<packageName>.*?)\\n\\s+revision:\\s+(?<currentValue>.*)',
-          ],
-          versioningTemplate: "regex:^(?<major>\\d+)$",
-        },
-        {
-          currentValueTemplate: "{{#if currentValue}}{{{currentValue}}}{{else}}main{{/if}}",
-          customType: "regex",
-          datasourceTemplate: "git-refs",
-          packageNameTemplate: "https://github.com/{{depName}}",
-          fileMatch: ["\\.md$"],
-          matchStrings: [
-            "# renovate:( currentValue=(?<currentValue>.+?))?\\n.*https:\\/\\/raw.githubusercontent.com\\/(?<depName>[^\\/]+\\/[^\\/]+)\\/(?<currentDigest>[^\\/]+)\\/",
-          ],
-        },
-      ],
-      // Ignore chirpy blog post dependencies
-      ignorePaths: ["_posts/**"],
-      packageRules: [
-        {
-          automerge: true,
-          commitBody: "[skip ci]",
-          description: "Grafana Dashboards",
-          ignoreTests: true,
-          matchDatasources: ["custom.grafana-dashboards"],
-          matchUpdateTypes: ["major"],
-        },
-        {
-          automerge: true,
-          commitBody: "[skip ci]",
-          description: "Automerge all patch, pin and digest updates for custom.regex without running any tests",
-          ignoreTests: true,
-          matchManagers: ["custom.regex"],
-          matchUpdateTypes: ["patch", "pin", "digest"],
-        },
-      ],
-    },
-  ],
   // Create separate branches for minor and patch updates
   // https://docs.renovatebot.com/configuration-options/#separateminorpatch
   separateMinorPatch: true,
-  // Username for Renovate commits
-  // https://docs.renovatebot.com/self-hosted-configuration/#username
-  username: "ruzickap",
   // # keep-sorted end
 }
