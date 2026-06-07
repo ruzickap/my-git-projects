@@ -75,6 +75,13 @@ jobs:
           # https://docs.renovatebot.com/config-overview/#special-environment-variables
           LOG_FILE: /tmp/renovate-log.json
 
+      - name: Generate Renovate report summary
+        if: always()
+        run: |
+          if [[ -f /tmp/renovate-report.json ]]; then
+            python3 scripts/renovate-report-summary.py /tmp/renovate-report.json >> "${GITHUB_STEP_SUMMARY}"
+          fi
+
       - name: Upload Renovate log
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
