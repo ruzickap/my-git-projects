@@ -17,12 +17,18 @@ env:
   # Automatically discover all repositories accessible by the token
   # https://docs.renovatebot.com/self-hosted-configuration/#autodiscover
   RENOVATE_AUTODISCOVER: "true"
-  # Filter autodiscovery to only ruzickap repositories
+  # Filter autodiscovery to only ruzickap repositories, excluding repos without package files
   # https://docs.renovatebot.com/self-hosted-configuration/#autodiscoverfilter
-  RENOVATE_AUTODISCOVER_FILTER: "/^${{ github.repository_owner }}\\/.*/"
+  RENOVATE_AUTODISCOVER_FILTER: >-
+    [
+    "!/^ruzickap/old_stuff$/",
+    "!/^ruzickap/ruzickovabozena\\.xvx\\.cz$/",
+    "!/^ruzickap/wizcli-terraform-test$/",
+    "/^${{ github.repository_owner }}\\/.*/"
+    ]
   # Enable dry-run mode for non-main branches to preview changes (https://docs.renovatebot.com/self-hosted-configuration/#dryrun)
   # Run renovate in dry-run mode if executed in branches other than main to prevent updating versions in PRs/branches
-  RENOVATE_DRY_RUN: ${{ inputs.dryRun || ( github.head_ref || github.ref_name ) != 'main' || false }}
+  RENOVATE_DRY_RUN: ${{ (inputs.dryRun || ( github.head_ref || github.ref_name ) != 'main') && 'full' || 'off' }}
   # Skip archived repositories
   # https://docs.renovatebot.com/self-hosted-configuration/#ignorearchived
   RENOVATE_IGNORE_ARCHIVED: "true"
