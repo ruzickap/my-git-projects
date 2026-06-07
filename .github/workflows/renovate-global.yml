@@ -42,7 +42,7 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
 
@@ -58,6 +58,7 @@ jobs:
           permission-checks: read
           permission-metadata: read
           permission-statuses: write
+          permission-vulnerability-alerts: read
           permission-workflows: write
 
       - name: 💡 Self-hosted Renovate
@@ -95,7 +96,7 @@ jobs:
 
       - name: Upload Renovate log
         if: always()
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: renovate-log
           path: /tmp/renovate-log.txt
