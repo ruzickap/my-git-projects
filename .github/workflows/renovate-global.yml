@@ -62,6 +62,9 @@ jobs:
         with:
           configurationFile: .github/renovate-global.json5
           token: ${{ steps.app-token.outputs.token }}
+        env:
+          LOG_FILE: /tmp/renovate-log.txt
+          LOG_FILE_LEVEL: info
 
       - name: Install Copilot CLI
         if: always()
@@ -71,11 +74,7 @@ jobs:
         if: always()
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.MY_COPILOT_TOKEN }}
-          GH_TOKEN: ${{ secrets.MY_COPILOT_TOKEN }}
         run: |
-          # Fetch the Renovate step log from the current workflow run
-          gh run view "${{ github.run_id }}" --repo "${{ github.repository }}" --log > /tmp/renovate-log.txt 2>&1 || true
-
           copilot -p "Read the file /tmp/renovate-log.txt which contains Renovate bot output logs.
           Create a markdown summary organized by repository showing:
           - Which repositories were processed
