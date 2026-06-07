@@ -17,13 +17,13 @@ env:
   # Automatically discover all repositories accessible by the token
   # https://docs.renovatebot.com/self-hosted-configuration/#autodiscover
   RENOVATE_AUTODISCOVER: "true"
-  # Filter autodiscovery to only ruzickap repositories, excluding repos without package files
+  # Filter autodiscovery to only ${{ github.repository_owner }} repositories, with a few explicit exclusions
   # https://docs.renovatebot.com/self-hosted-configuration/#autodiscoverfilter
   RENOVATE_AUTODISCOVER_FILTER: >-
     [
-    "!/^ruzickap/old_stuff$/",
-    "!/^ruzickap/ruzickovabozena\\.xvx\\.cz$/",
-    "!/^ruzickap/wizcli-terraform-test$/",
+    "!/^${{ github.repository_owner }}/old_stuff$/",
+    "!/^${{ github.repository_owner }}/ruzickovabozena\\.xvx\\.cz$/",
+    "!/^${{ github.repository_owner }}/wizcli-terraform-test$/",
     "/^${{ github.repository_owner }}\\/.*/"
     ]
   # Enable dry-run mode for non-main branches to preview changes (https://docs.renovatebot.com/self-hosted-configuration/#dryrun)
