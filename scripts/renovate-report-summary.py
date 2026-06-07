@@ -10,8 +10,8 @@ Usage:
 """
 
 import json
+import os
 import sys
-from collections import defaultdict
 
 
 def load_report(path: str) -> dict:
@@ -65,8 +65,9 @@ def format_version_transition(upgrade: dict) -> str:
     return ""
 
 
-def result_to_status(result: str, pr_no: int | None, pr_blocked_by: str,
-                     repo_name: str) -> str:
+def result_to_status(
+    result: str, pr_no: int | None, pr_blocked_by: str, repo_name: str
+) -> str:
     """Convert branch result to status string with emoji."""
     status = ""
     if result == "automerged":
@@ -105,8 +106,6 @@ def generate_summary(data: dict) -> str:
     # -- Collect statistics --
     total_repos = len(repositories)
     repos_with_activity = 0
-    total_branches_created = 0
-    total_branches_updated = 0
     total_automerged = 0
     total_prs_opened = 0
     total_errors = 0
@@ -162,31 +161,36 @@ def generate_summary(data: dict) -> str:
 
         if problems:
             has_activity = True
-            seen_problems = set()
+            seen_problems: set[tuple[str, str, str, str]] = set()
             for p in problems:
-                key = (repo_name, p.get("branch", ""),
-                       p.get("file", ""), p.get("msg", ""))
-                if key in seen_problems:
+                problem_key = (
+                    repo_name,
+                    p.get("branch", ""),
+                    p.get("file", ""),
+                    p.get("msg", ""),
+                )
+                if problem_key in seen_problems:
                     continue
-                seen_problems.add(key)
-                all_problems.append({
-                    "repository": repo_name,
-                    "branch": p.get("branch", ""),
-                    "msg": p.get("msg", ""),
-                    "level": p.get("level", 30),
-                    "file": p.get("file", ""),
-                })
+                seen_problems.add(problem_key)
+                all_problems.append(
+                    {
+                        "repository": repo_name,
+                        "branch": p.get("branch", ""),
+                        "msg": p.get("msg", ""),
+                        "level": p.get("level", 30),
+                        "file": p.get("file", ""),
+                    }
+                )
 
         if has_activity:
             repos_with_activity += 1
             # Deduplicate problems for per-repo display
             deduped_problems = []
-            seen_repo_problems = set()
+            seen_repo_problems: set[tuple[str, str, str]] = set()
             for p in problems:
-                key = (p.get("branch", ""), p.get("file", ""),
-                       p.get("msg", ""))
-                if key not in seen_repo_problems:
-                    seen_repo_problems.add(key)
+                dedup_key = (p.get("branch", ""), p.get("file", ""), p.get("msg", ""))
+                if dedup_key not in seen_repo_problems:
+                    seen_repo_problems.add(dedup_key)
                     deduped_problems.append(p)
             active_repos[repo_name] = {
                 "branches": repo_active_branches,
@@ -197,30 +201,30 @@ def generate_summary(data: dict) -> str:
 
     # Add global problems
     for p in global_problems:
-        all_problems.append({
-            "repository": p.get("repository", "global"),
-            "branch": p.get("branch", ""),
-            "msg": p.get("msg", ""),
-            "level": p.get("level", 30),
-            "file": p.get("file", ""),
-        })
+        all_problems.append(
+            {
+                "repository": p.get("repository", "global"),
+                "branch": p.get("branch", ""),
+                "msg": p.get("msg", ""),
+                "level": p.get("level", 30),
+                "file": p.get("file", ""),
+            }
+        )
 
     # -- Section 1: Header with global statistics --
     lines.append("# Renovate Report Summary")
     lines.append("")
     lines.append("## 1. Global Statistics")
     lines.append("")
-    lines.append(f"| Metric | Count |")
-    lines.append(f"|--------|-------|")
+    lines.append("| Metric | Count |")
+    lines.append("|--------|-------|")
     lines.append(f"| Total repositories processed | {total_repos} |")
-    lines.append(
-        f"| Repositories with activity | {repos_with_activity} |")
+    lines.append(f"| Repositories with activity | {repos_with_activity} |")
     lines.append(f"| Branches automerged | {total_automerged} |")
     lines.append(f"| PRs opened | {total_prs_opened} |")
     lines.append(f"| Pending branches | {total_pending} |")
     lines.append(f"| Errors | {total_errors} |")
-    lines.append(
-        f"| Warnings/Problems | {len(all_problems)} |")
+    lines.append(f"| Warnings/Problems | {len(all_problems)} |")
     lines.append("")
 
     # -- Section 2: Errors and Warnings --
@@ -253,23 +257,21 @@ def generate_summary(data: dict) -> str:
             continue
 
         # H3 heading linked to GitHub
-        lines.append(
-            f"### [{repo_name}](https://github.com/{repo_name})")
+        lines.append(f"### [{repo_name}](https://github.com/{repo_name})")
         lines.append("")
 
         # Dependency managers detected
         if package_files:
             managers = sorted(package_files.keys())
             lines.append(
-                f"**Dependency managers:** {', '.join(f'`{m}`' for m in managers)}")
+                f"**Dependency managers:** {', '.join(f'`{m}`' for m in managers)}"
+            )
             lines.append("")
 
         # Branch table
         if branches:
-            lines.append(
-                "| Branch | Update Type | Status | Dependencies | Files |")
-            lines.append(
-                "|--------|-------------|--------|--------------|-------|")
+            lines.append("| Branch | Update Type | Status | Dependencies | Files |")
+            lines.append("|--------|-------------|--------|--------------|-------|")
 
             for branch in branches:
                 branch_name = branch.get("branchName", "")
@@ -288,8 +290,7 @@ def generate_summary(data: dict) -> str:
                 update_type = get_update_type(upgrades)
 
                 # Status
-                status = result_to_status(
-                    result, pr_no, pr_blocked_by, repo_name)
+                status = result_to_status(result, pr_no, pr_blocked_by, repo_name)
 
                 # Dependencies
                 deps_seen = set()
@@ -298,13 +299,11 @@ def generate_summary(data: dict) -> str:
                     dep_name = u.get("depName", "")
                     datasource = u.get("datasource", "")
                     package_name = u.get("packageName", "")
-                    dep_key = (dep_name, u.get("newValue", ""),
-                               u.get("newDigest", ""))
+                    dep_key = (dep_name, u.get("newValue", ""), u.get("newDigest", ""))
                     if dep_key in deps_seen:
                         continue
                     deps_seen.add(dep_key)
-                    dep_link = format_dep_link(
-                        dep_name, datasource, package_name)
+                    dep_link = format_dep_link(dep_name, datasource, package_name)
                     version = format_version_transition(u)
                     if version:
                         dep_parts.append(f"{dep_link} {version}")
@@ -331,8 +330,7 @@ def generate_summary(data: dict) -> str:
                     )
                 else:
                     files_str = (
-                        "<br>".join(f"`{f}`" for f in files_list)
-                        if files_list else "—"
+                        "<br>".join(f"`{f}`" for f in files_list) if files_list else "—"
                     )
 
                 lines.append(
@@ -346,16 +344,15 @@ def generate_summary(data: dict) -> str:
         if repo_info["problems"]:
             lines.append("**Errors:**")
             lines.append("")
-            seen = set()
+            seen: set[tuple[str, str]] = set()
             for p in repo_info["problems"]:
                 branch_or_file = p.get("branch", "") or p.get("file", "")
                 msg = p.get("msg", "")
-                key = (branch_or_file, msg)
-                if key in seen:
+                error_key = (branch_or_file, msg)
+                if error_key in seen:
                     continue
-                seen.add(key)
-                lines.append(
-                    f"- `{branch_or_file}`: {msg}")
+                seen.add(error_key)
+                lines.append(f"- `{branch_or_file}`: {msg}")
             lines.append("")
 
     # -- Section 4: Merged Branches summary --
@@ -389,7 +386,6 @@ def main():
 
     report_path = sys.argv[1]
 
-    import os
     if not os.path.isfile(report_path):
         print(
             f"Error: file not found: {report_path}",
