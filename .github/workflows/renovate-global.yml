@@ -71,6 +71,7 @@ jobs:
         with:
           configurationFile: .github/renovate-global.json5
           token: ${{ steps.app-token.outputs.token }}
+          env-regex: "^(?:RENOVATE_\\w+|LOG_\\w+|GITHUB_COM_TOKEN|NODE_OPTIONS|(?:HTTPS?|NO)_PROXY|(?:https?|no)_proxy)$"
         env:
           LOG_FILE: /tmp/renovate-log.txt
           LOG_FILE_LEVEL: info
