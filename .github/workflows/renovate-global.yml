@@ -75,13 +75,16 @@ jobs:
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.MY_COPILOT_TOKEN }}
         run: |
-          copilot -p "Read the file /tmp/renovate-log.txt which contains Renovate bot output logs.
-          Create a markdown summary organized by repository showing:
-          - Which repositories were processed
-          - What updates would be applied (or were applied) in each repo (branches created, PRs, automerges)
-          - Any errors or warnings encountered
-          Group updates by type: automerge, PR creation, branch commits, orphan branch cleanup, onboarding.
-          Format as clear markdown with tables and bullet lists.
-          Write the result to summary.md" \
-            --allow-tool='shell(cat:*,grep:*,wc:*)' --allow-tool=read --allow-tool=write --no-ask-user
-          cat summary.md >> "${GITHUB_STEP_SUMMARY}"
+          copilot --allow-tool='*' --no-ask-user -p "
+            Read the file /tmp/renovate-log.txt which contains Renovate bot output logs.
+
+            Create a markdown summary organized by repository showing:
+            - Which repositories were processed
+            - What updates would be applied (or were applied) in each repo (branches created, PRs, automerges)
+            - Any errors or warnings encountered
+
+            Group updates by type: automerge, PR creation, branch commits, orphan branch cleanup, onboarding.
+            Format as clear markdown with tables and bullet lists.
+            Write the result to /tmp/summary.md"
+
+          cat /tmp/summary.md >> "${GITHUB_STEP_SUMMARY}"
