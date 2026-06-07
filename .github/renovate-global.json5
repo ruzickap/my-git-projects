@@ -107,6 +107,9 @@
   },
   // Wait for releases to be at least 3 days old before creating PRs (reduces risk of buggy releases)
   minimumReleaseAge: "3 days",
+  // Disable onboarding PRs since we manage config centrally in this repo
+  // https://docs.renovatebot.com/self-hosted-configuration/#onboarding
+  onboarding: false,
   // Package-specific Update Rules
   packageRules: [
     {
@@ -180,6 +183,15 @@
   // Rebase branches when they fall behind the base branch
   // https://docs.renovatebot.com/configuration-options/#rebasewhen
   rebaseWhen: "behind-base-branch",
+  // Write a JSON report of all updates to a file
+  // https://docs.renovatebot.com/self-hosted-configuration/#reportpath
+  reportPath: "/tmp/renovate-report.json",
+  // Output report as a file
+  // https://docs.renovatebot.com/self-hosted-configuration/#reporttype
+  reportType: "file",
+  // Ignore repository-level Renovate config files; only use the global config from this repo
+  // https://docs.renovatebot.com/self-hosted-configuration/#requireconfig
+  requireConfig: "ignored",
   // Create separate branches for minor and patch updates
   // https://docs.renovatebot.com/configuration-options/#separateminorpatch
   separateMinorPatch: true,
