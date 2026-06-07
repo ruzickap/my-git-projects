@@ -9,21 +9,13 @@ on:
       dryRun:
         type: boolean
         description: Dry-Run
-      logLevel:
-        type: choice
-        description: Log-Level
-        default: debug
-        options:
-          - info
-          - debug
-          - trace
   # schedule:
   #   - cron: 0 4-6 * * 0
 
 env:
   # keep-sorted start
   # Set log level for debugging (info, debug, or trace) https://docs.renovatebot.com/troubleshooting/#log-debug-levels
-  LOG_LEVEL: ${{ inputs.logLevel || 'debug' }}
+  LOG_LEVEL: info
   # Enable dry-run mode for non-main branches to preview changes (https://docs.renovatebot.com/self-hosted-configuration/#dryrun)
   # Run renovate in dry-run mode if executed in branches other than main to prevent updating versions in PRs/branches
   RENOVATE_DRY_RUN: ${{ inputs.dryRun || ( github.head_ref || github.ref_name ) != 'main' || false }}
@@ -70,7 +62,7 @@ jobs:
         if: always()
         run: npm install -g @github/copilot
 
-      - name: Summarize Renovate output
+      - name: 📝 Summarize Renovate output
         if: always()
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.MY_COPILOT_TOKEN }}
@@ -88,3 +80,11 @@ jobs:
             Write the result to /tmp/summary.md"
 
           cat /tmp/summary.md >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Upload Renovate log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: renovate-log
+          path: /tmp/renovate-log.txt
+          retention-days: 1
