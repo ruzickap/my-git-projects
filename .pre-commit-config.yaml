@@ -13,7 +13,7 @@ repos:
     rev: v6.0.0
     hooks:
       - id: check-added-large-files
-        args: ["--maxkb=600"]
+        args: ["--maxkb=1024"]
       - id: check-json
         exclude: .*/devcontainer\.json$|settings\.json$
       - id: check-merge-conflict
