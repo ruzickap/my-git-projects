@@ -55,6 +55,7 @@ jobs:
         with:
           client-id: ${{ secrets.MY_RENOVATE_GITHUB_CLIENT_ID }}
           private-key: ${{ secrets.MY_RENOVATE_GITHUB_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }} # zizmor: ignore[github-app]
           permission-contents: write
           permission-pull-requests: write
           permission-issues: write
