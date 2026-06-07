@@ -71,8 +71,13 @@ jobs:
         with:
           configurationFile: .github/renovate-global.json5
           token: ${{ steps.app-token.outputs.token }}
+          # Override default env-regex to pass LOG_FILE* vars to the Docker container
+          # Default only passes LOG_LEVEL; LOG_FILE and LOG_FILE_LEVEL need LOG_\w+
+          # https://github.com/renovatebot/github-action#env-regex
           env-regex: "^(?:RENOVATE_\\w+|LOG_\\w+|GITHUB_COM_TOKEN|NODE_OPTIONS|(?:HTTPS?|NO)_PROXY|(?:https?|no)_proxy)$"
         env:
+          # Write Renovate logs to a file (JSON format by default) for post-processing
+          # https://docs.renovatebot.com/config-overview/#special-environment-variables
           LOG_FILE: /tmp/renovate-log.txt
           LOG_FILE_LEVEL: info
 
