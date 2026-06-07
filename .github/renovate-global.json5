@@ -108,7 +108,11 @@
       matchManagers: ["mise"],
     },
   ],
+  // PR body template showing dependency table, notes, and changelogs
+  // https://docs.renovatebot.com/configuration-options/#prbodytemplate
   prBodyTemplate: "{{{table}}}{{{notes}}}{{{changelogs}}}",
+  // Rebase branches when they fall behind the base branch
+  // https://docs.renovatebot.com/configuration-options/#rebasewhen
   rebaseWhen: "behind-base-branch",
   // Repository-specific rules for the global Renovate workflow
   // https://docs.renovatebot.com/configuration-options/#repositoryrules
@@ -191,6 +195,8 @@
       ],
     },
   ],
+  // Create separate branches for minor and patch updates
+  // https://docs.renovatebot.com/configuration-options/#separateminorpatch
   separateMinorPatch: true,
   // Username for Renovate commits
   // https://docs.renovatebot.com/self-hosted-configuration/#username
