@@ -14,8 +14,6 @@ on:
 
 env:
   # keep-sorted start
-  # Set log level for debugging (info, debug, or trace) https://docs.renovatebot.com/troubleshooting/#log-debug-levels
-  LOG_LEVEL: info
   # Automatically discover all repositories accessible by the token
   # https://docs.renovatebot.com/self-hosted-configuration/#autodiscover
   RENOVATE_AUTODISCOVER: "true"
@@ -80,7 +78,7 @@ jobs:
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.MY_COPILOT_TOKEN }}
         run: |
-          copilot --allow-tool='*' --no-ask-user -p "
+          copilot --prompt "
             Read the file /tmp/renovate-log.txt which contains Renovate bot output logs.
 
             Create a markdown summary organized by repository showing:
@@ -90,7 +88,7 @@ jobs:
 
             Group updates by type: automerge, PR creation, branch commits, orphan branch cleanup, onboarding.
             Format as clear markdown with tables and bullet lists.
-            Write the result to /tmp/summary.md"
+            Write the result to /tmp/summary.md" --yolo --no-ask-user --no-custom-instructions
 
           cat /tmp/summary.md >> "${GITHUB_STEP_SUMMARY}"
 
