@@ -125,7 +125,7 @@ case "${REPOSITORY}" in
     megalinter_flavor cupcake
     ;;
   ruzickap/malware-cryptominer-container)
-    checkout_files ".checkov.yml" ".github/workflows/release-please.yml" ".github/renovate.json5"
+    checkout_files ".checkov.yml" ".github/workflows/release-please.yml"
     megalinter_flavor cupcake
     ;;
   ruzickap/my-git-projects)
@@ -138,7 +138,7 @@ case "${REPOSITORY}" in
     megalinter_flavor cupcake
     ;;
   ruzickap/ruzickap.github.io)
-    checkout_files ".github/renovate.json5" ".rumdl.toml" ".mega-linter.yml" "AGENTS.md"
+    checkout_files ".rumdl.toml" ".mega-linter.yml" "AGENTS.md"
     megalinter_flavor ruby
     ;;
   ruzickap/wiz-certification-notes)

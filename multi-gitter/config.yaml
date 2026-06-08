@@ -49,6 +49,7 @@ merge-type:
 platform: github
 
 # Pull request configuration
+draft: true
 pr-title: "chore: add default github repo files"
 pr-body: |
   This PR adds/updates standardized repository configuration files including:
