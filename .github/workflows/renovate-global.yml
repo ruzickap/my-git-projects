@@ -21,6 +21,7 @@ env:
   # https://docs.renovatebot.com/self-hosted-configuration/#autodiscoverfilter
   RENOVATE_AUTODISCOVER_FILTER: >-
     [
+    "!/^${{ github.repository_owner }}/k8s-multicluster-gitops$/",
     "!/^${{ github.repository_owner }}/old_stuff$/",
     "!/^${{ github.repository_owner }}/ruzickovabozena\\.xvx\\.cz$/",
     "!/^${{ github.repository_owner }}/wizcli-terraform-test$/",
@@ -81,21 +82,18 @@ jobs:
           COPILOT_GITHUB_TOKEN: ${{ secrets.MY_COPILOT_TOKEN }}
         run: |
           copilot --prompt "
-            Read /tmp/renovate-report.json (Renovate report, keys: problems, repositories).
+            Read /tmp/renovate-log.json.
             Write a GitHub-flavored Markdown summary to /tmp/summary.md with these sections:
 
             1. Global stats table: total repos, repos with activity, automerged, PRs, pending, errors, warnings
-            2. Errors/Warnings table (deduplicated): Repository | Branch/File | Message
-            3. Per-repo details (skip repos with only no-work/not-scheduled branches):
-               - H3 heading linked to GitHub, dependency managers from packageFiles keys
+            2. Errors/Warnings table: Repository | Branch/File | Message
+            3. Per-repo details:
+               - H3 heading linked to GitHub, dependency managers
                - Table: Branch | Update Type | Status | Dependencies | Files
                - Status emojis: automerged=checkmark, error=X, pending=hourglass, done+BranchAutomerge=hourglass
-               - Link branches to /tree/<branch>, PRs to /pull/<prNo>, github-tags deps to their repos
-               - Show depName currentValue->newValue (max 5), packageFile names (max 3)
+               - Show dependency name current value -> new value, packageFile names
             4. Merged branches summary table with total count
-
-            Key fields: branches[].{branchName,result,prNo,prBlockedBy,upgrades[]},
-            problems[].{branch,file,msg}, upgrades[].{depName,currentValue,newValue,updateType,datasource,packageFile}
+            5. Create links for all files, commits, PRs mentioned in document
             " --yolo --no-ask-user --no-custom-instruction
 
       - name: Upload Renovate log
@@ -104,12 +102,4 @@ jobs:
         with:
           name: renovate-log
           path: /tmp/renovate-log.json
-          retention-days: 1
-
-      - name: Upload Renovate report
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: renovate-report
-          path: /tmp/renovate-report.json
           retention-days: 1

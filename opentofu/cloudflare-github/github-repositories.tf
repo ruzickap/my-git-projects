@@ -4,11 +4,8 @@ locals {
   # Default secrets applied to all GitHub repositories
   github_action_default_secrets = {
     # keep-sorted start
-    "MY_RENOVATE_GITHUB_APP_ID"      = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_ID.value # TODO: delete in July, replaced by MY_RENOVATE_GITHUB_CLIENT_ID
-    "MY_RENOVATE_GITHUB_CLIENT_ID"   = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_CLIENT_ID.value
-    "MY_RENOVATE_GITHUB_PRIVATE_KEY" = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_PRIVATE_KEY.value
-    "MY_SLACK_BOT_TOKEN"             = data.aws_ssm_parameter.github_shared_actions_secrets_MY_SLACK_BOT_TOKEN.value
-    "MY_SLACK_CHANNEL_ID"            = data.aws_ssm_parameter.github_shared_actions_secrets_MY_SLACK_CHANNEL_ID.value
+    "MY_SLACK_BOT_TOKEN"  = data.aws_ssm_parameter.github_shared_actions_secrets_MY_SLACK_BOT_TOKEN.value
+    "MY_SLACK_CHANNEL_ID" = data.aws_ssm_parameter.github_shared_actions_secrets_MY_SLACK_CHANNEL_ID.value
     # keep-sorted end
   }
   github_repositories = {
@@ -153,7 +150,9 @@ locals {
       topics      = ["github", "projects", "templates"]
       secrets = {
         # keep-sorted start
-        "MY_AWS_AWS_ROLE_TO_ASSUME" = data.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_MY_AWS_AWS_ROLE_TO_ASSUME.value
+        "MY_AWS_AWS_ROLE_TO_ASSUME"      = data.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_MY_AWS_AWS_ROLE_TO_ASSUME.value
+        "MY_RENOVATE_GITHUB_CLIENT_ID"   = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_CLIENT_ID.value
+        "MY_RENOVATE_GITHUB_PRIVATE_KEY" = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_PRIVATE_KEY.value
         # Needed for aws-cloudformation-gh-action.yml
         "RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"      = data.aws_ssm_parameter.github_shared_actions_secrets_RUZICKA_SBX01_AWS_ROLE_TO_ASSUME.value
         "TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE" = var.opentofu_encryption_passphrase

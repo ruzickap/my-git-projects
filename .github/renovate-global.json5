@@ -157,6 +157,14 @@
       matchFileNames: ["_posts/**"],
       enabled: false,
     },
+    {
+      description: "Pin Ruby to 3.x in ruzickap.github.io (skip major v4)",
+      matchRepositories: ["ruzickap/ruzickap.github.io"],
+      matchPackageNames: ["ruby"],
+      matchManagers: ["github-actions"],
+      matchUpdateTypes: ["major"],
+      enabled: false,
+    },
     // {
     //   description: "Grafana Dashboards automerge for ruzickap.github.io",
     //   matchRepositories: ["ruzickap/ruzickap.github.io"],
@@ -182,15 +190,6 @@
   // Rebase branches when they fall behind the base branch
   // https://docs.renovatebot.com/configuration-options/#rebasewhen
   rebaseWhen: "behind-base-branch",
-  // Write a JSON report of all updates to a file
-  // https://docs.renovatebot.com/self-hosted-configuration/#reportpath
-  reportPath: "/tmp/renovate-report.json",
-  // Output report as a file
-  // https://docs.renovatebot.com/self-hosted-configuration/#reporttype
-  reportType: "file",
-  // Ignore repository-level Renovate config files; only use the global config from this repo
-  // https://docs.renovatebot.com/self-hosted-configuration/#requireconfig
-  requireConfig: "ignored",
   // Create separate branches for minor and patch updates
   // https://docs.renovatebot.com/configuration-options/#separateminorpatch
   separateMinorPatch: true,
