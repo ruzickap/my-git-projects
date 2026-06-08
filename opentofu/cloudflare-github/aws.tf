@@ -94,11 +94,6 @@ data "aws_ssm_parameter" "github_ruzickap_ruzickap_github_io_actions_secrets_MY_
   with_decryption = true
 }
 
-data "aws_ssm_parameter" "github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_ID" {
-  name            = "/github/shared/actions-secrets/MY_RENOVATE_GITHUB_APP_ID"
-  with_decryption = true
-}
-
 data "aws_ssm_parameter" "github_shared_actions_secrets_MY_RENOVATE_GITHUB_CLIENT_ID" {
   name            = "/github/shared/actions-secrets/MY_RENOVATE_GITHUB_CLIENT_ID"
   with_decryption = true

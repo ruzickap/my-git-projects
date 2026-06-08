@@ -74,7 +74,6 @@ the `my-aws` profile (local) or OIDC role (CI).
 | `google_client_secret`                                                      | Google client secret                                       |
 | `my_atlassian_personal_token`                                               | Atlassian personal access token                            |
 | `my_aws_aws_role_to_assume`                                                 | AWS role ARN for OIDC in GitHub Actions CI                 |
-| `my_renovate_github_app_id`                                                 | Renovate GitHub App ID                                     |
 | `my_renovate_github_private_key`                                            | Renovate GitHub App private key                            |
 | `my_slack_bot_token`                                                        | Slack bot token                                            |
 | `my_slack_channel_id`                                                       | Slack channel ID                                           |
