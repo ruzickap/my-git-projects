@@ -57,15 +57,15 @@
       versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
     },
     // Custom manager for Grafana dashboard revisions (for ruzickap.github.io)
-    {
-      datasourceTemplate: "custom.grafana-dashboards",
-      customType: "regex",
-      managerFilePatterns: ["/\\.md$/"],
-      matchStrings: [
-        '# renovate: depName="(?<depName>.*)"\\n\\s+gnetId:\\s+(?<packageName>.*?)\\n\\s+revision:\\s+(?<currentValue>.*)',
-      ],
-      versioningTemplate: "regex:^(?<major>\\d+)$",
-    },
+    // {
+    //   datasourceTemplate: "custom.grafana-dashboards",
+    //   customType: "regex",
+    //   managerFilePatterns: ["/\\.md$/"],
+    //   matchStrings: [
+    //     '# renovate: depName="(?<depName>.*)"\\n\\s+gnetId:\\s+(?<packageName>.*?)\\n\\s+revision:\\s+(?<currentValue>.*)',
+    //   ],
+    //   versioningTemplate: "regex:^(?<major>\\d+)$",
+    // },
     // Custom manager for raw.githubusercontent.com URLs (for ruzickap.github.io)
     {
       currentValueTemplate: "{{#if currentValue}}{{{currentValue}}}{{else}}main{{/if}}",
@@ -146,36 +146,35 @@
       enabled: false,
     },
     {
-      description: "Auto-merge digest updates for malware-cryptominer-container",
-      matchRepositories: ["ruzickap/malware-cryptominer-container"],
-      matchUpdateTypes: ["digest"],
-      automerge: true,
-      minimumReleaseAge: "3 days",
-    },
-    {
       description: "Skip pinning for slsa-framework/slsa-github-generator",
       matchRepositories: ["ruzickap/malware-cryptominer-container"],
       matchPackageNames: ["slsa-framework/slsa-github-generator"],
       pinDigests: false,
     },
     {
-      description: "Grafana Dashboards automerge for ruzickap.github.io",
+      description: "Skip renovating _posts directory in ruzickap.github.io",
       matchRepositories: ["ruzickap/ruzickap.github.io"],
-      matchDatasources: ["custom.grafana-dashboards"],
-      matchUpdateTypes: ["major"],
-      automerge: true,
-      commitBody: "[skip ci]",
-      ignoreTests: true,
+      matchFileNames: ["_posts/**"],
+      enabled: false,
     },
-    {
-      description: "Automerge all patch, pin and digest updates for custom.regex in ruzickap.github.io",
-      matchRepositories: ["ruzickap/ruzickap.github.io"],
-      matchManagers: ["custom.regex"],
-      matchUpdateTypes: ["patch", "pin", "digest"],
-      automerge: true,
-      commitBody: "[skip ci]",
-      ignoreTests: true,
-    },
+    // {
+    //   description: "Grafana Dashboards automerge for ruzickap.github.io",
+    //   matchRepositories: ["ruzickap/ruzickap.github.io"],
+    //   matchDatasources: ["custom.grafana-dashboards"],
+    //   matchUpdateTypes: ["major"],
+    //   automerge: true,
+    //   commitBody: "[skip ci]",
+    //   ignoreTests: true,
+    // },
+    // {
+    //   description: "Automerge all patch, pin and digest updates for custom.regex in ruzickap.github.io",
+    //   matchRepositories: ["ruzickap/ruzickap.github.io"],
+    //   matchManagers: ["custom.regex"],
+    //   matchUpdateTypes: ["patch", "pin", "digest"],
+    //   automerge: true,
+    //   commitBody: "[skip ci]",
+    //   ignoreTests: true,
+    // },
   ],
   // PR body template showing dependency table, notes, and changelogs
   // https://docs.renovatebot.com/configuration-options/#prbodytemplate
