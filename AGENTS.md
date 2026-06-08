@@ -1,179 +1,85 @@
-# AI Agent Guidelines
+# AGENTS.md
 
-## Project Overview
+Repo-specific notes for `ruzickap/my-git-projects`. General linting, commit,
+branch, and PR conventions live in the shared `~/.config/opencode/AGENTS.md`
+and are not repeated here. This file only captures what an agent would
+otherwise get wrong.
 
-Infrastructure-as-code repository (`ruzickap/my-git-projects`) managing
-Cloudflare, GitHub, Supabase, and UptimeRobot resources via OpenTofu.
-Also contains GitHub Actions workflows, multi-gitter scripts, and repository
-default templates distributed to ~40+ repos.
+## What this repo actually is
 
-**Tech stack**: HCL (OpenTofu/Terraform), Bash, YAML, JSON5
-**No application code or tests** -- quality is enforced through linting,
-security scanning, and CI validation.
+This is **not** an application. It is the owner's personal control plane:
 
-## Repository Structure
+- `gh-repo-defaults/` — template files that multi-gitter **copies into ~30
+  other repositories**. Editing a file here changes every downstream repo on
+  the next multi-gitter run, not just this one.
+- `multi-gitter/` — the engine that distributes `gh-repo-defaults/`
+  (`config.yaml` + `multi-gitter-run-script.sh`).
+- `opentofu/` — two independent OpenTofu root modules managing the owner's
+  real AWS / Cloudflare / GitHub / Supabase / UptimeRobot infrastructure.
+- `cloudformation/gh-action-iam-role-oidc.yaml` — legacy bootstrap of the AWS
+  OIDC role; the OpenTofu `aws` module is the current source of truth for the
+  same resources.
+- `README.md` is a personal git/`gh` command cheatsheet. It does **not**
+  document this repo's architecture — do not treat it as such.
 
-```text
-opentofu/cloudflare-github/  # Main IaC module (Cloudflare, GitHub, etc.)
-opentofu/aws/                # AWS IAM bootstrap module (apply first)
-gh-repo-defaults/            # Default files synced to ~40+ repos
-multi-gitter/                # Scripts for bulk repo updates
-.github/workflows/           # CI: MegaLinter, OpenTofu plan/apply
-```
+## This repo dogfoods its own defaults
 
-## Build / Lint / Test Commands
+The root config files (`.mega-linter.yml`, `.rumdl.toml`, `.checkov.yml`,
+`lychee.toml`, `SECURITY.md`, `.github/workflows/*`) are **copies** of the
+files under `gh-repo-defaults/my-defaults/`. They are plain copies, not
+symlinks.
 
-### OpenTofu (run from `opentofu/cloudflare-github/`)
+- When you change a shared config, update **both** the root copy and the
+  `gh-repo-defaults/my-defaults/` copy, or they silently drift.
+- This repo is processed by multi-gitter as `ruzickap/my-git-projects` with the
+  `cupcake` MegaLinter flavor (see `multi-gitter-run-script.sh`).
 
-```bash
-tofu init                             # Initialize providers and backend
-tofu fmt -check -recursive            # Check HCL formatting
-tofu validate                         # Validate configuration
-tofu plan                             # Preview changes (requires secrets)
-tofu apply                            # Apply changes (requires secrets)
-```
+## AGENTS.md is special — do not let it get overwritten
 
-OpenTofu `1.11.5` is pinned in `opentofu/cloudflare-github/mise.toml` (managed
-by [mise](https://mise.jdx.dev/)).
+- `copy_defaults()` copies defaults with `--exclude AGENTS.md`, so this file is
+  **never** overwritten by a normal multi-gitter run.
+- The run script only seeds `AGENTS.md` from `gh-repo-defaults/my-defaults/`
+  (then runs `opencode run --command init`) when a target repo has **no**
+  `AGENTS.md`.
+- Therefore `gh-repo-defaults/my-defaults/AGENTS.md` is a generic starter
+  template. This root `AGENTS.md` is meant to be repo-specific and to diverge
+  from it. Do not "fix" the divergence by resetting this file to the default.
 
-### Pre-commit (run from repo root)
+## OpenTofu — how to run modules
 
-```bash
-pre-commit run --all-files            # Run ALL hooks (full suite)
-pre-commit run "hook-id" --all-files  # Run single hook
-pre-commit run shellcheck --all-files # Lint shell scripts
-pre-commit run shfmt --all-files      # Format shell scripts
-pre-commit run actionlint-system --all-files
-pre-commit run terraform_fmt --all-files
-pre-commit run rumdl-fmt --all-files # Lint + format markdown
-pre-commit run keep-sorted --all-files
-```
+Both modules use [mise](https://mise.jdx.dev/) + `fnox` (`mise.toml` +
+`fnox.toml`). `mise` pins the `opentofu` version and exports
+`AWS_PROFILE=my-aws` / `AWS_REGION=eu-central-1`; `fnox` injects `TF_VAR_*`
+secrets from AWS SSM Parameter Store. With mise active, just run `tofu init`
+and `tofu plan` / `tofu apply` inside the module dir.
 
-Install: `pre-commit install && pre-commit install --hook-type commit-msg`
+- `opentofu/aws/` — **local** state. Must be applied **first**: it provisions
+  the `aws-cli` IAM user and writes the `~/.aws/credentials` / `~/.aws/config`
+  `[my-aws]` profile that the other module depends on. First-ever apply needs a
+  manual bootstrap (temporary admin key + manually created SSM params) —
+  see `opentofu/aws/README.md`.
+- `opentofu/cloudflare-github/` — **encrypted** S3 remote state (AES-GCM via
+  PBKDF2). Requires `TF_VAR_opentofu_encryption_passphrase`; without it `tofu
+  init` against existing state will fail.
+- Provider versions are **pinned exactly** in `main.tf` (e.g. `aws = 6.48.0`);
+  Renovate bumps them. Keep `required_providers` blocks sorted (`keep-sorted`).
+- `opentofu/aws/` runs `tofu test` in CI (`tofu-aws-tests.yml`) but no
+  `*.tftest.hcl` files exist yet — add them in `opentofu/aws/` if writing
+  tests. `cloudflare-github` has no automated tests (it touches live infra).
 
-### Individual Linters
+## Gotchas worth knowing
 
-```bash
-shellcheck script.sh                         # Lint shell script
-shfmt --indent=2 --space-redirects script.sh # Format shell script
-actionlint                                   # Validate GH Actions workflows
-rumdl file.md                                # Lint markdown
-lychee --cache .                             # Check URLs
-tflint                                       # Lint Terraform/OpenTofu
-checkov --quiet -d .                         # IaC security scan
-trivy fs --severity HIGH,CRITICAL .          # Vulnerability scan
-codespell                                    # Spell check (config: .codespellrc)
-```
-
-CI: MegaLinter (cupcake flavor) in `.github/workflows/mega-linter.yml`; OpenTofu
-plan/apply in `.github/workflows/tofu-cloudflare-github.yml`.
-
-## Code Style Guidelines
-
-### HCL / OpenTofu
-
-- **Naming**: `snake_case` for all resource names, variables, locals
-- **Resource naming**: use `this` as the resource name with `for_each`
-- **Data-driven pattern**: define resources as maps in `locals`, iterate with
-  `for_each`; use `try()` for optional fields
-- **Lifecycle**: use `prevent_destroy = true` on critical resources
-- **Format**: `tofu fmt` (canonical HCL formatting); two-space indent; align
-  `=` signs within blocks
-- **Sorted blocks**: use `# keep-sorted` for alphabetical ordering; add
-  `block=yes` for multi-line blocks and `newline_separated=yes` when blocks are
-  separated by blank lines
-- **Security annotations** (inline suppression):
-  - `# checkov:skip=CKV_...`
-  - `# trivy:ignore:avd-git-0001 <reason>`
-  - `# codespell:ignore` (end-of-line, for false-positive words)
-
-### Shell Scripts
-
-- Shebang: `#!/usr/bin/env bash`; always `set -euo pipefail`
-- UPPERCASE variables with braces: `${MY_VARIABLE}`
-- Format: `shfmt --indent=2 --space-redirects`
-- Lint: `shellcheck` (SC2317 excluded)
-- Two-space indentation; use functions for reusable logic
-- Redirect stderr for logging: `echo "msg" >&2`
-- Validate dependencies early: `command -v tool > /dev/null || die "..."`
-
-### YAML
-
-- Start files with `---`; two-space indentation
-- Lint: `yamllint` (relaxed profile, line-length disabled)
-- Format: `prettier` (markdown excluded from prettier)
-- Use `# keep-sorted` for sorted lists
-
-### Markdown
-
-- Lint: `rumdl` (not markdownlint); line-length applies to prose only (code
-  blocks excluded via `.rumdl.toml`)
-- Wrap at 80 characters; proper heading hierarchy
-- Language identifiers required in code fences
-- `CHANGELOG.md` is auto-generated -- excluded from all linting
-
-### JSON / JSON5
-
-- Lint JSON with `jsonlint --comments` (comments allowed)
-- JSON5 used for Renovate config (`.github/renovate.json5`)
-- Excluded from lint: `.devcontainer/devcontainer.json`
-
-### GitHub Actions Workflows
-
-- **Always validate with `actionlint`** after modifications
-- Pin all actions to full SHA with version comment:
-  `uses: actions/checkout@<full-sha> # v4.2.0`
-- Set `permissions: read-all` at workflow level, override per-job with minimal
-  permissions and inline comments explaining each
-- Prefer `ubuntu-24.04-arm` runners
-- Set explicit `timeout-minutes` on jobs
-- Use `# keep-sorted` for env blocks
-
-### Spell Checking
-
-- `codespell` (pre-commit): config in `.codespellrc`; custom ignores for
-  abbreviations like `aks`
-- `typos` (optional): config in `_typos.toml`
-
-## Security
-
-- **Secrets**: passed as `TF_VAR_*` environment variables; never in code
-- **Secrets in CI**: stored as GitHub repository secrets
-- **Security scanners** (all in CI):
-  Checkov (skip `CKV_GHA_7`), DevSkim (ignore DS162092, DS137138),
-  Trivy (HIGH/CRITICAL, ignores unfixed), Gitleaks (pre-commit hook)
-
-## Version Control
-
-### Commit Messages
-
-Conventional commits enforced by commitizen, gitlint, and commit-check.
-
-- Format: `<type>: <description>` (lowercase, no period)
-- Types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `style`, `perf`,
-  `ci`, `build`, `revert`
-- Subject: imperative mood, max 72 characters
-- Body: wrap at 72 chars, explain what/why, reference issues with `Fixes`,
-  `Closes`, `Resolves`
-- Direct commits to `main`/`master` blocked by pre-commit hook
-
-### Branching
-
-Conventional branch format: `<type>/<description>` -- `feature/`, `feat/`,
-`bugfix/`, `fix/`, `hotfix/`, `release/`, `chore/`. Use lowercase, hyphens, no
-consecutive/leading/trailing hyphens.
-
-### Pull Requests
-
-- Create as **draft**; title must follow conventional commit format
-- Link related issues with keywords; CI must pass before merge
-
-## Quality Checklist
-
-- [ ] `pre-commit run --all-files` passes
-- [ ] HCL formatted with `tofu fmt`
-- [ ] Shell scripts pass `shellcheck` and `shfmt`
-- [ ] GitHub Actions validated with `actionlint`; pinned to full SHA
-- [ ] Markdown wrapped at 80 characters
-- [ ] `# keep-sorted` blocks remain sorted
-- [ ] No secrets or credentials in code; two-space indentation (no tabs)
+- `local_sensitive_file` in `opentofu/aws/` **fully owns** `~/.aws/credentials`
+  and `~/.aws/config`. A `tofu apply` overwrites any manual edits to those
+  files. Both modules' `[default]` profile points at a *different* AWS account
+  whose creds are passed via `TF_VAR_aws_default_*` and are not module-managed.
+- CI applies `opentofu/cloudflare-github` automatically on push to `main` and
+  on PRs labeled `tofu-apply`; the weekly schedule runs a drift check that
+  opens an issue. Changing files there is a live infrastructure change.
+- `checkov:skip` / `trivy:ignore` inline comments in the `.tf` files are
+  intentional (personal-account tradeoffs). Don't remove them to "fix" a scan.
+- The `prettier` pre-commit hook **excludes `*.md`**; Markdown is formatted by
+  `rumdl` instead. `CHANGELOG.md` is excluded from every linter and is
+  generated by release-please — never hand-edit it.
+- Branch protection blocks direct commits to `main`/`master`
+  (`no-commit-to-branch`). Work on a `chore/`, `feat/`, or `fix/` branch.
