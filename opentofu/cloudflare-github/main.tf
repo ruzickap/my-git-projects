@@ -84,7 +84,7 @@ locals {
   # Name of the Cloudflare API token to manage
   opentofu_cloudflare_github_api_token_name = "opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)"
   # ARN prefix for SSM parameters — used by ephemeral resources which require ARN instead of name (https://github.com/hashicorp/terraform-provider-aws/issues/40623)
-  ssm_parameter_arn_prefix = "arn:aws:ssm:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:parameter"
+  ssm_parameter_arn_prefix = "arn:aws:ssm:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:parameter"
   # keep-sorted end
 }
 
