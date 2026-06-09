@@ -31,22 +31,6 @@ resource "cloudflare_notification_policy" "this" {
   }
 }
 
-# Cloudflare Status: Cloudflare is experiencing a critical incident
-resource "cloudflare_notification_policy" "incident" {
-  account_id  = local.cloudflare_account_id
-  alert_type  = "incident_alert"
-  name        = "Incident Alert"
-  description = "Cloudflare is experiencing a critical incident"
-  mechanisms = {
-    email = [{
-      id = local.my_email
-    }]
-  }
-  filters = {
-    incident_impact = ["INCIDENT_IMPACT_CRITICAL"]
-  }
-}
-
 # Tunnel Health: Receive an alert for the health of a Tunnel
 resource "cloudflare_notification_policy" "tunnel_health" {
   account_id  = local.cloudflare_account_id
