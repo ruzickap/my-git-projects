@@ -48,6 +48,11 @@ locals {
         "WIZ_CLIENT_SECRET" = data.aws_ssm_parameter.github_ruzickap_pre_commit_wizcli_actions_secrets_WIZ_CLIENT_SECRET.value
       }
     }
+    "renovate_summary_generator" = {
+      name        = "renovate-summary-generator"
+      description = "Create a Markdown summary by parsing Renovate debug log"
+      topics      = ["renovate", "log", "parser", "debug", "public", "markdown"]
+    }
     "wiz_certification_notes" = {
       name        = "wiz-certification-notes"
       description = "Wiz Certified exams Notes"
