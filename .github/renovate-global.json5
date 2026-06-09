@@ -8,12 +8,24 @@
    *
    * Documentation: https://docs.renovatebot.com/configuration-options/
    */
-  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  $schema: "https://docs.renovatebot.com/renovate-global-schema.json",
 
   // # keep-sorted start block=yes
   "git-submodules": {
     enabled: true,
   },
+  // Automatically discover all repositories accessible by the token
+  // https://docs.renovatebot.com/self-hosted-configuration/#autodiscover
+  autodiscover: true,
+  // Filter autodiscovery to only ruzickap repositories, with a few explicit exclusions
+  // https://docs.renovatebot.com/self-hosted-configuration/#autodiscoverfilter
+  autodiscoverFilter: [
+    "!ruzickap/k8s-multicluster-gitops",
+    "!ruzickap/old_stuff",
+    "!ruzickap/ruzickovabozena.xvx.cz",
+    "!ruzickap/wizcli-terraform-test",
+    "ruzickap/*",
+  ],
   // Automatically merge PRs when all tests pass
   // https://docs.renovatebot.com/configuration-options/#automerge
   automerge: true,
@@ -23,7 +35,6 @@
   // Custom prefix for Renovate branches
   // https://docs.renovatebot.com/configuration-options/#branchprefix
   branchPrefix: "chore/renovate/",
-  // Custom datasource for Grafana dashboard revisions (for ruzickap.github.io)
   customDatasources: {
     "grafana-dashboards": {
       defaultRegistryUrlTemplate: "https://grafana.com/api/dashboards/{{packageName}}",

@@ -13,36 +13,15 @@ on:
   #   - cron: 0 4-6 * * 0
 
 env:
-  # keep-sorted start block=yes
-  # Automatically discover all repositories accessible by the token
-  # https://docs.renovatebot.com/self-hosted-configuration/#autodiscover
-  RENOVATE_AUTODISCOVER: "true"
-  # Filter autodiscovery to only ${{ github.repository_owner }} repositories, with a few explicit exclusions
-  # https://docs.renovatebot.com/self-hosted-configuration/#autodiscoverfilter
-  RENOVATE_AUTODISCOVER_FILTER: >-
-    [
-    "!/^${{ github.repository_owner }}/k8s-multicluster-gitops$/",
-    "!/^${{ github.repository_owner }}/old_stuff$/",
-    "!/^${{ github.repository_owner }}/ruzickovabozena\\.xvx\\.cz$/",
-    "!/^${{ github.repository_owner }}/wizcli-terraform-test$/",
-    "/^${{ github.repository_owner }}\\/.*/"
-    ]
   # Enable dry-run mode based on the workflow input (https://docs.renovatebot.com/self-hosted-configuration/#dryrun)
   RENOVATE_DRY_RUN: ${{ inputs.dryRun && 'full' || 'null' }}
-  # Skip archived repositories
-  # https://docs.renovatebot.com/self-hosted-configuration/#ignorearchived
-  RENOVATE_IGNORE_ARCHIVED: "true"
-  # Username for Renovate commits
-  # https://docs.renovatebot.com/self-hosted-configuration/#username
-  RENOVATE_USERNAME: ${{ github.repository_owner }}
-  # keep-sorted end
 
 permissions: read-all
 
 jobs:
   renovate-global:
     runs-on: ubuntu-24.04-arm
-    timeout-minutes: 120
+    timeout-minutes: 60
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
@@ -72,29 +51,8 @@ jobs:
           configurationFile: .github/renovate-global.json5
           token: ${{ steps.app-token.outputs.token }}
         env:
-          # Write Renovate logs to a file (JSON format by default)
-          # https://docs.renovatebot.com/config-overview/#special-environment-variables
+          # Write Renovate logs to a file - https://docs.renovatebot.com/config-overview/#special-environment-variables
           LOG_FILE: /tmp/renovate-log.json
-
-      - name: 📝 Summarize Renovate output
-        if: always()
-        env:
-          COPILOT_GITHUB_TOKEN: ${{ secrets.MY_COPILOT_TOKEN }}
-        run: |
-          copilot --prompt "
-            Read /tmp/renovate-log.json.
-            Write a GitHub-flavored Markdown summary to /tmp/summary.md with these sections:
-
-            1. Global stats table: total repos, repos with activity, automerged, PRs, pending, errors, warnings
-            2. Errors/Warnings table: Repository | Branch/File | Message
-            3. Per-repo details:
-               - H3 heading linked to GitHub, dependency managers
-               - Table: Branch | Update Type | Status | Dependencies | Files
-               - Status emojis: automerged=checkmark, error=X, pending=hourglass, done+BranchAutomerge=hourglass
-               - Show dependency name current value -> new value, packageFile names
-            4. Merged branches summary table with total count
-            5. Create links for all files, commits, PRs mentioned in document
-            " --yolo --no-ask-user --no-custom-instruction
 
       - name: Upload Renovate log
         if: always()
@@ -102,4 +60,6 @@ jobs:
         with:
           name: renovate-log
           path: /tmp/renovate-log.json
+          if-no-files-found: error
+          compression-level: 9
           retention-days: 1

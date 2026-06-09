@@ -137,6 +137,9 @@ case "${REPOSITORY}" in
   ruzickap/pre-commit-wizcli)
     megalinter_flavor cupcake
     ;;
+  ruzickap/renovate-summary-generator)
+    megalinter_flavor go
+    ;;
   ruzickap/ruzickap.github.io)
     checkout_files ".rumdl.toml" ".mega-linter.yml" "AGENTS.md"
     megalinter_flavor ruby
