@@ -70,7 +70,7 @@ jobs:
 
       - name: Save lychee cache
         uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        if: always() && steps.restore-cache.outputs.cache-primary-key
+        if: always() && steps.restore-cache.outputs.cache-hit != 'true'
         with:
           path: .lycheecache
           key: ${{ steps.restore-cache.outputs.cache-primary-key }}
