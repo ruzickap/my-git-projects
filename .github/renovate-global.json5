@@ -201,6 +201,9 @@
   // Rebase branches when they fall behind the base branch
   // https://docs.renovatebot.com/configuration-options/#rebasewhen
   rebaseWhen: "behind-base-branch",
+  // Process repositories even without a local Renovate config file
+  // https://docs.renovatebot.com/self-hosted-configuration/#requireconfig
+  requireConfig: "optional",
   // Create separate branches for minor and patch updates
   // https://docs.renovatebot.com/configuration-options/#separateminorpatch
   separateMinorPatch: true,
