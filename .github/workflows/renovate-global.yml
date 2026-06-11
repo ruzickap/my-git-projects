@@ -54,7 +54,6 @@ jobs:
         env:
           # Write Renovate logs to a file - https://docs.renovatebot.com/config-overview/#logging-variables
           LOG_FILE: /tmp/renovate-log.json
-          LOG_LEVEL: debug
 
       - name: Upload Renovate log
         if: always()

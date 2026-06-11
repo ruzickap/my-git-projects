@@ -94,6 +94,11 @@ data "aws_ssm_parameter" "github_ruzickap_ruzickap_github_io_actions_secrets_MY_
   with_decryption = true
 }
 
+data "aws_ssm_parameter" "github_ruzickap_ruzickap_github_io_actions_secrets_MY_SLACK_BOT_SIGNING_SECRET" {
+  name            = "/github/ruzickap/ruzickap.github.io/actions-secrets/MY_SLACK_BOT_SIGNING_SECRET"
+  with_decryption = true
+}
+
 data "aws_ssm_parameter" "github_shared_actions_secrets_MY_RENOVATE_GITHUB_CLIENT_ID" {
   name            = "/github/shared/actions-secrets/MY_RENOVATE_GITHUB_CLIENT_ID"
   with_decryption = true
