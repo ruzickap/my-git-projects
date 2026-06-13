@@ -60,9 +60,6 @@ jobs:
 
       - name: Render Renovate summary
         if: always()
-        # Best-effort: never fail the job just because the summary could not be
-        # rendered -- Renovate's own result and its uploaded artifacts/logs must
-        # still surface. Failures are reported into the step summary instead.
         run: |
           set -uo pipefail
           if [[ ! -f /tmp/renovate-report.json ]]; then
