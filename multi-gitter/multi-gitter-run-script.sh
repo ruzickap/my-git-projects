@@ -129,7 +129,7 @@ case "${REPOSITORY}" in
     megalinter_flavor cupcake
     ;;
   ruzickap/my-git-projects)
-    megalinter_flavor cupcake
+    megalinter_flavor all
     ;;
   ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/hugo"
