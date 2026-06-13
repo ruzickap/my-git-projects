@@ -130,14 +130,14 @@ available — `result`, `prBlockedBy`, and `prNo`:
 
 <!-- markdownlint-disable MD013 -->
 
-| Category      | Condition                                                   |
-|---------------|-------------------------------------------------------------|
-| PR opened     | `result: done` + a `prNo`                                   |
-| Merged        | `result: done` + `prBlockedBy: BranchAutomerge` + no `prNo` |
-| Pending       | `result: pending`                                           |
-| Not scheduled | `result: not-scheduled`                                     |
-| Error         | `result: error`                                             |
-| No work       | `result: no-work`                                           |
+| Category      | Condition                                                                        |
+|---------------|----------------------------------------------------------------------------------|
+| PR opened     | `result: done` + a `prNo`                                                        |
+| Merged        | `result: done` + `prBlockedBy: BranchAutomerge` + no `prNo`                      |
+| Pending       | `result: pending`                                                                |
+| Not scheduled | `result: not-scheduled`                                                          |
+| Error         | `result: error`                                                                  |
+| No work       | `result: no-work`                                                                |
 | Unknown       | `result: done` with no `prNo` (and not automerged), or any unrecognised `result` |
 
 <!-- markdownlint-enable MD013 -->
