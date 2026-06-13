@@ -176,6 +176,8 @@ def classify_action(branch: dict[str, Any]) -> str:
         if branch.get("prBlockedBy") == "BranchAutomerge":
             return "pending"
         return "no-work"
+    if not isinstance(result, str):
+        return "unknown"
     return _RESULT_TO_CATEGORY.get(result, "unknown")
 
 

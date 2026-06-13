@@ -137,17 +137,17 @@ values:
 
 <!-- markdownlint-disable MD013 -->
 
-| Category       | Condition (`result`, unless noted)                                                |
-|----------------|-----------------------------------------------------------------------------------|
-| PR opened      | any branch with a `prNo`; or `pr-created`, `pr-edited`, `already-existed`, `rebase` |
-| Needs approval | `needs-approval`, `needs-pr-approval`                                              |
-| Pending        | `pending`; or `done` + `prBlockedBy: BranchAutomerge` (committed, not yet merged)  |
-| Merged         | `automerged`                                                                      |
+| Category       | Condition (`result`, unless noted)                                                                                                      |
+|----------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| PR opened      | any branch with a `prNo`; or `pr-created`, `pr-edited`, `already-existed`, `rebase`                                                     |
+| Needs approval | `needs-approval`, `needs-pr-approval`                                                                                                   |
+| Pending        | `pending`; or `done` + `prBlockedBy: BranchAutomerge` (committed, not yet merged)                                                       |
+| Merged         | `automerged`                                                                                                                            |
 | Limited        | `pr-limit-reached`, `branch-limit-reached`, `commit-per-run-limit-reached`, `commit-hourly-limit-reached`, `minimum-group-size-not-met` |
-| Not scheduled  | `not-scheduled`, `update-not-scheduled`                                            |
-| Error          | `error`                                                                           |
-| No work        | `no-work`; or `done` with no `prNo` and no automerge                               |
-| Unknown        | any unrecognised `result`                                                         |
+| Not scheduled  | `not-scheduled`, `update-not-scheduled`                                                                                                 |
+| Error          | `error`                                                                                                                                 |
+| No work        | `no-work`; or `done` with no `prNo` and no automerge                                                                                    |
+| Unknown        | any unrecognised `result`                                                                                                               |
 
 <!-- markdownlint-enable MD013 -->
 
