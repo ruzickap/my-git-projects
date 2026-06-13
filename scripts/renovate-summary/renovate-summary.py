@@ -136,17 +136,30 @@ def repo_url(base: str, repo: str) -> str:
 
 
 def branch_link(base: str, repo: str, branch: dict[str, Any]) -> str:
-    """Link a branch to its PR (preferred) or branch tree."""
+    """Link a branch to its PR (preferred) or branch tree.
+
+    Falls back to ``-`` when neither a ``prNo`` nor a ``branchName`` is present
+    so the cell never renders an empty backticked name or a dangling link.
+    """
     pr_no = branch.get("prNo")
     if pr_no is not None:
         return f"[PR #{pr_no}]({base}/{repo}/pull/{pr_no})"
-    name = branch.get("branchName", "")
+    name = branch.get("branchName")
+    if not name:
+        return "-"
     return f"[`{name}`]({base}/{repo}/tree/{name})"
 
 
 def title_link(base: str, repo: str, branch: dict[str, Any]) -> str:
-    """Render the PR title linked to the branch's commit history."""
+    """Render the PR title linked to the branch's commit history.
+
+    Falls back to ``-`` when no title is present, and to the plain title
+    (unlinked) when no ``branchName`` is available, avoiding empty ``[](...)``
+    links.
+    """
     title = md(branch.get("prTitle")).replace("[", "\\[").replace("]", "\\]")
+    if not title:
+        return "-"
     name = branch.get("branchName")
     if not name:
         return title
@@ -273,34 +286,51 @@ def branch_row(
     )
 
 
-def render_problems(data: dict[str, Any], repos: Repos, base: str) -> list[str]:
-    """Render the "Problems" section: a table of all reported problems."""
-    lines = ["## ⚠️ Problems\n"]
-    rows: list[str] = []
+def collect_problems(
+    data: dict[str, Any], repos: Repos
+) -> list[tuple[str, dict[str, Any]]]:
+    """Deduplicated list of (repo, problem) pairs across the whole report.
+
+    Combines the top-level ``data['problems']`` (repository ``"-"``) with each
+    repository's ``problems``, deduplicating on (repo, level, branch, msg) so
+    the Problems table and the totals count always agree.
+    """
     seen: set[tuple[str, str, str, str]] = set()
-    # Top-level problems first (repository = "-"), then per-repository ones.
+    collected: list[tuple[str, dict[str, Any]]] = []
     sources: list[tuple[str, list[dict[str, Any]]]] = [
         ("-", data.get("problems") or [])
     ]
     sources += [(repo, r.get("problems") or []) for repo, r in repos]
     for repo, problems in sources:
         for p in problems:
-            branch = p.get("branch")
-            level = level_label(p.get("level"))
-            key = (repo, level, branch or "", p.get("msg") or "")
+            key = (
+                repo,
+                level_label(p.get("level")),
+                p.get("branch") or "",
+                p.get("msg") or "",
+            )
             if key in seen:
                 continue
             seen.add(key)
-            repo_cell = f"[{md(repo)}]({repo_url(base, repo)})" if repo != "-" else "-"
-            if branch and repo != "-":
-                branch_cell = f"[`{branch}`]({base}/{repo}/tree/{branch})"
-            elif branch:
-                branch_cell = f"`{branch}`"
-            else:
-                branch_cell = "-"
-            rows.append(
-                f"| {repo_cell} | {level} | {branch_cell} | {md(p.get('msg'))} |"
-            )
+            collected.append((repo, p))
+    return collected
+
+
+def render_problems(data: dict[str, Any], repos: Repos, base: str) -> list[str]:
+    """Render the "Problems" section: a table of all reported problems."""
+    lines = ["## ⚠️ Problems\n"]
+    rows: list[str] = []
+    for repo, p in collect_problems(data, repos):
+        branch = p.get("branch")
+        level = level_label(p.get("level"))
+        repo_cell = f"[{md(repo)}]({repo_url(base, repo)})" if repo != "-" else "-"
+        if branch and repo != "-":
+            branch_cell = f"[`{branch}`]({base}/{repo}/tree/{branch})"
+        elif branch:
+            branch_cell = f"`{branch}`"
+        else:
+            branch_cell = "-"
+        rows.append(f"| {repo_cell} | {level} | {branch_cell} | {md(p.get('msg'))} |")
     if rows:
         lines.append("| Repository | Level | Branch | Message |")
         lines.append("| --- | --- | --- | --- |")
@@ -335,10 +365,10 @@ def render_by_action(
     return lines
 
 
-def render_totals(repos: Repos) -> list[str]:
+def render_totals(data: dict[str, Any], repos: Repos) -> list[str]:
     """Render the "Totals" section with aggregate counts."""
     all_branches = [b for _, r in repos for b in (r.get("branches") or [])]
-    all_problems = [p for _, r in repos for p in (r.get("problems") or [])]
+    all_problems = collect_problems(data, repos)
     all_upgrades = [u for b in all_branches for u in (b.get("upgrades") or [])]
     results = tally([b.get("result") or "unknown" for b in all_branches])
     types = tally([u.get("updateType") or "unknown" for u in all_upgrades])
@@ -367,7 +397,7 @@ def build_report(data: dict[str, Any], base: str) -> str:
     lines.append(f"Repositories scanned: **{len(repos)}**\n")
     lines += render_problems(data, repos, base)
     lines += render_by_action(repos, base, age_indexes)
-    lines += render_totals(repos)
+    lines += render_totals(data, repos)
     return "\n".join(lines) + "\n"
 
 
