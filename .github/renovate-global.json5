@@ -179,6 +179,20 @@
       pinDigests: false,
     },
     {
+      // ansible-openwrt stores the OpenWrt image tag in a plain env var
+      // (OPENWRT_VERSION), used as "openwrt/rootfs:${OPENWRT_VERSION}". There is
+      // no "@sha256:" placeholder to write a digest into, so docker:pinDigests
+      // produces a pinDigest update that fails with "Error updating branch:
+      // update failure". The custom-regex pinDigests:false rule above does not
+      // reliably suppress it here, so disable the digest/pin update types for
+      // this dependency directly (version bumps are unaffected).
+      description: "openwrt/rootfs has no digest slot (env var); skip digest pin",
+      matchRepositories: ["ruzickap/ansible-openwrt"],
+      matchPackageNames: ["openwrt/rootfs"],
+      matchUpdateTypes: ["pinDigest", "digest"],
+      enabled: false,
+    },
+    {
       description: "Skip renovating _posts directory in ruzickap.github.io",
       matchRepositories: ["ruzickap/ruzickap.github.io"],
       matchFileNames: ["_posts/**"],
