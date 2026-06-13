@@ -31,6 +31,12 @@ locals {
         # keep-sorted end
       }
     }
+    "gha_test" = {
+      name         = "gha-test"
+      description  = "GitHub Action Test repository"
+      homepage_url = "https://petr.ruzicka.dev"
+      topics       = ["actions", "ci", "github", "test", "github-action", "gha"]
+    }
     "k8s_multicluster_gitops" = {
       name        = "k8s-multicluster-gitops"
       description = "Infrastructure as Code for provisioning multiple Kubernetes clusters, managed using GitOps with ArgoCD"
@@ -123,12 +129,6 @@ locals {
       description = "My CV in LaTeX"
       visibility  = "private"
       topics      = ["cv", "latex", "private", "resume", "texlive"]
-    }
-    "gha_test" = {
-      name         = "gha-test"
-      description  = "GitHub Action Test repository"
-      homepage_url = "https://petr.ruzicka.dev"
-      topics       = ["actions", "ci", "github", "test", "github-action", "gha"]
     }
     "malware_cryptominer_container" = {
       name         = "malware-cryptominer-container"
