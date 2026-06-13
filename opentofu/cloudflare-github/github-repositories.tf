@@ -199,7 +199,9 @@ locals {
       topics = ["blog", "github", "github-actions", "jekyll", "markdown", "personal-website", "public", "web", "website"]
       secrets = {
         # keep-sorted start
-        # .github/workflows/gh-pages-build.yml
+        # .github/workflows/gh-pages-build.yml (Cloudflare Pages + Analytics)
+        "CLOUDFLARE_ACCOUNT_ID"               = local.cloudflare_account_id
+        "CLOUDFLARE_API_TOKEN"                = cloudflare_account_token.pages_ruzickap_github_io.value
         "CLOUDFLARE_WEB_ANALYTICS_SITE_TOKEN" = cloudflare_web_analytics_site.ruzickap_github_io.site_token
         "GOOGLE_CLIENT_ID"                    = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_GOOGLE_CLIENT_ID.value
         "GOOGLE_CLIENT_SECRET"                = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_GOOGLE_CLIENT_SECRET.value
