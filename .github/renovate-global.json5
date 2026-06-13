@@ -63,9 +63,11 @@
       // The optional "@sha256:<digest>" suffix is captured as currentDigest so
       // pinned references (e.g. an OCI base-image LABEL) produce a writable
       // "digest" update instead of a failing "pinDigest". [^@\n]* stops the
-      // value scan before the digest so currentValue excludes it.
+      // value scan before the digest so currentValue excludes it. The digest
+      // is constrained to exactly 64 hex chars so truncated/invalid strings
+      // are not mistaken for a digest.
       matchStrings: [
-        '# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)( versioning=(?<versioning>.+?))?( extractVersion=(?<extractVersion>.+?))?( registryUrl=(?<registryUrl>.+?))?\\s[^@\\n]*[=:]\\s*"?(?<currentValue>.+?)(?:@(?<currentDigest>sha256:[0-9a-f]+))?"?\\s',
+        '# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)( versioning=(?<versioning>.+?))?( extractVersion=(?<extractVersion>.+?))?( registryUrl=(?<registryUrl>.+?))?\\s[^@\\n]*[=:]\\s*"?(?<currentValue>.+?)(?:@(?<currentDigest>sha256:[0-9a-f]{64}))?"?\\s',
       ],
 
       // Default to semantic versioning unless specified otherwise
