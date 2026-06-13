@@ -163,6 +163,16 @@
       pinDigests: false,
     },
     {
+      // The custom regex manager cannot write a digest back into values that
+      // have no digest placeholder, so docker:pinDigests produces an empty
+      // "pin" update and fails with "Error updating branch: update failure".
+      // Disable digest pinning for Docker deps handled by the custom manager.
+      description: "Custom regex manager can't pin Docker digests; only bump versions",
+      matchManagers: ["custom.regex"],
+      matchDatasources: ["docker"],
+      pinDigests: false,
+    },
+    {
       description: "Skip renovating _posts directory in ruzickap.github.io",
       matchRepositories: ["ruzickap/ruzickap.github.io"],
       matchFileNames: ["_posts/**"],
