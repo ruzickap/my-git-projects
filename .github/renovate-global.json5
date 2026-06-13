@@ -135,6 +135,17 @@
       automerge: false,
     },
     {
+      // The default Docker digest commit subject includes the image tag
+      // (e.g. "nginxinc/nginx-unprivileged:1.31.1-alpine-slim docker digest
+      // to ..."), which can exceed the 72-char commit-check limit and blocks
+      // automerge. Drop the tag from the topic (the PR body still shows the
+      // full currentValue) so the subject stays well under 72 characters.
+      description: "Shorten Docker digest commit subject to fit 72-char limit",
+      matchDatasources: ["docker"],
+      matchUpdateTypes: ["digest"],
+      commitMessageTopic: "{{{depName}}} digest",
+    },
+    {
       description: "Ignore frequent renovate updates",
       enabled: false,
       matchPackageNames: ["renovatebot/github-action"],
