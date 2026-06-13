@@ -331,7 +331,7 @@ def branch_row(
         f"| {branch_link(base, repo, branch)} "
         f"| {title_link(base, repo, branch)} "
         f"| {update_types_cell(branch)} "
-        f"| {md(upgrades)} "
+        f"| {md(upgrades) or '-'} "
         f"| {files_cell(base, repo, branch)} |"
     )
 
