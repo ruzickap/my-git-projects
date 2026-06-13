@@ -58,6 +58,16 @@ jobs:
           RENOVATE_REPORT_TYPE: file
           RENOVATE_REPORT_PATH: /tmp/renovate-report.json
 
+      - name: Render Renovate summary
+        if: always()
+        run: |
+          set -euo pipefail
+          if [[ ! -f /tmp/renovate-report.json ]]; then
+            echo "No Renovate report found - skipping summary." >> "${GITHUB_STEP_SUMMARY}"
+            exit 0
+          fi
+          ./scripts/renovate-summary/renovate-summary.py /tmp/renovate-report.json >> "${GITHUB_STEP_SUMMARY}"
+
       - name: Upload Renovate log
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
