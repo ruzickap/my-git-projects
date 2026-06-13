@@ -60,8 +60,12 @@
       // Regex pattern to match custom dependency declarations
       // Format: # renovate: datasource=<source> depName=<name> [versioning=<type>] [extractVersion=<regex>] [registryUrl=<url>]
       // Example: # renovate: datasource=github-releases depName=helm/helm versioning=semver
+      // The optional "@sha256:<digest>" suffix is captured as currentDigest so
+      // pinned references (e.g. an OCI base-image LABEL) produce a writable
+      // "digest" update instead of a failing "pinDigest". [^@\n]* stops the
+      // value scan before the digest so currentValue excludes it.
       matchStrings: [
-        '# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)( versioning=(?<versioning>.+?))?( extractVersion=(?<extractVersion>.+?))?( registryUrl=(?<registryUrl>.+?))?\\s.*[=:]\\s*"?(?<currentValue>.+?)"?\\s',
+        '# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)( versioning=(?<versioning>.+?))?( extractVersion=(?<extractVersion>.+?))?( registryUrl=(?<registryUrl>.+?))?\\s[^@\\n]*[=:]\\s*"?(?<currentValue>.+?)(?:@(?<currentDigest>sha256:[0-9a-f]+))?"?\\s',
       ],
 
       // Default to semantic versioning unless specified otherwise
