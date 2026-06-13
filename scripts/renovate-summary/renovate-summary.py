@@ -36,6 +36,7 @@ import json
 import sys
 from collections import Counter
 from typing import Any
+from urllib.parse import quote
 
 # A parsed Renovate report's repositories, as a sorted list of (name, data).
 Repos = list[tuple[str, dict[str, Any]]]
@@ -59,6 +60,17 @@ def md(value: Any) -> str:
 def short(digest: str | None) -> str | None:
     """Short 7-char digest, or None."""
     return digest[:7] if digest else None
+
+
+def enc_ref(ref: str) -> str:
+    """Percent-encode a git ref for use in a GitHub URL path segment.
+
+    ``/`` is preserved (GitHub's ``/tree/``, ``/commits/`` and ``/blob/``
+    routes accept slash-separated refs verbatim), while spaces, ``#``, ``(``,
+    ``)`` and other reserved characters are encoded so the surrounding Markdown
+    link target stays valid.
+    """
+    return quote(ref, safe="/")
 
 
 # Action categories derived from a branch's (result, prBlockedBy, prNo).
@@ -183,7 +195,7 @@ def branch_link(base: str, repo: str, branch: dict[str, Any]) -> str:
     name = branch.get("branchName")
     if not name:
         return "-"
-    return f"[`{name}`]({base}/{repo}/tree/{name})"
+    return f"[`{name}`]({base}/{repo}/tree/{enc_ref(name)})"
 
 
 def title_link(base: str, repo: str, branch: dict[str, Any]) -> str:
@@ -199,7 +211,7 @@ def title_link(base: str, repo: str, branch: dict[str, Any]) -> str:
     name = branch.get("branchName")
     if not name:
         return title
-    return f"[{title}]({base}/{repo}/commits/{name})"
+    return f"[{title}]({base}/{repo}/commits/{enc_ref(name)})"
 
 
 def build_age_index(repo_data: dict[str, Any]) -> AgeIndex:
@@ -281,7 +293,9 @@ def files_cell(base: str, repo: str, branch: dict[str, Any]) -> str:
     cells = []
     for path in files:
         if name:
-            cells.append(f"[`{path}`]({base}/{repo}/blob/{name}/{path})")
+            cells.append(
+                f"[`{path}`]({base}/{repo}/blob/{enc_ref(name)}/{enc_ref(path)})"
+            )
         else:
             cells.append(f"`{path}`")
     return "<br>".join(cells)
@@ -361,7 +375,7 @@ def render_problems(data: dict[str, Any], repos: Repos, base: str) -> list[str]:
         level = level_label(p.get("level"))
         repo_cell = f"[{md(repo)}]({repo_url(base, repo)})" if repo != "-" else "-"
         if branch and repo != "-":
-            branch_cell = f"[`{branch}`]({base}/{repo}/tree/{branch})"
+            branch_cell = f"[`{branch}`]({base}/{repo}/tree/{enc_ref(branch)})"
         elif branch:
             branch_cell = f"`{branch}`"
         else:

@@ -60,13 +60,19 @@ jobs:
 
       - name: Render Renovate summary
         if: always()
+        # Best-effort: never fail the job just because the summary could not be
+        # rendered -- Renovate's own result and its uploaded artifacts/logs must
+        # still surface. Failures are reported into the step summary instead.
         run: |
-          set -euo pipefail
+          set -uo pipefail
           if [[ ! -f /tmp/renovate-report.json ]]; then
             echo "No Renovate report found - skipping summary." >> "${GITHUB_STEP_SUMMARY}"
             exit 0
           fi
-          ./scripts/renovate-summary/renovate-summary.py /tmp/renovate-report.json >> "${GITHUB_STEP_SUMMARY}"
+          if ! ./scripts/renovate-summary/renovate-summary.py /tmp/renovate-report.json >> "${GITHUB_STEP_SUMMARY}"; then
+            echo "Failed to render Renovate summary from the report." >> "${GITHUB_STEP_SUMMARY}"
+          fi
+          exit 0
 
       - name: Upload Renovate log
         if: always()
