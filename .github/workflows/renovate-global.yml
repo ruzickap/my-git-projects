@@ -54,6 +54,9 @@ jobs:
         env:
           # Write Renovate logs to a file - https://docs.renovatebot.com/config-overview/#logging-variables
           LOG_FILE: /tmp/renovate-log.json
+          # Write a Renovate report to a file - https://docs.renovatebot.com/self-hosted-configuration/#reporttype
+          RENOVATE_REPORT_TYPE: file
+          RENOVATE_REPORT_PATH: /tmp/renovate-report.json
 
       - name: Upload Renovate log
         if: always()
@@ -61,6 +64,16 @@ jobs:
         with:
           name: renovate-log
           path: /tmp/renovate-log.json
+          if-no-files-found: error
+          compression-level: 9
+          retention-days: 1
+
+      - name: Upload Renovate report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: renovate-report
+          path: /tmp/renovate-report.json
           if-no-files-found: error
           compression-level: 9
           retention-days: 1
