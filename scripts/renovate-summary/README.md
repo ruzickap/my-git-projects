@@ -55,12 +55,12 @@ linked back to GitHub.
 
 <!-- markdownlint-disable MD013 -->
 
-| Argument | Description | Default |
-| --- | --- | --- |
-| `report` | Path to the Renovate JSON report. | `renovate-report.json` |
-| `-b`, `--base-url` | Base GitHub URL used to build links. | `https://github.com` |
-| `-o`, `--output` | Write the report to this file instead of stdout. | *stdout* |
-| `-h`, `--help` | Show help and exit. | — |
+| Argument           | Description                                      | Default                |
+|--------------------|--------------------------------------------------|------------------------|
+| `report`           | Path to the Renovate JSON report.                | `renovate-report.json` |
+| `-b`, `--base-url` | Base GitHub URL used to build links.             | `https://github.com`   |
+| `-o`, `--output`   | Write the report to this file instead of stdout. | *stdout*               |
+| `-h`, `--help`     | Show help and exit.                              | —                      |
 
 <!-- markdownlint-enable MD013 -->
 
@@ -109,8 +109,8 @@ means. Empty categories render `_None._`.
 Updates for which Renovate created (or updated) a real pull request -- these
 await your review or merge.
 
-| Repository | PR / Branch | Title | Type | Upgrades |
-| --- | --- | --- | --- | --- |
+| Repository      | PR / Branch  | Title         | Type  | Upgrades              |
+|-----------------|--------------|---------------|-------|-----------------------|
 | [owner/repo](…) | [PR #126](…) | [update X](…) | major | `12.6` → `13.0` (18d) |
 ````
 
@@ -127,14 +127,14 @@ available — `result`, `prBlockedBy`, and `prNo`:
 
 <!-- markdownlint-disable MD013 -->
 
-| Category | Condition |
-| --- | --- |
-| Merged | `result: done` + `prBlockedBy: BranchAutomerge` + no `prNo` |
-| PR opened | `result: done` + a `prNo` |
-| Pending | `result: pending` |
-| Not scheduled | `result: not-scheduled` |
-| Error | `result: error` |
-| No work | `result: no-work` |
+| Category      | Condition                                                   |
+|---------------|-------------------------------------------------------------|
+| Merged        | `result: done` + `prBlockedBy: BranchAutomerge` + no `prNo` |
+| PR opened     | `result: done` + a `prNo`                                   |
+| Pending       | `result: pending`                                           |
+| Not scheduled | `result: not-scheduled`                                     |
+| Error         | `result: error`                                             |
+| No work       | `result: no-work`                                           |
 
 <!-- markdownlint-enable MD013 -->
 
