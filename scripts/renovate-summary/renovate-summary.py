@@ -99,6 +99,13 @@ ACTION_CATEGORIES = [
         "Updates that passed tests and were merged straight to the base branch "
         "via branch automerge -- no pull request was opened.",
     ),
+    (
+        "unknown",
+        "❓ Unknown",
+        "Branches whose state did not map to any known category (e.g. a "
+        "`done` result without a PR number, or an unrecognised `result`). "
+        "Listed here so nothing is silently dropped.",
+    ),
 ]
 
 
@@ -106,18 +113,22 @@ def classify_action(branch: dict[str, Any]) -> str:
     """Map a branch to one of the ACTION_CATEGORIES keys.
 
     Derived from the report's ``result``, ``prBlockedBy`` and ``prNo`` fields
-    (the only state signals available); falls back to the raw result string
-    for any unrecognised combination.
+    (the only state signals available). Anything that does not map cleanly --
+    a ``done`` result with no ``prNo`` that is not a branch automerge, or an
+    unrecognised ``result`` string -- falls back to ``unknown`` so the branch
+    is still rendered (under the catch-all category) rather than dropped.
     """
     result = branch.get("result")
     if result == "done":
         blocked = branch.get("prBlockedBy")
-        if blocked == "BranchAutomerge" and branch.get("prNo") is None:
+        if branch.get("prNo") is not None:
+            return "pr"
+        if blocked == "BranchAutomerge":
             return "merged"
-        return "pr"
+        return "unknown"
     if result in ("pending", "not-scheduled", "error", "no-work"):
         return result
-    return result or "unknown"
+    return "unknown"
 
 
 def repo_url(base: str, repo: str) -> str:

@@ -94,7 +94,10 @@ The generated Markdown contains the following sections, in order:
 6. **💤 No work** — nothing to do this run.
 7. **🚀 Merged (auto-merged, no PR)** — merged straight to the base branch via
    branch automerge.
-8. **📊 Totals** — aggregate counts.
+8. **❓ Unknown** — branches whose state did not map to any known category
+   (e.g. a `done` result without a PR number, or an unrecognised `result`),
+   listed so nothing is silently dropped.
+9. **📊 Totals** — aggregate counts.
 
 Each action section is preceded by a one-line description of what the category
 means. Empty categories render `_None._`.
@@ -129,12 +132,13 @@ available — `result`, `prBlockedBy`, and `prNo`:
 
 | Category      | Condition                                                   |
 |---------------|-------------------------------------------------------------|
-| Merged        | `result: done` + `prBlockedBy: BranchAutomerge` + no `prNo` |
 | PR opened     | `result: done` + a `prNo`                                   |
+| Merged        | `result: done` + `prBlockedBy: BranchAutomerge` + no `prNo` |
 | Pending       | `result: pending`                                           |
 | Not scheduled | `result: not-scheduled`                                     |
 | Error         | `result: error`                                             |
 | No work       | `result: no-work`                                           |
+| Unknown       | `result: done` with no `prNo` (and not automerged), or any unrecognised `result` |
 
 <!-- markdownlint-enable MD013 -->
 
