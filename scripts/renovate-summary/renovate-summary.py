@@ -63,24 +63,44 @@ def short(digest: str | None) -> str | None:
 
 # Action categories derived from a branch's (result, prBlockedBy, prNo).
 # Order defines the order of tables in the "By Action" section. Each entry is
-# (key, heading, description).
+# (key, heading, description). Keys map to Renovate's BranchResult enum
+# (https://github.com/renovatebot/renovate/blob/main/lib/workers/types.ts).
 ACTION_CATEGORIES = [
     (
         "error",
         "❌ Error",
-        "Updates Renovate failed to apply (e.g. branch update failure).",
+        "Updates Renovate failed to apply (e.g. branch update or PR failure).",
     ),
     (
         "pr",
         "✅ Pull request opened",
-        "Updates for which Renovate created (or updated) a real pull request "
-        "-- these await your review or merge.",
+        "Updates for which Renovate has a real pull request (created, edited, "
+        "or already existing) -- these await your review or merge.",
+    ),
+    (
+        "needs-approval",
+        "🔒 Needs approval",
+        "Updates blocked awaiting manual approval (e.g. via the Dependency "
+        "Dashboard or `dependencyDashboardApproval`) before a PR is created.",
     ),
     (
         "pending",
         "⏳ Pending (not created yet)",
-        "Updates Renovate found but has not created yet, e.g. held back by "
-        "`minimumReleaseAge` or pending status checks.",
+        "Updates Renovate found but has not opened a PR for yet, e.g. awaiting "
+        "status checks, held by `minimumReleaseAge`, or queued for branch "
+        "automerge (committed but not merged).",
+    ),
+    (
+        "automerged",
+        "🚀 Merged (auto-merged, no PR)",
+        "Updates that passed tests and were merged straight to the base branch "
+        "via branch automerge -- no pull request was opened.",
+    ),
+    (
+        "limited",
+        "🚦 Limited (rate/limit reached)",
+        "Updates deferred this run because a Renovate limit was reached "
+        "(PR/branch/commit hourly limits, or minimum group size).",
     ),
     (
         "not-scheduled",
@@ -91,44 +111,60 @@ ACTION_CATEGORIES = [
     (
         "no-work",
         "💤 No work",
-        "Branches that needed no action this run (already up to date or closed).",
-    ),
-    (
-        "merged",
-        "🚀 Merged (auto-merged, no PR)",
-        "Updates that passed tests and were merged straight to the base branch "
-        "via branch automerge -- no pull request was opened.",
+        "Branches that needed no action this run (already up to date, closed, "
+        "or otherwise complete).",
     ),
     (
         "unknown",
         "❓ Unknown",
-        "Branches whose state did not map to any known category (e.g. a "
-        "`done` result without a PR number, or an unrecognised `result`). "
-        "Listed here so nothing is silently dropped.",
+        "Branches whose `result` did not map to any known category. Listed "
+        "here so nothing is silently dropped.",
     ),
 ]
+
+# Renovate BranchResult values grouped by category key. A branch with a PR
+# number is always treated as "pr" regardless of result, so results that may
+# or may not carry a PR (e.g. "already-existed") are handled by prNo first.
+_RESULT_TO_CATEGORY = {
+    "error": "error",
+    "pr-created": "pr",
+    "pr-edited": "pr",
+    "already-existed": "pr",
+    "rebase": "pr",
+    "needs-approval": "needs-approval",
+    "needs-pr-approval": "needs-approval",
+    "pending": "pending",
+    "automerged": "automerged",
+    "pr-limit-reached": "limited",
+    "branch-limit-reached": "limited",
+    "commit-per-run-limit-reached": "limited",
+    "commit-hourly-limit-reached": "limited",
+    "minimum-group-size-not-met": "limited",
+    "not-scheduled": "not-scheduled",
+    "update-not-scheduled": "not-scheduled",
+    "no-work": "no-work",
+}
 
 
 def classify_action(branch: dict[str, Any]) -> str:
     """Map a branch to one of the ACTION_CATEGORIES keys.
 
     Derived from the report's ``result``, ``prBlockedBy`` and ``prNo`` fields
-    (the only state signals available). Anything that does not map cleanly --
-    a ``done`` result with no ``prNo`` that is not a branch automerge, or an
-    unrecognised ``result`` string -- falls back to ``unknown`` so the branch
-    is still rendered (under the catch-all category) rather than dropped.
+    -- the only state signals Renovate exposes. A present ``prNo`` always wins
+    (an open PR, however it got there). The ambiguous ``done`` result is split
+    by ``prBlockedBy``: ``BranchAutomerge`` means committed and queued for
+    automerge (``pending``), otherwise it is treated as completed work
+    (``no-work``). Any unrecognised ``result`` falls back to ``unknown`` so the
+    branch is still rendered rather than silently dropped.
     """
+    if branch.get("prNo") is not None:
+        return "pr"
     result = branch.get("result")
     if result == "done":
-        blocked = branch.get("prBlockedBy")
-        if branch.get("prNo") is not None:
-            return "pr"
-        if blocked == "BranchAutomerge":
-            return "merged"
-        return "unknown"
-    if result in ("pending", "not-scheduled", "error", "no-work"):
-        return result
-    return "unknown"
+        if branch.get("prBlockedBy") == "BranchAutomerge":
+            return "pending"
+        return "no-work"
+    return _RESULT_TO_CATEGORY.get(result, "unknown")
 
 
 def repo_url(base: str, repo: str) -> str:
@@ -384,7 +420,7 @@ def render_totals(data: dict[str, Any], repos: Repos) -> list[str]:
 
 def build_report(data: dict[str, Any], base: str) -> str:
     """Build the full Markdown report from a parsed Renovate JSON report."""
-    repos: Repos = sorted(data.get("repositories", {}).items())
+    repos: Repos = sorted((data.get("repositories") or {}).items())
     # Per-repo lookup of new-version age, sourced from the dependency
     # inventory (packageFiles), keyed by (depName, newVersion).
     age_indexes = {repo: build_age_index(r) for repo, r in repos}
