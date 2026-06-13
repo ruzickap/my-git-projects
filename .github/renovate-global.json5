@@ -167,8 +167,10 @@
       // have no digest placeholder, so docker:pinDigests produces an empty
       // "pin" update and fails with "Error updating branch: update failure".
       // Disable digest pinning for Docker deps handled by the custom manager.
+      // Renovate reports this manager as "regex" (not "custom.regex") in the
+      // run report/logs, so match both names to stay version-proof.
       description: "Custom regex manager can't pin Docker digests; only bump versions",
-      matchManagers: ["custom.regex"],
+      matchManagers: ["custom.regex", "regex"],
       matchDatasources: ["docker"],
       pinDigests: false,
     },
