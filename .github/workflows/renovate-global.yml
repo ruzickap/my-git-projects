@@ -69,7 +69,7 @@ jobs:
             echo "No Renovate report found - skipping summary." >> "${GITHUB_STEP_SUMMARY}"
             exit 0
           fi
-          if ! ./scripts/renovate-summary/renovate-summary.py /tmp/renovate-report.json >> "${GITHUB_STEP_SUMMARY}"; then
+          if ! python3 ./scripts/renovate-summary/renovate-summary.py /tmp/renovate-report.json >> "${GITHUB_STEP_SUMMARY}"; then
             echo "Failed to render Renovate summary from the report." >> "${GITHUB_STEP_SUMMARY}"
           fi
           exit 0
