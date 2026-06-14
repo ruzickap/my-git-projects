@@ -172,6 +172,12 @@
   // Process repositories even without a local Renovate config file
   // https://docs.renovatebot.com/self-hosted-configuration/#requireconfig
   requireConfig: "optional",
+  // Force Conventional Commits compliant commit messages and PR titles
+  // (e.g. "chore(deps): ...", "fix(deps): ..."). Without this the default
+  // "auto" mode inspects the last 20 base-branch commits and can flip to
+  // "disabled", producing non-compliant titles like "Update dependency ...".
+  // https://docs.renovatebot.com/configuration-options/#semanticcommits
+  semanticCommits: "enabled",
   // Create separate branches for minor and patch updates
   // https://docs.renovatebot.com/configuration-options/#separateminorpatch
   separateMinorPatch: true,
