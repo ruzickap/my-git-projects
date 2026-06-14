@@ -181,5 +181,15 @@
   // Create separate branches for minor and patch updates
   // https://docs.renovatebot.com/configuration-options/#separateminorpatch
   separateMinorPatch: true,
+  // Security (vulnerability) updates
+  // https://docs.renovatebot.com/configuration-options/#vulnerabilityalerts
+  vulnerabilityAlerts: {
+    // Bump vulnerable deps to the newest version instead of the advisory's
+    // minimum patched floor. Without this, the default "lowest" strategy
+    // rewrites the range downward (e.g. "^8.5.15" -> "^8.5.6"), which looks
+    // like a downgrade even though it still resolves to the fixed release.
+    // https://docs.renovatebot.com/configuration-options/#vulnerabilityfixstrategy
+    vulnerabilityFixStrategy: "highest",
+  },
   // # keep-sorted end
 }
