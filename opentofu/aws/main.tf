@@ -4,7 +4,7 @@ terraform {
     # keep-sorted start block=yes
     aws = {
       source  = "hashicorp/aws"
-      version = "6.49.0"
+      version = "6.50.0"
     }
     local = {
       source  = "hashicorp/local"
