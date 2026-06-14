@@ -137,12 +137,15 @@ ACTION_CATEGORIES = [
     ),
 ]
 
-# Renovate BranchResult values grouped by category key. ``already-existed`` is
-# Renovate's "PR Closed (Blocked)" state -- it is emitted only after a matching
-# PR was found closed-unmerged, and it always carries that closed PR's number
-# in ``prNo`` (see lib/workers/repository/update/branch/index.ts). It must
-# therefore be classified before the generic ``prNo`` shortcut in
-# ``classify_action`` so a closed PR is not mistaken for an open one.
+# Renovate BranchResult values grouped by category key. Any result listed here
+# is matched before the generic ``prNo`` shortcut in ``classify_action``, so a
+# recognised result wins even when the branch also carries a ``prNo``. This
+# matters for results that report a PR number while describing something other
+# than an open PR: ``already-existed`` is Renovate's "PR Closed (Blocked)"
+# state and always carries the *closed* PR's number (see
+# lib/workers/repository/update/branch/index.ts), and limit/error results can
+# likewise accompany an open PR. Those are filed by result rather than mistaken
+# for "pr".
 _RESULT_TO_CATEGORY = {
     "error": "error",
     "pr-created": "pr",
@@ -168,12 +171,15 @@ def classify_action(branch: dict[str, Any]) -> str:
     Derived from the report's ``result``, ``prBlockedBy`` and ``prNo`` fields
     -- the only state signals Renovate exposes.
 
-    ``result`` is consulted first, because some results imply a *closed* PR
-    even though they carry a ``prNo``. In particular ``already-existed`` is
-    Renovate's "PR Closed (Blocked)" state and always reports the closed PR's
-    number, so trusting ``prNo`` blindly would mis-file it as an open PR.
+    ``result`` is consulted first: any result mapped in ``_RESULT_TO_CATEGORY``
+    wins, even when the branch also carries a ``prNo``. This is because several
+    results report a PR number while describing something other than an open PR
+    awaiting review -- e.g. ``already-existed`` (Renovate's "PR Closed
+    (Blocked)" state, carrying the *closed* PR's number) or a limit/error result
+    on a branch that still has an open PR. Filing by result avoids mislabelling
+    those as open PRs.
 
-    For any other result, a present ``prNo`` means a real open PR exists
+    For an unmapped result, a present ``prNo`` means a real open PR exists
     (however it got there). The ambiguous ``done`` result is split by
     ``prBlockedBy``: ``BranchAutomerge`` means committed and queued for
     automerge (``pending``), otherwise it is treated as completed work

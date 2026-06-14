@@ -132,12 +132,18 @@ URLs in every link (abbreviated as `…` above).
 
 Renovate's report does not include explicit "created / merged / rebased" flags,
 so the script derives each branch's category from the only state signals
-available — `result`, `prBlockedBy`, and `prNo`. `result` is consulted first;
-for results that do not imply a specific state, a present `prNo` is then taken
-to mean a real, open PR. The one exception is `already-existed`, Renovate's "PR
-Closed (Blocked)" state, which carries the *closed* PR's number — it is matched
-on `result` before the `prNo` fallback so a closed PR is not shown as open. The
-category keys map to Renovate's
+available — `result`, `prBlockedBy`, and `prNo`. Any recognised `result` is
+matched first and wins, even when the branch also has a `prNo`; only a branch
+whose `result` is unmapped (or `done`) falls back to the `prNo` shortcut, where
+a present `prNo` is taken to mean a real, open PR.
+
+`result`-first ordering matters because several results carry a `prNo` while
+describing something other than an open PR awaiting review. The clearest case
+is `already-existed`, Renovate's "PR Closed (Blocked)" state, which reports the
+*closed* PR's number; matching on `result` first keeps it out of "PR opened".
+The same applies to, e.g., a rate-limited (`*-limit-reached`) or errored
+(`error`) branch that still has an open PR — it is filed under its result
+(Limited / Error) rather than "PR opened". The category keys map to Renovate's
 [`BranchResult`](https://github.com/renovatebot/renovate/blob/main/lib/workers/types.ts)
 values:
 
@@ -145,7 +151,7 @@ values:
 
 | Category            | Condition (`result`, unless noted)                                                                                                      |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| PR opened           | `pr-created`, `pr-edited`, `rebase`; or any other branch with a `prNo`                                                                  |
+| PR opened           | `pr-created`, `pr-edited`, `rebase`; or `done`/an unmapped result that has a `prNo`                                                     |
 | Blocked by closed PR | `already-existed` (a previous PR was closed unmerged; `prNo` points at it)                                                             |
 | Needs approval      | `needs-approval`, `needs-pr-approval`                                                                                                   |
 | Pending             | `pending`; or `done` + `prBlockedBy: BranchAutomerge` (committed, not yet merged)                                                       |
