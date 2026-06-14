@@ -6,8 +6,9 @@ The report is the "json" log/report output produced by Renovate. It emits:
   1. A "Problems" table listing every problem reported (top-level and per
      repository), with severity level, affected branch, and message.
   2. One described table per action category, ordered by how much attention
-     each needs (error, PR opened, needs approval, pending, merged, limited,
-     no work, unknown), grouping every branch by what Renovate did with it.
+     each needs (error, PR opened, blocked by closed PR, needs approval,
+     pending, merged, limited, no work, unknown), grouping every branch by what
+     Renovate did with it.
   3. A totals section.
 
 GitHub links are derived from the repository key (assumed "owner/repo" on
@@ -86,8 +87,16 @@ ACTION_CATEGORIES = [
     (
         "pr",
         "✅ Pull request opened",
-        "Updates for which Renovate has a real pull request (created, edited, "
-        "or already existing) -- these await your review or merge.",
+        "Updates for which Renovate has a real, open pull request -- these "
+        "await your review or merge.",
+    ),
+    (
+        "blocked",
+        "🚫 Blocked by closed PR",
+        "Updates Renovate will not raise again because a previous PR for them "
+        'was closed unmerged (Renovate\'s "PR Closed (Blocked)" state). The '
+        "linked PR is closed; rename/reopen it, or tick its box on the "
+        "Dependency Dashboard, to get a fresh PR.",
     ),
     (
         "needs-approval",
@@ -128,14 +137,20 @@ ACTION_CATEGORIES = [
     ),
 ]
 
-# Renovate BranchResult values grouped by category key. A branch with a PR
-# number is always treated as "pr" regardless of result, so results that may
-# or may not carry a PR (e.g. "already-existed") are handled by prNo first.
+# Renovate BranchResult values grouped by category key. Any result listed here
+# is matched before the generic ``prNo`` shortcut in ``classify_action``, so a
+# recognised result wins even when the branch also carries a ``prNo``. This
+# matters for results that report a PR number while describing something other
+# than an open PR: ``already-existed`` is Renovate's "PR Closed (Blocked)"
+# state and always carries the *closed* PR's number (see
+# lib/workers/repository/update/branch/index.ts), and limit/error results can
+# likewise accompany an open PR. Those are filed by result rather than mistaken
+# for "pr".
 _RESULT_TO_CATEGORY = {
     "error": "error",
     "pr-created": "pr",
     "pr-edited": "pr",
-    "already-existed": "pr",
+    "already-existed": "blocked",
     "rebase": "pr",
     "needs-approval": "needs-approval",
     "needs-pr-approval": "needs-approval",
@@ -154,23 +169,33 @@ def classify_action(branch: dict[str, Any]) -> str:
     """Map a branch to one of the ACTION_CATEGORIES keys.
 
     Derived from the report's ``result``, ``prBlockedBy`` and ``prNo`` fields
-    -- the only state signals Renovate exposes. A present ``prNo`` always wins
-    (an open PR, however it got there). The ambiguous ``done`` result is split
-    by ``prBlockedBy``: ``BranchAutomerge`` means committed and queued for
+    -- the only state signals Renovate exposes.
+
+    ``result`` is consulted first: any result mapped in ``_RESULT_TO_CATEGORY``
+    wins, even when the branch also carries a ``prNo``. This is because several
+    results report a PR number while describing something other than an open PR
+    awaiting review -- e.g. ``already-existed`` (Renovate's "PR Closed
+    (Blocked)" state, carrying the *closed* PR's number) or a limit/error result
+    on a branch that still has an open PR. Filing by result avoids mislabelling
+    those as open PRs.
+
+    For an unmapped result, a present ``prNo`` means a real open PR exists
+    (however it got there). The ambiguous ``done`` result is split by
+    ``prBlockedBy``: ``BranchAutomerge`` means committed and queued for
     automerge (``pending``), otherwise it is treated as completed work
     (``no-work``). Any unrecognised ``result`` falls back to ``unknown`` so the
     branch is still rendered rather than silently dropped.
     """
+    result = branch.get("result")
+    if isinstance(result, str) and result in _RESULT_TO_CATEGORY:
+        return _RESULT_TO_CATEGORY[result]
     if branch.get("prNo") is not None:
         return "pr"
-    result = branch.get("result")
     if result == "done":
         if branch.get("prBlockedBy") == "BranchAutomerge":
             return "pending"
         return "no-work"
-    if not isinstance(result, str):
-        return "unknown"
-    return _RESULT_TO_CATEGORY.get(result, "unknown")
+    return "unknown"
 
 
 def repo_url(base: str, repo: str) -> str:
