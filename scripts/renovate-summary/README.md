@@ -12,9 +12,9 @@ linked back to GitHub.
 ## Features
 
 - **Action-oriented grouping** — branches are bucketed by what Renovate
-  actually did (Error, PR opened, Needs approval, Pending, Merged, Limited,
-  No work, Unknown), ordered so the items needing the most attention come
-  first.
+  actually did (Error, PR opened, Blocked by closed PR, Needs approval, Pending,
+  Merged, Limited, No work, Unknown), ordered so the items needing the most
+  attention come first.
 - **Problems table** — every problem Renovate reported (deduplicated), with
   severity level, affected branch, and message.
 - **Rich, linked tables** — repositories, PRs, branches, commit history, and
@@ -88,20 +88,22 @@ The generated Markdown contains the following sections, in order:
 
 1. **⚠️ Problems** — table of all reported problems.
 2. **❌ Error** — updates Renovate failed to apply.
-3. **✅ Pull request opened** — updates with a real PR (created, edited, or
-   already existing) awaiting review/merge.
-4. **🔒 Needs approval** — blocked awaiting manual approval before a PR is
+3. **✅ Pull request opened** — updates with a real, open PR (created or edited)
+   awaiting review/merge.
+4. **🚫 Blocked by closed PR** — updates Renovate will not raise again because a
+   previous PR was closed unmerged (Renovate's "PR Closed (Blocked)" state).
+5. **🔒 Needs approval** — blocked awaiting manual approval before a PR is
    created.
-5. **⏳ Pending (not created yet)** — found but no PR yet (e.g. awaiting checks,
+6. **⏳ Pending (not created yet)** — found but no PR yet (e.g. awaiting checks,
    held by `minimumReleaseAge`, or queued for branch automerge).
-6. **🚀 Merged (auto-merged, no PR)** — merged straight to the base branch via
+7. **🚀 Merged (auto-merged, no PR)** — merged straight to the base branch via
    branch automerge.
-7. **🚦 Limited (rate/limit reached)** — deferred because a Renovate limit was
+8. **🚦 Limited (rate/limit reached)** — deferred because a Renovate limit was
    reached (PR/branch/commit/group-size).
-8. **💤 No work** — nothing to do this run.
-9. **❓ Unknown** — branches whose `result` did not map to any known category,
-   listed so nothing is silently dropped.
-10. **📊 Totals** — aggregate counts.
+9. **💤 No work** — nothing to do this run.
+10. **❓ Unknown** — branches whose `result` did not map to any known category,
+    listed so nothing is silently dropped.
+11. **📊 Totals** — aggregate counts.
 
 Each action section is preceded by a one-line description of what the category
 means. Empty categories render `_None._`.
@@ -130,30 +132,39 @@ URLs in every link (abbreviated as `…` above).
 
 Renovate's report does not include explicit "created / merged / rebased" flags,
 so the script derives each branch's category from the only state signals
-available — `result`, `prBlockedBy`, and `prNo`. A present `prNo` always wins
-(an open PR, however it got there). The category keys map to Renovate's
+available — `result`, `prBlockedBy`, and `prNo`. `result` is consulted first;
+for results that do not imply a specific state, a present `prNo` is then taken
+to mean a real, open PR. The one exception is `already-existed`, Renovate's "PR
+Closed (Blocked)" state, which carries the *closed* PR's number — it is matched
+on `result` before the `prNo` fallback so a closed PR is not shown as open. The
+category keys map to Renovate's
 [`BranchResult`](https://github.com/renovatebot/renovate/blob/main/lib/workers/types.ts)
 values:
 
 <!-- markdownlint-disable MD013 -->
 
-| Category       | Condition (`result`, unless noted)                                                                                                      |
-|----------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| PR opened      | any branch with a `prNo`; or `pr-created`, `pr-edited`, `already-existed`, `rebase`                                                     |
-| Needs approval | `needs-approval`, `needs-pr-approval`                                                                                                   |
-| Pending        | `pending`; or `done` + `prBlockedBy: BranchAutomerge` (committed, not yet merged)                                                       |
-| Merged         | `automerged`                                                                                                                            |
-| Limited        | `pr-limit-reached`, `branch-limit-reached`, `commit-per-run-limit-reached`, `commit-hourly-limit-reached`, `minimum-group-size-not-met` |
-| Error          | `error`                                                                                                                                 |
-| No work        | `no-work`; or `done` with no `prNo` and no automerge                                                                                    |
-| Unknown        | any unrecognised `result`                                                                                                               |
+| Category            | Condition (`result`, unless noted)                                                                                                      |
+|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| PR opened           | `pr-created`, `pr-edited`, `rebase`; or any other branch with a `prNo`                                                                  |
+| Blocked by closed PR | `already-existed` (a previous PR was closed unmerged; `prNo` points at it)                                                             |
+| Needs approval      | `needs-approval`, `needs-pr-approval`                                                                                                   |
+| Pending             | `pending`; or `done` + `prBlockedBy: BranchAutomerge` (committed, not yet merged)                                                       |
+| Merged              | `automerged`                                                                                                                            |
+| Limited             | `pr-limit-reached`, `branch-limit-reached`, `commit-per-run-limit-reached`, `commit-hourly-limit-reached`, `minimum-group-size-not-met` |
+| Error               | `error`                                                                                                                                 |
+| No work             | `no-work`; or `done` with no `prNo` and no automerge                                                                                    |
+| Unknown             | any unrecognised `result`                                                                                                               |
+
+<!-- markdownlint-enable MD013 -->
 
 <!-- markdownlint-enable MD013 -->
 
 > **Note:** This reflects *what Renovate did in this run*, not full PR history.
-> A `prNo` means a PR exists, but the report cannot tell a brand-new PR from one
-> that already existed and was rebased, and it has no "new since last run"
-> signal. For that you would need the GitHub API (`created_at` / `updated_at` /
+> A `prNo` under **PR opened** means a PR exists, but the report cannot tell a
+> brand-new PR from one that already existed and was rebased, and it has no "new
+> since last run" signal. (A `prNo` under **Blocked by closed PR** is known to be
+> closed, since `already-existed` is only emitted for a closed-unmerged PR.) For
+> richer history you would need the GitHub API (`created_at` / `updated_at` /
 > `merged_at`) or a diff of two consecutive reports.
 
 ### A note on links and `pending` branches
@@ -162,8 +173,10 @@ For `pending` updates, Renovate has not created the branch yet, so the
 `branchName` in the report is only the name it *intends* to use. Links to
 `/tree/<branch>`, `/blob/...`, and `/commits/<branch>` for those rows will
 therefore 404 until (and unless) the branch is actually pushed. Likewise,
-branches that were auto-merged and deleted will 404. A link checker run against
-the output will report these — that is expected, not a bug.
+branches that were auto-merged and deleted, or pruned after their PR was closed
+(**Blocked by closed PR**), will 404. A link checker run against the output will
+report these — that is expected, not a bug. The PR link for a **Blocked by
+closed PR** row still resolves, pointing at the closed PR.
 
 ## License
 
