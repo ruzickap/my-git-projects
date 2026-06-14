@@ -149,19 +149,17 @@ values:
 
 <!-- markdownlint-disable MD013 -->
 
-| Category            | Condition (`result`, unless noted)                                                                                                      |
-|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| PR opened           | `pr-created`, `pr-edited`, `rebase`; or `done`/an unmapped result that has a `prNo`                                                     |
-| Blocked by closed PR | `already-existed` (a previous PR was closed unmerged; `prNo` points at it)                                                             |
-| Needs approval      | `needs-approval`, `needs-pr-approval`                                                                                                   |
-| Pending             | `pending`; or `done` + `prBlockedBy: BranchAutomerge` (committed, not yet merged)                                                       |
-| Merged              | `automerged`                                                                                                                            |
-| Limited             | `pr-limit-reached`, `branch-limit-reached`, `commit-per-run-limit-reached`, `commit-hourly-limit-reached`, `minimum-group-size-not-met` |
-| Error               | `error`                                                                                                                                 |
-| No work             | `no-work`; or `done` with no `prNo` and no automerge                                                                                    |
-| Unknown             | any unrecognised `result`                                                                                                               |
-
-<!-- markdownlint-enable MD013 -->
+| Category             | Condition (`result`, unless noted)                                                                                                      |
+|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| PR opened            | `pr-created`, `pr-edited`, `rebase`; or `done`/an unmapped result that has a `prNo`                                                     |
+| Blocked by closed PR | `already-existed` (a previous PR was closed unmerged; `prNo` points at it)                                                              |
+| Needs approval       | `needs-approval`, `needs-pr-approval`                                                                                                   |
+| Pending              | `pending`; or `done` + `prBlockedBy: BranchAutomerge` (committed, not yet merged)                                                       |
+| Merged               | `automerged`                                                                                                                            |
+| Limited              | `pr-limit-reached`, `branch-limit-reached`, `commit-per-run-limit-reached`, `commit-hourly-limit-reached`, `minimum-group-size-not-met` |
+| Error                | `error`                                                                                                                                 |
+| No work              | `no-work`; or `done` with no `prNo` and no automerge                                                                                    |
+| Unknown              | any unrecognised `result`                                                                                                               |
 
 <!-- markdownlint-enable MD013 -->
 
