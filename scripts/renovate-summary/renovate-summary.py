@@ -94,7 +94,7 @@ ACTION_CATEGORIES = [
         "blocked",
         "🚫 Blocked by closed PR",
         "Updates Renovate will not raise again because a previous PR for them "
-        "was closed unmerged (Renovate's \"PR Closed (Blocked)\" state). The "
+        'was closed unmerged (Renovate\'s "PR Closed (Blocked)" state). The '
         "linked PR is closed; rename/reopen it, or tick its box on the "
         "Dependency Dashboard, to get a fresh PR.",
     ),
