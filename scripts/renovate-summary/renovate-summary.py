@@ -204,24 +204,25 @@ def classify_action(branch: dict[str, Any]) -> str:
     those as open PRs.
 
     For an unmapped result, a present ``prNo`` means a real open PR exists
-    (however it got there). A lock-file-maintenance branch with no PR is filed
+    (however it got there). The ambiguous ``done`` result is then split by
+    ``prBlockedBy``: ``BranchAutomerge`` means committed and queued for
+    automerge (``pending``). A remaining lock-file-maintenance branch is filed
     under ``lock-file-maintenance`` (it carries no depName/version, so it would
-    otherwise fall into ``no-work``/``unknown``). The ambiguous ``done`` result
-    is then split by ``prBlockedBy``: ``BranchAutomerge`` means committed and
-    queued for automerge (``pending``), otherwise it is treated as completed
-    work (``no-work``). Any unrecognised ``result`` falls back to ``unknown`` so
-    the branch is still rendered rather than silently dropped.
+    otherwise fall into ``no-work``/``unknown``); any other ``done`` branch is
+    treated as completed work (``no-work``). Any unrecognised ``result`` falls
+    back to ``unknown`` so the branch is still rendered rather than silently
+    dropped.
     """
     result = branch.get("result")
     if isinstance(result, str) and result in _RESULT_TO_CATEGORY:
         return _RESULT_TO_CATEGORY[result]
     if branch.get("prNo") is not None:
         return "pr"
+    if result == "done" and branch.get("prBlockedBy") == "BranchAutomerge":
+        return "pending"
     if is_lock_file_maintenance(branch):
         return "lock-file-maintenance"
     if result == "done":
-        if branch.get("prBlockedBy") == "BranchAutomerge":
-            return "pending"
         return "no-work"
     return "unknown"
 
