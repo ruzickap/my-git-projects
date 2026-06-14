@@ -6,7 +6,7 @@ The report is the "json" log/report output produced by Renovate. It emits:
   1. A "Problems" table listing every problem reported (top-level and per
      repository), with severity level, affected branch, and message.
   2. One described table per action category, ordered by how much attention
-     each needs (error, PR opened, pending, not scheduled, no work, merged),
+     each needs (error, PR opened, pending, no work, merged),
      grouping every branch by what Renovate did with it.
   3. A totals section.
 
@@ -115,12 +115,6 @@ ACTION_CATEGORIES = [
         "(PR/branch/commit hourly limits, or minimum group size).",
     ),
     (
-        "not-scheduled",
-        "⏰ Not scheduled",
-        "Updates skipped this run because they fell outside their configured "
-        "schedule window.",
-    ),
-    (
         "no-work",
         "💤 No work",
         "Branches that needed no action this run (already up to date, closed, "
@@ -152,8 +146,6 @@ _RESULT_TO_CATEGORY = {
     "commit-per-run-limit-reached": "limited",
     "commit-hourly-limit-reached": "limited",
     "minimum-group-size-not-met": "limited",
-    "not-scheduled": "not-scheduled",
-    "update-not-scheduled": "not-scheduled",
     "no-work": "no-work",
 }
 

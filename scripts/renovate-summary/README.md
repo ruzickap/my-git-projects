@@ -12,7 +12,7 @@ linked back to GitHub.
 ## Features
 
 - **Action-oriented grouping** — branches are bucketed by what Renovate
-  actually did (Error, PR opened, Pending, Not scheduled, No work, Merged),
+  actually did (Error, PR opened, Pending, No work, Merged),
   ordered so the items needing the most attention come first.
 - **Problems table** — every problem Renovate reported (deduplicated), with
   severity level, affected branch, and message.
@@ -97,11 +97,10 @@ The generated Markdown contains the following sections, in order:
    branch automerge.
 7. **🚦 Limited (rate/limit reached)** — deferred because a Renovate limit was
    reached (PR/branch/commit/group-size).
-8. **⏰ Not scheduled** — skipped, outside the schedule window.
-9. **💤 No work** — nothing to do this run.
-10. **❓ Unknown** — branches whose `result` did not map to any known category,
-    listed so nothing is silently dropped.
-11. **📊 Totals** — aggregate counts.
+8. **💤 No work** — nothing to do this run.
+9. **❓ Unknown** — branches whose `result` did not map to any known category,
+   listed so nothing is silently dropped.
+10. **📊 Totals** — aggregate counts.
 
 Each action section is preceded by a one-line description of what the category
 means. Empty categories render `_None._`.
@@ -144,7 +143,6 @@ values:
 | Pending        | `pending`; or `done` + `prBlockedBy: BranchAutomerge` (committed, not yet merged)                                                       |
 | Merged         | `automerged`                                                                                                                            |
 | Limited        | `pr-limit-reached`, `branch-limit-reached`, `commit-per-run-limit-reached`, `commit-hourly-limit-reached`, `minimum-group-size-not-met` |
-| Not scheduled  | `not-scheduled`, `update-not-scheduled`                                                                                                 |
 | Error          | `error`                                                                                                                                 |
 | No work        | `no-work`; or `done` with no `prNo` and no automerge                                                                                    |
 | Unknown        | any unrecognised `result`                                                                                                               |
