@@ -88,8 +88,8 @@ The generated Markdown contains the following sections, in order:
 
 1. **⚠️ Problems** — table of all reported problems.
 2. **❌ Error** — updates Renovate failed to apply.
-3. **✅ Pull request opened** — updates with a real, open PR (created or edited)
-   awaiting review/merge.
+3. **✅ Pull request opened** — updates with a real, open PR awaiting
+   review/merge.
 4. **🚫 Blocked by closed PR** — updates Renovate will not raise again because a
    previous PR was closed unmerged (Renovate's "PR Closed (Blocked)" state).
 5. **🔒 Needs approval** — blocked awaiting manual approval before a PR is

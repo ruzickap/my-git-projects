@@ -87,8 +87,8 @@ ACTION_CATEGORIES = [
     (
         "pr",
         "✅ Pull request opened",
-        "Updates for which Renovate has a real, open pull request (created or "
-        "edited) -- these await your review or merge.",
+        "Updates for which Renovate has a real, open pull request -- these "
+        "await your review or merge.",
     ),
     (
         "blocked",
