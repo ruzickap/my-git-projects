@@ -6,8 +6,8 @@ The report is the "json" log/report output produced by Renovate. It emits:
   1. A "Problems" table listing every problem reported (top-level and per
      repository), with severity level, affected branch, and message.
   2. One described table per action category, ordered by how much attention
-     each needs (error, PR opened, pending, no work, merged),
-     grouping every branch by what Renovate did with it.
+     each needs (error, PR opened, needs approval, pending, merged, limited,
+     no work, unknown), grouping every branch by what Renovate did with it.
   3. A totals section.
 
 GitHub links are derived from the repository key (assumed "owner/repo" on

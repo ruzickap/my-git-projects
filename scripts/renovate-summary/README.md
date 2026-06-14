@@ -12,8 +12,9 @@ linked back to GitHub.
 ## Features
 
 - **Action-oriented grouping** — branches are bucketed by what Renovate
-  actually did (Error, PR opened, Pending, No work, Merged),
-  ordered so the items needing the most attention come first.
+  actually did (Error, PR opened, Needs approval, Pending, Merged, Limited,
+  No work, Unknown), ordered so the items needing the most attention come
+  first.
 - **Problems table** — every problem Renovate reported (deduplicated), with
   severity level, affected branch, and message.
 - **Rich, linked tables** — repositories, PRs, branches, commit history, and
