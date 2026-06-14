@@ -177,15 +177,19 @@ def is_lock_file_maintenance(branch: dict[str, Any]) -> bool:
     ``lockFileMaintenance`` is not a Renovate ``BranchResult``; it is flagged
     per upgrade. Renovate sets ``isLockFileMaintenance`` and
     ``updateType == "lockFileMaintenance"`` on each such upgrade and lifts
-    ``isLockFileMaintenance`` onto the branch when every upgrade is one (see
-    Renovate's updates/flatten.ts and updates/generate.ts). Either signal is
-    accepted here so the branch is recognised even on older report shapes.
+    ``isLockFileMaintenance`` onto the branch only when *every* upgrade is one
+    (see Renovate's updates/flatten.ts and updates/generate.ts). The branch
+    flag is honoured first; otherwise the branch counts as lock-file
+    maintenance only when it has upgrades and *all* of them are LFM. Requiring
+    all (not any) mirrors Renovate's own lifting rule and avoids misclassifying
+    a branch that mixes lock-file maintenance with normal dependency updates.
     """
     if branch.get("isLockFileMaintenance"):
         return True
-    return any(
+    upgrades = branch.get("upgrades") or []
+    return bool(upgrades) and all(
         u.get("isLockFileMaintenance") or u.get("updateType") == "lockFileMaintenance"
-        for u in (branch.get("upgrades") or [])
+        for u in upgrades
     )
 
 
