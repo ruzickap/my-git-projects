@@ -7,8 +7,8 @@ The report is the "json" log/report output produced by Renovate. It emits:
      repository), with severity level, affected branch, and message.
   2. One described table per action category, ordered by how much attention
      each needs (error, PR opened, blocked by closed PR, needs approval,
-     pending, merged, limited, no work, unknown), grouping every branch by what
-     Renovate did with it.
+     pending, merged, limited, lock file maintenance, no work, unknown),
+     grouping every branch by what Renovate did with it.
   3. A totals section.
 
 GitHub links are derived from the repository key (assumed "owner/repo" on
@@ -124,6 +124,12 @@ ACTION_CATEGORIES = [
         "(PR/branch/commit hourly limits, or minimum group size).",
     ),
     (
+        "lock-file-maintenance",
+        "🔧 Lock file maintenance",
+        "Branches refreshing lock files only (`lockFileMaintenance`), with no "
+        "dependency version change. Routine upkeep, typically auto-merged.",
+    ),
+    (
         "no-work",
         "💤 No work",
         "Branches that needed no action this run (already up to date, closed, "
@@ -165,11 +171,33 @@ _RESULT_TO_CATEGORY = {
 }
 
 
+def is_lock_file_maintenance(branch: dict[str, Any]) -> bool:
+    """Whether a branch is a lock-file-maintenance branch.
+
+    ``lockFileMaintenance`` is not a Renovate ``BranchResult``; it is flagged
+    per upgrade. Renovate sets ``isLockFileMaintenance`` and
+    ``updateType == "lockFileMaintenance"`` on each such upgrade and lifts
+    ``isLockFileMaintenance`` onto the branch only when *every* upgrade is one
+    (see Renovate's updates/flatten.ts and updates/generate.ts). The branch
+    flag is honoured first; otherwise the branch counts as lock-file
+    maintenance only when it has upgrades and *all* of them are LFM. Requiring
+    all (not any) mirrors Renovate's own lifting rule and avoids misclassifying
+    a branch that mixes lock-file maintenance with normal dependency updates.
+    """
+    if branch.get("isLockFileMaintenance"):
+        return True
+    upgrades = branch.get("upgrades") or []
+    return bool(upgrades) and all(
+        u.get("isLockFileMaintenance") or u.get("updateType") == "lockFileMaintenance"
+        for u in upgrades
+    )
+
+
 def classify_action(branch: dict[str, Any]) -> str:
     """Map a branch to one of the ACTION_CATEGORIES keys.
 
-    Derived from the report's ``result``, ``prBlockedBy`` and ``prNo`` fields
-    -- the only state signals Renovate exposes.
+    Derived from the report's ``result``, ``prBlockedBy``, ``prNo`` and
+    ``isLockFileMaintenance`` fields -- the state signals Renovate exposes.
 
     ``result`` is consulted first: any result mapped in ``_RESULT_TO_CATEGORY``
     wins, even when the branch also carries a ``prNo``. This is because several
@@ -180,20 +208,25 @@ def classify_action(branch: dict[str, Any]) -> str:
     those as open PRs.
 
     For an unmapped result, a present ``prNo`` means a real open PR exists
-    (however it got there). The ambiguous ``done`` result is split by
+    (however it got there). The ambiguous ``done`` result is then split by
     ``prBlockedBy``: ``BranchAutomerge`` means committed and queued for
-    automerge (``pending``), otherwise it is treated as completed work
-    (``no-work``). Any unrecognised ``result`` falls back to ``unknown`` so the
-    branch is still rendered rather than silently dropped.
+    automerge (``pending``). A remaining lock-file-maintenance branch is filed
+    under ``lock-file-maintenance`` (it carries no depName/version, so it would
+    otherwise fall into ``no-work``/``unknown``); any other ``done`` branch is
+    treated as completed work (``no-work``). Any unrecognised ``result`` falls
+    back to ``unknown`` so the branch is still rendered rather than silently
+    dropped.
     """
     result = branch.get("result")
     if isinstance(result, str) and result in _RESULT_TO_CATEGORY:
         return _RESULT_TO_CATEGORY[result]
     if branch.get("prNo") is not None:
         return "pr"
+    if result == "done" and branch.get("prBlockedBy") == "BranchAutomerge":
+        return "pending"
+    if is_lock_file_maintenance(branch):
+        return "lock-file-maintenance"
     if result == "done":
-        if branch.get("prBlockedBy") == "BranchAutomerge":
-            return "pending"
         return "no-work"
     return "unknown"
 
