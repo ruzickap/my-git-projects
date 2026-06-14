@@ -9,8 +9,8 @@ on:
       dryRun:
         type: boolean
         description: Dry-Run
-  # schedule:
-  #   - cron: 0 4-6 * * 0
+  schedule:
+    - cron: 1 0-5 * * 4
 
 env:
   # Enable dry-run mode based on the workflow input (https://docs.renovatebot.com/self-hosted-configuration/#dryrun)
@@ -21,7 +21,7 @@ permissions: read-all
 jobs:
   renovate-global:
     runs-on: ubuntu-24.04-arm
-    timeout-minutes: 60
+    timeout-minutes: 30
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:

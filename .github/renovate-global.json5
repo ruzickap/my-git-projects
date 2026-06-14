@@ -35,13 +35,6 @@
   // Custom prefix for Renovate branches
   // https://docs.renovatebot.com/configuration-options/#branchprefix
   branchPrefix: "chore/renovate/",
-  customDatasources: {
-    "grafana-dashboards": {
-      defaultRegistryUrlTemplate: "https://grafana.com/api/dashboards/{{packageName}}",
-      format: "json",
-      transformTemplates: ['{"releases":[{"version": $string(revision)}]}'],
-    },
-  },
   // This allows Renovate to detect and update dependencies that aren't in standard package files
   customManagers: [
     {
@@ -73,27 +66,6 @@
       // Default to semantic versioning unless specified otherwise
       versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
     },
-    // Custom manager for Grafana dashboard revisions (for ruzickap.github.io)
-    // {
-    //   datasourceTemplate: "custom.grafana-dashboards",
-    //   customType: "regex",
-    //   managerFilePatterns: ["/\\.md$/"],
-    //   matchStrings: [
-    //     '# renovate: depName="(?<depName>.*)"\\n\\s+gnetId:\\s+(?<packageName>.*?)\\n\\s+revision:\\s+(?<currentValue>.*)',
-    //   ],
-    //   versioningTemplate: "regex:^(?<major>\\d+)$",
-    // },
-    // Custom manager for raw.githubusercontent.com URLs (for ruzickap.github.io)
-    {
-      currentValueTemplate: "{{#if currentValue}}{{{currentValue}}}{{else}}main{{/if}}",
-      customType: "regex",
-      datasourceTemplate: "git-refs",
-      packageNameTemplate: "https://github.com/{{depName}}",
-      managerFilePatterns: ["/\\.md$/"],
-      matchStrings: [
-        "# renovate:( currentValue=(?<currentValue>.+?))?\\n.*https:\\/\\/raw.githubusercontent.com\\/(?<depName>[^\\/]+\\/[^\\/]+)\\/(?<currentDigest>[^\\/]+)\\/",
-      ],
-    },
   ],
   // Base Configuration Presets
   // Keep the extends started with ":" at the end of the list to allow overriding
@@ -120,7 +92,6 @@
   // Lock File Maintenance
   lockFileMaintenance: {
     enabled: true,
-    schedule: ["before 6am on Sunday"],
   },
   // Wait for releases to be at least 3 days old before creating PRs (reduces risk of buggy releases)
   minimumReleaseAge: "3 days",
@@ -144,18 +115,6 @@
       matchDatasources: ["docker"],
       matchUpdateTypes: ["digest"],
       commitMessageTopic: "{{{depName}}} digest",
-    },
-    {
-      description: "Ignore frequent renovate updates",
-      enabled: false,
-      matchPackageNames: ["renovatebot/github-action"],
-      matchUpdateTypes: ["patch"],
-    },
-    {
-      description: "Update renovatebot/github-action minor updates on Sundays",
-      matchPackageNames: ["renovatebot/github-action"],
-      matchUpdateTypes: ["minor"],
-      schedule: ["* * * * 0"],
     },
     {
       description: "Group all GitHub Actions updates into a single PR",
@@ -190,20 +149,6 @@
       pinDigests: false,
     },
     {
-      // ansible-openwrt stores the OpenWrt image tag in a plain env var
-      // (OPENWRT_VERSION), used as "openwrt/rootfs:${OPENWRT_VERSION}". There is
-      // no "@sha256:" placeholder to write a digest into, so docker:pinDigests
-      // produces a pinDigest update that fails with "Error updating branch:
-      // update failure". The custom-regex pinDigests:false rule above does not
-      // reliably suppress it here, so disable the digest/pin update types for
-      // this dependency directly (version bumps are unaffected).
-      description: "openwrt/rootfs has no digest slot (env var); skip digest pin",
-      matchRepositories: ["ruzickap/ansible-openwrt"],
-      matchPackageNames: ["openwrt/rootfs"],
-      matchUpdateTypes: ["pinDigest", "digest"],
-      enabled: false,
-    },
-    {
       description: "Skip renovating _posts directory in ruzickap.github.io",
       matchRepositories: ["ruzickap/ruzickap.github.io"],
       matchFileNames: ["_posts/**"],
@@ -217,24 +162,6 @@
       matchUpdateTypes: ["major"],
       enabled: false,
     },
-    // {
-    //   description: "Grafana Dashboards automerge for ruzickap.github.io",
-    //   matchRepositories: ["ruzickap/ruzickap.github.io"],
-    //   matchDatasources: ["custom.grafana-dashboards"],
-    //   matchUpdateTypes: ["major"],
-    //   automerge: true,
-    //   commitBody: "[skip ci]",
-    //   ignoreTests: true,
-    // },
-    // {
-    //   description: "Automerge all patch, pin and digest updates for custom.regex in ruzickap.github.io",
-    //   matchRepositories: ["ruzickap/ruzickap.github.io"],
-    //   matchManagers: ["custom.regex"],
-    //   matchUpdateTypes: ["patch", "pin", "digest"],
-    //   automerge: true,
-    //   commitBody: "[skip ci]",
-    //   ignoreTests: true,
-    // },
   ],
   // PR body template showing dependency table, notes, and changelogs
   // https://docs.renovatebot.com/configuration-options/#prbodytemplate
