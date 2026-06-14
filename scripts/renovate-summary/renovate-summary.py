@@ -184,8 +184,7 @@ def is_lock_file_maintenance(branch: dict[str, Any]) -> bool:
     if branch.get("isLockFileMaintenance"):
         return True
     return any(
-        u.get("isLockFileMaintenance")
-        or u.get("updateType") == "lockFileMaintenance"
+        u.get("isLockFileMaintenance") or u.get("updateType") == "lockFileMaintenance"
         for u in (branch.get("upgrades") or [])
     )
 
