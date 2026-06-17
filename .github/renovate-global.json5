@@ -127,6 +127,10 @@
       matchManagers: ["mise"],
     },
     {
+      // Disables every non-github-actions manager for brewwatch so regular
+      // (non-security) updates are limited to GitHub Actions. Security fixes
+      // bypass this rule and are blocked separately via
+      // vulnerabilityAlerts.force.packageRules below.
       description: "Only update GitHub Actions in brewwatch repo",
       matchRepositories: ["ruzickap/brewwatch"],
       matchManagers: ["!github-actions"],
@@ -184,6 +188,22 @@
   // Security (vulnerability) updates
   // https://docs.renovatebot.com/configuration-options/#vulnerabilityalerts
   vulnerabilityAlerts: {
+    // Vulnerability/security fixes "skip the line" and ignore normal
+    // packageRules (Renovate applies them via an internal force.enabled), so a
+    // plain "enabled: false" rule cannot stop them. Use force.packageRules
+    // here to also block security updates for every non-github-actions manager
+    // in brewwatch, keeping that repo limited to GitHub Actions updates only.
+    // https://docs.renovatebot.com/configuration-options/#vulnerabilityalerts
+    force: {
+      packageRules: [
+        {
+          description: "Only update GitHub Actions in brewwatch repo (security)",
+          matchRepositories: ["ruzickap/brewwatch"],
+          matchManagers: ["!github-actions"],
+          enabled: false,
+        },
+      ],
+    },
     // Bump vulnerable deps to the newest version instead of the advisory's
     // minimum patched floor. Without this, the default "lowest" strategy
     // rewrites the range downward (e.g. "^8.5.15" -> "^8.5.6"), which looks
