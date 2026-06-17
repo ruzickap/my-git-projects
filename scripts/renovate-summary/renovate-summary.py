@@ -51,15 +51,17 @@ class AgeIndex(NamedTuple):
 
     * ``new`` -- (depName, newVersion) -> newVersionAgeInDays, the age of the
       *target* version. Present for version bumps (major/minor/patch).
-    * ``current`` -- depName -> currentVersionAgeInDays, the age of the
-      *currently pinned* version. Used as a fallback for digest-only updates,
-      where the report carries no age or timestamp for the new digest at all
-      (only the current version's age), so it is the best stability signal
-      available.
+    * ``current`` -- (depName, currentVersion) -> currentVersionAgeInDays, the
+      age of the *currently pinned* version. Used as a fallback for digest-only
+      updates, where the report carries no age or timestamp for the new digest
+      at all (only the current version's age), so it is the best stability
+      signal available. It is keyed by version too (not just name) so that the
+      same dependency pinned to different versions across files does not
+      collapse to a single, order-dependent age.
     """
 
     new: dict[tuple[str, str], int]
-    current: dict[str, int]
+    current: dict[tuple[str, str], int]
 
 
 def tally(values: list[Any]) -> str:
@@ -289,11 +291,12 @@ def build_age_index(repo_data: dict[str, Any]) -> AgeIndex:
     The age of a dependency lives in the report's full inventory
     (packageFiles[].deps[]), not on the branch upgrades, so it must be looked
     up separately: ``currentVersionAgeInDays`` per dep populates the
-    ``current`` map, and each update's ``newVersionAgeInDays`` populates the
-    ``new`` map (keyed by the target version).
+    ``current`` map (keyed by the current version), and each update's
+    ``newVersionAgeInDays`` populates the ``new`` map (keyed by the target
+    version).
     """
     new_index: dict[tuple[str, str], int] = {}
-    current_index: dict[str, int] = {}
+    current_index: dict[tuple[str, str], int] = {}
     for managers in (repo_data.get("packageFiles") or {}).values():
         for package_file in managers or []:
             for dep in package_file.get("deps") or []:
@@ -301,8 +304,9 @@ def build_age_index(repo_data: dict[str, Any]) -> AgeIndex:
                 if name is None:
                     continue
                 current_age = dep.get("currentVersionAgeInDays")
-                if current_age is not None:
-                    current_index.setdefault(name, current_age)
+                current_value = dep.get("currentVersion") or dep.get("currentValue")
+                if current_age is not None and current_value is not None:
+                    current_index.setdefault((name, current_value), current_age)
                 for update in dep.get("updates") or []:
                     age = update.get("newVersionAgeInDays")
                     if age is None:
@@ -330,7 +334,10 @@ def age_cell(upgrade: dict[str, Any], age_index: AgeIndex) -> str:
     new_age = age_index.new.get((name, new_value)) if new_value else None
     if new_age is not None:
         return f" ({new_age}d)"
-    current_age = age_index.current.get(name)
+    current_value = upgrade.get("currentVersion") or upgrade.get("currentValue")
+    current_age = (
+        age_index.current.get((name, current_value)) if current_value else None
+    )
     if current_age is not None:
         return f" (cur {current_age}d)"
     return ""
