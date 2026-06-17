@@ -203,6 +203,8 @@ locals {
         # .github/workflows/docs-confluence-sync.yml
         "MY_ATLASSIAN_PERSONAL_TOKEN" = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_MY_ATLASSIAN_PERSONAL_TOKEN.value
         "MY_SLACK_BOT_SIGNING_SECRET" = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_MY_SLACK_BOT_SIGNING_SECRET.value
+        # Needed by .github/workflows/post_tests.yml
+        "RUZICKA_SBX01_AWS_ROLE_TO_ASSUME" = data.aws_ssm_parameter.github_shared_actions_secrets_RUZICKA_SBX01_AWS_ROLE_TO_ASSUME.value
         # keep-sorted end
       }
     }
