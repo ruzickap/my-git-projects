@@ -22,7 +22,10 @@ linked back to GitHub.
 - **Version + age** — each upgrade shows `old → new` plus the age of the new
   version in days (e.g. `2.11.4 → 2.11.5 (4d)`), which makes
   [`minimumReleaseAge`](https://docs.renovatebot.com/configuration-options/#minimumreleaseage)
-  hold-backs obvious.
+  hold-backs obvious. Digest-only updates (container images, git submodules)
+  have no age for the *new* digest in Renovate's report, so the age of the
+  *currently pinned* version is shown instead, labelled `(cur 2d)` (e.g.
+  `1.31.1 → 1.31.1-alpine-slim (cur 2d)`) to make the distinction clear.
 - **Totals** — aggregate counts of branches, upgrades, problems, results, and
   update types.
 - **Zero dependencies** — pure Python standard library.
@@ -127,6 +130,30 @@ await your review or merge.
 
 The real output additionally includes a **Files** column and uses full GitHub
 URLs in every link (abbreviated as `…` above).
+
+### Upgrade age (`(<days>d)` vs `(cur <days>d)`)
+
+The age suffix in the **Upgrades** column comes from Renovate's dependency
+inventory (`packageFiles[].deps[]`) and has two forms:
+
+- **`(<days>d)`** — the age of the **new** version (`newVersionAgeInDays`). Shown
+  for version bumps (major/minor/patch), e.g. `v2.8.0 → v2.9.0 (0d)`. This is
+  what
+  [`minimumReleaseAge`](https://docs.renovatebot.com/configuration-options/#minimumreleaseage)
+  gates on, so a small number here explains a held-back update.
+- **`(cur <days>d)`** — the age of the **currently pinned** version
+  (`currentVersionAgeInDays`). Shown for **digest-only** updates (container
+  images, git submodules), e.g. `1.31.1 → 1.31.1-alpine-slim (cur 2d)`.
+
+Why the fallback: for a digest update the version string does not change (only
+the `@sha256:…` digest moves), and **Renovate's report carries no age or
+timestamp for the new digest at all** — only the current version's age. So
+`(cur 2d)` is the closest stability signal available without extra registry/API
+calls. Note it is *not* the age of the new digest: `minimumReleaseAge` for
+digests is evaluated against the new image's publish time, which the report does
+not expose. When no age is available for either the new or the current version
+(e.g. a floating tag like `node:lts-alpine` with no resolvable version), no
+suffix is shown.
 
 ## How branches are classified
 

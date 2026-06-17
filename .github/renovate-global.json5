@@ -95,6 +95,16 @@
   },
   // Wait for releases to be at least 3 days old before creating PRs (reduces risk of buggy releases)
   minimumReleaseAge: "3 days",
+  // Proceed with updates whose datasource/registry provides no release
+  // timestamp instead of holding them back indefinitely. Renovate 42+ defaults
+  // to "timestamp-required", which treats a missing timestamp as "not yet aged"
+  // and (with internalChecksFilter=strict) never creates the branch -- this
+  // permanently blocks ghcr.io/quay.io Docker tags (e.g.
+  // ghcr.io/home-assistant/home-assistant), which expose no timestamp. Trade-off:
+  // any timestamp-less update bypasses the minimumReleaseAge cooldown for every
+  // datasource.
+  // https://docs.renovatebot.com/configuration-options/#minimumreleaseagebehaviour
+  minimumReleaseAgeBehaviour: "timestamp-optional",
   // Disable onboarding PRs since we manage config centrally in this repo
   // https://docs.renovatebot.com/self-hosted-configuration/#onboarding
   onboarding: false,

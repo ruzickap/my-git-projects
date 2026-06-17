@@ -36,13 +36,30 @@ import argparse
 import json
 import sys
 from collections import Counter
-from typing import Any
+from typing import Any, NamedTuple
 from urllib.parse import quote
 
 # A parsed Renovate report's repositories, as a sorted list of (name, data).
 Repos = list[tuple[str, dict[str, Any]]]
-# Lookup of (depName, newVersion) -> newVersionAgeInDays for one repository.
-AgeIndex = dict[tuple[str, str], int]
+
+
+class AgeIndex(NamedTuple):
+    """Per-repository age lookups, sourced from the dependency inventory.
+
+    Renovate reports an upgrade's age on different fields depending on the
+    update kind, so two maps are kept:
+
+    * ``new`` -- (depName, newVersion) -> newVersionAgeInDays, the age of the
+      *target* version. Present for version bumps (major/minor/patch).
+    * ``current`` -- depName -> currentVersionAgeInDays, the age of the
+      *currently pinned* version. Used as a fallback for digest-only updates,
+      where the report carries no age or timestamp for the new digest at all
+      (only the current version's age), so it is the best stability signal
+      available.
+    """
+
+    new: dict[tuple[str, str], int]
+    current: dict[str, int]
 
 
 def tally(values: list[Any]) -> str:
@@ -267,27 +284,56 @@ def title_link(base: str, repo: str, branch: dict[str, Any]) -> str:
 
 
 def build_age_index(repo_data: dict[str, Any]) -> AgeIndex:
-    """Map (depName, newVersion) -> newVersionAgeInDays for a repo.
+    """Build per-repo age lookups (see ``AgeIndex``) from the inventory.
 
-    The age of a target version lives in the report's full dependency
-    inventory (packageFiles[].deps[].updates[]), not on the branch upgrades,
-    so it must be looked up separately.
+    The age of a dependency lives in the report's full inventory
+    (packageFiles[].deps[]), not on the branch upgrades, so it must be looked
+    up separately: ``currentVersionAgeInDays`` per dep populates the
+    ``current`` map, and each update's ``newVersionAgeInDays`` populates the
+    ``new`` map (keyed by the target version).
     """
-    index: AgeIndex = {}
+    new_index: dict[tuple[str, str], int] = {}
+    current_index: dict[str, int] = {}
     for managers in (repo_data.get("packageFiles") or {}).values():
         for package_file in managers or []:
             for dep in package_file.get("deps") or []:
                 name = dep.get("depName") or dep.get("packageName")
                 if name is None:
                     continue
+                current_age = dep.get("currentVersionAgeInDays")
+                if current_age is not None:
+                    current_index.setdefault(name, current_age)
                 for update in dep.get("updates") or []:
                     age = update.get("newVersionAgeInDays")
                     if age is None:
                         continue
                     value = update.get("newVersion") or update.get("newValue")
                     if value is not None:
-                        index.setdefault((name, value), age)
-    return index
+                        new_index.setdefault((name, value), age)
+    return AgeIndex(new=new_index, current=current_index)
+
+
+def age_cell(upgrade: dict[str, Any], age_index: AgeIndex) -> str:
+    """Return the age suffix for an upgrade, e.g. " (4d)" or " (cur 2d)".
+
+    Returns an empty string when no age is known. The new-version age (age of
+    the *target* version) is preferred and rendered as ``(4d)``. When that is
+    absent -- which is always the case for digest-only updates, since Renovate
+    reports no age or timestamp for the new digest -- the age of the
+    *currently pinned* version is used instead and rendered as ``(cur 2d)`` to
+    signal it is the current version's age rather than the new artifact's.
+    """
+    name = upgrade.get("depName") or upgrade.get("packageName")
+    if name is None:
+        return ""
+    new_value = upgrade.get("newVersion") or upgrade.get("newValue")
+    new_age = age_index.new.get((name, new_value)) if new_value else None
+    if new_age is not None:
+        return f" ({new_age}d)"
+    current_age = age_index.current.get(name)
+    if current_age is not None:
+        return f" (cur {current_age}d)"
+    return ""
 
 
 def upgrade_cell(upgrade: dict[str, Any], age_index: AgeIndex) -> str:
@@ -296,6 +342,18 @@ def upgrade_cell(upgrade: dict[str, Any], age_index: AgeIndex) -> str:
     Appends the age of the new version (e.g. "(0d)") when known. Falls back to
     digests, then to the dependency name / update type when no version
     information is available (e.g. lockFileMaintenance).
+
+    Age handling has two sources, because Renovate reports it differently per
+    update kind:
+
+    * Version bumps carry ``newVersionAgeInDays`` (age of the *target*
+      version), rendered as e.g. ``(4d)``.
+    * Digest-only updates (container images, git submodules) carry no age or
+      timestamp for the *new* digest at all. As a fallback, the age of the
+      *currently pinned* version (``currentVersionAgeInDays``) is shown,
+      labelled ``(cur 2d)`` to make clear it is the current version's age --
+      how long the pinned tag has existed -- not the age of the new digest.
+      This is the closest stability signal the report exposes for digests.
     """
     name = upgrade.get("depName") or upgrade.get("packageName")
     from_ver = (
@@ -309,10 +367,7 @@ def upgrade_cell(upgrade: dict[str, Any], age_index: AgeIndex) -> str:
         or short(upgrade.get("newDigest"))
     )
 
-    # Age of the new version, looked up from the dependency inventory.
-    new_value = upgrade.get("newVersion") or upgrade.get("newValue")
-    age = age_index.get((name, new_value)) if name is not None and new_value else None
-    age_suffix = f" ({age}d)" if age is not None else ""
+    age_suffix = age_cell(upgrade, age_index)
 
     if from_ver is not None and to_ver is not None:
         return f"`{from_ver}` → `{to_ver}`{age_suffix}"
@@ -487,8 +542,9 @@ def render_totals(data: dict[str, Any], repos: Repos) -> list[str]:
 def build_report(data: dict[str, Any], base: str) -> str:
     """Build the full Markdown report from a parsed Renovate JSON report."""
     repos: Repos = sorted((data.get("repositories") or {}).items())
-    # Per-repo lookup of new-version age, sourced from the dependency
-    # inventory (packageFiles), keyed by (depName, newVersion).
+    # Per-repo age lookups, sourced from the dependency inventory
+    # (packageFiles): new-version age keyed by (depName, newVersion), plus
+    # current-version age keyed by depName for digest-update fallbacks.
     age_indexes = {repo: build_age_index(r) for repo, r in repos}
 
     lines: list[str] = []
