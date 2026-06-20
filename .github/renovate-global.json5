@@ -206,6 +206,19 @@
   // Create separate branches for minor and patch updates
   // https://docs.renovatebot.com/configuration-options/#separateminorpatch
   separateMinorPatch: true,
+  // Disable the "renovate/stability-days" (minimumReleaseAge) commit status.
+  // With automergeType=branch, Renovate POSTs this status to the branch HEAD
+  // before merging; the GitHub App's POST gets a 422 that Renovate's error
+  // handler mis-parses (github.ts:183, err.body.errors is not an array),
+  // throwing REPOSITORY_CHANGED and aborting the repo *before* automerge -- so
+  // no branch merges. internalChecksFilter=strict only gates branch creation;
+  // it does NOT stop this status POST. Setting the status name to null skips
+  // the POST entirely (minimumReleaseAge is still enforced internally), letting
+  // the App fast-forward chore/renovate/* into main.
+  // https://docs.renovatebot.com/configuration-options/#statuschecknames
+  statusCheckNames: {
+    minimumReleaseAge: null,
+  },
   // Security (vulnerability) updates
   // https://docs.renovatebot.com/configuration-options/#vulnerabilityalerts
   vulnerabilityAlerts: {
