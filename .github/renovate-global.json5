@@ -86,7 +86,7 @@
   // REPOSITORY_CHANGED and aborting every repo *before* automerge -- so no
   // branch ever merges. "strict" makes Renovate evaluate minimumReleaseAge
   // internally and skip the status POST entirely, unblocking automerge.
-  // Requires minimumReleaseAgeBehaviour=timestamp-optional (set above) so
+  // Requires minimumReleaseAgeBehaviour=timestamp-optional (set below) so
   // timestamp-less ghcr.io tags are not held back forever under strict.
   // https://docs.renovatebot.com/configuration-options/#internalchecksfilter
   internalChecksFilter: "strict",
