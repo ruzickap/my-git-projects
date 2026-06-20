@@ -99,6 +99,10 @@ case "${REPOSITORY}" in
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
     megalinter_flavor all
     ;;
+  ruzickap/ansible-my_workstation)
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
+    checkout_files .gitignore
+    ;;
   ruzickap/ansible-*)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
     ;;
