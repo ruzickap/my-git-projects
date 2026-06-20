@@ -178,8 +178,12 @@
       // including "comparisons: { image: strict }" -- a community.docker
       // docker_container module option (strict/ignore/allow_more_present), not
       // an image. That phantom dep makes Renovate probe docker.io/library/strict
-      // and log a harmless 401. Ignore it. (ansible-raspberry-pi-os apps.yml)
+      // and log a harmless 401. Scope the ignore to the ansible manager in the
+      // affected repo so a genuine Docker image named "strict" elsewhere is not
+      // suppressed. (ansible-raspberry-pi-os apps.yml)
       description: "Ignore ansible docker_container comparisons:image:strict false positive",
+      matchRepositories: ["ruzickap/ansible-raspberry-pi-os"],
+      matchManagers: ["ansible"],
       matchDatasources: ["docker"],
       matchPackageNames: ["strict", "library/strict"],
       enabled: false,
