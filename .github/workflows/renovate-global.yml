@@ -50,10 +50,9 @@ jobs:
         with:
           configurationFile: .github/renovate-global.json5
           token: ${{ steps.app-token.outputs.token }}
-          env-regex: "^(?:RENOVATE_\\w+|LOG_\\w+|GITHUB_COM_TOKEN|NODE_OPTIONS|(?:HTTPS?|NO)_PROXY|(?:https?|no)_proxy)$"
         env:
           # Write Renovate logs to a file - https://docs.renovatebot.com/config-overview/#logging-variables
-          LOG_FILE: /tmp/renovate-log.json
+          RENOVATE_LOG_FILE: /tmp/renovate-log.json
           # Write a Renovate report to a file - https://docs.renovatebot.com/self-hosted-configuration/#reporttype
           RENOVATE_REPORT_TYPE: file
           RENOVATE_REPORT_PATH: /tmp/renovate-report.json
