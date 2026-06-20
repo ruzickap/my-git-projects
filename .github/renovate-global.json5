@@ -79,6 +79,17 @@
     ":enableVulnerabilityAlertsWithLabel(security)", // Add security label to vulnerability alerts
     ":pinSkipCi", // Pin dependencies and skip CI for pin-only updates
   ],
+  // Use internal checks only and do NOT publish a "renovate/stability-days"
+  // commit status. With automergeType=branch, Renovate POSTs that status to
+  // GitHub before merging; the GitHub App receives a 422 that Renovate's error
+  // handler mis-parses (err.body.errors is not an array), throwing
+  // REPOSITORY_CHANGED and aborting every repo *before* automerge -- so no
+  // branch ever merges. "strict" makes Renovate evaluate minimumReleaseAge
+  // internally and skip the status POST entirely, unblocking automerge.
+  // Requires minimumReleaseAgeBehaviour=timestamp-optional (set above) so
+  // timestamp-less ghcr.io tags are not held back forever under strict.
+  // https://docs.renovatebot.com/configuration-options/#internalchecksfilter
+  internalChecksFilter: "strict",
   // Scan Kubernetes manifests in deploy directory (for malware-cryptominer-container)
   kubernetes: {
     managerFilePatterns: ["/^deploy/.+\\.ya?ml$/"],
@@ -98,8 +109,8 @@
   // Proceed with updates whose datasource/registry provides no release
   // timestamp instead of holding them back indefinitely. Renovate 42+ defaults
   // to "timestamp-required", which treats a missing timestamp as "not yet aged"
-  // and (with internalChecksFilter=strict) never creates the branch -- this
-  // permanently blocks ghcr.io/quay.io Docker tags (e.g.
+  // and (because internalChecksFilter=strict is set above) never creates the
+  // branch -- this permanently blocks ghcr.io/quay.io Docker tags (e.g.
   // ghcr.io/home-assistant/home-assistant), which expose no timestamp. Trade-off:
   // any timestamp-less update bypasses the minimumReleaseAge cooldown for every
   // datasource.
