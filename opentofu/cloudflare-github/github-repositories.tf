@@ -202,6 +202,7 @@ locals {
         "GOOGLE_CLIENT_SECRET"                = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_GOOGLE_CLIENT_SECRET.value
         # .github/workflows/docs-confluence-sync.yml
         "MY_ATLASSIAN_PERSONAL_TOKEN" = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_MY_ATLASSIAN_PERSONAL_TOKEN.value
+        "MY_SLACK_APP_TOKEN"          = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_MY_SLACK_APP_TOKEN.value
         "MY_SLACK_BOT_SIGNING_SECRET" = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_MY_SLACK_BOT_SIGNING_SECRET.value
         "MY_SLACK_BOT_TOKEN"          = data.aws_ssm_parameter.github_shared_actions_secrets_MY_SLACK_BOT_TOKEN.value
         # Needed by .github/workflows/post_tests.yml
