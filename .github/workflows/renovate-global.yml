@@ -10,7 +10,7 @@ on:
         type: boolean
         description: Dry-Run
   schedule:
-    - cron: 1 0-5 * * 4
+    - cron: 1 1 * * *
 
 env:
   # Enable dry-run mode based on the workflow input (https://docs.renovatebot.com/self-hosted-configuration/#dryrun)
