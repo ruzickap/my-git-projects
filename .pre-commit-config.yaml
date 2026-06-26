@@ -40,7 +40,7 @@ repos:
       - id: shellcheck
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.107.0
+    rev: v1.108.0
     hooks:
       - id: terraform_checkov
         # args:
@@ -60,7 +60,7 @@ repos:
           - --args=--version "~> 1.11"
 
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.2.20
+    rev: v0.2.23
     hooks:
       - id: rumdl-fmt
 
@@ -127,7 +127,7 @@ repos:
       - id: keep-sorted
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.16.3
+    rev: v4.16.4
     hooks:
       - id: commitizen
         stages: [commit-msg]
@@ -135,7 +135,7 @@ repos:
         stages: [pre-push]
 
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.8.0
+    rev: v2.9.0
     hooks:
       - id: check-message
       - id: check-branch
@@ -159,7 +159,7 @@ repos:
           ]
 
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: v1.25.2
+    rev: v1.26.1
     hooks:
       - id: zizmor
 
