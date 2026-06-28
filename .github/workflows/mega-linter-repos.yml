@@ -123,7 +123,7 @@ jobs:
           persist-credentials: false
 
       - name: 💡 MegaLinter (${{ matrix.flavor }})
-        uses: oxsecurity/megalinter@0e3ce9b9c8c10effb9b269509cc47ca17cae31c7 # v9.5.0
+        uses: oxsecurity/megalinter@ef3e84b8b836d76db562d0f3ed7da61e8fd538bc # v9.6.0
         env:
           GITHUB_TOKEN: ${{ github.token }}
           MEGALINTER_FLAVOR: ${{ matrix.flavor }}
