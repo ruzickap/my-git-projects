@@ -24,6 +24,8 @@ exclude = [
   '%7B.*%7D',
   # Ignore URLs with dollar signs - shell/environment variables
   '\$',
+  # Ignore git-over-HTTPS auth URLs (e.g. https://x-access-token:...@github.com)
+  'x-access-token',
 ]
 
 # Exclude these filesystem paths from link checking
