@@ -53,7 +53,6 @@ jobs:
           git tag -f "v${MAJOR}" "${SHA}"
           git tag -f "v${MAJOR}.${MINOR}" "${SHA}"
 
-          set +x
           REMOTE_URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push --force "${REMOTE_URL}" "v${MAJOR}"
           git push --force "${REMOTE_URL}" "v${MAJOR}.${MINOR}"
