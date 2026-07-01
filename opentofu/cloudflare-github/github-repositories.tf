@@ -392,7 +392,7 @@ resource "github_repository_ruleset" "main" {
     deletion                = true # prevent branch deletion
     non_fast_forward        = true # prevent force pushes
     required_linear_history = true # require linear commit history (no merge commits)
-    # required_signatures     = true
+    required_signatures     = true # require signed commits
 
     # Pull request requirements
     pull_request {
