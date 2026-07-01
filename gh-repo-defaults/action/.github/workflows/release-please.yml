@@ -34,6 +34,7 @@ jobs:
       - name: Tag major and minor versions
         if: ${{ steps.release.outputs.release_created }}
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAJOR: ${{ steps.release.outputs.major }}
           MINOR: ${{ steps.release.outputs.minor }}
         run: |
@@ -52,6 +53,9 @@ jobs:
           git tag -f "v${MAJOR}" "${SHA}"
           git tag -f "v${MAJOR}.${MINOR}" "${SHA}"
 
-          # Push tags to remote
-          git push --force origin "v${MAJOR}"
-          git push --force origin "v${MAJOR}.${MINOR}"
+          # Authenticate the push with the workflow token via an HTTP header
+          # (checkout used persist-credentials: false). Avoids putting the
+          # token in the remote URL.
+          AUTH_HEADER="AUTHORIZATION: basic $(printf 'x-access-token:%s' "${GH_TOKEN}" | base64 | tr -d '\n')"
+          git -c http.extraheader="${AUTH_HEADER}" push --force origin "v${MAJOR}"
+          git -c http.extraheader="${AUTH_HEADER}" push --force origin "v${MAJOR}.${MINOR}"
