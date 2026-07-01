@@ -30,6 +30,7 @@ DISABLE_LINTERS:
   - MARKDOWN_MARKDOWNLINT # Using rumdl instead (faster Rust-based alternative)
   - MARKDOWN_MARKDOWN_LINK_CHECK # Using lychee instead for link checking (more configurable)
   - SPELL_CSPELL # Spell checking disabled - prone to false positives
+  - TERRAFORM_TERRASCAN # Disabled - using checkov and trivy for IaC security scanning
 
 # Fail the build if a required linter is missing from the Docker flavor
 FAIL_IF_MISSING_LINTER_IN_FLAVOR: true
