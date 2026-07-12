@@ -53,9 +53,9 @@ jobs:
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           echo "/home/linuxbrew/.linuxbrew/bin" >> "${GITHUB_PATH}"
-          brew install actionlint gitleaks opentofu terraform-docs terraform-linters/tap/tflint terrascan tfupdate trivy
+          brew install actionlint betterleaks opentofu terraform-docs terraform-linters/tap/tflint terrascan tfupdate trivy
 
-          gitleaks version
+          betterleaks version
           terrascan version
           tflint --version
           tfupdate --version
