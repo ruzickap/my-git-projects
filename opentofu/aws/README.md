@@ -165,7 +165,7 @@ dependency:
    Expected output:
 
    ```ini
-   # Managed by OpenTofu — ~/git/my-git-projects/opentofu/aws
+   # Managed by OpenTofu - ~/git/my-git-projects/opentofu/aws
    [default]
    aws_access_key_id = AKIA...
    aws_secret_access_key = ...
@@ -182,7 +182,7 @@ dependency:
    Expected output:
 
    ```ini
-   # Managed by OpenTofu — ~/git/my-git-projects/opentofu/aws
+   # Managed by OpenTofu - ~/git/my-git-projects/opentofu/aws
    [default]
    role_arn = arn:aws:iam::ACCOUNT:role/ROLE
    source_profile = default
