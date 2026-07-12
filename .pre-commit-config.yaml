@@ -8,6 +8,12 @@
 # prek install && prek install --hook-type commit-msg
 ---
 fail_fast: true
+# Install commit-msg and pre-push hook types by default so commit-check's
+# check-message (commit-msg) and check-no-force-push (pre-push) hooks run.
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
+  - pre-push
 repos:
   # keep-sorted start newline_separated=yes
   - repo: https://github.com/adrienverge/yamllint

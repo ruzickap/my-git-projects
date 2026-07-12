@@ -53,11 +53,19 @@ jobs:
         # tflint has no Linux Homebrew formula (the tap ships a macOS cask)
         uses: terraform-linters/setup-tflint@6e1e0642c0289bd619021bf6b34e3c08ed1e005a # v6.3.0
 
+      - name: Install OpenTofu
+        # Pin the version so Homebrew cannot drift past the modules' ~> 1.12
+        uses: opentofu/setup-opentofu@a1320f892987e89d278cc92dc5adc984fb93aca4 # v2.0.2
+        with:
+          # renovate: datasource=github-releases depName=opentofu/opentofu
+          tofu_version: 1.12.3
+          tofu_wrapper: false
+
       - name: Install dependencies
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           echo "/home/linuxbrew/.linuxbrew/bin" >> "${GITHUB_PATH}"
-          brew install actionlint betterleaks opentofu terraform-docs terrascan tfupdate trivy
+          brew install actionlint betterleaks terraform-docs terrascan tfupdate trivy
 
           betterleaks version
           terrascan version
