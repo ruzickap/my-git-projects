@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 1.11"
+  required_version = "~> 1.12"
   required_providers {
     # keep-sorted start block=yes
     aws = {
@@ -16,12 +16,12 @@ terraform {
 
 locals {
   # keep-sorted start
-  # File paths for AWS CLI configuration — standard locations, profile sections managed by local_sensitive_file resources
+  # File paths for AWS CLI configuration -- standard locations, profile sections managed by local_sensitive_file resources
   aws_config_file      = "${pathexpand("~")}/.aws/config"
   aws_credentials_file = "${pathexpand("~")}/.aws/credentials"
   aws_profile          = "my-aws"
   aws_region           = "eu-central-1"
-  # Dollars — set a low budget limit for personal account to get notified of any unexpected costs immediately
+  # Dollars -- set a low budget limit for personal account to get notified of any unexpected costs immediately
   budget_limit_amount   = "5"
   github_oidc_repo      = "ruzickap/my-git-projects"
   github_oidc_role_name = "GitHubOidc-${replace(local.github_oidc_repo, "/", "-")}"
@@ -69,9 +69,9 @@ provider "aws" {
 
 data "aws_partition" "current" {}
 
-# trivy:ignore:AVD-AWS-0143 Personal account — single IAM user, groups/roles overhead not warranted
+# trivy:ignore:AVD-AWS-0143 Personal account -- single IAM user, groups/roles overhead not warranted
 resource "aws_iam_user" "this" {
-  # checkov:skip=CKV_AWS_273:SSO not available — personal account uses IAM user for programmatic access
+  # checkov:skip=CKV_AWS_273:SSO not available -- personal account uses IAM user for programmatic access
   name = local.iam_user_name
 }
 
@@ -80,7 +80,7 @@ resource "aws_iam_access_key" "this" {
 }
 
 resource "aws_iam_user_policy_attachment" "this" {
-  # checkov:skip=CKV_AWS_40:Single-user personal account — no groups or roles needed
+  # checkov:skip=CKV_AWS_40:Single-user personal account -- no groups or roles needed
   for_each   = toset(local.iam_managed_policy_arns)
   user       = aws_iam_user.this.name
   policy_arn = each.value
@@ -91,7 +91,7 @@ resource "local_sensitive_file" "aws_credentials" {
   file_permission      = "0600"
   directory_permission = "0700"
   content              = <<-EOT
-    # Managed by OpenTofu — ~/git/my-git-projects/opentofu/aws
+    # Managed by OpenTofu -- ~/git/my-git-projects/opentofu/aws
     [default]
     aws_access_key_id = ${var.aws_default_access_key_id}
     aws_secret_access_key = ${var.aws_default_secret_access_key}
@@ -111,7 +111,7 @@ resource "local_sensitive_file" "aws_config" {
   file_permission      = "0600"
   directory_permission = "0700"
   content              = <<-EOT
-    # Managed by OpenTofu — ~/git/my-git-projects/opentofu/aws
+    # Managed by OpenTofu -- ~/git/my-git-projects/opentofu/aws
     [default]
     role_arn = ${var.aws_default_role_arn}
     source_profile = default
@@ -122,16 +122,16 @@ resource "local_sensitive_file" "aws_config" {
 }
 
 ################################################################################
-# S3 Bucket — OpenTofu State Files
+# S3 Bucket -- OpenTofu State Files
 ################################################################################
 
-# trivy:ignore:AVD-AWS-0089 Personal account — access logging not needed for state bucket
-# trivy:ignore:AVD-AWS-0132 Personal account — SSE-S3 (AWS default) is sufficient, KMS CMK not needed
+# trivy:ignore:AVD-AWS-0089 Personal account -- access logging not needed for state bucket
+# trivy:ignore:AVD-AWS-0132 Personal account -- SSE-S3 (AWS default) is sufficient, KMS CMK not needed
 resource "aws_s3_bucket" "opentofu_state" {
-  # checkov:skip=CKV_AWS_18:Personal account — access logging not needed for state bucket
-  # checkov:skip=CKV_AWS_144:Personal account — cross-region replication not needed for state bucket
-  # checkov:skip=CKV_AWS_145:Personal account — SSE-S3 (AWS default) is sufficient, KMS CMK not needed
-  # checkov:skip=CKV2_AWS_62:Personal account — S3 event notifications not needed for state bucket
+  # checkov:skip=CKV_AWS_18:Personal account -- access logging not needed for state bucket
+  # checkov:skip=CKV_AWS_144:Personal account -- cross-region replication not needed for state bucket
+  # checkov:skip=CKV_AWS_145:Personal account -- SSE-S3 (AWS default) is sufficient, KMS CMK not needed
+  # checkov:skip=CKV2_AWS_62:Personal account -- S3 event notifications not needed for state bucket
   bucket = local.s3_bucket_name
 
   lifecycle {
@@ -214,7 +214,7 @@ resource "aws_s3_bucket_policy" "opentofu_state" {
 }
 
 ################################################################################
-# AWS Budget — Cost Alert
+# AWS Budget -- Cost Alert
 ################################################################################
 
 resource "aws_budgets_budget" "monthly" {
@@ -287,15 +287,15 @@ resource "aws_iam_role" "github_actions" {
   assume_role_policy = data.aws_iam_policy_document.github_actions_assume_role.json
 }
 
-# trivy:ignore:AVD-AWS-0057 Personal account — admin privileges intentional for CI/CD full infrastructure management
+# trivy:ignore:AVD-AWS-0057 Personal account -- admin privileges intentional for CI/CD full infrastructure management
 resource "aws_iam_role_policy_attachment" "github_actions" {
-  # checkov:skip=CKV_AWS_274:Personal account — admin privileges intentional for CI/CD full infrastructure management
+  # checkov:skip=CKV_AWS_274:Personal account -- admin privileges intentional for CI/CD full infrastructure management
   role       = aws_iam_role.github_actions.name
   policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AdministratorAccess"
 }
 
 resource "aws_ssm_parameter" "github_oidc_role_arn" {
-  # checkov:skip=CKV_AWS_337:Personal account — AWS-managed key is sufficient for non-critical SSM parameters
+  # checkov:skip=CKV_AWS_337:Personal account -- AWS-managed key is sufficient for non-critical SSM parameters
   name  = "/github/ruzickap/my-git-projects/actions-secrets/MY_AWS_AWS_ROLE_TO_ASSUME"
   type  = "SecureString"
   value = aws_iam_role.github_actions.arn

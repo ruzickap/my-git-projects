@@ -12,6 +12,8 @@ on:
 
 env:
   SKIP: no-commit-to-branch
+  # Use OpenTofu for the antonbabenko/pre-commit-terraform hooks
+  PCT_TFPATH: tofu
 
 defaults:
   run:
@@ -51,10 +53,11 @@ jobs:
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           echo "/home/linuxbrew/.linuxbrew/bin" >> "${GITHUB_PATH}"
-          brew install actionlint gitleaks opentofu terraform-docs terrascan tfupdate trivy
+          brew install actionlint gitleaks opentofu terraform-docs terrascan tflint tfupdate trivy
 
           gitleaks version
           terrascan version
+          tflint --version
           tfupdate --version
           tofu -version
           terraform-docs --version
