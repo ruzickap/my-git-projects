@@ -4,8 +4,8 @@
 #                                                                                        #
 ##########################################################################################
 # ln -s ~/git/my-git-projects/.pre-commit-config.yaml .pre-commit-config.yaml
-# pre-commit install && pre-commit install --hook-type commit-msg
-# prek install && prek install --hook-type commit-msg
+# pre-commit install
+# prek install
 ---
 fail_fast: true
 # Install commit-msg and pre-push hook types by default so commit-check's
