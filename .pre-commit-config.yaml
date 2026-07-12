@@ -4,7 +4,6 @@
 #                                                                                        #
 ##########################################################################################
 # ln -s ~/git/my-git-projects/.pre-commit-config.yaml .pre-commit-config.yaml
-# pre-commit install
 # prek install
 ---
 fail_fast: true
