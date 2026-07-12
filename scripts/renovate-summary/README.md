@@ -5,31 +5,31 @@ Generate a clean, linkable **Markdown summary** from a
 
 Renovate's machine-readable report is great for tooling but hard to read. This
 script turns it into a single Markdown document that tells you, at a glance,
-**what Renovate did this run** -- what was merged, what is waiting, what failed,
-and what needs your attention -- with every repository, branch, PR, and file
+**what Renovate did this run** - what was merged, what is waiting, what failed,
+and what needs your attention - with every repository, branch, PR, and file
 linked back to GitHub.
 
 ## Features
 
-- **Action-oriented grouping** -- branches are bucketed by what Renovate
+- **Action-oriented grouping** - branches are bucketed by what Renovate
   actually did (Error, PR opened, Blocked by closed PR, Needs approval, Pending,
   Merged, Limited, No work, Unknown), ordered so the items needing the most
   attention come first.
-- **Problems table** -- every problem Renovate reported (deduplicated), with
+- **Problems table** - every problem Renovate reported (deduplicated), with
   severity level, affected branch, and message.
-- **Rich, linked tables** -- repositories, PRs, branches, commit history, and
+- **Rich, linked tables** - repositories, PRs, branches, commit history, and
   changed files all link to GitHub.
-- **Version + age** -- each upgrade shows `old → new` plus the age of the new
+- **Version + age** - each upgrade shows `old → new` plus the age of the new
   version in days (e.g. `2.11.4 → 2.11.5 (4d)`), which makes
   [`minimumReleaseAge`](https://docs.renovatebot.com/configuration-options/#minimumreleaseage)
   hold-backs obvious. Digest-only updates (container images, git submodules)
   have no age for the *new* digest in Renovate's report, so the age of the
   *currently pinned* version is shown instead, labelled `(cur 2d)` (e.g.
   `1.31.1 → 1.31.1-alpine-slim (cur 2d)`) to make the distinction clear.
-- **Totals** -- aggregate counts of branches, upgrades, problems, results, and
+- **Totals** - aggregate counts of branches, upgrades, problems, results, and
   update types.
-- **Zero dependencies** -- pure Python standard library.
-- **Lint-clean output** -- passes
+- **Zero dependencies** - pure Python standard library.
+- **Lint-clean output** - passes
   [`markdownlint`](https://github.com/DavidAnson/markdownlint) and
   [`rumdl`](https://github.com/rvben/rumdl) (a `markdownlint-disable` directive
   for `MD013`/`MD033` is emitted for the rich tables).
@@ -64,7 +64,7 @@ linked back to GitHub.
 | `report`           | Path to the Renovate JSON report.                | `renovate-report.json` |
 | `-b`, `--base-url` | Base GitHub URL used to build links.             | `https://github.com`   |
 | `-o`, `--output`   | Write the report to this file instead of stdout. | *stdout*               |
-| `-h`, `--help`     | Show help and exit.                              | --                      |
+| `-h`, `--help`     | Show help and exit.                              | -                      |
 
 <!-- markdownlint-enable MD013 -->
 
@@ -89,24 +89,24 @@ vary between setups.
 
 The generated Markdown contains the following sections, in order:
 
-1. **⚠️ Problems** -- table of all reported problems.
-2. **❌ Error** -- updates Renovate failed to apply.
-3. **✅ Pull request opened** -- updates with a real, open PR awaiting
+1. **⚠️ Problems** - table of all reported problems.
+2. **❌ Error** - updates Renovate failed to apply.
+3. **✅ Pull request opened** - updates with a real, open PR awaiting
    review/merge.
-4. **🚫 Blocked by closed PR** -- updates Renovate will not raise again because a
+4. **🚫 Blocked by closed PR** - updates Renovate will not raise again because a
    previous PR was closed unmerged (Renovate's "PR Closed (Blocked)" state).
-5. **🔒 Needs approval** -- blocked awaiting manual approval before a PR is
+5. **🔒 Needs approval** - blocked awaiting manual approval before a PR is
    created.
-6. **⏳ Pending (not created yet)** -- found but no PR yet (e.g. awaiting checks,
+6. **⏳ Pending (not created yet)** - found but no PR yet (e.g. awaiting checks,
    held by `minimumReleaseAge`, or queued for branch automerge).
-7. **🚀 Merged (auto-merged, no PR)** -- merged straight to the base branch via
+7. **🚀 Merged (auto-merged, no PR)** - merged straight to the base branch via
    branch automerge.
-8. **🚦 Limited (rate/limit reached)** -- deferred because a Renovate limit was
+8. **🚦 Limited (rate/limit reached)** - deferred because a Renovate limit was
    reached (PR/branch/commit/group-size).
-9. **💤 No work** -- nothing to do this run.
-10. **❓ Unknown** -- branches whose `result` did not map to any known category,
+9. **💤 No work** - nothing to do this run.
+10. **❓ Unknown** - branches whose `result` did not map to any known category,
     listed so nothing is silently dropped.
-11. **📊 Totals** -- aggregate counts.
+11. **📊 Totals** - aggregate counts.
 
 Each action section is preceded by a one-line description of what the category
 means. Empty categories render `_None._`.
@@ -136,18 +136,18 @@ URLs in every link (abbreviated as `…` above).
 The age suffix in the **Upgrades** column comes from Renovate's dependency
 inventory (`packageFiles[].deps[]`) and has two forms:
 
-- **`(<days>d)`** -- the age of the **new** version (`newVersionAgeInDays`). Shown
+- **`(<days>d)`** - the age of the **new** version (`newVersionAgeInDays`). Shown
   for version bumps (major/minor/patch), e.g. `v2.8.0 → v2.9.0 (0d)`. This is
   what
   [`minimumReleaseAge`](https://docs.renovatebot.com/configuration-options/#minimumreleaseage)
   gates on, so a small number here explains a held-back update.
-- **`(cur <days>d)`** -- the age of the **currently pinned** version
+- **`(cur <days>d)`** - the age of the **currently pinned** version
   (`currentVersionAgeInDays`). Shown for **digest-only** updates (container
   images, git submodules), e.g. `1.31.1 → 1.31.1-alpine-slim (cur 2d)`.
 
 Why the fallback: for a digest update the version string does not change (only
 the `@sha256:…` digest moves), and **Renovate's report carries no age or
-timestamp for the new digest at all** -- only the current version's age. So
+timestamp for the new digest at all** - only the current version's age. So
 `(cur 2d)` is the closest stability signal available without extra registry/API
 calls. Note it is *not* the age of the new digest: `minimumReleaseAge` for
 digests is evaluated against the new image's publish time, which the report does
@@ -159,7 +159,7 @@ suffix is shown.
 
 Renovate's report does not include explicit "created / merged / rebased" flags,
 so the script derives each branch's category from the only state signals
-available -- `result`, `prBlockedBy`, and `prNo`. Any recognised `result` is
+available - `result`, `prBlockedBy`, and `prNo`. Any recognised `result` is
 matched first and wins, even when the branch also has a `prNo`; only a branch
 whose `result` is unmapped (or `done`) falls back to the `prNo` shortcut, where
 a present `prNo` is taken to mean a real, open PR.
@@ -169,7 +169,7 @@ describing something other than an open PR awaiting review. The clearest case
 is `already-existed`, Renovate's "PR Closed (Blocked)" state, which reports the
 *closed* PR's number; matching on `result` first keeps it out of "PR opened".
 The same applies to, e.g., a rate-limited (`*-limit-reached`) or errored
-(`error`) branch that still has an open PR -- it is filed under its result
+(`error`) branch that still has an open PR - it is filed under its result
 (Limited / Error) rather than "PR opened". The category keys map to Renovate's
 [`BranchResult`](https://github.com/renovatebot/renovate/blob/main/lib/workers/types.ts)
 values:
@@ -206,7 +206,7 @@ For `pending` updates, Renovate has not created the branch yet, so the
 therefore 404 until (and unless) the branch is actually pushed. Likewise,
 branches that were auto-merged and deleted, or pruned after their PR was closed
 (**Blocked by closed PR**), will 404. A link checker run against the output will
-report these -- that is expected, not a bug. The PR link for a **Blocked by
+report these - that is expected, not a bug. The PR link for a **Blocked by
 closed PR** row still resolves, pointing at the closed PR.
 
 ## License

@@ -49,11 +49,15 @@ jobs:
           uv tool install checkov==3.3.7
           echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
 
+      - name: Install tflint
+        # tflint has no Linux Homebrew formula (the tap ships a macOS cask)
+        uses: terraform-linters/setup-tflint@6e1e0642c0289bd619021bf6b34e3c08ed1e005a # v6.3.0
+
       - name: Install dependencies
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           echo "/home/linuxbrew/.linuxbrew/bin" >> "${GITHUB_PATH}"
-          brew install actionlint betterleaks opentofu terraform-docs terraform-linters/tap/tflint terrascan tfupdate trivy
+          brew install actionlint betterleaks opentofu terraform-docs terrascan tfupdate trivy
 
           betterleaks version
           terrascan version

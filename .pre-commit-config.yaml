@@ -134,7 +134,6 @@ repos:
     rev: 0.7.1
     hooks:
       - id: fix-smartquotes
-      - id: fix-unicode-dashes
       - id: fix-ligatures
       - id: fix-spaces
       - id: forbid-bidi-controls
@@ -144,4 +143,14 @@ repos:
     rev: v1.26.1
     hooks:
       - id: zizmor
+
+  - repo: local
+    hooks:
+      # texthooks' fix-unicode-dashes converts em dashes to "--"; normalize all
+      # Unicode dashes to a single ASCII hyphen instead.
+      - id: fix-unicode-dashes
+        name: Normalize Unicode dashes to a single hyphen
+        entry: scripts/fix-unicode-dashes.sh
+        language: script
+        types: [text]
   # keep-sorted end
