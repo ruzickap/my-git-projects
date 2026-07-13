@@ -46,7 +46,7 @@ jobs:
       - name: Install checkov using uv
         run: |
           # renovate: datasource=pypi depName=checkov
-          uv tool install checkov==3.3.7
+          uv tool install checkov==3.3.8
           echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
 
       - name: Install tflint
