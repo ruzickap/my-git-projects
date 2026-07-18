@@ -21,7 +21,6 @@ BASH_SHFMT_ARGUMENTS: --case-indent --indent 2 --space-redirects
 
 # Disable linters
 DISABLE_LINTERS:
-  - MARKDOWN_MARKDOWNLINT # Using rumdl instead (faster Rust-based alternative)
   - MARKDOWN_MARKDOWN_LINK_CHECK # Using lychee instead for link checking (more configurable)
   - SPELL_CSPELL # Spell checking disabled - prone to false positives
   - TERRAFORM_TERRASCAN # Disabled - using checkov and trivy for IaC security scanning
@@ -41,11 +40,17 @@ JSON_JSONLINT_ARGUMENTS: --comments
 # Exclude devcontainer.json from JSON linting (VS Code extension format)
 JSON_JSONLINT_FILTER_REGEX_EXCLUDE: .devcontainer/devcontainer.json
 
+# Use rumdl as the default Markdown style (faster Rust-based alternative)
+MARKDOWN_DEFAULT_STYLE: rumdl
+
 # Exclude CHANGELOG.md from rumdl (auto-generated, may have formatting issues)
 MARKDOWN_RUMDL_FILTER_REGEX_EXCLUDE: CHANGELOG.md
 
 # Disable the MegaLinter ASCII art graphic in output
 PRINT_ALPACA: false
+
+# Use ruff as the default Python style (faster Rust-based alternative)
+PYTHON_DEFAULT_STYLE: ruff
 
 # Don't create a report output folder (using CI artifacts instead)
 REPORT_OUTPUT_FOLDER: none
