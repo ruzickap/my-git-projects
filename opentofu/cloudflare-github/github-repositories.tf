@@ -15,6 +15,12 @@ locals {
       visibility  = "private"
       topics      = ["ai", "ai-security", "caisp", "caisp-exam", "caisp-exam-preparation", "devsecops", "notes", "security"]
     }
+    "claude_courses" = {
+      name        = "claude-courses"
+      description = "Claude Courses Notes"
+      visibility  = "public"
+      topics      = ["claude", "courses", "architect", "foundations", "notes", "public"]
+    }
     "container_image_scans" = {
       name        = "container-image-scans"
       description = "Container image scans"
