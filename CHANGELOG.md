@@ -1,5 +1,64 @@
 # Changelog
 
+## [1.1.0](https://github.com/ruzickap/my-git-projects/compare/v1.0.0...v1.1.0) (2026-07-24)
+
+
+### Features
+
+* add cloudflare pages secrets for ruzickap.github.io ([#354](https://github.com/ruzickap/my-git-projects/issues/354)) ([f2b9858](https://github.com/ruzickap/my-git-projects/commit/f2b985885655231d072a657f232e8eefadf83df0))
+* add CLOUDFLARE_WEB_ANALYTICS_SITE_TOKEN to ruzickap.github.io repo ([#277](https://github.com/ruzickap/my-git-projects/issues/277)) ([d9180d4](https://github.com/ruzickap/my-git-projects/commit/d9180d439f1fa7a51e90ed06dfe6c81b0c6a31b4))
+* add copilot code review to repository rulesets ([#330](https://github.com/ruzickap/my-git-projects/issues/330)) ([278c432](https://github.com/ruzickap/my-git-projects/commit/278c432ddd063670d4492030492416638b90134a))
+* add DNSSEC drift workaround and gate tunnel token SSM parameter ([#332](https://github.com/ruzickap/my-git-projects/issues/332)) ([a9e3ea8](https://github.com/ruzickap/my-git-projects/commit/a9e3ea89bc7fb4bdf9a37be9061560e3509ae5b9))
+* add gate-bracha Cloudflare tunnel ([#333](https://github.com/ruzickap/my-git-projects/issues/333)) ([6e9ad84](https://github.com/ruzickap/my-git-projects/commit/6e9ad84ce91c0370db8c41e947d8c86545506406))
+* add global renovate workflow for all repositories ([#341](https://github.com/ruzickap/my-git-projects/issues/341)) ([3f2adda](https://github.com/ruzickap/my-git-projects/commit/3f2adda1cd161f24281e98a1355d3cfa6b88f995))
+* add lock file maintenance category to renovate summary ([#368](https://github.com/ruzickap/my-git-projects/issues/368)) ([33e9d5f](https://github.com/ruzickap/my-git-projects/commit/33e9d5f0ee8fa5891c24cc5f9adfdf4f97332254))
+* add lovable brewwatch analytics and dns configuration ([#290](https://github.com/ruzickap/my-git-projects/issues/290)) ([d3d6d66](https://github.com/ruzickap/my-git-projects/commit/d3d6d664647ce0271aa2256d83b2d8d9ce25b301))
+* add MISE_SOPS_AGE_KEY secret and config for container-image-scans ([#304](https://github.com/ruzickap/my-git-projects/issues/304)) ([9fd5e51](https://github.com/ruzickap/my-git-projects/commit/9fd5e51cd8b59369e1f69598d8ce47f11f56e71b))
+* add more secrets to tofu code ([#273](https://github.com/ruzickap/my-git-projects/issues/273)) ([2678540](https://github.com/ruzickap/my-git-projects/commit/26785407fe4c7d32ac89a6f3e1473cdc4ed708ed))
+* add MY_SLACK_APP_TOKEN secret to ruzickap.github.io repo ([#383](https://github.com/ruzickap/my-git-projects/issues/383)) ([392d71a](https://github.com/ruzickap/my-git-projects/commit/392d71a303e13679326c8f08348b613a43e7c8e5))
+* add MY_SLACK_BOT_TOKEN secret to ruzickap.github.io ([#372](https://github.com/ruzickap/my-git-projects/issues/372)) ([39eb755](https://github.com/ruzickap/my-git-projects/commit/39eb755c3d37a962aba75e1d4c1f3554550d9dec))
+* add OpenTofu tests for AWS bootstrap module ([6fb45b2](https://github.com/ruzickap/my-git-projects/commit/6fb45b2f9c56af2e67679717f3e2a6585ec6c31c))
+* add renovate report and upload it as artifact ([#355](https://github.com/ruzickap/my-git-projects/issues/355)) ([379ccd4](https://github.com/ruzickap/my-git-projects/commit/379ccd479f4c2619b6eeb62e127bd97a6ffa6543))
+* add renovate-summary script to render report as markdown ([#359](https://github.com/ruzickap/my-git-projects/issues/359)) ([206696c](https://github.com/ruzickap/my-git-projects/commit/206696c88849d50fabf6f91ba352b7e7c4e75596))
+* add renovate-summary-generator repo and fix region ref ([#348](https://github.com/ruzickap/my-git-projects/issues/348)) ([026127c](https://github.com/ruzickap/my-git-projects/commit/026127cd638669e63f9ef00c11301a708e034929))
+* add RUZICKA_SBX01_AWS_ROLE_TO_ASSUME secret to ruzickap.github.io ([#371](https://github.com/ruzickap/my-git-projects/issues/371)) ([46e8871](https://github.com/ruzickap/my-git-projects/commit/46e8871ad75240745df3348056f36380cd899d69))
+* add workflow to run MegaLinter on all non-archived repositories ([#284](https://github.com/ruzickap/my-git-projects/issues/284)) ([c448f46](https://github.com/ruzickap/my-git-projects/commit/c448f46fd1aabe47788c5a75e879a50702a2fffb))
+* add zizmor static analysis for GitHub Actions workflows ([#326](https://github.com/ruzickap/my-git-projects/issues/326)) ([8a58ffb](https://github.com/ruzickap/my-git-projects/commit/8a58ffb80a8e7a554da7514f6145c5131c3734ca))
+* capture docker digest in custom regex manager ([#362](https://github.com/ruzickap/my-git-projects/issues/362)) ([35ff9f4](https://github.com/ruzickap/my-git-projects/commit/35ff9f48e6f9aefe3a261190390d4391d29a38d1))
+* enhance tofu-cloudflare-github workflow with manual trigger ([#278](https://github.com/ruzickap/my-git-projects/issues/278)) ([d6d213a](https://github.com/ruzickap/my-git-projects/commit/d6d213acfe1349e21a6d3ab7da71dc105410f4fb))
+* enhance tofu-cloudflare-github workflow with PR label handling ([#276](https://github.com/ruzickap/my-git-projects/issues/276)) ([d261243](https://github.com/ruzickap/my-git-projects/commit/d2612435755eba91ed29d3a2ce18bf1ebb9875a6))
+* migrate secrets from SOPS to AWS SSM Parameter Store ([#306](https://github.com/ruzickap/my-git-projects/issues/306)) ([e269207](https://github.com/ruzickap/my-git-projects/commit/e2692076dabd05c32130279e9669ec161eb41577))
+* migrate sensitive SSM parameters to ephemeral resources ([#310](https://github.com/ruzickap/my-git-projects/issues/310)) ([80ad852](https://github.com/ruzickap/my-git-projects/commit/80ad85273ce084213e46b064ed776ddfc8af11ca))
+* redesign tofu secrets ([#272](https://github.com/ruzickap/my-git-projects/issues/272)) ([0a0e583](https://github.com/ruzickap/my-git-projects/commit/0a0e5836805af17ca944c5232594c35e0cff684d))
+* redesign tofu-cloudflare-github workflow ([#274](https://github.com/ruzickap/my-git-projects/issues/274)) ([3667e14](https://github.com/ruzickap/my-git-projects/commit/3667e14d40da1422261889453e14be56f62ebcc6))
+* replace hugo-build workflow with gh-pages-build ([#280](https://github.com/ruzickap/my-git-projects/issues/280)) ([87ed836](https://github.com/ruzickap/my-git-projects/commit/87ed8369eb1bc16aef208a79079d7a1ad97f5aab))
+* update CI workflows, pre-commit hooks, docs, and secrets ([#305](https://github.com/ruzickap/my-git-projects/issues/305)) ([f38c006](https://github.com/ruzickap/my-git-projects/commit/f38c0065735e8f323baea8bf3a09a84c224dbcb7))
+* use rumdl for markdown linting ([#269](https://github.com/ruzickap/my-git-projects/issues/269)) ([7e20618](https://github.com/ruzickap/my-git-projects/commit/7e206189269dc2b3d5a1f6a796be4ebec5ba1562))
+
+
+### Bug Fixes
+
+* add env-regex to forward LOG_FILE to Renovate container ([#350](https://github.com/ruzickap/my-git-projects/issues/350)) ([de28411](https://github.com/ruzickap/my-git-projects/commit/de2841153825772d2d6c75e8df47dc8362ed6a69))
+* add requireConfig optional for repos without config ([#352](https://github.com/ruzickap/my-git-projects/issues/352)) ([365a503](https://github.com/ruzickap/my-git-projects/commit/365a5032e7f54fb69fb9c12d98a4dc130374916c))
+* aws-cloudformation-gh-action GH Action ([#282](https://github.com/ruzickap/my-git-projects/issues/282)) ([8b125c3](https://github.com/ruzickap/my-git-projects/commit/8b125c374ac47f32fe750ca122cefdb8096e18fd))
+* classify renovate closed-PR branches as blocked, not open ([#367](https://github.com/ruzickap/my-git-projects/issues/367)) ([bd40536](https://github.com/ruzickap/my-git-projects/commit/bd40536ea8650389b72fff87bdf440f5baa757ec))
+* correct Google API credentials in terraform configuration ([#275](https://github.com/ruzickap/my-git-projects/issues/275)) ([5323b43](https://github.com/ruzickap/my-git-projects/commit/5323b433928d88749a539b7cee7b1a572903ccb8))
+* correct workflow defaults for cache, colors, and stale timings ([#351](https://github.com/ruzickap/my-git-projects/issues/351)) ([e145ed3](https://github.com/ruzickap/my-git-projects/commit/e145ed3cd38a5b51f23caee40d8723e917cccc24))
+* disable digest pinning for custom regex Docker deps ([#356](https://github.com/ruzickap/my-git-projects/issues/356)) ([0d7f998](https://github.com/ruzickap/my-git-projects/commit/0d7f998422662fa2b4adf9ad9914b4e83dd6b291))
+* disable renovate/stability-days status to unblock automerge ([#377](https://github.com/ruzickap/my-git-projects/issues/377)) ([b7df8d9](https://github.com/ruzickap/my-git-projects/commit/b7df8d972e2dd1ffdd251a47031507ede7fb174d))
+* ensure .lycheecache is checked before modification in workflows ([#294](https://github.com/ruzickap/my-git-projects/issues/294)) ([e2ef093](https://github.com/ruzickap/my-git-projects/commit/e2ef0930354734ab25bc1c8c1f86521e906176b2))
+* ignore ansible comparisons:image:strict false positive ([#378](https://github.com/ruzickap/my-git-projects/issues/378)) ([279b76b](https://github.com/ruzickap/my-git-projects/commit/279b76b35d829c1627ab1c5303d1d30faad5ee27))
+* install checkov via uv to satisfy scorecard pinning ([#360](https://github.com/ruzickap/my-git-projects/issues/360)) ([9c75b9b](https://github.com/ruzickap/my-git-projects/commit/9c75b9b7401a24ced0900ff1ce312b7c5e44195d))
+* scope renovate-global token to all owner repos ([#342](https://github.com/ruzickap/my-git-projects/issues/342)) ([4fdadca](https://github.com/ruzickap/my-git-projects/commit/4fdadca90324ce283dfed0fc50d060a7f2877cc5))
+* set renovate internalChecksFilter to strict ([#376](https://github.com/ruzickap/my-git-projects/issues/376)) ([ccaeb63](https://github.com/ruzickap/my-git-projects/commit/ccaeb63348a57808eea87ca402c9a9665500352f))
+* simplify renovate dry-run logic and ignore repo configs ([#343](https://github.com/ruzickap/my-git-projects/issues/343)) ([7a41ebb](https://github.com/ruzickap/my-git-projects/commit/7a41ebbc85b1eba90f1a86c41f086a6032e4abe0))
+* skip digest pin for openwrt/rootfs env var ([#363](https://github.com/ruzickap/my-git-projects/issues/363)) ([486f800](https://github.com/ruzickap/my-git-projects/commit/486f800fef77c581226b6cb04eede2ffcd889e57))
+* unblock ghcr stability gate and show digest age in summary ([#374](https://github.com/ruzickap/my-git-projects/issues/374)) ([25e5463](https://github.com/ruzickap/my-git-projects/commit/25e5463c185bd5f031bfc87b12212de55cb568ba))
+* update checkov skip comment and change plaintext_value to value ([#324](https://github.com/ruzickap/my-git-projects/issues/324)) ([57c5f78](https://github.com/ruzickap/my-git-projects/commit/57c5f78b9d195967a4bc884c38944313e879c9a7))
+* update MaxSessionDuration for GitHub Actions IAM role to 2 hours ([#283](https://github.com/ruzickap/my-git-projects/issues/283)) ([19acc26](https://github.com/ruzickap/my-git-projects/commit/19acc260f31c865f2db0dbf902a1cde56430e652))
+* update zigbee2mqtt Cloudflare tunnel port to 8090 ([#335](https://github.com/ruzickap/my-git-projects/issues/335)) ([2b91147](https://github.com/ruzickap/my-git-projects/commit/2b91147b67bd553a639facae2fb3155444f701c9))
+* use client-id for actions/create-github-app-token ([#321](https://github.com/ruzickap/my-git-projects/issues/321)) ([c8266cd](https://github.com/ruzickap/my-git-projects/commit/c8266cd9135c467d87c5487cfab11a1bf767228a))
+
 ## [1.0.0](https://github.com/ruzickap/my-git-projects/compare/v0.6.0...v1.0.0) (2026-01-04)
 
 
