@@ -189,6 +189,15 @@
       enabled: false,
     },
     {
+      // Bump must be "feat" so release-please opens a release PR; merging it
+      // publishes a Release that triggers the custom flavor image build.
+      description: "MegaLinter bump must be feat so release-please releases it",
+      matchRepositories: ["ruzickap/megalinter-custom-flavor-my-repos"],
+      matchDepNames: ["oxsecurity/megalinter"],
+      commitMessageTopic: "MegaLinter",
+      semanticCommitType: "feat",
+    },
+    {
       description: "Skip renovating _posts directory in ruzickap.github.io",
       matchRepositories: ["ruzickap/ruzickap.github.io"],
       matchFileNames: ["_posts/**"],
