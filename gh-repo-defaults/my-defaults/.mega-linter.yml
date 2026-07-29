@@ -29,7 +29,7 @@ DISABLE_LINTERS:
 FAIL_IF_MISSING_LINTER_IN_FLAVOR: true
 
 # Exclude CHANGELOG.md from all linting
-FILTER_REGEX_EXCLUDE: CHANGELOG.md
+FILTER_REGEX_EXCLUDE: CHANGELOG\.md
 
 # Allow formatters to report errors
 FORMATTERS_DISABLE_ERRORS: false
@@ -44,7 +44,7 @@ JSON_JSONLINT_FILTER_REGEX_EXCLUDE: .devcontainer/devcontainer.json
 MARKDOWN_DEFAULT_STYLE: rumdl
 
 # Exclude CHANGELOG.md from rumdl (auto-generated, may have formatting issues)
-MARKDOWN_RUMDL_FILTER_REGEX_EXCLUDE: CHANGELOG.md
+MARKDOWN_RUMDL_FILTER_REGEX_EXCLUDE: CHANGELOG\.md
 
 # Disable the MegaLinter ASCII art graphic in output
 PRINT_ALPACA: false
