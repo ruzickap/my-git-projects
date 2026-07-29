@@ -48,6 +48,11 @@ locals {
       description = "Infrastructure as Code for provisioning multiple Kubernetes clusters, managed using GitOps with ArgoCD"
       topics      = ["aks", "argocd", "eks", "gitops", "infrastructure-as-code", "k8s", "k8s-gitops", "kind", "kubernetes", "multi-cluster", "terraform", "vcluster"] # codespell:ignore
     }
+    "megalinter_custom_flavor_my_repos" = {
+      name        = "megalinter-custom-flavor-my-repos"
+      description = "MegaLinter custom flavor bundling the linters used across my repositories"
+      topics      = ["custom-flavor", "docker", "github-action", "github-actions", "linter", "linters", "linting", "megalinter"]
+    }
     "pre_commit_wizcli" = {
       name        = "pre-commit-wizcli"
       description = "pre-commit hook for WizCLI that checks your code"
@@ -338,14 +343,14 @@ resource "github_actions_secret" "this" {
       for repo_key, repo in local.all_github_repositories : [
         for secret_name, secret_value in merge(local.github_action_default_secrets, try(repo.secrets, {})) : {
           key          = "${repo_key}-${secret_name}"
-          repository   = repo.name
+          repo_key     = repo_key
           secret_name  = secret_name
           secret_value = secret_value
         }
       ]
     ]) : item.key => item
   }
-  repository  = each.value.repository
+  repository  = github_repository.this[each.value.repo_key].name
   secret_name = each.value.secret_name
   value       = each.value.secret_value
 }
@@ -359,7 +364,7 @@ import {
 
 resource "github_repository_topics" "this" {
   for_each   = local.all_github_repositories
-  repository = each.value.name
+  repository = github_repository.this[each.key].name
   topics     = try(each.value.topics, [])
 }
 
@@ -418,7 +423,7 @@ resource "github_repository_ruleset" "main" {
     required_status_checks {
       strict_required_status_checks_policy = true # branch must be up-to-date before merging
       required_check {
-        context = "semantic-pull-request" # enforce conventional commit PR titles
+        context = "commit-check"
       }
     }
   }
