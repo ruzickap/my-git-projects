@@ -19,7 +19,7 @@ locals {
       name        = "claude-courses"
       description = "Claude Courses Notes"
       visibility  = "public"
-      topics      = ["claude", "courses", "architect", "foundations", "notes", "public"]
+      topics      = ["claude", "courses", "architect", "foundations", "notes"]
     }
     "container_image_scans" = {
       name        = "container-image-scans"
@@ -406,7 +406,7 @@ resource "github_repository_ruleset" "main" {
       dismiss_stale_reviews_on_push     = true       # invalidate approvals when new commits are pushed
       require_code_owner_review         = true       # require approval from code owners
       require_last_push_approval        = true       # last pusher cannot self-approve
-      required_approving_review_count   = 2          # minimum number of approving reviews
+      required_approving_review_count   = 1          # minimum number of approving reviews
       required_review_thread_resolution = true       # all conversations must be resolved
     }
 

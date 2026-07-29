@@ -23,8 +23,7 @@ permissions: read-all
 
 jobs:
   pre-commit-config:
-    # brew is not available on ubuntu-24.04-arm
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     timeout-minutes: 10
     env:
       GH_TOKEN: ${{ github.token }}
@@ -36,35 +35,31 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - name: Install tools with mise
+        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
         with:
-          go-version: 1.26
+          mise_toml: |
+            [tools]
+            actionlint = "latest"
+            betterleaks = "latest"
+            checkov = "latest"
+            opentofu = "latest"
+            terraform-docs = "latest"
+            terrascan = "latest"
+            tflint = "latest"
+            tfupdate = "latest"
+            trivy = "latest"
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
-
-      - name: Install checkov using uv
+      - name: Verify tool versions
         run: |
-          # renovate: datasource=pypi depName=checkov
-          uv tool install checkov==3.3.8
-          echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
-
-      - name: Install tflint
-        # tflint has no Linux Homebrew formula (the tap ships a macOS cask)
-        uses: terraform-linters/setup-tflint@6e1e0642c0289bd619021bf6b34e3c08ed1e005a # v6.3.0
-
-      - name: Install dependencies
-        run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          echo "/home/linuxbrew/.linuxbrew/bin" >> "${GITHUB_PATH}"
-          brew install actionlint betterleaks opentofu terraform-docs terrascan tfupdate trivy
-
+          actionlint --version
           betterleaks version
+          checkov --version
+          tofu -version
+          terraform-docs --version
           terrascan version
           tflint --version
           tfupdate --version
-          tofu -version
-          terraform-docs --version
           trivy version
 
       - uses: j178/prek-action@5337cb91e0fa35a7ff31b9ca345126d8bbbcdf16 # v2.0.6

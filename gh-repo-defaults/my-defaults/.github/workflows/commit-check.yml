@@ -23,6 +23,8 @@ jobs:
           persist-credentials: false
 
       - uses: commit-check/commit-check-action@bbb6580f01838e475563514f115ec7ef41c9ddc7 # v2.11.1
+        with:
+          pr-title: true
         env:
           CCHK_SUBJECT_CAPITALIZED: false
           CCHK_SUBJECT_MAX_LENGTH: 72
