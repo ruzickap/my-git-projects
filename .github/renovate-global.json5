@@ -198,6 +198,30 @@
       semanticCommitType: "feat",
     },
     {
+      // markdownlint-cli provides the action's user-facing linting behavior,
+      // so its bumps must trigger a release-please minor release.
+      description: "markdownlint-cli bump must be feat so release-please releases it",
+      matchRepositories: ["ruzickap/action-my-markdown-linter"],
+      matchPackageNames: ["markdownlint-cli"],
+      semanticCommitType: "feat",
+    },
+    {
+      // markdown-link-check provides the action's user-facing link checking,
+      // so its bumps must trigger a release-please minor release.
+      description: "markdown-link-check bump must be feat so release-please releases it",
+      matchRepositories: ["ruzickap/action-my-markdown-link-checker"],
+      matchPackageNames: ["markdown-link-check"],
+      semanticCommitType: "feat",
+    },
+    {
+      // Muffet provides the action's user-facing link checking behavior, so
+      // its bumps must trigger a release-please minor release.
+      description: "Muffet bump must be feat so release-please releases it",
+      matchRepositories: ["ruzickap/action-my-broken-link-checker"],
+      matchPackageNames: ["raviqqe/muffet"],
+      semanticCommitType: "feat",
+    },
+    {
       description: "Skip renovating _posts directory in ruzickap.github.io",
       matchRepositories: ["ruzickap/ruzickap.github.io"],
       matchFileNames: ["_posts/**"],
