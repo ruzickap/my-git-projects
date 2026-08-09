@@ -27,9 +27,7 @@ BASH_SHFMT_ARGUMENTS: --case-indent --indent 2 --space-redirects
 
 # Disable linters
 DISABLE_LINTERS:
-  - MARKDOWN_MARKDOWN_LINK_CHECK # Using lychee instead for link checking (more configurable)
   - SPELL_CSPELL # Spell checking disabled - prone to false positives
-  - TERRAFORM_TERRASCAN # Disabled - using checkov and trivy for IaC security scanning
 
 # Fail the build if a required linter is missing from the Docker flavor
 FAIL_IF_MISSING_LINTER_IN_FLAVOR: true
@@ -68,7 +66,7 @@ REPOSITORY_CHECKOV_ARGUMENTS: --quiet
 # --ignore-rule-ids DS162092,DS137138: ignore specific rules:
 #   - DS162092: "Do not leave debug code in production"
 #   - DS137138: "Insecure URL" (for HTTP links that are intentional)
-REPOSITORY_DEVSKIM_ARGUMENTS: --ignore-globs CHANGELOG.md --ignore-rule-ids DS162092,DS137138
+REPOSITORY_DEVSKIM_ARGUMENTS: --ignore-rule-ids DS162092,DS137138
 
 # Kingfisher (secret scanner) - exclude .git directory to avoid false positives on Git metadata files (e.g., refs that match token patterns)
 REPOSITORY_KINGFISHER_ARGUMENTS: --exclude .git

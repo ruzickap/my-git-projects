@@ -45,7 +45,6 @@ jobs:
             checkov = "latest"
             opentofu = "latest"
             terraform-docs = "latest"
-            terrascan = "latest"
             tflint = "latest"
             tfupdate = "latest"
             trivy = "latest"
@@ -57,7 +56,6 @@ jobs:
           checkov --version
           tofu -version
           terraform-docs --version
-          terrascan version
           tflint --version
           tfupdate --version
           trivy version

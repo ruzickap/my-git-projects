@@ -114,6 +114,9 @@ case "${REPOSITORY}" in
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
     megalinter_flavor all
     ;;
+  ruzickap/claude-courses)
+    megalinter_flavor python
+    ;;
   ruzickap/container-image-scans)
     megalinter_flavor all
     ;;
@@ -131,6 +134,9 @@ case "${REPOSITORY}" in
   ruzickap/malware-cryptominer-container)
     checkout_files ".checkov.yml" ".github/workflows/release-please.yml"
     megalinter_flavor cupcake
+    ;;
+  ruzickap/megalinter-custom-flavor-my-repos)
+    checkout_files ".github/workflows/mega-linter.yml" ".github/workflows/release-please.yml"
     ;;
   ruzickap/my-git-projects)
     megalinter_flavor all
@@ -160,7 +166,7 @@ esac
 if [[ ! -f "AGENTS.md" ]]; then
   log_info "Copying AGENTS.md from defaults and reinitializing with opencode"
   cp "${GH_REPO_DEFAULTS_BASE}/my-defaults/AGENTS.md" AGENTS.md
-  opencode run --model="github-copilot/claude-opus-4.7" --command "init"
+  opencode run --model="github-copilot/claude-opus-5" --command "init"
 fi
 
 log_info "Completed processing ${REPOSITORY}"
