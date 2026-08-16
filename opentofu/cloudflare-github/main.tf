@@ -21,7 +21,7 @@ terraform {
     # keep-sorted start block=yes
     aws = {
       source  = "hashicorp/aws"
-      version = "6.58.0"
+      version = "6.59.0"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
