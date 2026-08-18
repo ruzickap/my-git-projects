@@ -101,7 +101,7 @@ case "${REPOSITORY}" in
     ;;
   ruzickap/ansible-my_workstation)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
-    checkout_files .gitignore
+    checkout_files ".gitignore" ".mega-linter.yml"
     ;;
   ruzickap/ansible-*)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
@@ -132,7 +132,7 @@ case "${REPOSITORY}" in
     megalinter_flavor cupcake
     ;;
   ruzickap/malware-cryptominer-container)
-    checkout_files ".checkov.yml" ".github/workflows/release-please.yml"
+    checkout_files ".github/workflows/release-please.yml"
     megalinter_flavor cupcake
     ;;
   ruzickap/megalinter-custom-flavor-my-repos)
