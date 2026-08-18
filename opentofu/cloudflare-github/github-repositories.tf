@@ -48,6 +48,12 @@ locals {
       description = "Infrastructure as Code for provisioning multiple Kubernetes clusters, managed using GitOps with ArgoCD"
       topics      = ["aks", "argocd", "eks", "gitops", "infrastructure-as-code", "k8s", "k8s-gitops", "kind", "kubernetes", "multi-cluster", "terraform", "vcluster"] # codespell:ignore
     }
+    "latex_old" = {
+      name        = "latex-old"
+      description = "My old LaTeX docs"
+      visibility  = "private"
+      topics      = ["latex", "old", "private", "texlive"]
+    }
     "megalinter_custom_flavor_my_repos" = {
       name        = "megalinter-custom-flavor-my-repos"
       description = "MegaLinter custom flavor bundling the linters used across my repositories"
