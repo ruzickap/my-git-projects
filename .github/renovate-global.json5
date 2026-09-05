@@ -71,7 +71,6 @@
   // Keep the extends started with ":" at the end of the list to allow overriding
   extends: [
     "config:recommended", // Renovate's recommended configuration preset
-    "docker:pinDigests", // Pin Docker image digests for security
     "helpers:pinGitHubActionDigestsToSemver", // Pin GitHub Actions to specific versions with semantic versioning
     "security:openssf-scorecard", // Add OpenSSF Scorecard security insights
     ":disableDependencyDashboard", // Don't create dependency dashboard issues
@@ -122,6 +121,16 @@
   // Package-specific Update Rules
   packageRules: [
     {
+      // Inlined from the "docker:pinDigests" preset. Preset packageRules are
+      // appended *after* this file's own packageRules, so a preset rule always
+      // wins over ours -- the "custom.regex can't pin digests" rule below was
+      // silently overridden and produced "Error updating branch: update
+      // failure". Inlining puts it in our own (earlier) rule list instead.
+      description: "Pin Docker image digests for security",
+      matchDatasources: ["docker"],
+      pinDigests: true,
+    },
+    {
       description: "Disable auto-merge for major updates",
       matchUpdateTypes: ["major"],
       automerge: false,
@@ -165,7 +174,7 @@
     },
     {
       // The custom regex manager cannot write a digest back into values that
-      // have no digest placeholder, so docker:pinDigests produces an empty
+      // have no digest placeholder, so digest pinning produces an empty
       // "pin" update and fails with "Error updating branch: update failure".
       // Disable digest pinning for Docker deps handled by the custom manager.
       description: "Custom regex manager can't pin Docker digests; only bump versions",
