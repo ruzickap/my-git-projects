@@ -120,23 +120,15 @@
   onboarding: false,
   // Package-specific Update Rules
   packageRules: [
+    // Both rules inlined verbatim from the "docker:pinDigests" preset. In a
+    // *global* config file, extends is resolved per repo, so preset rules land
+    // AFTER these -- the custom.regex rule below could never override them.
     {
-      // Both rules here are inlined verbatim from the "docker:pinDigests"
-      // preset, which was removed from "extends" above. In a *global* config
-      // file the preset is resolved later, per repository, so its packageRules
-      // land AFTER the ones defined here -- the "custom.regex can't pin
-      // digests" rule below was therefore silently overridden, and Renovate
-      // emitted a pinDigest update the regex manager cannot write back
-      // ("Error updating branch: update failure" in
-      // ruzickap/megalinter-custom-flavor-my-repos). Inlining keeps both rules
-      // in this array, where the later custom.regex rule wins as intended.
       description: "Pin Docker image digests for security",
       matchDatasources: ["docker"],
       pinDigests: true,
     },
     {
-      // Second half of the inlined "docker:pinDigests" preset: upstream
-      // deliberately excludes these managers from digest pinning.
       description: "Don't pin digests for argocd/devcontainer/helmv3/pyenv",
       matchManagers: ["argocd", "devcontainer", "helmv3", "pyenv"],
       pinDigests: false,
