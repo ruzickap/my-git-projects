@@ -45,7 +45,7 @@ terraform {
     }
     supabase = {
       source  = "supabase/supabase"
-      version = "1.10.1"
+      version = "1.11.0"
     }
     uptimerobot = {
       source  = "uptimerobot/uptimerobot"
