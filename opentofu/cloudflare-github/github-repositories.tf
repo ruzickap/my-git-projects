@@ -19,7 +19,13 @@ locals {
       name        = "claude-courses"
       description = "Claude Courses Notes"
       visibility  = "public"
-      topics      = ["claude", "courses", "architect", "foundations", "notes"]
+      topics      = ["architect", "claude", "courses", "foundations", "notes"]
+    }
+    "cmcpse_notes" = {
+      name        = "cmcpse-notes"
+      description = "Certified MCP Security Expert Notes"
+      visibility  = "private"
+      topics      = ["ai", "ai-security", "cmcpse", "cmcpse-exam", "cmcpse-exam-preparation", "devsecops", "mcp", "notes", "security"]
     }
     "container_image_scans" = {
       name        = "container-image-scans"
@@ -41,18 +47,12 @@ locals {
       name         = "gha-test"
       description  = "GitHub Action Test repository"
       homepage_url = "https://petr.ruzicka.dev"
-      topics       = ["actions", "ci", "github", "test", "github-action", "gha"]
+      topics       = ["actions", "ci", "gha", "github", "github-action", "test"]
     }
     "k8s_multicluster_gitops" = {
       name        = "k8s-multicluster-gitops"
       description = "Infrastructure as Code for provisioning multiple Kubernetes clusters, managed using GitOps with ArgoCD"
       topics      = ["aks", "argocd", "eks", "gitops", "infrastructure-as-code", "k8s", "k8s-gitops", "kind", "kubernetes", "multi-cluster", "terraform", "vcluster"] # codespell:ignore
-    }
-    "latex_old" = {
-      name        = "latex-old"
-      description = "My old LaTeX docs"
-      visibility  = "private"
-      topics      = ["latex", "old", "private", "texlive"]
     }
     "megalinter_custom_flavor_my_repos" = {
       name        = "megalinter-custom-flavor-my-repos"
@@ -62,7 +62,7 @@ locals {
     "pre_commit_wizcli" = {
       name        = "pre-commit-wizcli"
       description = "pre-commit hook for WizCLI that checks your code"
-      topics      = ["pre-commit", "wizcli", "wiz"]
+      topics      = ["pre-commit", "wiz", "wizcli"]
       pages = {
         branch = "gh-pages"
       }
@@ -94,7 +94,7 @@ locals {
     "action_my_markdown_linter" = {
       name        = "action-my-markdown-linter"
       description = "Style checking and linting for Markdown files"
-      topics      = ["github-action", "github-actions", "lint", "linter", "linting", "linters", "markdown", "public"]
+      topics      = ["github-action", "github-actions", "lint", "linter", "linters", "linting", "markdown", "public"]
     }
     "ansible_my_workstation" = {
       name        = "ansible-my_workstation"
@@ -109,7 +109,7 @@ locals {
     "ansible_raspberry_pi_os" = {
       name        = "ansible-raspberry-pi-os"
       description = "Configure Raspberry Pi OS (RPi) using Ansible"
-      topics      = ["ansible", "grafana", "kodi", "node-exporter", "public", "prometheus", "raspberry-pi", "raspberry-pi-os", "rpi"]
+      topics      = ["ansible", "grafana", "kodi", "node-exporter", "prometheus", "public", "raspberry-pi", "raspberry-pi-os", "rpi"]
       secrets = {
         "WIFI_PASSWORD" = data.aws_ssm_parameter.github_shared_actions_secrets_WIFI_PASSWORD.value
         "WIFI_SSID"     = data.aws_ssm_parameter.github_shared_actions_secrets_WIFI_SSID.value
@@ -179,7 +179,7 @@ locals {
     "old_stuff" = {
       name        = "old_stuff"
       description = "Obsolete and old things"
-      topics      = ["bash", "perl", "old", "scripts"]
+      topics      = ["bash", "old", "perl", "scripts"]
     }
     "petr_ruzicka_dev" = {
       name         = "petr.ruzicka.dev"

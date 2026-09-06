@@ -70,7 +70,6 @@ skip-repo:
 
   # Legacy/archived repositories
   - ruzickap/old_stuff
-  - ruzickap/latex-old
 
   # WizCLI test repo
   - ruzickap/wizcli-terraform-test
