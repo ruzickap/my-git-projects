@@ -65,9 +65,9 @@ the `my-aws` profile (local) or OIDC role (CI).
 
 | Name                                                                        | Description                                                |
 |-----------------------------------------------------------------------------|------------------------------------------------------------|
-| `/xvx.cz/app1/BASIC_AUTH_USERNAME`, `/xvx.cz/app1/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app1.xvx.cz` Worker        |
-| `/xvx.cz/app2/BASIC_AUTH_USERNAME`, `/xvx.cz/app2/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app2.xvx.cz` Worker        |
-| `/xvx.cz/app3/BASIC_AUTH_USERNAME`, `/xvx.cz/app3/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app3.xvx.cz` Worker        |
+| `/xvx.cz/app1/BASIC_AUTH_USERNAME`, `/xvx.cz/app1/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app1.xvx.cz` Worker       |
+| `/xvx.cz/app2/BASIC_AUTH_USERNAME`, `/xvx.cz/app2/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app2.xvx.cz` Worker       |
+| `/xvx.cz/app3/BASIC_AUTH_USERNAME`, `/xvx.cz/app3/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app3.xvx.cz` Worker       |
 | `cloudflare_zero_trust_access_identity_provider_google_oauth_client_id`     | Google OAuth client ID for Cloudflare Zero Trust           |
 | `cloudflare_zero_trust_access_identity_provider_google_oauth_client_secret` | Google OAuth client secret for Cloudflare Zero Trust       |
 | `dockerhub_container_registry_password`                                     | DockerHub container registry password                      |
@@ -182,8 +182,8 @@ Response Compression, Workers Routes, Zone Settings, Zone.
 Simple HTML pages behind HTTP Basic Auth, served by a shared Worker script and
 bound to their own hostname via `cloudflare_workers_custom_domain`:
 
-| Worker      | Hostname       |
-|-------------|----------------|
+| Worker        | Hostname      |
+|---------------|---------------|
 | `app1-xvx-cz` | `app1.xvx.cz` |
 | `app2-xvx-cz` | `app2.xvx.cz` |
 | `app3-xvx-cz` | `app3.xvx.cz` |
