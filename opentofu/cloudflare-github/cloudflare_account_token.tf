@@ -39,6 +39,7 @@ locals {
     "Cloudflare Tunnel Write",       # manage tunnels via cloudflare_zero_trust_tunnel_cloudflared
     "Email Routing Addresses Write", # manage email routing via cloudflare_email_routing_address
     "Pages Write",                   # deploy sites via cloudflare_pages_project
+    "Workers Scripts Write",         # manage Workers scripts via cloudflare_workers_script
     "Zero Trust Write",              # manage Zero Trust settings via cloudflare_zero_trust_*
     # keep-sorted end
   ]
@@ -50,6 +51,7 @@ locals {
     "DNS Write",                   # manage DNS records via cloudflare_dns_record
     "Dynamic URL Redirects Write", # manage dynamic redirect rules via cloudflare_ruleset
     "Response Compression Write",  # manage compression rules via cloudflare_ruleset
+    "Workers Routes Write",        # manage Workers Custom Domains via cloudflare_workers_custom_domain
     "Zone Settings Write",         # manage zone settings via cloudflare_zone_setting
     "Zone Write",                  # manage zones via cloudflare_zone
     # keep-sorted end
