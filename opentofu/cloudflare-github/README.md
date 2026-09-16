@@ -65,6 +65,9 @@ the `my-aws` profile (local) or OIDC role (CI).
 
 | Name                                                                        | Description                                                |
 |-----------------------------------------------------------------------------|------------------------------------------------------------|
+| `/xvx.cz/app1/BASIC_AUTH_USERNAME`, `/xvx.cz/app1/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app1.xvx.cz` Worker        |
+| `/xvx.cz/app2/BASIC_AUTH_USERNAME`, `/xvx.cz/app2/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app2.xvx.cz` Worker        |
+| `/xvx.cz/app3/BASIC_AUTH_USERNAME`, `/xvx.cz/app3/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app3.xvx.cz` Worker        |
 | `cloudflare_zero_trust_access_identity_provider_google_oauth_client_id`     | Google OAuth client ID for Cloudflare Zero Trust           |
 | `cloudflare_zero_trust_access_identity_provider_google_oauth_client_secret` | Google OAuth client secret for Cloudflare Zero Trust       |
 | `dockerhub_container_registry_password`                                     | DockerHub container registry password                      |
@@ -92,6 +95,7 @@ the `my-aws` profile (local) or OIDC role (CI).
 
 | Name                                               | Sensitive |
 |----------------------------------------------------|-----------|
+| `basic_auth_apps_urls`                             | yes       |
 | `supabase_container_image_scans_apikeys`           | yes       |
 | `supabase_container_image_scans_endpoint`          | no        |
 | `supabase_container_image_scans_database_password` | yes       |
@@ -148,10 +152,11 @@ Access policies:
 
 Main token account-scoped permissions: Access (Apps and Policies,
 Organizations/Identity Providers/Groups, Service Tokens), Account API Tokens,
-Account Settings, Cloudflare Tunnel, Email Routing Addresses, Pages, Zero Trust.
+Account Settings, Cloudflare Tunnel, Email Routing Addresses, Pages, Workers
+Scripts, Zero Trust.
 
 Main token zone-scoped permissions: Cache Settings, DNS, Dynamic URL Redirects,
-Response Compression, Zone Settings, Zone.
+Response Compression, Workers Routes, Zone Settings, Zone.
 
 ### Cloudflare Notification Policies
 
@@ -171,6 +176,22 @@ Response Compression, Zone Settings, Zone.
 | `petr-ruzicka-dev`   | `main`            |
 | `ruzickap-github-io` | `main`            |
 | `xvx-cz`             | `main`            |
+
+### Cloudflare Workers -- Basic Auth Apps
+
+Simple HTML pages behind HTTP Basic Auth, served by a shared Worker script and
+bound to their own hostname via `cloudflare_workers_custom_domain`:
+
+| Worker      | Hostname       |
+|-------------|----------------|
+| `app1-xvx-cz` | `app1.xvx.cz` |
+| `app2-xvx-cz` | `app2.xvx.cz` |
+| `app3-xvx-cz` | `app3.xvx.cz` |
+
+Credentials are read from AWS SSM Parameter Store
+(`/xvx.cz/<app>/BASIC_AUTH_USERNAME` and `/xvx.cz/<app>/BASIC_AUTH_PASSWORD`).
+See [Get OpenTofu Outputs](#get-opentofu-outputs) for how to retrieve
+ready-to-use URLs with embedded credentials.
 
 ### Cloudflare Web Analytics
 
@@ -285,6 +306,9 @@ tofu output supabase_container_image_scans_endpoint
 
 # Get sensitive outputs (e.g., Supabase API keys)
 tofu output -json supabase_container_image_scans_apikeys | jq -r 'to_entries[] | "\(.key): \(.value)"'
+
+# Get Basic Auth-protected app URLs (appN.xvx.cz) with embedded credentials
+tofu output -json basic_auth_apps_urls | jq -r 'to_entries[] | "\(.key): \(.value)"'
 ```
 
 ## Notes

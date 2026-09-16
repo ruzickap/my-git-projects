@@ -1,4 +1,34 @@
 # keep-sorted start block=yes newline_separated=yes
+data "aws_ssm_parameter" "app1_xvx_cz_basic_auth_password" {
+  name            = "/xvx.cz/app1/BASIC_AUTH_PASSWORD"
+  with_decryption = true
+}
+
+data "aws_ssm_parameter" "app1_xvx_cz_basic_auth_username" {
+  name            = "/xvx.cz/app1/BASIC_AUTH_USERNAME"
+  with_decryption = true
+}
+
+data "aws_ssm_parameter" "app2_xvx_cz_basic_auth_password" {
+  name            = "/xvx.cz/app2/BASIC_AUTH_PASSWORD"
+  with_decryption = true
+}
+
+data "aws_ssm_parameter" "app2_xvx_cz_basic_auth_username" {
+  name            = "/xvx.cz/app2/BASIC_AUTH_USERNAME"
+  with_decryption = true
+}
+
+data "aws_ssm_parameter" "app3_xvx_cz_basic_auth_password" {
+  name            = "/xvx.cz/app3/BASIC_AUTH_PASSWORD"
+  with_decryption = true
+}
+
+data "aws_ssm_parameter" "app3_xvx_cz_basic_auth_username" {
+  name            = "/xvx.cz/app3/BASIC_AUTH_USERNAME"
+  with_decryption = true
+}
+
 data "aws_ssm_parameter" "github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_ANON_KEY" {
   name            = "/github/ruzickap/container-image-scans/actions-secrets/NEXT_PUBLIC_SUPABASE_ANON_KEY"
   with_decryption = true
