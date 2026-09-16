@@ -10,7 +10,7 @@ locals {
           });
 
         const auth = request.headers.get("Authorization");
-        if (!auth || !auth.startsWith("Basic ")) {
+        if (!auth || !/^Basic /i.test(auth)) {
           return unauthorized();
         }
 
@@ -67,6 +67,10 @@ resource "cloudflare_workers_script" "basic_auth_apps" {
   content_sha256     = sha256(local.basic_auth_worker_script)
   main_module        = "${each.key}_xvx_cz.js"
   compatibility_date = "2025-01-01"
+
+  # Ensure the token used by the Cloudflare provider already has Workers Scripts Write
+  # before creating these Workers, to avoid a 403 race on the first apply.
+  depends_on = [cloudflare_account_token.opentofu_cloudflare_github]
 
   bindings = [
     {
