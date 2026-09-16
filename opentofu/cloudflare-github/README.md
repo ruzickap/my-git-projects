@@ -145,7 +145,7 @@ Access policies:
 
 | Token Name                                          | Permissions                     |
 |-----------------------------------------------------|---------------------------------|
-| `opentofu-cloudflare-github`                        | 10 account + 6 zone permissions |
+| `opentofu-cloudflare-github`                        | 11 account + 7 zone permissions |
 | `cloudflare-account-token-pages-xvx-cz`             | Pages Write                     |
 | `cloudflare-account-token-pages-petr-ruzicka-dev`   | Pages Write                     |
 | `cloudflare-account-token-pages-ruzickap-github-io` | Pages Write                     |

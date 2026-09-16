@@ -14,7 +14,16 @@ locals {
           return unauthorized();
         }
 
-        const [user, pass] = atob(auth.slice(6)).split(":");
+        let decoded;
+        try {
+          decoded = atob(auth.slice(6));
+        } catch {
+          return unauthorized();
+        }
+
+        const separatorIndex = decoded.indexOf(":");
+        const user = decoded.slice(0, separatorIndex);
+        const pass = decoded.slice(separatorIndex + 1);
         if (user !== env.BASIC_AUTH_USERNAME || pass !== env.BASIC_AUTH_PASSWORD) {
           return unauthorized();
         }
@@ -99,7 +108,7 @@ output "basic_auth_apps_urls" {
   description = "URLs with embedded HTTP Basic Auth credentials for appN.xvx.cz"
   value = {
     for app_name, app in local.basic_auth_apps :
-    app_name => "https://${app.username}:${app.password}@${app_name}.${cloudflare_zone.xvx_cz.name}"
+    app_name => "https://${urlencode(app.username)}:${urlencode(app.password)}@${app_name}.${cloudflare_zone.xvx_cz.name}"
   }
   sensitive = true
 }
