@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~>1.12"
+  required_version = "~> 1.12"
   required_providers {
     # keep-sorted start block=yes
     aws = {
