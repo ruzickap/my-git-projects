@@ -46,7 +46,7 @@ repos:
       - id: tfupdate
         args:
           - --args=terraform
-          - --args=--version "~> 1.12"
+          - --args=-v "~> 1.12"
 
   - repo: https://github.com/betterleaks/betterleaks
     rev: v1.8.1
