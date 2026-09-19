@@ -1,0 +1,11 @@
+# actionlint configuration
+# https://github.com/rhysd/actionlint/blob/main/docs/config.md
+#
+# actionlint validates `runs-on` against a hardcoded list of known GitHub
+# runner labels. Newly released images (Ubuntu 26.04) are not in that list yet,
+# so they are declared here to avoid false "label is unknown" errors.
+# Remove entries once actionlint ships support for them.
+self-hosted-runner:
+  labels:
+    - ubuntu-26.04
+    - ubuntu-26.04-arm

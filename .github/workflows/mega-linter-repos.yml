@@ -46,7 +46,7 @@ defaults:
 
 jobs:
   fetch-repos:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     outputs:
       repos: ${{ steps.get-repos.outputs.repos }}
       flavors: ${{ steps.get-repos.outputs.flavors }}
