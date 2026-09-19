@@ -7,5 +7,4 @@
 # Remove entries once actionlint ships support for them.
 self-hosted-runner:
   labels:
-    - ubuntu-26.04
     - ubuntu-26.04-arm
