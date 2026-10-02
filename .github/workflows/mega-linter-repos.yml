@@ -34,8 +34,7 @@ on:
           - swift
           - terraform
 
-permissions:
-  contents: read
+permissions: {}
 
 env:
   REPO_OWNER: ${{ github.repository_owner }}
@@ -47,6 +46,8 @@ defaults:
 jobs:
   fetch-repos:
     runs-on: ubuntu-26.04-arm
+    permissions:
+      contents: read
     outputs:
       repos: ${{ steps.get-repos.outputs.repos }}
       flavors: ${{ steps.get-repos.outputs.flavors }}
@@ -99,6 +100,8 @@ jobs:
   megalinter-parallel:
     needs: fetch-repos
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     name: "megalinter-${{ matrix.flavor }}-${{ matrix.repo }}"
     timeout-minutes: 60
     strategy:

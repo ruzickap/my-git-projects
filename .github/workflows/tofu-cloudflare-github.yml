@@ -28,7 +28,7 @@ on:
   schedule:
     - cron: "0 0 * * 0"
 
-permissions: read-all
+permissions: {}
 
 env:
   AWS_REGION: "eu-central-1"

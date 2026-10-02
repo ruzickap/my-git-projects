@@ -6,7 +6,7 @@ on:
 env:
   AWS_DEFAULT_REGION: eu-central-1
 
-permissions: read-all
+permissions: {}
 
 jobs:
   aws-cloudformation-gh-action:

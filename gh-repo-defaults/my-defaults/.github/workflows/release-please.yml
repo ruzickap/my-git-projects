@@ -10,7 +10,7 @@ on:
     branches:
       - main
 
-permissions: read-all
+permissions: {}
 
 jobs:
   release-please:
