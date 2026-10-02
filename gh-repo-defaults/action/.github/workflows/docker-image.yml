@@ -22,12 +22,14 @@ on:
       - Dockerfile
       - entrypoint.sh
 
-permissions: read-all
+permissions: {}
 
 jobs:
   docker-image:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 5
+    permissions:
+      contents: read
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-26.04-arm]

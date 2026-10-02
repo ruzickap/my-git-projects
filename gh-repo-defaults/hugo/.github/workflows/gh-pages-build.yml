@@ -20,7 +20,7 @@ on:
       - static/**
       - themes/**
 
-permissions: read-all
+permissions: {}
 
 defaults:
   run:
@@ -33,6 +33,7 @@ jobs:
     permissions:
       contents: write
       deployments: write
+      pages: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

@@ -16,7 +16,7 @@ on:
       - opentofu/aws/**
       - "!opentofu/aws/README.md"
 
-permissions: read-all
+permissions: {}
 
 jobs:
   tofu-aws-test:
