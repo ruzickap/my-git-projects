@@ -42,12 +42,13 @@ jobs:
             [tools]
             actionlint = "latest"
             betterleaks = "latest"
-            checkov = "latest"
+            "pipx:checkov" = "latest"
             opentofu = "latest"
             terraform-docs = "latest"
             tflint = "latest"
             tfupdate = "latest"
             trivy = "latest"
+            uv = "latest"
 
       - name: Verify tool versions
         run: |
