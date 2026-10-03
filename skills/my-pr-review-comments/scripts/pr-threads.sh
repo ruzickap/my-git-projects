@@ -73,7 +73,7 @@ reply_thread() {
     return
   fi
   # shellcheck disable=SC2016
-  gh api graphql -F threadId="${THREAD_ID}" -F body="${BODY}" -f query='
+  gh api graphql -f threadId="${THREAD_ID}" -f body="${BODY}" -f query='
 mutation($threadId: ID!, $body: String!) {
   addPullRequestReviewThreadReply(input: {pullRequestReviewThreadId: $threadId, body: $body}) {
     comment { url }
@@ -88,7 +88,7 @@ resolve_thread() {
     return
   fi
   # shellcheck disable=SC2016
-  gh api graphql -F threadId="${THREAD_ID}" -f query='
+  gh api graphql -f threadId="${THREAD_ID}" -f query='
 mutation($threadId: ID!) {
   resolveReviewThread(input: {threadId: $threadId}) {
     thread { isResolved }
