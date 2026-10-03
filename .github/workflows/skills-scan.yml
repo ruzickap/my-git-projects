@@ -1,0 +1,108 @@
+---
+# GitHub Actions workflow scanning agent skills with security scanners
+name: skills-scan
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths:
+      - .github/workflows/skills-scan.yml
+      - skills/**
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/skills-scan.yml
+      - skills/**
+
+permissions: {}
+
+env:
+  # renovate: datasource=github-tags depName=NVIDIA/skillspector
+  SKILLSPECTOR_VERSION: v2.9.6
+  # renovate: datasource=pypi depName=cisco-ai-skill-scanner
+  SKILL_SCANNER_VERSION: 2.2.0
+
+jobs:
+  skillspector:
+    name: 🛡️ SkillSpector
+    runs-on: ubuntu-26.04-arm
+    timeout-minutes: 15
+    permissions:
+      contents: read # Required to checkout repository.
+      security-events: write # Required to upload SARIF results.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: 📦 Install SkillSpector
+        run: |
+          pipx install "git+https://github.com/NVIDIA/skillspector.git@${SKILLSPECTOR_VERSION}"
+
+      - name: 🔍 Run SkillSpector
+        id: skillspector
+        run: |
+          mkdir -p skillspector-sarif
+          FAILED_SKILLS=""
+          while IFS= read -r SKILL_DIR; do
+            SKILL_NAME=$(basename "${SKILL_DIR}")
+            echo "::group::${SKILL_NAME}"
+            skillspector scan "${SKILL_DIR}" --no-llm --format sarif --output "skillspector-${SKILL_NAME}.sarif" || true
+            if [[ -s "skillspector-${SKILL_NAME}.sarif" ]]; then
+              jq --arg ID "skillspector/${SKILL_NAME}/" '.runs[].automationDetails.id = $ID' "skillspector-${SKILL_NAME}.sarif" > "skillspector-sarif/${SKILL_NAME}.sarif"
+            fi
+            skillspector scan "${SKILL_DIR}" --no-llm --format markdown --output "skillspector-${SKILL_NAME}.md" || FAILED_SKILLS="${FAILED_SKILLS} ${SKILL_NAME}"
+            tee -a "${GITHUB_STEP_SUMMARY}" < "skillspector-${SKILL_NAME}.md"
+            echo "::endgroup::"
+          done < <(find skills -mindepth 2 -maxdepth 2 -name SKILL.md -exec dirname {} \; | sort)
+          echo "failed_skills=${FAILED_SKILLS}" | tee -a "${GITHUB_OUTPUT}"
+
+      - name: 📤 Upload SARIF results
+        uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        if: always() && hashFiles('skillspector-sarif/*.sarif') != ''
+        with:
+          sarif_file: skillspector-sarif
+
+      - name: 🚦 Check SkillSpector results
+        env:
+          FAILED_SKILLS: ${{ steps.skillspector.outputs.failed_skills }}
+        run: |
+          if [[ -n "${FAILED_SKILLS}" ]]; then
+            echo "::error::❌ SkillSpector failed for:${FAILED_SKILLS}"
+            exit 1
+          fi
+
+  cisco-skill-scanner:
+    name: 🔐 Cisco Skill Scanner
+    runs-on: ubuntu-26.04-arm
+    timeout-minutes: 15
+    permissions:
+      contents: read # Required to checkout repository.
+      security-events: write # Required to upload SARIF results.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: 📦 Install Cisco Skill Scanner
+        run: |
+          pipx install "cisco-ai-skill-scanner==${SKILL_SCANNER_VERSION}"
+
+      - name: 🔍 Run Cisco Skill Scanner (SARIF)
+        run: |
+          skill-scanner scan-all skills --recursive --check-overlap --use-behavioral --use-trigger --policy low-noise --format sarif --output skill-scanner.sarif || true
+
+      - name: 📤 Upload SARIF results
+        uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        if: always() && hashFiles('skill-scanner.sarif') != ''
+        with:
+          sarif_file: skill-scanner.sarif
+          category: cisco-skill-scanner
+
+      - name: 🚦 Run Cisco Skill Scanner (gate)
+        run: |
+          skill-scanner scan-all skills --recursive --check-overlap --use-behavioral --use-trigger --policy low-noise --format markdown --detailed --output skill-scanner.md --fail-on-severity high || EXIT_CODE=$?
+          tee -a "${GITHUB_STEP_SUMMARY}" < skill-scanner.md
+          exit "${EXIT_CODE:-0}"

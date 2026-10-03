@@ -1,17 +1,13 @@
 ---
 name: my-pr-review-comments
 description: >-
-  Triage and address review comments on a GitHub pull request: find the PR
-  (current branch or given number/URL), read all unresolved review threads,
-  judge whether each comment is valid, fix the valid ones, reply to and
-  resolve threads, and print a summary table of fixed vs skipped comments.
-  Skipped comments from AI reviewers (Copilot, Claude, CodeRabbit, Gemini,
-  Codex, Cursor, other bots) get an explanatory reply and are resolved
-  automatically; skipped comments from humans get a drafted reply that the
-  user approves before anything is posted. Supports a dry-run mode. Use this
-  whenever the user wants to address, handle, go through, fix, triage, answer,
-  or resolve PR review comments, review feedback, or Copilot/bot suggestions -
-  even if they just say "check the PR comments" or "deal with the review".
+  Triage unresolved review threads on a GitHub pull request: judge each
+  comment, fix valid ones, then reply and resolve after user confirmation
+  (replies to humans are approved one by one). Supports dry-run. Use when the
+  user wants to address, triage, fix, answer, or resolve PR review comments or
+  Copilot/bot suggestions - even if they just say "check the PR comments" or
+  "deal with the review".
+license: Apache-2.0
 ---
 
 # PR Review Comments
@@ -135,7 +131,8 @@ and say what you didn't take and why.
 - Make the changes and run the relevant linters / tests.
 - Commit with conventional commit messages (use the `git-commit` skill if
   available); one commit per logical change.
-- `git push`, then note the short SHA for each fixed comment.
+- Note the short SHA for each fixed comment. Do **not** push yet - pushing
+  waits for the confirmation in step 8.
 - In dry-run, stop after making the local changes and show `git diff`.
 
 ### 7. Show the summary table
@@ -150,13 +147,34 @@ Print this before posting anything, so the user sees the full picture first:
 | 3 | jdoe         | Human | README.md:5 | Rename section     | Skipped  | Name used by docs links | -       |
 ```
 
-### 8. Reply and resolve
+### 8. Confirm before writing to GitHub
 
-| Decision | Author         | Action                                                                      |
-|----------|----------------|-----------------------------------------------------------------------------|
-| Fixed    | Agent or Human | Reply `Fixed in <sha> - <what changed>`, then resolve                       |
-| Skipped  | Agent          | Reply with a concise, factual reason, then resolve - no confirmation needed |
-| Skipped  | Human          | Ask the user first (below)                                                  |
+Pushing, replying, and resolving are visible to collaborators and hard to
+undo, so nothing leaves the machine without the user's go-ahead. Skip this
+step in dry-run.
+
+Under the table, list the planned replies for fixed comments and skipped
+agent comments, then ask **once** with the `question` tool, e.g. "Push 2
+commits, post 4 replies, and resolve 4 threads on <PR URL>?":
+
+- **Proceed** (recommended) - push, then reply and resolve as planned
+- **Proceed, keep threads open** - push and reply, but resolve nothing
+- **Review one by one** - confirm each reply individually
+- **Cancel** - keep the local commits, post nothing
+
+Skipped human comments are not covered by this batch confirmation - they
+always get their own question (below).
+
+### 9. Push, reply, and resolve
+
+After confirmation, `git push` first, so the SHAs in replies exist on the
+remote. Then:
+
+| Decision | Author         | Action                                                |
+|----------|----------------|-------------------------------------------------------|
+| Fixed    | Agent or Human | Reply `Fixed in <sha> - <what changed>`, then resolve |
+| Skipped  | Agent          | Reply with a concise, factual reason, then resolve    |
+| Skipped  | Human          | Ask the user first (below)                            |
 
 For the rare plain PR conversation comment selected in step 3, reply with
 `gh pr comment <PR> --body "..."` quoting the original; there is nothing to
@@ -182,7 +200,7 @@ Then ask with the `question` tool, one question per comment:
 
 Only post or resolve what the user approved.
 
-### 9. Final report
+### 10. Final report
 
 Repeat the table with an extra `GitHub action` column (`replied + resolved`,
 `replied`, `left open`, `no action`, or `dry-run`) and the PR URL.
