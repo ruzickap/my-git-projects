@@ -132,6 +132,18 @@
       automerge: false,
     },
     {
+      // Digest/pin updates have no release timestamp; skip minimumReleaseAge
+      // to avoid "Some release(s) did not have a releaseTimestamp" warnings.
+      description: "Skip minimumReleaseAge for digest and pin updates",
+      matchUpdateTypes: ["digest", "pin", "pinDigest"],
+      minimumReleaseAge: null,
+    },
+    {
+      description: "Skip minimumReleaseAge for git-based datasources without timestamps",
+      matchDatasources: ["git-refs", "git-tags", "github-digest"],
+      minimumReleaseAge: null,
+    },
+    {
       // The default Docker digest commit subject includes the image tag
       // (e.g. "nginxinc/nginx-unprivileged:1.31.1-alpine-slim docker digest
       // to ..."), which can exceed the 72-char commit-check limit and blocks
