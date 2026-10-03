@@ -14,6 +14,11 @@
   "git-submodules": {
     enabled: true,
   },
+  // Update hook revisions in .pre-commit-config.yaml (disabled by default)
+  // https://docs.renovatebot.com/modules/manager/pre-commit/
+  "pre-commit": {
+    enabled: true,
+  },
   // Automatically discover all repositories accessible by the token
   // https://docs.renovatebot.com/self-hosted-configuration/#autodiscover
   autodiscover: true,

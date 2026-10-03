@@ -1,0 +1,23 @@
+{
+  "skill_name": "my-pr-review-comments",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "dry run: go through the review comments on __PR_URL__ and tell me what you'd fix and what you'd skip",
+      "expected_output": "Lists unresolved threads, classifies agent vs human authors, makes fixes locally only, prints the summary table and drafted replies, posts nothing to GitHub.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "copilot left a bunch of suggestions on __PR_URL__ - handle them, but this is a dry run so don't push or comment anything",
+      "expected_output": "Focuses on Copilot/bot threads, uses DRY_RUN=1 for replies/resolves, gives a reason for every skipped agent comment, no commits pushed.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "preview only: address the PR feedback on __PR_URL__, and for anything from my colleagues that you won't fix, draft me an answer",
+      "expected_output": "Human skipped comments get original text, reason and drafted polite reply presented for approval; nothing posted.",
+      "files": []
+    }
+  ]
+}
