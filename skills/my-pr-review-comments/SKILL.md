@@ -49,7 +49,9 @@ SKILL_DIR="<path to this skill>"
 ```
 
 Each `list` record contains `thread_id`, `outdated`, `path`, `line`,
-`author`, `author_type`, `url`, and the full `comments` conversation.
+`author`, `author_type`, `url` (all from the first comment),
+`comments_total`, and the latest 100 `comments` of the conversation. If
+`comments_total` is larger than 100, open `url` to read the earlier replies.
 
 ## Workflow
 
@@ -77,8 +79,9 @@ so reading, re-evaluating or replying to it only creates noise.
 
 - `scripts/pr-threads.sh list <PR>` already returns only unresolved threads
   (`isResolved == false`). Do not query resolved threads.
-- If the list is empty, report "No unresolved review comments on <PR URL>"
-  and stop - do not fall back to other comment sources.
+- If the list is empty **and** no plain PR conversation comment qualifies
+  (see below), report "No unresolved review comments on <PR URL>" and stop.
+  Do not fall back to review summary bodies.
 
 Do **not** treat review summary bodies as comments to address. AI reviewers
 (e.g. Copilot's "Copilot review overview" with its "Open (N)" findings list)
