@@ -40,12 +40,17 @@ query($owner: String!, $repo: String!, $pr: Int!, $endCursor: String) {
           isOutdated
           path
           line
-          comments(first: 50) {
+          firstComment: comments(first: 1) {
             nodes {
-              databaseId
+              author { login __typename }
+              url
+            }
+          }
+          comments(last: 100) {
+            totalCount
+            nodes {
               author { login __typename }
               body
-              url
             }
           }
         }
@@ -59,9 +64,10 @@ query($owner: String!, $repo: String!, $pr: Int!, $endCursor: String) {
         outdated: .isOutdated,
         path,
         line,
-        author: .comments.nodes[0].author.login,
-        author_type: .comments.nodes[0].author.__typename,
-        url: .comments.nodes[0].url,
+        author: .firstComment.nodes[0].author.login,
+        author_type: .firstComment.nodes[0].author.__typename,
+        url: .firstComment.nodes[0].url,
+        comments_total: .comments.totalCount,
         comments: [.comments.nodes[] | {author: .author.login, body}]
       }'
 }
