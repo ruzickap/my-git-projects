@@ -132,10 +132,8 @@
       automerge: false,
     },
     {
-      // These datasources have no release timestamp; skip minimumReleaseAge
-      // to avoid "Some release(s) did not have a releaseTimestamp" warnings
-      // for them. Timestamp-less Docker registries (ghcr.io, quay.io) still
-      // warn - matching "docker" would drop the cooldown for Docker Hub too.
+      // No release timestamps here; skip to silence the warning. ghcr.io/quay.io
+      // still warn: matching "docker" would drop the Docker Hub cooldown too.
       description: "Skip minimumReleaseAge for git-based datasources without timestamps",
       matchDatasources: ["git-refs", "git-tags", "github-digest"],
       minimumReleaseAge: null,
