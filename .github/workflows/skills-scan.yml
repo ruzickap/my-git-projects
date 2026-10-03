@@ -21,6 +21,8 @@ permissions: {}
 env:
   # renovate: datasource=github-tags depName=NVIDIA/skillspector
   SKILLSPECTOR_VERSION: v2.9.6
+  # renovate: datasource=pypi depName=cisco-ai-skill-scanner
+  SKILL_SCANNER_VERSION: 2.2.0
 
 jobs:
   skillspector:
@@ -74,15 +76,33 @@ jobs:
 
   cisco-skill-scanner:
     name: 🔐 Cisco Skill Scanner
+    runs-on: ubuntu-26.04-arm
+    timeout-minutes: 15
     permissions:
-      actions: read # Required by the reusable workflow for SARIF upload.
       contents: read # Required to checkout repository.
       security-events: write # Required to upload SARIF results.
-    uses: cisco-ai-defense/skill-scanner/.github/workflows/scan-skills.yml@863c097d63e23f487390ee707b674cfc59caa606 # 2.2.0
-    with:
-      # renovate: datasource=github-tags depName=cisco-ai-defense/skill-scanner
-      scanner_version: 2.2.0
-      skill_path: skills
-      policy: low-noise
-      use_behavioral: true
-      extra_args: --use-trigger
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: 📦 Install Cisco Skill Scanner
+        run: |
+          pipx install "cisco-ai-skill-scanner==${SKILL_SCANNER_VERSION}"
+
+      - name: 🔍 Run Cisco Skill Scanner (SARIF)
+        run: |
+          skill-scanner scan-all skills --recursive --check-overlap --use-behavioral --use-trigger --policy low-noise --format sarif --output skill-scanner.sarif || true
+
+      - name: 📤 Upload SARIF results
+        uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        if: always() && hashFiles('skill-scanner.sarif') != ''
+        with:
+          sarif_file: skill-scanner.sarif
+          category: cisco-skill-scanner
+
+      - name: 🚦 Run Cisco Skill Scanner (gate)
+        run: |
+          skill-scanner scan-all skills --recursive --check-overlap --use-behavioral --use-trigger --policy low-noise --format markdown --detailed --output skill-scanner.md --fail-on-severity high || EXIT_CODE=$?
+          tee -a "${GITHUB_STEP_SUMMARY}" < skill-scanner.md
+          exit "${EXIT_CODE:-0}"
