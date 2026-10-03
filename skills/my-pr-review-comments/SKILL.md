@@ -1,16 +1,10 @@
 ---
 name: my-pr-review-comments
 description: >-
-  Triage and address review comments on a GitHub pull request: find the PR
-  (current branch or given number/URL), read all unresolved review threads,
-  judge whether each comment is valid, fix the valid ones, reply to and
-  resolve threads, and print a summary table of fixed vs skipped comments.
-  Skipped comments from AI reviewers (Copilot, Claude, CodeRabbit, Gemini,
-  Codex, Cursor, other bots) get an explanatory reply and are resolved after
-  one batch confirmation; skipped comments from humans get a drafted reply
-  that the user approves before anything is posted. Supports a dry-run mode.
-  Use this whenever the user wants to address, handle, go through, fix,
-  triage, answer, or resolve PR review comments, review feedback, or
+  Triage unresolved review threads on a GitHub pull request: judge each
+  comment, fix valid ones, then reply and resolve after user confirmation
+  (replies to humans are approved one by one). Supports dry-run. Use when the
+  user wants to address, triage, fix, answer, or resolve PR review comments or
   Copilot/bot suggestions - even if they just say "check the PR comments" or
   "deal with the review".
 license: Apache-2.0
