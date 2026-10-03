@@ -43,7 +43,7 @@ available through GraphQL and the script handles pagination.
 
 ```bash
 SKILL_DIR="<path to this skill>"
-"${SKILL_DIR}/scripts/pr-threads.sh" list [PR]           # unresolved threads (JSON lines)
+"${SKILL_DIR}/scripts/pr-threads.sh" list [PR] # unresolved threads (JSON lines)
 "${SKILL_DIR}/scripts/pr-threads.sh" reply THREAD_ID "body"
 "${SKILL_DIR}/scripts/pr-threads.sh" resolve THREAD_ID
 ```
@@ -140,20 +140,20 @@ and say what you didn't take and why.
 Print this before posting anything, so the user sees the full picture first:
 
 ```markdown
-| # | Author | Type | File:Line | Comment (short) | Decision | Reason / Fix | Commit |
-|---|--------|------|-----------|-----------------|----------|--------------|--------|
-| 1 | copilot | Agent | src/a.ts:12 | Null check missing | Fixed | Added guard | abc1234 |
-| 2 | coderabbitai | Agent | main.tf:40 | Pin provider | Skipped | Already pinned exactly | - |
-| 3 | jdoe | Human | README.md:5 | Rename section | Skipped | Name used by docs links | - |
+| # | Author       | Type  | File:Line   | Comment (short)    | Decision | Reason / Fix            | Commit  |
+|---|--------------|-------|-------------|--------------------|----------|-------------------------|---------|
+| 1 | copilot      | Agent | src/a.ts:12 | Null check missing | Fixed    | Added guard             | abc1234 |
+| 2 | coderabbitai | Agent | main.tf:40  | Pin provider       | Skipped  | Already pinned exactly  | -       |
+| 3 | jdoe         | Human | README.md:5 | Rename section     | Skipped  | Name used by docs links | -       |
 ```
 
 ### 8. Reply and resolve
 
-| Decision | Author | Action |
-|----------|--------|--------|
-| Fixed | Agent or Human | Reply `Fixed in <sha> - <what changed>`, then resolve |
-| Skipped | Agent | Reply with a concise, factual reason, then resolve - no confirmation needed |
-| Skipped | Human | Ask the user first (below) |
+| Decision | Author         | Action                                                                      |
+|----------|----------------|-----------------------------------------------------------------------------|
+| Fixed    | Agent or Human | Reply `Fixed in <sha> - <what changed>`, then resolve                       |
+| Skipped  | Agent          | Reply with a concise, factual reason, then resolve - no confirmation needed |
+| Skipped  | Human          | Ask the user first (below)                                                  |
 
 For the rare plain PR conversation comment selected in step 3, reply with
 `gh pr comment <PR> --body "..."` quoting the original; there is nothing to
