@@ -101,7 +101,8 @@ case "${REPOSITORY}" in
     ;;
   ruzickap/ansible-my_workstation)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
-    checkout_files ".gitignore" ".mega-linter.yml"
+    checkout_files ".gitignore"
+    megalinter_flavor all
     ;;
   ruzickap/ansible-*)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
@@ -161,6 +162,12 @@ case "${REPOSITORY}" in
     log_info "Using default configuration for ${REPOSITORY}"
     ;;
 esac
+
+# Apply rumdl fixes so new rules (e.g. MD060) don't break downstream linting
+if [[ -f ".rumdl.toml" ]]; then
+  log_info "Formatting Markdown files with rumdl"
+  rumdl fmt . || true
+fi
 
 # Handle AGENTS.md: copy if missing, reinitialize if identical to default
 if [[ ! -f "AGENTS.md" ]]; then
