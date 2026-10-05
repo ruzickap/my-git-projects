@@ -163,6 +163,12 @@ case "${REPOSITORY}" in
     ;;
 esac
 
+# Apply rumdl fixes so new rules (e.g. MD060) don't break downstream linting
+if [[ -f ".rumdl.toml" ]]; then
+  log_info "Formatting Markdown files with rumdl"
+  rumdl fmt . || true
+fi
+
 # Handle AGENTS.md: copy if missing, reinitialize if identical to default
 if [[ ! -f "AGENTS.md" ]]; then
   log_info "Copying AGENTS.md from defaults and reinitializing with opencode"
