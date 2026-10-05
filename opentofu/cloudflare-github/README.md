@@ -50,7 +50,7 @@ at plan/apply time through `data "aws_ssm_parameter"` data sources in
 Only one OpenTofu variable is defined in `variables.tf`:
 
 | Name                             | Sensitive | Description                    |
-|----------------------------------|-----------|--------------------------------|
+| -------------------------------- | --------- | ------------------------------ |
 | `opentofu_encryption_passphrase` | yes       | OpenTofu encryption passphrase |
 
 Set it via `TF_VAR_opentofu_encryption_passphrase`.
@@ -64,7 +64,7 @@ is needed for these; the AWS provider reads them directly from SSM using
 the `my-aws` profile (local) or OIDC role (CI).
 
 | Name                                                                        | Description                                                |
-|-----------------------------------------------------------------------------|------------------------------------------------------------|
+| --------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | `/xvx.cz/app1/BASIC_AUTH_USERNAME`, `/xvx.cz/app1/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app1.xvx.cz` Worker       |
 | `/xvx.cz/app2/BASIC_AUTH_USERNAME`, `/xvx.cz/app2/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app2.xvx.cz` Worker       |
 | `/xvx.cz/app3/BASIC_AUTH_USERNAME`, `/xvx.cz/app3/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app3.xvx.cz` Worker       |
@@ -94,7 +94,7 @@ the `my-aws` profile (local) or OIDC role (CI).
 ### Outputs
 
 | Name                                               | Sensitive |
-|----------------------------------------------------|-----------|
+| -------------------------------------------------- | --------- |
 | `basic_auth_apps_urls`                             | yes       |
 | `supabase_container_image_scans_apikeys`           | yes       |
 | `supabase_container_image_scans_endpoint`          | no        |
@@ -109,7 +109,7 @@ Each zone has DNSSEC enabled, minimum TLS 1.3 enforced, Zstandard compression
 (with Brotli and Gzip fallbacks), and cache rules for static file extensions.
 
 | Zone          | Email Provider           | Features                                                                             |
-|---------------|--------------------------|--------------------------------------------------------------------------------------|
+| ------------- | ------------------------ | ------------------------------------------------------------------------------------ |
 | `mylabs.dev`  | Mailtrap                 | Redirect to `petr.ruzicka.dev`, AWS Route 53 NS delegation (`aws`, `k8s` subdomains) |
 | `ruzicka.dev` | Cloudflare Email Routing | Blog redirect (`blog.ruzicka.dev` to `ruzickap.github.io`), GoatCounter analytics    |
 | `xvx.cz`      | Google Workspace         | Zero Trust tunnel CNAME records, UptimeRobot status page redirect (`stats.xvx.cz`)   |
@@ -119,7 +119,7 @@ Each zone has DNSSEC enabled, minimum TLS 1.3 enforced, Zstandard compression
 Two tunnels (`gate`, `raspi`) hosting 14 applications on the `xvx.cz` domain:
 
 | Tunnel  | Application       | Service                  | Tags                      |
-|---------|-------------------|--------------------------|---------------------------|
+| ------- | ----------------- | ------------------------ | ------------------------- |
 | `gate`  | `gate`            | `https://127.0.0.1`      | lan, router, wan          |
 | `gate`  | `gate-ssh`        | `ssh://127.0.0.1:22`     | lan, router, ssh, wan     |
 | `gate`  | `msr-2`           | `http://192.168.1.4`     | iot, wifi                 |
@@ -144,7 +144,7 @@ Access policies:
 ### Cloudflare API Tokens
 
 | Token Name                                          | Permissions                     |
-|-----------------------------------------------------|---------------------------------|
+| --------------------------------------------------- | ------------------------------- |
 | `opentofu-cloudflare-github`                        | 11 account + 7 zone permissions |
 | `cloudflare-account-token-pages-xvx-cz`             | Pages Write                     |
 | `cloudflare-account-token-pages-petr-ruzicka-dev`   | Pages Write                     |
@@ -161,7 +161,7 @@ Response Compression, Workers Routes, Zone Settings, Zone.
 ### Cloudflare Notification Policies
 
 | Alert                               | Type                           |
-|-------------------------------------|--------------------------------|
+| ----------------------------------- | ------------------------------ |
 | Cloudflare Abuse Report Alert       | `abuse_report_alert`           |
 | Expiring Access Service Token Alert | `expiring_service_token_alert` |
 | Passive Origin Monitoring           | `real_origin_monitoring`       |
@@ -172,7 +172,7 @@ Response Compression, Workers Routes, Zone Settings, Zone.
 ### Cloudflare Pages Projects
 
 | Project              | Production Branch |
-|----------------------|-------------------|
+| -------------------- | ----------------- |
 | `petr-ruzicka-dev`   | `main`            |
 | `ruzickap-github-io` | `main`            |
 | `xvx-cz`             | `main`            |
@@ -183,7 +183,7 @@ Simple HTML pages behind HTTP Basic Auth, served by a shared Worker script and
 bound to their own hostname via `cloudflare_workers_custom_domain`:
 
 | Worker        | Hostname      |
-|---------------|---------------|
+| ------------- | ------------- |
 | `app1-xvx-cz` | `app1.xvx.cz` |
 | `app2-xvx-cz` | `app2.xvx.cz` |
 | `app3-xvx-cz` | `app3.xvx.cz` |
@@ -196,7 +196,7 @@ ready-to-use URLs with embedded credentials.
 ### Cloudflare Web Analytics
 
 | Site                    | Auto Install |
-|-------------------------|--------------|
+| ----------------------- | ------------ |
 | `brewwatch.lovable.app` | no           |
 | `ruzickap.github.io`    | no           |
 
@@ -265,11 +265,11 @@ See the [`opentofu/aws` README](../aws/README.md) for bootstrap instructions.
 2. Fill in the **Create Custom Token** form:
 
    | Token Name                                                                         |
-   |------------------------------------------------------------------------------------|
+   | ---------------------------------------------------------------------------------- |
    | `opentofu-cloudflare-github (ruzickap/my-git-projects/opentofu/cloudflare-github)` |
 
    | Permission | Access             | Purpose |
-   |------------|--------------------|---------|
+   | ---------- | ------------------ | ------- |
    | `Account`  | `Account Settings` | `Edit`  |
    | `Account`  | `API Tokens`       | `Edit`  |
 
