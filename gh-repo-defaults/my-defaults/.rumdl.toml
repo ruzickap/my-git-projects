@@ -14,4 +14,4 @@ code-blocks = false  # Exclude code blocks from line length check
 # MD060: Table format - https://github.com/rvben/rumdl/blob/main/docs/md060.md
 [MD060]
 enabled = true
-style = "aligned"
+style = "aligned-no-space"

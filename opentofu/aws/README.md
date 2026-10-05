@@ -100,7 +100,7 @@ and via `sts:AssumeRole` by the `aws-cli` IAM user.
 ### Inputs
 
 | Name                            | Sensitive | Description                                           |
-| ------------------------------- | --------- | ----------------------------------------------------- |
+|---------------------------------|-----------|-------------------------------------------------------|
 | `aws_default_access_key_id`     | yes       | Access key ID for the `[default]` AWS CLI profile     |
 | `aws_default_role_arn`          | no        | Role ARN for the `[default]` AWS CLI config profile   |
 | `aws_default_secret_access_key` | yes       | Secret access key for the `[default]` AWS CLI profile |
@@ -111,7 +111,7 @@ this module. Pass them via `TF_VAR_*` environment variables.
 ### Outputs
 
 | Name                   | Sensitive | Description                             |
-| ---------------------- | --------- | --------------------------------------- |
+|------------------------|-----------|-----------------------------------------|
 | `github_oidc_role_arn` | no        | ARN of the GitHub Actions OIDC IAM role |
 
 ## Prerequisites

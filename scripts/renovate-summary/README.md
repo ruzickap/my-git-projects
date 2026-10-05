@@ -60,7 +60,7 @@ linked back to GitHub.
 <!-- markdownlint-disable MD013 -->
 
 | Argument           | Description                                      | Default                |
-| ------------------ | ------------------------------------------------ | ---------------------- |
+|--------------------|--------------------------------------------------|------------------------|
 | `report`           | Path to the Renovate JSON report.                | `renovate-report.json` |
 | `-b`, `--base-url` | Base GitHub URL used to build links.             | `https://github.com`   |
 | `-o`, `--output`   | Write the report to this file instead of stdout. | *stdout*               |
@@ -177,7 +177,7 @@ values:
 <!-- markdownlint-disable MD013 -->
 
 | Category             | Condition (`result`, unless noted)                                                                                                      |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | PR opened            | `pr-created`, `pr-edited`, `rebase`; or `done`/an unmapped result that has a `prNo`                                                     |
 | Blocked by closed PR | `already-existed` (a previous PR was closed unmerged; `prNo` points at it)                                                              |
 | Needs approval       | `needs-approval`, `needs-pr-approval`                                                                                                   |

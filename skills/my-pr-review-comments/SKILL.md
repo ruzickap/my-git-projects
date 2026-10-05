@@ -171,7 +171,7 @@ After confirmation, `git push` first, so the SHAs in replies exist on the
 remote. Then:
 
 | Decision | Author         | Action                                                |
-| -------- | -------------- | ----------------------------------------------------- |
+|----------|----------------|-------------------------------------------------------|
 | Fixed    | Agent or Human | Reply `Fixed in <sha> - <what changed>`, then resolve |
 | Skipped  | Agent          | Reply with a concise, factual reason, then resolve    |
 | Skipped  | Human          | Ask the user first (below)                            |
