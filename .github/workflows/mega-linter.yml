@@ -26,10 +26,8 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      # Extract shell commands from markdown code blocks for validation
-      # This creates a bash_commands_from_md.sh file containing all bash/shell/sh code blocks
-      # from changed markdown files to ensure they are syntactically correct.
-      # Changed files are read NUL-separated from git, so any filename is passed through unmodified
+      # Extract bash/shell/sh code blocks from changed markdown files into bash_commands_from_md.sh
+      # Files are listed NUL-separated by git, so any filename is passed through unmodified
       - name: Extract commands from markdown files
         env:
           BEFORE: ${{ github.event.before }}
