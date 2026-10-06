@@ -1,6 +1,5 @@
 ---
-# GitHub Actions workflow for MegaLinter code quality checks
-# Runs comprehensive linting and security checks on all supported file types
+# MegaLinter: linting and security checks on all supported file types
 # https://megalinter.io/
 name: mega-linter
 
