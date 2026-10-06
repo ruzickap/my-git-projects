@@ -37,9 +37,9 @@ jobs:
           if [[ "${BEFORE}" =~ ^0*$ ]] || ! git cat-file -e "${BEFORE}^{commit}" 2> /dev/null; then
             BEFORE=$(git merge-base "origin/${DEFAULT_BRANCH}" HEAD)
           fi
-          # Running on the default branch itself (workflow_dispatch): check the last commit
+          # No commits ahead of the default branch: check the last commit (empty tree if none)
           if [[ "${BEFORE}" == "$(git rev-parse HEAD)" ]]; then
-            BEFORE=$(git rev-parse HEAD^)
+            BEFORE=$(git rev-parse --verify --quiet HEAD^ || git hash-object -t tree /dev/null)
           fi
           git diff -z --name-only --diff-filter=ACMRT "${BEFORE}" HEAD -- '*.md' > "${RUNNER_TEMP}/changed-md-files"
           mapfile -d '' -t FILES < "${RUNNER_TEMP}/changed-md-files"
