@@ -19,6 +19,12 @@ jobs:
     permissions:
       contents: read
     steps:
+      # The full MegaLinter image leaves too little disk for the grype and trivy databases
+      - name: Free disk space
+        run: |
+          set -euxo pipefail
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+
       - name: Checkout Code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

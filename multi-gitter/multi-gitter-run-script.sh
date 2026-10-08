@@ -143,6 +143,7 @@ case "${REPOSITORY}" in
     megalinter_flavor all
     ;;
   ruzickap/my-stocks)
+    checkout_files ".mega-linter.yml"
     megalinter_flavor all
     ;;
   ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
