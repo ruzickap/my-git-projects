@@ -111,8 +111,9 @@ jobs:
         flavor: ${{ fromJson(needs.fetch-repos.outputs.flavors) }}
     steps:
       # The full MegaLinter image leaves too little disk for the grype and trivy databases
+      # Runs in the background - the space is needed only later inside MegaLinter
       - name: Free disk space
-        run: sudo rm -rf /opt/hostedtoolcache/CodeQL
+        run: sudo rm -rf /opt/hostedtoolcache/CodeQL /usr/local/.ghcup > /dev/null 2>&1 &
 
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token

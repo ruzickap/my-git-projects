@@ -20,10 +20,11 @@ jobs:
       contents: read
     steps:
       # The full MegaLinter image leaves too little disk for the grype and trivy databases
+      # Runs in the background - the space is needed only later inside MegaLinter
       - name: Free disk space
         run: |
           set -euxo pipefail
-          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /opt/hostedtoolcache/CodeQL /usr/local/.ghcup > /dev/null 2>&1 &
 
       - name: Checkout Code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
