@@ -59,6 +59,15 @@ locals {
       description = "MegaLinter custom flavor bundling the linters used across my repositories"
       topics      = ["custom-flavor", "docker", "github-action", "github-actions", "linter", "linters", "linting", "megalinter"]
     }
+    "my_stocks" = {
+      name        = "my-stocks"
+      description = "AI-powered analysis of my Interactive Brokers portfolio transactions"
+      visibility  = "private"
+      topics      = ["ai", "dividends", "finance", "investing", "portfolio", "stocks"]
+      secrets = {
+        "MY_COPILOT_GITHUB_TOKEN" = data.aws_ssm_parameter.github_shared_actions_secrets_MY_COPILOT_GITHUB_TOKEN.value
+      }
+    }
     "pre_commit_wizcli" = {
       name        = "pre-commit-wizcli"
       description = "pre-commit hook for WizCLI that checks your code"

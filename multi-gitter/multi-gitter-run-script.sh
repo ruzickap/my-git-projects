@@ -142,6 +142,9 @@ case "${REPOSITORY}" in
   ruzickap/my-git-projects)
     megalinter_flavor all
     ;;
+  ruzickap/my-stocks)
+    megalinter_flavor all
+    ;;
   ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/hugo"
     ;;
@@ -173,7 +176,8 @@ fi
 if [[ ! -f "AGENTS.md" ]]; then
   log_info "Copying AGENTS.md from defaults and reinitializing with opencode"
   cp "${GH_REPO_DEFAULTS_BASE}/my-defaults/AGENTS.md" AGENTS.md
-  opencode run --model="github-copilot/claude-opus-5" --command "init"
+  opencode run --auto --model="github-copilot/claude-opus-5" \
+    "Analyze this repository and rewrite AGENTS.md (currently a generic template) into a concise, repo-specific guide for AI agents. Capture only what an agent would otherwise get wrong: build/lint/test commands, architecture and non-obvious conventions, and gotchas. Do not repeat the generic lint, commit, branch, and PR conventions from the template. Only edit AGENTS.md."
 fi
 
 log_info "Completed processing ${REPOSITORY}"
