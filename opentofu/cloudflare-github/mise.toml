@@ -18,3 +18,7 @@ run = "fnox exec -- tofu plan"
 [tasks.apply]
 description = "Run tofu apply with secrets from fnox"
 run = "fnox exec -- tofu apply"
+
+[tasks.tofu]
+description = "Run any tofu command with secrets from fnox (mise run tofu output)"
+run = "fnox exec -- tofu"

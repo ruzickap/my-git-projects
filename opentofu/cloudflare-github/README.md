@@ -284,13 +284,17 @@ plan/apply time -- only the encryption passphrase must be provided.
 
 With mise, the `init` / `plan` / `apply` tasks in `mise.toml` wrap `tofu` in
 `fnox exec`, which reads `TF_VAR_opentofu_encryption_passphrase` from AWS SSM
-Parameter Store (`fnox.toml`):
+Parameter Store (`fnox.toml`). The generic `tofu` task does the same for any
+other command (e.g. `mise run tofu output`, `mise run tofu state list`):
 
 ```bash
 mise run init
 mise run plan
 mise run apply
 ```
+
+With fnox shell activation (`eval "$(fnox activate zsh)"`) the secret is
+loaded when entering this directory, so plain `tofu` commands work too.
 
 Without mise / fnox:
 
@@ -307,7 +311,9 @@ tofu apply
 
 ## Get OpenTofu Outputs
 
-After applying - retrieve outputs:
+After applying - retrieve outputs (reading the encrypted state needs the
+passphrase - prefix with `mise run` if fnox shell activation is not enabled,
+e.g. `mise run tofu output`):
 
 ```bash
 # List all outputs

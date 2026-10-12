@@ -51,7 +51,8 @@ Both modules use [mise](https://mise.jdx.dev/) (`mise.toml`), which pins the
 `opentofu` version and exports `AWS_PROFILE=my-aws` / `AWS_REGION=eu-central-1`.
 `cloudflare-github` uses `fnox` (`fnox.toml`) to inject `TF_VAR_*` secrets from
 AWS SSM Parameter Store via `fnox exec` wrapped in mise tasks - run
-`mise run init` / `mise run plan` / `mise run apply` there (the archived
+`mise run init` / `mise run plan` / `mise run apply` (or the generic
+`mise run tofu <args>`, e.g. `mise run tofu output`) there (the archived
 `mise-env-fnox` plugin is no longer used). `aws` reads its secrets from
 KeePassXC (see below); with mise active, just run `tofu init` and `tofu plan` /
 `tofu apply` inside that module dir.
