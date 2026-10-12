@@ -35,6 +35,10 @@ jobs:
 
       - name: Run tofu tests
         working-directory: opentofu/aws
+        env:
+          # The state/plan encryption configuration is evaluated during "tofu init".
+          # No state exists in CI - any value works (the passphrase is its SHA-512 hash).
+          TF_VAR_keepassxc_password: xxxxxxxxxxxxxxxx
         run: |
           tofu init
           tofu test

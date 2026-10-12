@@ -1,11 +1,26 @@
 [tools]
-fnox = "1.39.0"
 opentofu = "1.13.1"
-
-[plugins]
-fnox-env = "https://github.com/jdx/mise-env-fnox"
+yq = "4.54.1"
 
 [env]
-_.fnox-env = { tools = true }
 AWS_PROFILE = "my-aws"
 AWS_REGION = "eu-central-1"
+
+# Ask for the KeePass password (~/Documents/secrets/keepass2.kdbx + keepass.key) and verify it
+# TF_VAR_keepassxc_password is used by OpenTofu: KeePassXC access + state/plan encryption (SHA-512 of the password)
+[hooks.enter]
+shell = "zsh"
+script = '''
+read -rs "TF_VAR_keepassxc_password?🔑 KeePass password for ~/Documents/secrets/keepass2.kdbx: " && echo
+export TF_VAR_keepassxc_password
+if printf '%s\n' "$TF_VAR_keepassxc_password" | keepassxc-cli db-info --quiet --key-file ~/Documents/secrets/keepass.key ~/Documents/secrets/keepass2.kdbx > /dev/null 2>&1; then
+  echo "✅ KeePass password is correct"
+else
+  echo "❌ Wrong KeePass password"
+fi
+'''
+
+# mise does not track variables exported by hooks - unset them when leaving
+[hooks.leave]
+shell = "zsh"
+script = "unset TF_VAR_keepassxc_password"
