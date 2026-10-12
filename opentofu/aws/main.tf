@@ -1,4 +1,21 @@
 terraform {
+  encryption {
+    key_provider "pbkdf2" "main" {
+      # SHA-512 (128 hex characters) of the KeePassXC password - PBKDF2 requires min. 16 characters
+      passphrase = sha512(var.keepassxc_password)
+    }
+    method "aes_gcm" "main" {
+      keys = key_provider.pbkdf2.main
+    }
+    state {
+      method   = method.aes_gcm.main
+      enforced = true
+    }
+    plan {
+      method   = method.aes_gcm.main
+      enforced = true
+    }
+  }
   required_version = "~> 1.12"
   required_providers {
     # keep-sorted start block=yes
@@ -29,30 +46,33 @@ locals {
   iam_managed_policy_arns = ["arn:${data.aws_partition.current.partition}:iam::aws:policy/AdministratorAccess"]
   # User name for the IAM user
   iam_user_name = "aws-cli"
+  # KeePassXC database - the same path is used by the mise "enter" hook (mise.toml)
+  keepassxc_database = pathexpand("~/Documents/secrets/keepass2.kdbx")
+  # KeePassXC group with the SSM parameters - one entry per parameter (UserName: name, Notes: description)
+  keepassxc_group = "aws-ssm-parameter-store"
+  # KeePassXC key file - the same path is used by the mise "enter" hook (mise.toml)
+  keepassxc_key_file = pathexpand("~/Documents/secrets/keepass.key")
   # User email address used for notifications and ownership
   my_email = "petr.ruzicka@gmail.com"
   # S3 bucket name for OpenTofu state files
   s3_bucket_name = "ruzickap-my-git-projects-opentofu-state-files"
   # keep-sorted end
+
+  # KeePassXC entries of the group by Title (UserName: SSM parameter name, Notes: description)
+  keepassxc_entries = {
+    for entry in csvdecode(data.local_command.keepassxc_export.stdout) : entry.Title => {
+      username = entry.Username
+      # Multi-line Notes => single-line description, lines separated by "; "
+      description = join("; ", compact([for line in split("\n", replace(entry.Notes, "\r", "")) : trimspace(line)]))
+      password    = sensitive(entry.Password)
+    }
+  }
 }
 
-# Access to RUZICKA_SBX01 AWS Account (/github/shared/actions-secrets/RUZICKA_SBX01_AWS_ROLE_TO_ASSUME)
-variable "aws_default_access_key_id" {
-  description = "Access key ID for the [default] AWS CLI profile (different account, not managed by this module)"
+variable "keepassxc_password" {
+  description = "Password of the KeePassXC database (set via TF_VAR_keepassxc_password environment variable), its SHA-512 hash encrypts the OpenTofu state and plan"
   type        = string
-  sensitive   = true
-}
-
-# Access to RUZICKA_SBX01 AWS Account (/github/shared/actions-secrets/RUZICKA_SBX01_AWS_ROLE_TO_ASSUME) (arn:aws:iam::7xxxxx7:role/GitHubOidcFederatedRole)
-variable "aws_default_role_arn" {
-  description = "Role ARN for the [default] AWS CLI config profile (different account, not managed by this module)"
-  type        = string
-}
-
-# Access to RUZICKA_SBX01 AWS Account (/github/shared/actions-secrets/RUZICKA_SBX01_AWS_ROLE_TO_ASSUME)
-variable "aws_default_secret_access_key" {
-  description = "Secret access key for the [default] AWS CLI profile (different account, not managed by this module)"
-  type        = string
+  ephemeral   = true
   sensitive   = true
 }
 
@@ -62,7 +82,7 @@ provider "aws" {
     tags = {
       managed-by = "opentofu"
       owner      = local.my_email
-      repository = "ruzickap/my-git-projects/opentofu/aws"
+      repository = "https://github.com/ruzickap/my-git-projects/tree/main/opentofu/aws"
     }
   }
 }
@@ -86,6 +106,7 @@ resource "aws_iam_user_policy_attachment" "this" {
   policy_arn = each.value
 }
 
+# [default] profile = RUZICKA_SBX01 AWS account (not managed by this module) - values from the KeePassXC entries (Title)
 resource "local_sensitive_file" "aws_credentials" {
   filename             = local.aws_credentials_file
   file_permission      = "0600"
@@ -93,8 +114,8 @@ resource "local_sensitive_file" "aws_credentials" {
   content              = <<-EOT
     # Managed by OpenTofu - ~/git/my-git-projects/opentofu/aws
     [default]
-    aws_access_key_id = ${var.aws_default_access_key_id}
-    aws_secret_access_key = ${var.aws_default_secret_access_key}
+    aws_access_key_id = ${local.keepassxc_entries["aws_access_key_id"].password}
+    aws_secret_access_key = ${local.keepassxc_entries["aws_secret_access_key"].password}
 
     [${local.aws_profile}]
     aws_access_key_id = ${aws_iam_access_key.this.id}
@@ -113,7 +134,7 @@ resource "local_sensitive_file" "aws_config" {
   content              = <<-EOT
     # Managed by OpenTofu - ~/git/my-git-projects/opentofu/aws
     [default]
-    role_arn = ${var.aws_default_role_arn}
+    role_arn = ${local.keepassxc_entries["ruzicka_sbx01_aws_role_to_assume"].password}
     source_profile = default
 
     [profile ${local.aws_profile}]
@@ -294,14 +315,61 @@ resource "aws_iam_role_policy_attachment" "github_actions" {
   policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AdministratorAccess"
 }
 
-resource "aws_ssm_parameter" "github_oidc_role_arn" {
-  # checkov:skip=CKV_AWS_337:Personal account - AWS-managed key is sufficient for non-critical SSM parameters
-  name  = "/github/ruzickap/my-git-projects/actions-secrets/MY_AWS_AWS_ROLE_TO_ASSUME"
-  type  = "SecureString"
-  value = aws_iam_role.github_actions.arn
+################################################################################
+# SSM Parameters - synced from KeePassXC
+################################################################################
+
+data "local_command" "keepassxc_export" {
+  command = "bash"
+  # Script via stdin, paths/group as arguments (no shell escaping needed); password from env TF_VAR_keepassxc_password
+  # yq keeps only the group entries (header + Title, Username, Password, Notes); CSV output keeps values like "0123" intact
+  arguments = ["-o", "pipefail", "-s", local.keepassxc_database, local.keepassxc_key_file, local.keepassxc_group]
+  stdin     = <<-EOT
+    printf '%s\n' "$${TF_VAR_keepassxc_password:?Environment variable TF_VAR_keepassxc_password (KeePass password) is not set}" |
+      keepassxc-cli export --format csv --key-file "$2" "$1" |
+      GROUP="$3" yq -p csv -o csv --csv-auto-parse=false '[["Title", "Username", "Password", "Notes"]] + [.[] | select(.Group | sub("^[^/]*/"; "") == strenv(GROUP)) | [.Title, .Username, .Password, .Notes]]'
+  EOT
+
+  lifecycle {
+    # Protection against destroying all SSM parameters (wrong group, empty group, ...)
+    postcondition {
+      condition     = length(csvdecode(self.stdout)) > 0
+      error_message = "No entries found in the KeePassXC group \"${local.keepassxc_group}\""
+    }
+  }
+}
+
+resource "aws_ssm_parameter" "keepassxc" {
+  # checkov:skip=CKV_AWS_337:Personal account - AWS-managed key is sufficient for SSM parameters
+  for_each = local.keepassxc_entries
+
+  name        = each.value.username
+  description = each.value.description
+  type        = "SecureString"
+  value       = sensitive(each.value.password)
+
+  lifecycle {
+    precondition {
+      condition     = each.value.username != ""
+      error_message = "KeePassXC entry \"${local.keepassxc_group}/${each.key}\" must have UserName (SSM parameter name)"
+    }
+    precondition {
+      condition     = each.value.description != "" && length(each.value.description) <= 1024
+      error_message = "Notes (SSM parameter description) of the KeePassXC entry \"${local.keepassxc_group}/${each.key}\" must be non-empty and max. 1024 characters long (current length: ${length(each.value.description)})"
+    }
+    precondition {
+      condition     = length([for entry in local.keepassxc_entries : entry.username if entry.username == each.value.username]) == 1
+      error_message = "UserName (SSM parameter name) \"${each.value.username}\" is used by more than one KeePassXC entry"
+    }
+  }
 }
 
 output "github_oidc_role_arn" {
   description = "ARN of the GitHub Actions OIDC federated IAM role"
   value       = aws_iam_role.github_actions.arn
+}
+
+output "keepassxc_ssm_parameter_names" {
+  description = "Names of the SSM parameters synced from KeePassXC"
+  value       = sort([for p in aws_ssm_parameter.keepassxc : p.name])
 }

@@ -8,14 +8,15 @@ provider configuration.
 
 ## Modules
 
-| Directory                                 | Description                                                                 |
-|-------------------------------------------|-----------------------------------------------------------------------------|
-| [`aws`](aws/)                             | AWS IAM: `aws-cli` user, S3 state bucket, GitHub Actions OIDC (local state) |
-| [`cloudflare-github`](cloudflare-github/) | Cloudflare, GitHub, Supabase, UptimeRobot, and AWS OIDC/IAM role            |
+| Directory                                 | Description                                                                       |
+|-------------------------------------------|-----------------------------------------------------------------------------------|
+| [`aws`](aws/)                             | AWS IAM: `aws-cli` user, S3 state bucket, GitHub Actions OIDC, SSM from KeePassXC |
+| [`cloudflare-github`](cloudflare-github/) | Cloudflare, GitHub, Supabase, UptimeRobot, and AWS OIDC/IAM role                  |
 
 The `cloudflare-github` module stores state **encrypted** (AES-GCM with PBKDF2
 key) in an AWS S3 bucket (`ruzickap-my-git-projects-opentofu-state-files`). The
-`aws` module uses a **local** state file.
+`aws` module uses a **local** state file, **encrypted** with the SHA-512 hash of
+the KeePassXC password.
 
 ## Module Dependency Order
 
@@ -24,14 +25,18 @@ user and writes the `my-aws` profile to the standard `~/.aws/credentials` and
 `~/.aws/config` files. The `cloudflare-github` module depends on this profile
 (`AWS_PROFILE` is set in `mise.toml`).
 
-The `aws` module requires three input variables for the `[default]` AWS CLI
-profile (a separate account not managed by the module):
+The `aws` module reads its secrets - the SSM parameters and the `[default]` AWS
+CLI profile (a separate account not managed by the module) - from the KeePassXC
+database `~/Documents/secrets/keepass2.kdbx` (key file
+`~/Documents/secrets/keepass.key`), group `aws-ssm-parameter-store`. It requires
+the KeePassXC password, which the mise `enter` hook in `opentofu/aws` asks for:
 
 ```bash
-export TF_VAR_aws_default_access_key_id="..."
-export TF_VAR_aws_default_secret_access_key="..."
-export TF_VAR_aws_default_role_arn="arn:aws:iam::ACCOUNT:role/ROLE"
+read -rs TF_VAR_keepassxc_password && export TF_VAR_keepassxc_password
 ```
+
+See [`aws/README.md`](aws/README.md) for the KeePassXC entries and the
+bootstrap.
 
 ```text
 opentofu/aws  ──►  opentofu/cloudflare-github
