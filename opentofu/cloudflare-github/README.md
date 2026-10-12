@@ -280,7 +280,19 @@ See the [`opentofu/aws` README](../aws/README.md) for bootstrap instructions.
 Provision all managed resources (Cloudflare zones, DNS, Zero Trust, API
 tokens, GitHub repositories with Actions secrets, Supabase, UptimeRobot).
 All provider credentials are read from AWS SSM Parameter Store at
-plan/apply time -- only the encryption passphrase must be exported.
+plan/apply time -- only the encryption passphrase must be provided.
+
+With mise, the `init` / `plan` / `apply` tasks in `mise.toml` wrap `tofu` in
+`fnox exec`, which reads `TF_VAR_opentofu_encryption_passphrase` from AWS SSM
+Parameter Store (`fnox.toml`):
+
+```bash
+mise run init
+mise run plan
+mise run apply
+```
+
+Without mise / fnox:
 
 ```bash
 # The only TF_VAR_* variable required
