@@ -348,7 +348,7 @@ the fallback again:
 
 ```hcl
 key_provider "pbkdf2" "old" {
-  passphrase = sha512("old-keepassxc-password")
+  passphrase = sha512("xxxxxxxxxxxxxxxx")
 }
 method "aes_gcm" "old" {
   keys = key_provider.pbkdf2.old
