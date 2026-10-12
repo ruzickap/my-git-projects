@@ -280,7 +280,23 @@ See the [`opentofu/aws` README](../aws/README.md) for bootstrap instructions.
 Provision all managed resources (Cloudflare zones, DNS, Zero Trust, API
 tokens, GitHub repositories with Actions secrets, Supabase, UptimeRobot).
 All provider credentials are read from AWS SSM Parameter Store at
-plan/apply time -- only the encryption passphrase must be exported.
+plan/apply time -- only the encryption passphrase must be provided.
+
+With mise, the `init` / `plan` / `apply` tasks in `mise.toml` wrap `tofu` in
+`fnox exec`, which reads `TF_VAR_opentofu_encryption_passphrase` from AWS SSM
+Parameter Store (`fnox.toml`). The generic `tofu` task does the same for any
+other command (e.g. `mise run tofu output`, `mise run tofu state list`):
+
+```bash
+mise run init
+mise run plan
+mise run apply
+```
+
+With fnox shell activation (`eval "$(fnox activate zsh)"`) the secret is
+loaded when entering this directory, so plain `tofu` commands work too.
+
+Without mise / fnox:
 
 ```bash
 # The only TF_VAR_* variable required
@@ -295,7 +311,9 @@ tofu apply
 
 ## Get OpenTofu Outputs
 
-After applying - retrieve outputs:
+After applying - retrieve outputs (reading the encrypted state needs the
+passphrase - prefix with `mise run` if fnox shell activation is not enabled,
+e.g. `mise run tofu output`):
 
 ```bash
 # List all outputs
