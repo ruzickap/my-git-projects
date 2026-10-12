@@ -2,10 +2,10 @@
 opentofu = "1.13.1"
 fnox = "1.39.0"
 
-[plugins]
-fnox-env = "https://github.com/jdx/mise-env-fnox"
-
 [env]
-_.fnox-env = { tools = true }
 AWS_PROFILE = "my-aws"
 AWS_REGION = "eu-central-1"
+
+[tasks.tofu]
+description = "Run tofu with fnox secrets (e.g. mise run tofu -- plan)"
+run = "fnox exec -- tofu"
