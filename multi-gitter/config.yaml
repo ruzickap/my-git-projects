@@ -77,7 +77,6 @@ skip-repo:
 # Private repositories (need to be specified explicitly)
 repo:
   - ruzickap/brewwatch
-  - ruzickap/caisp-notes
   - ruzickap/cv
   - ruzickap/wiz-certification-notes
 
