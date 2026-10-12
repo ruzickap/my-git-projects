@@ -47,17 +47,23 @@ symlinks.
 
 ## OpenTofu - how to run modules
 
-Both modules use [mise](https://mise.jdx.dev/) + `fnox` (`mise.toml` +
-`fnox.toml`). `mise` pins the `opentofu` version and exports
-`AWS_PROFILE=my-aws` / `AWS_REGION=eu-central-1`; `fnox` injects `TF_VAR_*`
-secrets from AWS SSM Parameter Store. With mise active, just run `tofu init`
-and `tofu plan` / `tofu apply` inside the module dir.
+Both modules use [mise](https://mise.jdx.dev/) (`mise.toml`), which pins the
+`opentofu` version and exports `AWS_PROFILE=my-aws` / `AWS_REGION=eu-central-1`.
+`cloudflare-github` uses `fnox` (`fnox.toml`) to inject `TF_VAR_*` secrets from
+AWS SSM Parameter Store; `aws` reads its secrets from KeePassXC (see below).
+With mise active, just run `tofu init` and `tofu plan` / `tofu apply` inside
+the module dir.
 
-- `opentofu/aws/` - **local** state. Must be applied **first**: it provisions
-  the `aws-cli` IAM user and writes the `~/.aws/credentials` / `~/.aws/config`
-  `[my-aws]` profile that the other module depends on. First-ever apply needs a
-  manual bootstrap (temporary admin key + manually created SSM params) -
-  see `opentofu/aws/README.md`.
+- `opentofu/aws/` - **local** state, **encrypted** with the SHA-512 hash of the
+  KeePassXC password (`TF_VAR_keepassxc_password`, exported by the mise `enter`
+  hook which prompts for it). Reads `~/Documents/secrets/keepass2.kdbx` (+
+  `keepass.key`) via `keepassxc-cli` + `yq`: every entry of the group
+  `aws-ssm-parameter-store` becomes an SSM parameter, the `[default]` AWS CLI
+  profile values come from entries of the same group. Must be applied
+  **first**: it provisions the `aws-cli` IAM user and writes the
+  `~/.aws/credentials` / `~/.aws/config` `[my-aws]` profile that the other
+  module depends on. First-ever apply needs a manual bootstrap (temporary admin
+  key) - see `opentofu/aws/README.md`.
 - `opentofu/cloudflare-github/` - **encrypted** S3 remote state (AES-GCM via
   PBKDF2). Requires `TF_VAR_opentofu_encryption_passphrase`; without it `tofu
   init` against existing state will fail.
@@ -72,7 +78,11 @@ and `tofu plan` / `tofu apply` inside the module dir.
 - `local_sensitive_file` in `opentofu/aws/` **fully owns** `~/.aws/credentials`
   and `~/.aws/config`. A `tofu apply` overwrites any manual edits to those
   files. Both modules' `[default]` profile points at a *different* AWS account
-  whose creds are passed via `TF_VAR_aws_default_*` and are not module-managed.
+  whose creds come from KeePassXC entries (read by `opentofu/aws/`) and are not
+  module-managed.
+- The local `terraform_validate` pre-commit hook runs `terraform` by default,
+  which can not read the encrypted `opentofu/aws` state - set
+  `PCT_TFPATH=tofu` (as in CI).
 - CI applies `opentofu/cloudflare-github` automatically on push to `main` and
   on PRs labeled `tofu-apply`; the weekly schedule runs a drift check that
   opens an issue. Changing files there is a live infrastructure change.
