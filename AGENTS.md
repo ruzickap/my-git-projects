@@ -50,9 +50,11 @@ symlinks.
 Both modules use [mise](https://mise.jdx.dev/) + `fnox` (`mise.toml` +
 `fnox.toml`). `mise` pins the `opentofu` version and exports
 `AWS_PROFILE=my-aws` / `AWS_REGION=eu-central-1`. `fnox` injects `TF_VAR_*`
-secrets from AWS SSM Parameter Store only into commands wrapped in
-`fnox exec`. In `cloudflare-github` run `mise run tofu -- init` /
-`mise run tofu -- plan` (or `fnox exec -- tofu plan`) inside the module dir.
+secrets from AWS SSM Parameter Store. In `cloudflare-github` they are loaded
+automatically on `cd` by fnox shell integration
+(`eval "$(fnox activate zsh)"` in `~/.zshrc`), so just run `tofu init` /
+`tofu plan` inside the module dir. Without shell integration use
+`mise run tofu -- plan` or `fnox exec -- tofu plan`.
 
 - `opentofu/aws/` - **local** state. Must be applied **first**: it provisions
   the `aws-cli` IAM user and writes the `~/.aws/credentials` / `~/.aws/config`

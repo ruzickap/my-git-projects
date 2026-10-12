@@ -294,8 +294,12 @@ tofu apply
 ```
 
 With [mise](https://mise.jdx.dev/) and [fnox](https://fnox.jdx.dev/) the
-passphrase is read from AWS SSM Parameter Store (see `fnox.toml`) by wrapping
-the commands in `fnox exec`, either directly or via the `tofu` mise task:
+passphrase is read from AWS SSM Parameter Store (see `fnox.toml`). With
+[fnox shell integration](https://fnox.jdx.dev/guide/shell-integration.html)
+enabled (`eval "$(fnox activate zsh)"` in `~/.zshrc`) it is loaded
+automatically when you `cd` into this directory, so plain `tofu init` /
+`tofu apply` works. Otherwise wrap the commands in `fnox exec`, either
+directly or via the `tofu` mise task:
 
 ```bash
 mise run tofu -- init
