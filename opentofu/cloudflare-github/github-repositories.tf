@@ -9,23 +9,11 @@ locals {
     # keep-sorted end
   }
   github_repositories = {
-    "caisp_notes" = {
-      name        = "caisp-notes"
-      description = "Certified AI Security Professional Notes"
-      visibility  = "private"
-      topics      = ["ai", "ai-security", "caisp", "caisp-exam", "caisp-exam-preparation", "devsecops", "notes", "security"]
-    }
     "claude_courses" = {
       name        = "claude-courses"
       description = "Claude Courses Notes"
       visibility  = "public"
       topics      = ["architect", "claude", "courses", "foundations", "notes"]
-    }
-    "cmcpse_notes" = {
-      name        = "cmcpse-notes"
-      description = "Certified MCP Security Expert Notes"
-      visibility  = "private"
-      topics      = ["ai", "ai-security", "cmcpse", "cmcpse-exam", "cmcpse-exam-preparation", "devsecops", "mcp", "notes", "security"]
     }
     "container_image_scans" = {
       name        = "container-image-scans"

@@ -201,6 +201,11 @@ data "cloudflare_zero_trust_tunnel_cloudflared_token" "gate_bracha" {
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.tunnels["gate-bracha"].id
 }
 
+data "cloudflare_zero_trust_tunnel_cloudflared_token" "raspi" {
+  account_id = local.cloudflare_account_id
+  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.tunnels["raspi"].id
+}
+
 resource "cloudflare_zero_trust_tunnel_cloudflared_config" "configs" {
   for_each   = local.cloudflare_zero_trust_tunnels_applications
   account_id = local.cloudflare_account_id
