@@ -176,8 +176,8 @@
     // ========== release-please: map dependency bumps to fix/feat/feat! commits ==========
     // Use commitMessagePrefix: preset "chore" rules are appended later and override semanticCommitType
     {
-      // Open an automerging PR assigned to ruzickap (not a silent branch merge),
-      // so the bump is noticed and the release can be created manually
+      // Open a PR assigned to ruzickap (not a silent branch merge) to notice the bump;
+      // patch/minor automerge, major stays manual via the "Disable auto-merge" rule
       description: "Assign release-triggering MegaLinter bumps to ruzickap",
       matchRepositories: ["ruzickap/megalinter-custom-flavor-my-repos"],
       matchDepNames: ["oxsecurity/megalinter"],
