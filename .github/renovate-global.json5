@@ -1,13 +1,6 @@
 {
-  /**
-   * Renovate Global Configuration
-   *
-   * This configuration is used by the renovate-global workflow to manage
-   * dependency updates across all repositories. It extends the base config
-   * and adds repository-specific rules.
-   *
-   * Documentation: https://docs.renovatebot.com/configuration-options/
-   */
+  // Renovate global config used by the renovate-global workflow for all repos
+  // https://docs.renovatebot.com/configuration-options/
   $schema: "https://docs.renovatebot.com/renovate-global-schema.json",
 
   // # keep-sorted start block=yes
@@ -55,15 +48,8 @@
         "/^entrypoint\\.sh$/",
       ],
 
-      // Regex pattern to match custom dependency declarations
       // Format: # renovate: datasource=<source> depName=<name> [versioning=<type>] [extractVersion=<regex>] [registryUrl=<url>]
-      // Example: # renovate: datasource=github-releases depName=helm/helm versioning=semver
-      // The optional "@sha256:<digest>" suffix is captured as currentDigest so
-      // pinned references (e.g. an OCI base-image LABEL) produce a writable
-      // "digest" update instead of a failing "pinDigest". [^@\n]* stops the
-      // value scan before the digest so currentValue excludes it. The digest
-      // is constrained to exactly 64 hex chars so truncated/invalid strings
-      // are not mistaken for a digest.
+      // Optional "@sha256:<64 hex>" suffix is captured as currentDigest (digest update, not a failing pinDigest)
       matchStrings: [
         '# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)( versioning=(?<versioning>.+?))?( extractVersion=(?<extractVersion>.+?))?( registryUrl=(?<registryUrl>.+?))?\\s[^@\\n]*[=:]\\s*"?(?<currentValue>.+?)(?:@(?<currentDigest>sha256:[0-9a-f]{64}))?"?\\s',
       ],
@@ -84,16 +70,8 @@
     ":enableVulnerabilityAlertsWithLabel(security)", // Add security label to vulnerability alerts
     ":pinSkipCi", // Pin dependencies and skip CI for pin-only updates
   ],
-  // Use internal checks only and do NOT publish a "renovate/stability-days"
-  // commit status. With automergeType=branch, Renovate POSTs that status to
-  // GitHub before merging; the GitHub App receives a 422 that Renovate's error
-  // handler mis-parses (err.body.errors is not an array), throwing
-  // REPOSITORY_CHANGED and aborting every repo *before* automerge -- so no
-  // branch ever merges. "strict" makes Renovate evaluate minimumReleaseAge
-  // internally and skip the status POST entirely, unblocking automerge.
-  // Requires minimumReleaseAgeBehaviour=timestamp-optional (set below) so
-  // timestamp-less ghcr.io tags are not held back forever under strict.
-  // https://docs.renovatebot.com/configuration-options/#internalchecksfilter
+  // Check minimumReleaseAge internally instead of POSTing a "renovate/stability-days"
+  // status, whose 422 aborts every repo before automerge (needs timestamp-optional)
   internalChecksFilter: "strict",
   // Scan Kubernetes manifests in deploy directory (for malware-cryptominer-container)
   kubernetes: {
@@ -111,15 +89,8 @@
   },
   // Wait for releases to be at least 3 days old before creating PRs (reduces risk of buggy releases)
   minimumReleaseAge: "3 days",
-  // Proceed with updates whose datasource/registry provides no release
-  // timestamp instead of holding them back indefinitely. Renovate 42+ defaults
-  // to "timestamp-required", which treats a missing timestamp as "not yet aged"
-  // and (because internalChecksFilter=strict is set above) never creates the
-  // branch -- this permanently blocks ghcr.io/quay.io Docker tags (e.g.
-  // ghcr.io/home-assistant/home-assistant), which expose no timestamp. Trade-off:
-  // any timestamp-less update bypasses the minimumReleaseAge cooldown for every
-  // datasource.
-  // https://docs.renovatebot.com/configuration-options/#minimumreleaseagebehaviour
+  // Don't hold back updates without release timestamps (e.g. ghcr.io/quay.io tags) forever
+  // under "strict"; trade-off: they skip the minimumReleaseAge cooldown
   minimumReleaseAgeBehaviour: "timestamp-optional",
   // Disable onboarding PRs since we manage config centrally in this repo
   // https://docs.renovatebot.com/self-hosted-configuration/#onboarding
@@ -139,11 +110,8 @@
       minimumReleaseAge: null,
     },
     {
-      // The default Docker digest commit subject includes the image tag
-      // (e.g. "nginxinc/nginx-unprivileged:1.31.1-alpine-slim docker digest
-      // to ..."), which can exceed the 72-char commit-check limit and blocks
-      // automerge. Drop the tag from the topic (the PR body still shows the
-      // full currentValue) so the subject stays well under 72 characters.
+      // Drop the image tag from the digest commit subject so it fits commit-check's
+      // 72-char limit (which blocks automerge); the PR body still shows the tag
       description: "Shorten Docker digest commit subject to fit 72-char limit",
       matchDatasources: ["docker"],
       matchUpdateTypes: ["digest"],
@@ -160,10 +128,8 @@
       matchManagers: ["mise"],
     },
     {
-      // Disables every non-github-actions manager for brewwatch so regular
-      // (non-security) updates are limited to GitHub Actions. Security fixes
-      // bypass this rule and are blocked separately via
-      // vulnerabilityAlerts.force.packageRules below.
+      // Limit regular updates to GitHub Actions; security fixes bypass this rule
+      // and are blocked via vulnerabilityAlerts.force.packageRules below
       description: "Only update GitHub Actions in brewwatch repo",
       matchRepositories: ["ruzickap/brewwatch"],
       matchManagers: ["!github-actions"],
@@ -176,62 +142,22 @@
       pinDigests: false,
     },
     {
-      // The custom regex manager cannot write a digest back into values that
-      // have no digest placeholder, so docker:pinDigests produces an empty
-      // "pin" update and fails with "Error updating branch: update failure".
-      // Disable digest pinning for Docker deps handled by the custom manager.
+      // The custom regex manager can't write a digest into values without one,
+      // so docker:pinDigests fails with "update failure"; only bump versions
       description: "Custom regex manager can't pin Docker digests; only bump versions",
       matchManagers: ["custom.regex"],
       matchDatasources: ["docker"],
       pinDigests: false,
     },
     {
-      // Renovate's ansible manager treats every "image:" key as a Docker image,
-      // including "comparisons: { image: strict }" -- a community.docker
-      // docker_container module option (strict/ignore/allow_more_present), not
-      // an image. That phantom dep makes Renovate probe docker.io/library/strict
-      // and log a harmless 401. Scope the ignore to the ansible manager in the
-      // affected repo so a genuine Docker image named "strict" elsewhere is not
-      // suppressed. (ansible-raspberry-pi-os apps.yml)
+      // The ansible manager treats docker_container "comparisons: { image: strict }"
+      // as an image and probes docker.io/library/strict (harmless 401)
       description: "Ignore ansible docker_container comparisons:image:strict false positive",
       matchRepositories: ["ruzickap/ansible-raspberry-pi-os"],
       matchManagers: ["ansible"],
       matchDatasources: ["docker"],
       matchPackageNames: ["strict", "library/strict"],
       enabled: false,
-    },
-    {
-      // Bump must be "feat" so release-please opens a release PR; merging it
-      // publishes a Release that triggers the custom flavor image build.
-      description: "MegaLinter bump must be feat so release-please releases it",
-      matchRepositories: ["ruzickap/megalinter-custom-flavor-my-repos"],
-      matchDepNames: ["oxsecurity/megalinter"],
-      commitMessageTopic: "MegaLinter",
-      semanticCommitType: "feat",
-    },
-    {
-      // markdownlint-cli provides the action's user-facing linting behavior,
-      // so its bumps must trigger a release-please minor release.
-      description: "markdownlint-cli bump must be feat so release-please releases it",
-      matchRepositories: ["ruzickap/action-my-markdown-linter"],
-      matchPackageNames: ["markdownlint-cli"],
-      semanticCommitType: "feat",
-    },
-    {
-      // markdown-link-check provides the action's user-facing link checking,
-      // so its bumps must trigger a release-please minor release.
-      description: "markdown-link-check bump must be feat so release-please releases it",
-      matchRepositories: ["ruzickap/action-my-markdown-link-checker"],
-      matchPackageNames: ["markdown-link-check"],
-      semanticCommitType: "feat",
-    },
-    {
-      // Muffet provides the action's user-facing link checking behavior, so
-      // its bumps must trigger a release-please minor release.
-      description: "Muffet bump must be feat so release-please releases it",
-      matchRepositories: ["ruzickap/action-my-broken-link-checker"],
-      matchPackageNames: ["raviqqe/muffet"],
-      semanticCommitType: "feat",
     },
     {
       description: "Skip renovating _posts directory in ruzickap.github.io",
@@ -247,6 +173,113 @@
       matchUpdateTypes: ["major"],
       enabled: false,
     },
+    // ========== release-please: map dependency bumps to fix/feat/feat! commits ==========
+    // Use commitMessagePrefix: preset "chore" rules are appended later and override semanticCommitType
+    {
+      // Open an automerging PR assigned to ruzickap (not a silent branch merge),
+      // so the bump is noticed and the release can be created manually
+      description: "Assign release-triggering MegaLinter bumps to ruzickap",
+      matchRepositories: ["ruzickap/megalinter-custom-flavor-my-repos"],
+      matchDepNames: ["oxsecurity/megalinter"],
+      assignAutomerge: true,
+      assignees: ["ruzickap"],
+      automergeType: "pr",
+      commitMessageAction: "update",
+      commitMessageTopic: "MegaLinter",
+    },
+    {
+      description: "MegaLinter patch bump must be fix so release-please cuts a patch release",
+      matchRepositories: ["ruzickap/megalinter-custom-flavor-my-repos"],
+      matchDepNames: ["oxsecurity/megalinter"],
+      matchUpdateTypes: ["patch"],
+      commitMessagePrefix: "fix(deps):",
+    },
+    {
+      description: "MegaLinter minor bump must be feat so release-please cuts a minor release",
+      matchRepositories: ["ruzickap/megalinter-custom-flavor-my-repos"],
+      matchDepNames: ["oxsecurity/megalinter"],
+      matchUpdateTypes: ["minor"],
+      commitMessagePrefix: "feat(deps):",
+    },
+    {
+      description: "MegaLinter major bump must be feat! so release-please cuts a major release",
+      matchRepositories: ["ruzickap/megalinter-custom-flavor-my-repos"],
+      matchDepNames: ["oxsecurity/megalinter"],
+      matchUpdateTypes: ["major"],
+      commitMessagePrefix: "feat(deps)!:",
+    },
+    {
+      // markdownlint-cli provides the action's user-facing linting behavior,
+      // so its bumps must trigger a release-please minor release.
+      description: "markdownlint-cli bump must be feat so release-please releases it",
+      matchRepositories: ["ruzickap/action-my-markdown-linter"],
+      matchPackageNames: ["markdownlint-cli"],
+      assignAutomerge: true,
+      assignees: ["ruzickap"],
+      automergeType: "pr",
+      commitMessageAction: "update",
+      commitMessagePrefix: "feat(deps):",
+    },
+    {
+      description: "Assign release-triggering markdown-link-check bumps to ruzickap",
+      matchRepositories: ["ruzickap/action-my-markdown-link-checker"],
+      matchPackageNames: ["markdown-link-check"],
+      assignAutomerge: true,
+      assignees: ["ruzickap"],
+      automergeType: "pr",
+      commitMessageAction: "update",
+    },
+    {
+      description: "markdown-link-check patch bump must be fix so release-please cuts a patch release",
+      matchRepositories: ["ruzickap/action-my-markdown-link-checker"],
+      matchPackageNames: ["markdown-link-check"],
+      matchUpdateTypes: ["patch"],
+      commitMessagePrefix: "fix(deps):",
+    },
+    {
+      description: "markdown-link-check minor bump must be feat so release-please cuts a minor release",
+      matchRepositories: ["ruzickap/action-my-markdown-link-checker"],
+      matchPackageNames: ["markdown-link-check"],
+      matchUpdateTypes: ["minor"],
+      commitMessagePrefix: "feat(deps):",
+    },
+    {
+      description: "markdown-link-check major bump must be feat! so release-please cuts a major release",
+      matchRepositories: ["ruzickap/action-my-markdown-link-checker"],
+      matchPackageNames: ["markdown-link-check"],
+      matchUpdateTypes: ["major"],
+      commitMessagePrefix: "feat(deps)!:",
+    },
+    {
+      description: "Assign release-triggering Muffet bumps to ruzickap",
+      matchRepositories: ["ruzickap/action-my-broken-link-checker"],
+      matchPackageNames: ["raviqqe/muffet"],
+      assignAutomerge: true,
+      assignees: ["ruzickap"],
+      automergeType: "pr",
+      commitMessageAction: "update",
+    },
+    {
+      description: "Muffet patch bump must be fix so release-please cuts a patch release",
+      matchRepositories: ["ruzickap/action-my-broken-link-checker"],
+      matchPackageNames: ["raviqqe/muffet"],
+      matchUpdateTypes: ["patch"],
+      commitMessagePrefix: "fix(deps):",
+    },
+    {
+      description: "Muffet minor bump must be feat so release-please cuts a minor release",
+      matchRepositories: ["ruzickap/action-my-broken-link-checker"],
+      matchPackageNames: ["raviqqe/muffet"],
+      matchUpdateTypes: ["minor"],
+      commitMessagePrefix: "feat(deps):",
+    },
+    {
+      description: "Muffet major bump must be feat! so release-please cuts a major release",
+      matchRepositories: ["ruzickap/action-my-broken-link-checker"],
+      matchPackageNames: ["raviqqe/muffet"],
+      matchUpdateTypes: ["major"],
+      commitMessagePrefix: "feat(deps)!:",
+    },
   ],
   // PR body template showing dependency table, notes, and changelogs
   // https://docs.renovatebot.com/configuration-options/#prbodytemplate
@@ -257,37 +290,22 @@
   // Process repositories even without a local Renovate config file
   // https://docs.renovatebot.com/self-hosted-configuration/#requireconfig
   requireConfig: "optional",
-  // Force Conventional Commits compliant commit messages and PR titles
-  // (e.g. "chore(deps): ...", "fix(deps): ..."). Without this the default
-  // "auto" mode inspects the last 20 base-branch commits and can flip to
-  // "disabled", producing non-compliant titles like "Update dependency ...".
-  // https://docs.renovatebot.com/configuration-options/#semanticcommits
+  // Force Conventional Commits messages and PR titles; the default "auto" mode
+  // can flip to "disabled" and produce titles like "Update dependency ..."
   semanticCommits: "enabled",
   // Create separate branches for minor and patch updates
   // https://docs.renovatebot.com/configuration-options/#separateminorpatch
   separateMinorPatch: true,
-  // Disable the "renovate/stability-days" (minimumReleaseAge) commit status.
-  // With automergeType=branch, Renovate POSTs this status to the branch HEAD
-  // before merging; the GitHub App's POST gets a 422 that Renovate's error
-  // handler mis-parses (github.ts:183, err.body.errors is not an array),
-  // throwing REPOSITORY_CHANGED and aborting the repo *before* automerge -- so
-  // no branch merges. internalChecksFilter=strict only gates branch creation;
-  // it does NOT stop this status POST. Setting the status name to null skips
-  // the POST entirely (minimumReleaseAge is still enforced internally), letting
-  // the App fast-forward chore/renovate/* into main.
-  // https://docs.renovatebot.com/configuration-options/#statuschecknames
+  // Skip the "renovate/stability-days" status POST, whose 422 aborts the repo before
+  // automerge; minimumReleaseAge is still enforced internally
   statusCheckNames: {
     minimumReleaseAge: null,
   },
   // Security (vulnerability) updates
   // https://docs.renovatebot.com/configuration-options/#vulnerabilityalerts
   vulnerabilityAlerts: {
-    // Vulnerability/security fixes "skip the line" and ignore normal
-    // packageRules (Renovate applies them via an internal force.enabled), so a
-    // plain "enabled: false" rule cannot stop them. Use force.packageRules
-    // here to also block security updates for every non-github-actions manager
-    // in brewwatch, keeping that repo limited to GitHub Actions updates only.
-    // https://docs.renovatebot.com/configuration-options/#vulnerabilityalerts
+    // Security fixes ignore normal packageRules, so block non-github-actions
+    // security updates for brewwatch here via force.packageRules
     force: {
       packageRules: [
         {
@@ -298,11 +316,8 @@
         },
       ],
     },
-    // Bump vulnerable deps to the newest version instead of the advisory's
-    // minimum patched floor. Without this, the default "lowest" strategy
-    // rewrites the range downward (e.g. "^8.5.15" -> "^8.5.6"), which looks
-    // like a downgrade even though it still resolves to the fixed release.
-    // https://docs.renovatebot.com/configuration-options/#vulnerabilityfixstrategy
+    // Bump vulnerable deps to the newest version, not the advisory's minimum fix
+    // (the default "lowest" rewrites ranges downward, e.g. "^8.5.15" -> "^8.5.6")
     vulnerabilityFixStrategy: "highest",
   },
   // # keep-sorted end
