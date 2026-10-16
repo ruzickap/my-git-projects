@@ -71,9 +71,6 @@ skip-repo:
   # Legacy/archived repositories
   - ruzickap/old_stuff
 
-  # WizCLI test repo
-  - ruzickap/wizcli-terraform-test
-
 # Private repositories (need to be specified explicitly)
 repo:
   - ruzickap/brewwatch
