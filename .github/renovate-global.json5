@@ -21,7 +21,6 @@
     "!ruzickap/k8s-multicluster-gitops",
     "!ruzickap/old_stuff",
     "!ruzickap/ruzickovabozena.xvx.cz",
-    "!ruzickap/wizcli-terraform-test",
     "ruzickap/*",
   ],
   // Automatically merge PRs when all tests pass
