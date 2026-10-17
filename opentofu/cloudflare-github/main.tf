@@ -49,7 +49,7 @@ terraform {
     }
     uptimerobot = {
       source  = "uptimerobot/uptimerobot"
-      version = "1.11.1"
+      version = "1.12.0"
     }
     # keep-sorted end
   }
