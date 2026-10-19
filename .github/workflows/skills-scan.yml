@@ -60,7 +60,7 @@ jobs:
           echo "failed_skills=${FAILED_SKILLS}" | tee -a "${GITHUB_OUTPUT}"
 
       - name: 📤 Upload SARIF results
-        uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        uses: github/codeql-action/upload-sarif@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
         if: always() && hashFiles('skillspector-sarif/*.sarif') != ''
         with:
           sarif_file: skillspector-sarif
@@ -95,7 +95,7 @@ jobs:
           skill-scanner scan-all skills --recursive --check-overlap --use-behavioral --use-trigger --policy low-noise --format sarif --output skill-scanner.sarif || true
 
       - name: 📤 Upload SARIF results
-        uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        uses: github/codeql-action/upload-sarif@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
         if: always() && hashFiles('skill-scanner.sarif') != ''
         with:
           sarif_file: skill-scanner.sarif
