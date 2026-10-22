@@ -36,7 +36,7 @@ jobs:
           persist-credentials: false
 
       - name: Install tools with mise
-        uses: jdx/mise-action@9b200bcecbfd6303e69a4a261b2e09e3757440a7 # v5.2.0
+        uses: jdx/mise-action@fc42bcc7ddbf51124c30f95a877a0c5168a3bfde # v5.2.1
         with:
           mise_toml: |
             [tools]
@@ -61,4 +61,4 @@ jobs:
           tfupdate --version
           trivy version
 
-      - uses: j178/prek-action@1382ad72dea72f9d53832f2bcb65b3e87a947204 # v3.0.1
+      - uses: j178/prek-action@af4d4fcb6922b8e6f65c0426947125fcc38794ce # v3.0.2
