@@ -59,7 +59,7 @@ repos:
       - id: codespell
 
   - repo: https://github.com/commit-check/commit-check
-    rev: v2.19.1
+    rev: v2.19.2
     hooks:
       - id: check-message
       - id: check-branch
