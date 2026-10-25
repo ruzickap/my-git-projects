@@ -1,5 +1,5 @@
 [tools]
-opentofu = "1.13.1"
+opentofu = "1.13.2"
 yq = "4.54.1"
 
 [env]
