@@ -93,9 +93,10 @@ should apply to all; otherwise handle photos one at a time.
 ## 4. Write the metadata
 
 ```bash
+SKILL_DIR="<path to this skill>"
 ALT_TEXT="..." CITY="San Francisco" STATE="California" COUNTRY="USA" \
   COUNTRY_CODE="US" SUBLOCATION="Golden Gate Bridge" \
-  <skill-dir>/scripts/tag_photo.sh "${TITLE}" "${DESCRIPTION}" "${KEYWORDS}" FILE...
+  "${SKILL_DIR}/scripts/tag_photo.sh" "${TITLE}" "${DESCRIPTION}" "${KEYWORDS}" FILE...
 ```
 
 Alt text and location variables are optional; leave unknown ones out.
