@@ -3,9 +3,3 @@
 self-hosted-runner:
   labels:
     - ubuntu-26.04-arm
-# gh-aw generated lock files use features actionlint does not know yet
-paths:
-  .github/workflows/*.lock.yml:
-    ignore:
-      - 'property "workflow_ref" is not defined'
-      - 'unexpected key "queue" for "concurrency" section'
