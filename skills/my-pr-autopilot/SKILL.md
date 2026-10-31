@@ -17,7 +17,7 @@ license: Apache-2.0
 Take the user's own pull request from "just opened" to "green, reviewed, and
 ready to merge" with as little babysitting as possible:
 
-1. Make CI green (fix, push, wait - repeat).
+1. Make CI green (fix, push, wait - repeat) and address code scanning alerts.
 2. Mark the PR ready for review.
 3. Get one Copilot review and address it with `my-pr-review-comments`.
 4. Make CI green again.
@@ -135,6 +135,37 @@ after 6 fix pushes in this phase. A loop that doesn't converge usually means
 a wrong diagnosis or missing access, and more pushes only add noise. Offer:
 keep trying (with your new theory), skip this check, or stop.
 
+#### Code scanning alerts
+
+Once checks are green, also handle open code scanning alerts for the PR
+(CodeQL, SkillSpector, Trivy, ... - the ones `github-advanced-security`
+links to). A green check does not mean there are no alerts:
+
+```bash
+gh api "repos/<owner>/<repo>/code-scanning/alerts?pr=<n>&state=open" \
+  --jq '.[] | [.number, .tool.name, .rule.id, .rule.severity,
+    .most_recent_instance.location.path,
+    .most_recent_instance.location.start_line,
+    .most_recent_instance.message.text] | @tsv'
+```
+
+- If the API returns 404/403 (code scanning not enabled), skip this.
+- Ignore the `github-advanced-security` "You are seeing this message because
+  GitHub Code Scanning has recently been set up" PR comment - it is just a
+  notice; the alerts above are what matters.
+- Same "honest green" rules: fix real findings in the code, batched with
+  other fixes in one push. Alerts introduced by the PR are this PR's job;
+  ones already open on the base branch are not - just list them.
+- For a verified false positive, or a finding that is the intended behaviour
+  of the change (e.g. a skill that is autonomous by design), dismiss it with
+  a reason instead of contorting the code:
+  `gh api -X PATCH repos/<owner>/<repo>/code-scanning/alerts/<number>
+  -f state=dismissed -f dismissed_reason="false positive"
+  -f dismissed_comment="<why>"` (`dismissed_reason` is one of
+  `false positive`, `won't fix`, `used in tests`). List every dismissal in
+  the summary.
+- After a push, re-query: alerts are recomputed when the scan re-runs.
+
 ### 3. Mark ready for review
 
 If the PR is a draft, run `gh pr ready <PR>`; otherwise note it was already
@@ -188,6 +219,8 @@ upfront about anything that is not green or still needs the user:
 
 - **CI (first run):** 2 checks failed -> fixed a shellcheck warning in
   `scripts/run.sh` (`abc1234`); re-ran the flaky link checker
+- **Code scanning:** 2 alerts -> 1 fixed (`abc1234`), 1 dismissed as false
+  positive (reason given)
 - **Ready for review:** marked ready (was a draft)
 - **Copilot review:** 4 comments -> 3 fixed (`def5678`, `0a1b2c3`),
   1 skipped (false positive: variable is always set); all threads resolved
