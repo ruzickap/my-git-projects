@@ -160,8 +160,8 @@ the table so the user sees what is being posted.
 
 **Human comments need confirmation**, because a reply to a colleague is the
 user speaking. If any **fixed human** comments exist, list each drafted
-reply under the table, then ask **once** with the `question` tool, e.g. "Post 2 replies and resolve 2 threads from humans on
-<PR URL>?":
+reply under the table, then ask **once** with the `question` tool, e.g.
+"Post 2 replies and resolve 2 threads from humans on <PR URL>?":
 
 - **Proceed** (recommended) - reply and resolve as planned
 - **Proceed, keep threads open** - reply, but resolve nothing
