@@ -11,6 +11,7 @@ description: >-
   social caption with hashtags. Use whenever the user wants to tag, caption,
   describe, title, add keywords to or prepare photos/pictures for upload, even if they
   just say "describe this photo" or "add metadata to these pics".
+license: Apache-2.0
 ---
 
 # Photo metadata
