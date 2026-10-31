@@ -39,7 +39,7 @@ jobs:
 
       - name: 📦 Install SkillSpector
         run: |
-          pipx install "git+https://github.com/NVIDIA/skillspector.git@${SKILLSPECTOR_VERSION}"
+          pipx install "git+https://github.com/NVIDIA/skillspector.git@v${SKILLSPECTOR_VERSION}"
 
       - name: 🔍 Run SkillSpector
         id: skillspector
