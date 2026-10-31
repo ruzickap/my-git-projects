@@ -47,7 +47,7 @@ exiftool -progress -overwrite_original -sep ", " "-filemodifydate<datetimeorigin
   -XMP:Description="${DESCRIPTION}" -XMP:Subject="${SUBJECT_KEYWORDS}" -XMP:Title="${TITLE}" \
   -XMP-xmp:Keywords="${SUBJECT_KEYWORDS}" -IPTC:Keywords="${SUBJECT_KEYWORDS}" \
   -XMP-exif:UserComment="${DESCRIPTION}" \
-  -XMP-iptcExt:DigitalSourceType="http://cv.iptc.org/newscodes/digitalsourcetype/digitalCapture" \
+  -XMP-iptcExt:DigitalSourceType-= -XMP-iptcExt:DigitalSourceType="http://cv.iptc.org/newscodes/digitalsourcetype/digitalCapture" \
   ${LOCATION_ARGS[@]+"${LOCATION_ARGS[@]}"} \
   "$@"
 

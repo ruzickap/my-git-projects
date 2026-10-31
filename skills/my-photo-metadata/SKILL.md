@@ -38,9 +38,9 @@ Models can't view RAW/AVIF/HEIC directly, so make a small JPEG preview in
 the temp directory:
 
 ```bash
-PREVIEW="${TMPDIR:-/tmp}/photo-preview.jpg"
-exiftool -b -JpgFromRaw "${FILE}" > "${PREVIEW}" ||
-  exiftool -b -PreviewImage "${FILE}" > "${PREVIEW}"
+PREVIEW="$(mktemp -d)/photo-preview.jpg"
+exiftool -b -JpgFromRaw "${FILE}" > "${PREVIEW}"
+[[ -s "${PREVIEW}" ]] || exiftool -b -PreviewImage "${FILE}" > "${PREVIEW}"
 # fallback (AVIF/HEIC/empty preview): magick "${FILE}" -resize 1600x1600 "${PREVIEW}"
 # or: sips -s format jpeg -Z 1600 "${FILE}" --out "${PREVIEW}"
 ```
