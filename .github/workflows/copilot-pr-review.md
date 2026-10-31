@@ -13,6 +13,8 @@ permissions:
   pull-requests: read
 timeout-minutes: 20
 tools:
+  bash: false
+  cli-proxy: false
   github:
     toolsets: [pull_requests, repos]
     min-integrity: none
