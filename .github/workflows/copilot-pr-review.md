@@ -15,7 +15,7 @@ timeout-minutes: 20
 tools:
   github:
     toolsets: [pull_requests, repos]
-    min-integrity: unapproved
+    min-integrity: none
 safe-outputs:
   threat-detection:
     continue-on-error: false
