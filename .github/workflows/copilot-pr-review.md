@@ -2,15 +2,22 @@
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-  bots: ["my-renovate[bot]"]
+  skip-bots: [my-renovate, renovate, dependabot]
+# skip-bots only checks github.actor; also skip PRs authored by these bots
+if: >-
+  !contains(fromJSON('["my-renovate[bot]", "renovate[bot]", "dependabot[bot]"]'),
+  github.event.pull_request.user.login)
 engine: copilot
 permissions:
   contents: read
   pull-requests: read
 timeout-minutes: 20
 tools:
+  bash: false
+  cli-proxy: false
   github:
     toolsets: [pull_requests, repos]
+    min-integrity: none
 safe-outputs:
   threat-detection:
     continue-on-error: false
@@ -23,6 +30,7 @@ safe-outputs:
   submit-pull-request-review:
     max: 1
     allowed-events: [APPROVE, COMMENT]
+    footer: "none"
 ---
 
 # Copilot PR review
