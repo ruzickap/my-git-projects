@@ -2,6 +2,7 @@
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
+  bots: ["my-renovate[bot]"]
 engine: copilot
 permissions:
   contents: read
@@ -11,6 +12,8 @@ tools:
   github:
     toolsets: [pull_requests, repos]
 safe-outputs:
+  threat-detection:
+    continue-on-error: false
   github-app:
     app-id: ${{ secrets.MY_PR_APPROVER_GITHUB_APP_ID }}
     private-key: ${{ secrets.MY_PR_APPROVER_GITHUB_APP_PRIVATE_KEY }}
