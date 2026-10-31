@@ -1,0 +1,6 @@
+{
+  "Globs": [
+    "**/.github/workflows/*.lock.yml",
+    "**/.github/aw/actions-lock.json"
+  ]
+}
