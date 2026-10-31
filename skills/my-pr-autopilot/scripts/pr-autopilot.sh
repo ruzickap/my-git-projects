@@ -36,14 +36,18 @@ log() {
 }
 
 # gh pr checks exits non-zero when checks fail or are pending, so the exit
-# code is ignored and an empty array is returned when nothing is reported.
+# code is ignored. Prints [] only when gh says there are no checks; any other
+# non-JSON output is an error (network, auth, API) and returns 1.
 get_checks() {
   local CHECKS
-  CHECKS=$(gh pr checks "${PR_URL}" --json name,state,bucket,link,workflow 2> /dev/null || true)
+  CHECKS=$(gh pr checks "${PR_URL}" --json name,state,bucket,link,workflow 2>&1 || true)
   if jq -e 'type == "array"' <<< "${CHECKS}" > /dev/null 2>&1; then
     printf '%s\n' "${CHECKS}"
-  else
+  elif grep -q 'no checks reported' <<< "${CHECKS}"; then
     echo '[]'
+  else
+    log "Failed to get checks: ${CHECKS}"
+    return 1
   fi
 }
 
@@ -57,7 +61,14 @@ wait_checks() {
   log "Waiting for CI checks on ${PR_URL}"
   while true; do
     NOW=$(date +%s)
-    CHECKS=$(get_checks)
+    if ! CHECKS=$(get_checks); then
+      if ((NOW - START > CHECKS_TIMEOUT)); then
+        echo "RESULT: error - could not read checks for ${PR_URL}"
+        return 2
+      fi
+      sleep "${POLL_INTERVAL}"
+      continue
+    fi
     TOTAL=$(jq 'length' <<< "${CHECKS}")
 
     if [[ "${TOTAL}" -eq 0 ]]; then
@@ -101,21 +112,19 @@ wait_checks() {
 # and drop colour codes (raw ESC or the "^[" form gh prints).
 fetch_job_log() {
   local OWNER_REPO="$1" RUN_ID="$2" JOB_ID="$3" RAW
-  RAW=$(gh run view "${RUN_ID}" -R "${OWNER_REPO}" --job "${JOB_ID}" --log-failed 2> /dev/null) || RAW=""
-  if [[ -z "${RAW}" ]]; then
-    RAW=$(gh run view "${RUN_ID}" -R "${OWNER_REPO}" --job "${JOB_ID}" --log 2> /dev/null) || RAW=""
-  fi
+  RAW=$(gh run view "${RUN_ID}" -R "${OWNER_REPO}" --job "${JOB_ID}" --log 2> /dev/null) || RAW=""
   [[ -n "${RAW}" ]] || return 0
   printf '%s\n' "${RAW}" | cut -f3- | perl -pe 's/^\S+Z //; s/(\e|\^\[)\[[0-9;]*m//g'
 }
 
 failed_logs() {
-  local OWNER_REPO LOG_DIR LOG_FILE END WORKFLOW NAME BUCKET LINK RUN_ID JOB_ID
+  local OWNER_REPO LOG_DIR LOG_FILE CHECKS END WORKFLOW NAME BUCKET LINK RUN_ID JOB_ID
   OWNER_REPO=$(sed -E 's#https://github.com/([^/]+/[^/]+)/pull/.*#\1#' <<< "${PR_URL}")
   LOG_DIR="${TMPDIR:-/tmp}"
   LOG_DIR=$(mktemp -d "${LOG_DIR%/}/pr-autopilot-logs.XXXXXX")
-  get_checks |
-    jq -r '.[] | select(.bucket == "fail" or .bucket == "cancel") | [.workflow, .name, .bucket, .link] | @tsv' |
+  CHECKS=$(get_checks)
+  # "-" placeholder: read collapses empty tab-separated fields (IFS whitespace)
+  jq -r '.[] | select(.bucket == "fail" or .bucket == "cancel") | [(.workflow // "" | if . == "" then "-" else . end), .name, .bucket, .link] | @tsv' <<< "${CHECKS}" |
     while IFS=$'\t' read -r WORKFLOW NAME BUCKET LINK; do
       printf '\n===== %s / %s (%s)\n%s\n' "${WORKFLOW}" "${NAME}" "${BUCKET}" "${LINK}"
       if [[ ! "${LINK}" =~ /actions/runs/([0-9]+)/job/([0-9]+) ]]; then
@@ -146,21 +155,19 @@ failed_logs() {
 }
 
 wait_copilot() {
-  local START START_ISO NOW DATA REVIEW REQUESTED=0
+  local START NOW DATA REVIEW REQUESTED=0
   START=$(date +%s)
-  START_ISO=$(date -u +%Y-%m-%dT%H:%M:%SZ)
   log "Waiting for a Copilot review on ${PR_URL}"
   while true; do
     NOW=$(date +%s)
     DATA=$(gh pr view "${PR_URL}" --json headRefOid,reviewRequests,reviews)
 
-    # A Copilot review counts if it covers the current head commit or was
-    # submitted after this wait started.
-    REVIEW=$(jq -c --arg START "${START_ISO}" '
+    # A Copilot review counts only if it covers the current head commit.
+    REVIEW=$(jq -c '
       .headRefOid as $HEAD
       | [.reviews[]
           | select(.author.login | ascii_downcase | test("copilot"))
-          | select(.commit.oid == $HEAD or .submittedAt >= $START)]
+          | select(.commit.oid == $HEAD)]
       | last // empty' <<< "${DATA}")
     if [[ -n "${REVIEW}" ]]; then
       echo "RESULT: reviewed"

@@ -88,8 +88,11 @@ kill the wait halfway.
 - `git status --porcelain` - if there are unrelated uncommitted changes, ask
   how to proceed, because fixes will be committed on top.
 - If `mergeable` is `CONFLICTING`, CI usually does not run. Resolve the
-  conflicts without asking: `git fetch origin <base>`,
-  `git rebase origin/<base>`, fix each conflict keeping the intent of both
+  conflicts without asking: fetch the PR's **target** repo and base branch
+  (`gh pr view --json baseRefName,url` - the target repo is the PR URL
+  without `/pull/<n>`; for fork PRs that is the upstream, not `origin`),
+  `git fetch <target-repo-url> <base>`, `git rebase FETCH_HEAD`, fix
+  each conflict keeping the intent of both
   sides, verify locally (linters/tests for touched files), then
   `git push --force-with-lease`. Note it in the summary. Ask only if a
   conflict's correct resolution is genuinely ambiguous.
@@ -168,7 +171,9 @@ Then handle the comments:
 Repeat step 2 - the review fixes and the ready-for-review event both start
 new runs. Run `wait-checks` even if nothing was pushed in step 4, so the
 summary reflects the final state. If the user cancelled the push inside
-`my-pr-review-comments`, mention the unpushed local commits.
+`my-pr-review-comments`, do **not** push in this step (skip the "push first"
+part of step 2): check CI on the existing remote head only and list the
+unpushed local commits in the summary.
 
 ### 6. Final summary
 
