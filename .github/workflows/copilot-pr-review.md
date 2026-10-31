@@ -2,7 +2,7 @@
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-  bots: ["my-renovate[bot]"]
+  skip-bots: [my-renovate, renovate, dependabot]
 engine: copilot
 permissions:
   contents: read
@@ -23,6 +23,8 @@ safe-outputs:
   submit-pull-request-review:
     max: 1
     allowed-events: [APPROVE, COMMENT]
+    supersede-older-reviews: true
+    footer: "none"
 ---
 
 # Copilot PR review
