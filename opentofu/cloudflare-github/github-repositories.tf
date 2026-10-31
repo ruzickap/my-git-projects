@@ -168,8 +168,8 @@ locals {
         "MY_AWS_AWS_ROLE_TO_ASSUME"             = data.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_MY_AWS_AWS_ROLE_TO_ASSUME.value
         "MY_PR_APPROVER_GITHUB_APP_ID"          = data.aws_ssm_parameter.github_shared_actions_secrets_MY_PR_APPROVER_GITHUB_APP_ID.value
         "MY_PR_APPROVER_GITHUB_APP_PRIVATE_KEY" = data.aws_ssm_parameter.github_shared_actions_secrets_MY_PR_APPROVER_GITHUB_APP_PRIVATE_KEY.value
-        "MY_RENOVATE_GITHUB_CLIENT_ID"          = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_CLIENT_ID.value
-        "MY_RENOVATE_GITHUB_PRIVATE_KEY"        = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_PRIVATE_KEY.value
+        "MY_RENOVATE_GITHUB_APP_CLIENT_ID"      = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_CLIENT_ID.value
+        "MY_RENOVATE_GITHUB_APP_PRIVATE_KEY"    = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_PRIVATE_KEY.value
         # Needed for aws-cloudformation-gh-action.yml
         "RUZICKA_SBX01_AWS_ROLE_TO_ASSUME"      = data.aws_ssm_parameter.github_shared_actions_secrets_RUZICKA_SBX01_AWS_ROLE_TO_ASSUME.value
         "TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE" = var.opentofu_encryption_passphrase
