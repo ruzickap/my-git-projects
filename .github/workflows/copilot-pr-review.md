@@ -3,6 +3,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   skip-bots: [my-renovate, renovate, dependabot]
+# skip-bots only checks github.actor; also skip PRs authored by these bots
+if: >-
+  !contains(fromJSON('["my-renovate[bot]", "renovate[bot]", "dependabot[bot]"]'),
+  github.event.pull_request.user.login)
 engine: copilot
 permissions:
   contents: read
@@ -23,7 +27,6 @@ safe-outputs:
   submit-pull-request-review:
     max: 1
     allowed-events: [APPROVE, COMMENT]
-    supersede-older-reviews: true
     footer: "none"
 ---
 
