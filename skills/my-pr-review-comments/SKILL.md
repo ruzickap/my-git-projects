@@ -2,8 +2,9 @@
 name: my-pr-review-comments
 description: >-
   Triage unresolved review threads on a GitHub pull request: judge each
-  comment, fix valid ones, then reply and resolve after user confirmation
-  (replies to humans are approved one by one). Supports dry-run. Use when the
+  comment, fix valid ones, push, reply, and resolve. AI agent comments are
+  handled automatically; replies to humans need user approval. Supports
+  dry-run. Use when the
   user wants to address, triage, fix, answer, or resolve PR review comments or
   Copilot/bot suggestions - even if they just say "check the PR comments" or
   "deal with the review".
@@ -13,8 +14,9 @@ license: Apache-2.0
 # PR Review Comments
 
 Handle **unresolved** review comments on a GitHub pull request end-to-end:
-triage, fix, reply, and resolve - while keeping the user in control of
-anything said on their behalf to other humans. Resolved threads are out of
+triage, fix, push, reply, and resolve. AI agent comments are processed
+without asking; the user stays in control of anything said on their behalf
+to other humans. Resolved threads are out of
 scope.
 
 ## Dry-run mode
@@ -98,7 +100,8 @@ praise-only comments.
 
 ### 4. Classify the author
 
-The first comment of a thread defines who raised it.
+The first comment of a thread defines who raised it. If any human other
+than the PR author has also commented in the thread, treat it as **Human**.
 
 - **Agent** - `author_type == "Bot"`, login ends with `[bot]`, or a known AI
   reviewer: `copilot-pull-request-reviewer`, `Copilot`, `claude`,
@@ -131,8 +134,7 @@ and say what you didn't take and why.
 - Make the changes and run the relevant linters / tests.
 - Commit with conventional commit messages (use the `git-commit` skill if
   available); one commit per logical change.
-- Note the short SHA for each fixed comment. Do **not** push yet - pushing
-  waits for the confirmation in step 8.
+- Note the short SHA for each fixed comment. Push in step 9.
 - In dry-run, stop after making the local changes and show `git diff`.
 
 ### 7. Show the summary table
@@ -147,27 +149,31 @@ Print this before posting anything, so the user sees the full picture first:
 | 3 | jdoe         | Human | README.md:5 | Rename section     | Skipped  | Name used by docs links | -       |
 ```
 
-### 8. Confirm before writing to GitHub
+### 8. Decide whether to confirm
 
-Pushing, replying, and resolving are visible to collaborators and hard to
-undo, so nothing leaves the machine without the user's go-ahead. Skip this
-step in dry-run.
+Skip this step in dry-run.
 
-Under the table, list the planned replies for fixed comments and skipped
-agent comments, then ask **once** with the `question` tool, e.g. "Push 2
-commits, post 4 replies, and resolve 4 threads on <PR URL>?":
+**Agent comments need no confirmation.** Replies to AI reviewers are not
+said to a person, so push the fixes, reply, and resolve agent threads
+automatically (step 9) - do not ask. Just list the planned replies under
+the table so the user sees what is being posted.
 
-- **Proceed** (recommended) - push, then reply and resolve as planned
-- **Proceed, keep threads open** - push and reply, but resolve nothing
+**Human comments need confirmation**, because a reply to a colleague is the
+user speaking. If any **fixed human** comments exist, list each drafted
+reply under the table, then ask **once** with the `question` tool, e.g.
+"Post 2 replies and resolve 2 threads from humans on <PR URL>?":
+
+- **Proceed** (recommended) - reply and resolve as planned
+- **Proceed, keep threads open** - reply, but resolve nothing
 - **Review one by one** - confirm each reply individually
-- **Cancel** - keep the local commits, post nothing
+- **Cancel** - post nothing to human threads
 
-Skipped human comments are not covered by this batch confirmation - they
-always get their own question (below).
+Skipped human comments always get their own question (below). Commits that
+fix agent comments are pushed regardless of the human answers.
 
 ### 9. Push, reply, and resolve
 
-After confirmation, `git push` first, so the SHAs in replies exist on the
+`git push` first, so the SHAs in replies exist on the
 remote. Then:
 
 | Decision | Author         | Action                                                |
