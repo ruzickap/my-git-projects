@@ -92,6 +92,10 @@ actions-up --yes --min-age 3
 
 # Repository-specific handling
 case "${REPOSITORY}" in
+  ruzickap/action-my-markdown-link-checker | ruzickap/action-my-markdown-linter)
+    copy_defaults "${GH_REPO_DEFAULTS_BASE}/action"
+    megalinter_flavor all
+    ;;
   ruzickap/action-*)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/action"
     ;;
