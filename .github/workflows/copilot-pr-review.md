@@ -15,8 +15,7 @@ timeout-minutes: 20
 tools:
   github:
     toolsets: [pull_requests, repos]
-    min-integrity: approved
-    trusted-users: [ruzickap]
+    min-integrity: unapproved
 safe-outputs:
   threat-detection:
     continue-on-error: false
