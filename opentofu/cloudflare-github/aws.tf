@@ -149,13 +149,13 @@ data "aws_ssm_parameter" "github_shared_actions_secrets_MY_PR_APPROVER_GITHUB_AP
   with_decryption = true
 }
 
-data "aws_ssm_parameter" "github_shared_actions_secrets_MY_RENOVATE_GITHUB_CLIENT_ID" {
-  name            = "/github/shared/actions-secrets/MY_RENOVATE_GITHUB_CLIENT_ID"
+data "aws_ssm_parameter" "github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_CLIENT_ID" {
+  name            = "/github/shared/actions-secrets/MY_RENOVATE_GITHUB_APP_CLIENT_ID"
   with_decryption = true
 }
 
-data "aws_ssm_parameter" "github_shared_actions_secrets_MY_RENOVATE_GITHUB_PRIVATE_KEY" {
-  name            = "/github/shared/actions-secrets/MY_RENOVATE_GITHUB_PRIVATE_KEY"
+data "aws_ssm_parameter" "github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_PRIVATE_KEY" {
+  name            = "/github/shared/actions-secrets/MY_RENOVATE_GITHUB_APP_PRIVATE_KEY"
   with_decryption = true
 }
 
