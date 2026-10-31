@@ -100,7 +100,8 @@ praise-only comments.
 
 ### 4. Classify the author
 
-The first comment of a thread defines who raised it.
+The first comment of a thread defines who raised it. If any human other
+than the PR author has also commented in the thread, treat it as **Human**.
 
 - **Agent** - `author_type == "Bot"`, login ends with `[bot]`, or a known AI
   reviewer: `copilot-pull-request-reviewer`, `Copilot`, `claude`,
@@ -158,8 +159,8 @@ automatically (step 9) - do not ask. Just list the planned replies under
 the table so the user sees what is being posted.
 
 **Human comments need confirmation**, because a reply to a colleague is the
-user speaking. If any **fixed human** comments exist, ask **once** with the
-`question` tool, e.g. "Post 2 replies and resolve 2 threads from humans on
+user speaking. If any **fixed human** comments exist, list each drafted
+reply under the table, then ask **once** with the `question` tool, e.g. "Post 2 replies and resolve 2 threads from humans on
 <PR URL>?":
 
 - **Proceed** (recommended) - reply and resolve as planned
