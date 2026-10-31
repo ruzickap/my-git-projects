@@ -1,7 +1,6 @@
 {
   "Globs": [
     "**/.git/**",
-    "**/megalinter-reports/**",
     "**/.github/aw/actions-lock.json",
     "**/.github/workflows/*.lock.yml"
   ]
