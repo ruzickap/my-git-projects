@@ -1,7 +1,7 @@
 {
   "Globs": [
     "**/.git/**",
-    "**/.github/aw/actions-lock.json",
-    "**/.github/workflows/*.lock.yml"
+    "**/.github/workflows/*.lock.yml",
+    "**/.github/aw/actions-lock.json"
   ]
 }
