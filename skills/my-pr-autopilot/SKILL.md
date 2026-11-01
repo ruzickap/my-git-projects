@@ -111,7 +111,8 @@ kill the wait halfway.
   continue without Copilot.
 - Start `wait-checks` and `wait-copilot` **at the same time** as two
   background commands, and handle each as its completion arrives. Don't let
-  one wait block the other.
+  one wait block the other. If Copilot is unavailable or skipped, run only
+  `wait-checks`.
 
 `wait-copilot` results:
 
@@ -220,9 +221,9 @@ gh api "repos/<owner>/<repo>/code-scanning/alerts?pr=<n>&state=open" \
 ### 5. Mark ready for review
 
 If the PR is a draft, run `gh pr ready <PR>`; otherwise note it was already
-ready. Marking ready can start extra workflows (`ready_for_review` event) -
-if it does, run `wait-checks` once more so the summary reflects the final
-state.
+ready. Marking ready can start extra workflows (`ready_for_review` event),
+so if the PR was a draft, repeat step 4 (including fixing failures and
+handling timeouts) before the summary.
 
 ### 6. Final summary
 
