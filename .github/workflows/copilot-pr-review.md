@@ -36,6 +36,7 @@ safe-outputs:
     footer: "none"
   add-labels:
     allowed: [copilot-review-passed, copilot-review-failed]
+    create-if-missing: true
     max: 1
   remove-labels:
     allowed: [copilot-review-passed, copilot-review-failed]
@@ -70,8 +71,9 @@ Review pull request #${{ github.event.pull_request.number }} in
 
 ## Verdict
 
-- `APPROVE` only if you found no real problems. Leave the review body
-  empty and add no inline comments.
+- `APPROVE` only if you found no real problems. Add no inline comments and
+  use exactly `No issues found.` as the review body (an empty body is
+  rejected).
 - Otherwise `COMMENT`, with a short summary list of the problems found.
 
 ## Labels
