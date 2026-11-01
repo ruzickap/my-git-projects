@@ -8,6 +8,9 @@ if: >-
   !contains(fromJSON('["my-renovate[bot]", "renovate[bot]", "dependabot[bot]"]'),
   github.event.pull_request.user.login)
 engine: copilot
+runtimes:
+  node:
+    version: "26"
 permissions:
   contents: read
   pull-requests: read
