@@ -20,7 +20,7 @@ permissions: {}
 
 env:
   # renovate: datasource=github-tags depName=NVIDIA/skillspector
-  SKILLSPECTOR_VERSION: 2.13.1
+  SKILLSPECTOR_VERSION: 2.13.2
   # renovate: datasource=pypi depName=cisco-ai-skill-scanner
   SKILL_SCANNER_VERSION: 2.3.2
 
