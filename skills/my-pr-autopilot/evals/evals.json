@@ -4,19 +4,19 @@
     {
       "id": 1,
       "prompt": "I just opened __PR_URL__ as a draft - babysit it until it's green and reviewed",
-      "expected_output": "Waits for CI with wait-checks, fixes and pushes failures until green, runs gh pr ready, waits for Copilot, hands the comments to my-pr-review-comments with its confirmations, waits for CI again, prints the itemized summary with commit SHAs.",
+      "expected_output": "Requests Copilot and runs wait-checks and wait-copilot in parallel, then fixes CI failures and hands Copilot comments to my-pr-review-comments (with its confirmations) in one batched push, waits for CI until green, runs gh pr ready, prints the itemized summary with commit SHAs.",
       "files": []
     },
     {
       "id": 2,
       "prompt": "CI on my PR __PR_URL__ is red, fix it and get it ready for review",
-      "expected_output": "Uses failed-logs to diagnose, distinguishes PR-caused vs flaky vs pre-existing failures, does not disable checks, stops and asks after repeated failed fix attempts, then continues with the ready/Copilot flow.",
+      "expected_output": "Uses failed-logs to diagnose, distinguishes PR-caused vs flaky vs pre-existing failures, does not disable checks, stops and asks after repeated failed fix attempts, handles Copilot comments started in parallel with CI, then marks ready.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "autopilot __PR_URL__ - this repo doesn't auto-request Copilot",
-      "expected_output": "After marking ready, wait-copilot returns not-requested and Copilot is requested automatically via gh pr edit --add-reviewer @copilot without asking; only one Copilot round is done.",
+      "expected_output": "Copilot is requested automatically up front via gh pr edit --add-reviewer @copilot without asking; only one Copilot round is done.",
       "files": []
     }
   ]
