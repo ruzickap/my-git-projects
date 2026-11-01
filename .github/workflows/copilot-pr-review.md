@@ -15,7 +15,8 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
-timeout-minutes: 20
+timeout-minutes: 10
+max-daily-ai-credits: -1
 tools:
   bash: false
   cli-proxy: false
@@ -23,8 +24,7 @@ tools:
     toolsets: [pull_requests, repos, labels]
     min-integrity: none
 safe-outputs:
-  threat-detection:
-    continue-on-error: false
+  threat-detection: false
   github-app:
     app-id: ${{ secrets.MY_PR_APPROVER_GITHUB_APP_ID }}
     private-key: ${{ secrets.MY_PR_APPROVER_GITHUB_APP_PRIVATE_KEY }}

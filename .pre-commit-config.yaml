@@ -6,6 +6,8 @@
 # prek install
 ---
 fail_fast: true
+# gh-aw generated workflows (gh aw compile) must not be modified
+exclude: ^\.github/workflows/.*\.lock\.yml$
 # Install commit-msg and pre-push hook types by default so commit-check's
 # check-message (commit-msg) and check-no-force-push (pre-push) hooks run.
 default_install_hook_types:
