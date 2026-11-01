@@ -34,6 +34,12 @@ safe-outputs:
     max: 1
     allowed-events: [APPROVE, COMMENT]
     footer: "none"
+  add-labels:
+    allowed: [copilot-review-passed, copilot-review-failed]
+    max: 1
+  remove-labels:
+    allowed: [copilot-review-passed, copilot-review-failed]
+    max: 1
 ---
 
 # Copilot PR review
@@ -64,6 +70,13 @@ Review pull request #${{ github.event.pull_request.number }} in
 
 ## Verdict
 
-- `APPROVE` only if you found no real problems. Keep the body short:
-  one or two sentences about what you checked.
+- `APPROVE` only if you found no real problems. Leave the review body
+  empty and add no inline comments.
 - Otherwise `COMMENT`, with a short summary list of the problems found.
+
+## Labels
+
+- On `APPROVE`: add the label `copilot-review-passed` and remove
+  `copilot-review-failed` if the PR has it.
+- On `COMMENT`: add the label `copilot-review-failed` and remove
+  `copilot-review-passed` if the PR has it.
