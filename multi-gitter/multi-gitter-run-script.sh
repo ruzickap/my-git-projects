@@ -4,6 +4,7 @@ set -euo pipefail
 
 # Configuration
 GH_REPO_DEFAULTS_BASE="${GH_REPO_DEFAULTS_BASE:-${HOME}/git/my-git-projects/gh-repo-defaults}"
+SED="$(command -v gsed || command -v sed)"
 
 # Simple logging
 log() { echo "[$(date +'%H:%M:%S')] ${*}" >&2; }
@@ -57,7 +58,7 @@ private_repository() {
   if gh repo view "${REPOSITORY}" --json isPrivate --jq '.isPrivate' 2> /dev/null | grep -q "true"; then
     log_info "Private repository detected: ${REPOSITORY}"
     remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
-    sed -i -E '/^[[:space:]]*schedule:[[:space:]]*$/ { N; /^[[:space:]]*schedule:[[:space:]]*\n[[:space:]]*-[[:space:]]*cron:[[:space:]]*.*$/d; }' .github/workflows/*.yml
+    "${SED}" -i -E '/^[[:space:]]*schedule:[[:space:]]*$/ { N; /^[[:space:]]*schedule:[[:space:]]*\n[[:space:]]*-[[:space:]]*cron:[[:space:]]*.*$/d; }' .github/workflows/*.yml
   fi
 }
 
@@ -73,7 +74,7 @@ megalinter_flavor() {
 
   [[ "${FLAVOR}" == "all" ]] && REPLACEMENT="oxsecurity/megalinter"
 
-  sed -i "s@uses: oxsecurity/megalinter/flavors/documentation@uses: ${REPLACEMENT}@" "${MEGALINTER_FILE}"
+  "${SED}" -i "s@uses: oxsecurity/megalinter/flavors/documentation@uses: ${REPLACEMENT}@" "${MEGALINTER_FILE}"
   log_info "Set MegaLinter flavor to: ${FLAVOR}"
 }
 
@@ -82,7 +83,7 @@ log_info "👉 Processing ${REPOSITORY}"
 
 # Always copy base defaults
 copy_defaults "${GH_REPO_DEFAULTS_BASE}/my-defaults"
-sed -i "s@/ruzickap/my-git-projects/@/${REPOSITORY}/@" ".github/ISSUE_TEMPLATE/config.yml"
+"${SED}" -i "s@/ruzickap/my-git-projects/@/${REPOSITORY}/@" ".github/ISSUE_TEMPLATE/config.yml"
 
 # Remove code not applicable to private repositories
 private_repository
