@@ -63,17 +63,17 @@ SKILL_DIR="<path to this skill>"
 
 - `wait-checks` prints every check (`bucket`, workflow, name, link) and a
   `RESULT:` line. Exit: `0` passed, `1` failed or cancelled, `2` timeout
-  (60 min), `3` no checks at all.
+  (30 min), `3` no checks at all.
 - `failed-logs` prints, for every failing GitHub Actions job, the lines with
   error markers (with line numbers), the last lines before post-job cleanup,
   and the path of the saved full log - grep that file when the excerpt is not
   enough. Non-Actions checks are reported as external.
-- `wait-copilot` exits `0` when Copilot has reviewed (prints the review
-  body), `2` on timeout (20 min), `3` if Copilot was never requested
-  (within 2 min).
+- `wait-copilot` requests Copilot itself if it is not requested yet, then
+  exits `0` when Copilot has reviewed (prints the review body), `2` on
+  timeout (10 min), `3` if the request did not register (within 2 min).
 
 The waits are long. Run them with a tool timeout longer than the script's own
-timeout (e.g. 65 minutes for `wait-checks`) or as a background command and
+timeout (e.g. 31 minutes) or as a background command and
 wait for the completion notification. A default 2-minute tool timeout would
 kill the wait halfway.
 

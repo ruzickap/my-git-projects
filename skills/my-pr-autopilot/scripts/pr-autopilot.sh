@@ -12,17 +12,17 @@
 #   wait-checks:  0 all passed, 1 failed/cancelled, 2 timeout, 3 no checks
 #   wait-copilot: 0 reviewed, 2 timeout, 3 Copilot was never requested
 #
-# Tunables (env, seconds): CHECKS_TIMEOUT=3600 CHECKS_APPEAR_TIMEOUT=300
-# CHECKS_MIN_WAIT=60 COPILOT_REQUEST_TIMEOUT=120 COPILOT_REVIEW_TIMEOUT=1200
+# Tunables (env, seconds): CHECKS_TIMEOUT=1800 CHECKS_APPEAR_TIMEOUT=300
+# CHECKS_MIN_WAIT=60 COPILOT_REQUEST_TIMEOUT=120 COPILOT_REVIEW_TIMEOUT=600
 # POLL_INTERVAL=30 LOG_LINES=150 (lines per failed job)
 
 set -euo pipefail
 
-: "${CHECKS_TIMEOUT:=3600}"
+: "${CHECKS_TIMEOUT:=1800}"
 : "${CHECKS_APPEAR_TIMEOUT:=300}"
 : "${CHECKS_MIN_WAIT:=60}"
 : "${COPILOT_REQUEST_TIMEOUT:=120}"
-: "${COPILOT_REVIEW_TIMEOUT:=1200}"
+: "${COPILOT_REVIEW_TIMEOUT:=600}"
 : "${POLL_INTERVAL:=30}"
 : "${LOG_LINES:=150}"
 
@@ -187,6 +187,11 @@ wait_copilot() {
         log "Copilot review is requested, waiting for it to finish"
         REQUESTED=1
       fi
+    elif [[ "${REQUESTED}" -eq 0 && "${ASKED:-0}" -eq 0 ]]; then
+      # Request it here so the review can't be silently skipped by the caller
+      ASKED=1
+      log "Copilot is not requested yet, requesting it"
+      gh pr edit "${PR_URL}" --add-reviewer @copilot > /dev/null || log "Failed to request Copilot review"
     elif [[ "${REQUESTED}" -eq 0 ]] && ((NOW - START > COPILOT_REQUEST_TIMEOUT)); then
       echo "RESULT: not-requested - Copilot is not a requested reviewer of ${PR_URL}"
       return 3
