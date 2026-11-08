@@ -159,6 +159,13 @@
       enabled: false,
     },
     {
+      // *.lock.yml files are generated from their *.md agentic workflow source,
+      // so any bump there is overwritten on the next recompile
+      description: "Skip generated agentic workflow lock files",
+      matchFileNames: [".github/workflows/*.lock.yml"],
+      enabled: false,
+    },
+    {
       description: "Skip renovating _posts directory in ruzickap.github.io",
       matchRepositories: ["ruzickap/ruzickap.github.io"],
       matchFileNames: ["_posts/**"],
