@@ -186,4 +186,6 @@ Resolves: #123
 - Update documentation for user-facing changes
 - Make atomic, focused commits
 - Explain reasoning behind changes
+- Keep code comments short: max two lines if possible, otherwise use a
+  clear, concise itemized list
 - Maintain consistent formatting
