@@ -72,10 +72,9 @@ SKILL_DIR="<path to this skill>"
   exits `0` when Copilot has reviewed (prints the review body), `2` on
   timeout (10 min), `3` if the request did not register (within 2 min).
 
-The waits are long. Run them with a tool timeout longer than the script's own
-timeout (e.g. 31 minutes) or as a background command and
-wait for the completion notification. A default 2-minute tool timeout would
-kill the wait halfway.
+Run waits in the **foreground** (never background) with a 31-minute tool
+timeout, so the user sees progress but can't type mid-run. Say in one line
+what you wait for, and what finished.
 
 ## Workflow
 
@@ -109,10 +108,8 @@ kill the wait halfway.
   this if Copilot already reviewed or is already requested. If the request
   fails (e.g. Copilot review not available for the repo), note it and
   continue without Copilot.
-- Start `wait-checks` and `wait-copilot` **at the same time** as two
-  background commands, and handle each as its completion arrives. Don't let
-  one wait block the other. If Copilot is unavailable or skipped, run only
-  `wait-checks`.
+- Run `wait-checks` and `wait-copilot` as two foreground calls in one tool
+  batch, so they run in parallel (only `wait-checks` if Copilot is skipped).
 
 `wait-copilot` results:
 
@@ -138,10 +135,6 @@ saves a full CI cycle:
   CI fixes in the same push (or commit them first so they go out together).
   If it finds no unresolved threads (e.g. Copilot reported "No open
   issues"), just note that.
-
-If CI is still running when Copilot finishes, you may start triaging the
-Copilot comments, but hold the push until CI results are in so CI fixes
-ride along.
 
 Do **not** re-request Copilot after the fixes - one review round is the
 agreed scope. Only do another round if the user explicitly asks.
