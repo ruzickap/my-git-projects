@@ -1,6 +1,6 @@
 [tools]
-opentofu = "1.13.2"
-yq = "4.54.1"
+opentofu = "1.13.9"
+yq = "4.54.2"
 
 [env]
 AWS_PROFILE = "my-aws"
