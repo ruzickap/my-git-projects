@@ -1,6 +1,6 @@
 [tools]
 opentofu = "1.13.9"
-fnox = "1.47.0"
+fnox = "1.48.0"
 
 [env]
 AWS_PROFILE = "my-aws"
