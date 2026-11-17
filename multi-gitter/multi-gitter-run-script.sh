@@ -91,7 +91,8 @@ copy_defaults "${GH_REPO_DEFAULTS_BASE}/my-defaults"
 private_repository
 
 # Upgrade all in GH Actions
-actions-up --yes --min-age 3
+# gh-aw actions live in generated *.lock.yml files - bumping them without `gh aw compile` breaks the workflow
+actions-up --yes --min-age 3 --exclude 'github/gh-aw-actions'
 
 # Repository-specific handling
 case "${REPOSITORY}" in
@@ -131,7 +132,8 @@ case "${REPOSITORY}" in
   ruzickap/cv)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
     checkout_files "run.sh" # Disable SVG
-    megalinter_flavor all
+    # Default documentation flavor - "all" does not fit on the private repo runner disk (LATEX_CHKTEX disabled)
+    checkout_files ".mega-linter.yml"
     ;;
   ruzickap/gha-test)
     remove_files ".github/workflows/pr-slack-notification.yml"
@@ -151,7 +153,8 @@ case "${REPOSITORY}" in
     ;;
   ruzickap/my-stocks)
     checkout_files ".mega-linter.yml"
-    megalinter_flavor all
+    # Full "all" image does not fit on the private repo runner disk
+    megalinter_flavor cupcake
     ;;
   ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/hugo"
