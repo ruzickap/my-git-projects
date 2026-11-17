@@ -132,12 +132,12 @@ Response Compression, Workers Routes, Zone Settings, Zone.
 
 Email alerts (`cloudflare_notification_policy.tf`):
 
-| Alert                               | Type                                       |
-|-------------------------------------|--------------------------------------------|
-| Expiring Access Service Token Alert | `expiring_service_token_alert`             |
-| Passive Origin Monitoring           | `real_origin_monitoring`                   |
-| Web Analytics Metrics Update        | `web_analytics_metrics_update`             |
-| Tunnel Health Alert                 | `tunnel_health_event` (all tunnels)        |
+| Alert                               | Type                                |
+|-------------------------------------|-------------------------------------|
+| Expiring Access Service Token Alert | `expiring_service_token_alert`      |
+| Passive Origin Monitoring           | `real_origin_monitoring`            |
+| Web Analytics Metrics Update        | `web_analytics_metrics_update`      |
+| Tunnel Health Alert                 | `tunnel_health_event` (all tunnels) |
 
 ### Cloudflare Pages Projects
 
