@@ -16,9 +16,11 @@ This is **not** an application. It is the owner's personal control plane:
   (`config.yaml` + `multi-gitter-run-script.sh`).
 - `opentofu/` - two independent OpenTofu root modules managing the owner's
   real AWS / Cloudflare / GitHub / Supabase / UptimeRobot infrastructure.
-- `cloudformation/gh-action-iam-role-oidc.yaml` - legacy bootstrap of the AWS
-  OIDC role; the OpenTofu `aws` module is the current source of truth for the
-  same resources.
+- `cloudformation/gh-action-iam-role-oidc.yaml` - OIDC provider and
+  `GitHubOidcFederatedRole` for the separate RUZICKA_SBX01 AWS account,
+  deployed manually by `aws-cloudformation-gh-action.yml`. Not the same
+  resources as the OpenTofu `aws` module (that one manages the `my-aws`
+  account).
 - `README.md` is a personal git/`gh` command cheatsheet. It does **not**
   document this repo's architecture - do not treat it as such.
 
@@ -32,15 +34,15 @@ symlinks.
 - When you change a shared config, update **both** the root copy and the
   `gh-repo-defaults/my-defaults/` copy, or they silently drift.
 - This repo is processed by multi-gitter as `ruzickap/my-git-projects` with the
-  `cupcake` MegaLinter flavor (see `multi-gitter-run-script.sh`).
+  `all` MegaLinter flavor (see `multi-gitter-run-script.sh`).
 
 ## AGENTS.md is special - do not let it get overwritten
 
 - `copy_defaults()` copies defaults with `--exclude AGENTS.md`, so this file is
   **never** overwritten by a normal multi-gitter run.
 - The run script only seeds `AGENTS.md` from `gh-repo-defaults/my-defaults/`
-  (then runs `opencode run --command init`) when a target repo has **no**
-  `AGENTS.md`.
+  (then runs `opencode run` with a prompt that rewrites it for the repo) when a
+  target repo has **no** `AGENTS.md`.
 - Therefore `gh-repo-defaults/my-defaults/AGENTS.md` is a generic starter
   template. This root `AGENTS.md` is meant to be repo-specific and to diverge
   from it. Do not "fix" the divergence by resetting this file to the default.
@@ -72,9 +74,10 @@ KeePassXC (see below); with mise active, just run `tofu init` and `tofu plan` /
   init` against existing state will fail.
 - Provider versions are **pinned exactly** in `main.tf` (e.g. `aws = 6.48.0`);
   Renovate bumps them. Keep `required_providers` blocks sorted (`keep-sorted`).
-- `opentofu/aws/` runs `tofu test` in CI (`tofu-aws-tests.yml`) but no
-  `*.tftest.hcl` files exist yet - add them in `opentofu/aws/` if writing
-  tests. `cloudflare-github` has no automated tests (it touches live infra).
+- `opentofu/aws/` runs `tofu test` in CI (`tofu-aws-tests.yml`):
+  `keepassxc.tftest.hcl` checks the KeePassXC -> SSM guards with mocked
+  providers. `cloudflare-github` has no automated tests (it touches live
+  infra).
 
 ## Gotchas worth knowing
 
@@ -89,6 +92,12 @@ KeePassXC (see below); with mise active, just run `tofu init` and `tofu plan` /
 - CI applies `opentofu/cloudflare-github` automatically on push to `main` and
   on PRs labeled `tofu-apply`; the weekly schedule runs a drift check that
   opens an issue. Changing files there is a live infrastructure change.
+- On push to `main`, `tf-via-pr` applies the plan saved on the merged PR - a
+  direct push (no PR) has no plan and fails. Renovate therefore merges
+  provider bumps there via PR (`packageRules` in `.github/renovate-global.json5`).
+- The CI AWS role (`GitHubOidc-ruzickap-my-git-projects`, AdministratorAccess)
+  trusts only the `ref:refs/heads/main` and `pull_request` OIDC subjects. Give
+  `id-token: write` only to jobs that assume it.
 - `checkov:skip` / `trivy:ignore` inline comments in the `.tf` files are
   intentional (personal-account tradeoffs). Don't remove them to "fix" a scan.
 - The `prettier` pre-commit hook **excludes `*.md`**; Markdown is formatted by

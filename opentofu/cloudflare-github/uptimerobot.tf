@@ -8,7 +8,7 @@ locals {
         domain = key == "" ? cloudflare_zone.xvx_cz.name : "${key}.${cloudflare_zone.xvx_cz.name}"
         tags   = ["xvx_cz"]
       }
-      if !startswith(key, "www.") && key != "www.linux" # Exclude www subdomains to avoid duplicates
+      if !startswith(key, "www.") # Exclude www subdomains to avoid duplicates
     },
     # xvx.cz A records (only proxied ones that are publicly accessible)
     {
@@ -51,6 +51,12 @@ resource "uptimerobot_monitor" "zero_trust_applications" {
   type     = "HTTP"
   url      = "https://${each.key}.${cloudflare_zone.xvx_cz.name}"
   interval = 300
+
+  # Cloudflare Access service token (cloudflare_zero_trust_access_policy.uptimerobot_direct_access)
+  custom_http_headers = {
+    "cf-access-client-id"     = cloudflare_zero_trust_access_service_token.uptimerobot.client_id
+    "cf-access-client-secret" = cloudflare_zero_trust_access_service_token.uptimerobot.client_secret
+  }
 
   tags = each.value.tags
 }

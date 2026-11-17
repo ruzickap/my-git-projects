@@ -50,7 +50,7 @@ jobs:
 
       - name: 🔨 Build Hugo site
         run: |
-          hugo build --minify --printPathWarnings --printPathWarnings --printI18nWarnings --panicOnWarning
+          hugo build --minify --printPathWarnings --printI18nWarnings --panicOnWarning
           cp LICENSE README.md public/
           touch public/.nojekyll
 

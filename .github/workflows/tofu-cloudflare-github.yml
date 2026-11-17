@@ -20,11 +20,16 @@ on:
     paths:
       - opentofu/cloudflare-github/**
       - "!opentofu/cloudflare-github/README.md"
+      # Local tooling only (mise + fnox), CI does not use them
+      - "!opentofu/cloudflare-github/fnox.toml"
+      - "!opentofu/cloudflare-github/mise.toml"
   push:
     branches: [main]
     paths:
       - opentofu/cloudflare-github/**
       - "!opentofu/cloudflare-github/README.md"
+      - "!opentofu/cloudflare-github/fnox.toml"
+      - "!opentofu/cloudflare-github/mise.toml"
   schedule:
     - cron: "0 0 * * 0"
 

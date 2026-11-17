@@ -44,9 +44,6 @@ The script supports the following environment variables:
 
 - `GH_REPO_DEFAULTS_BASE` - Base directory for repository defaults
   (default: `$HOME/git/my-git-projects/gh-repo-defaults`)
-- `RCLONE_OPTS` - Additional options for rclone
-  (default: `--verbose --stats 0`)
-- `DEBUG` - Set to `true` to enable debug mode with verbose output
 
 ### Running Multi-Gitter
 
@@ -119,14 +116,6 @@ The improved script includes:
 - Detailed logging with timestamps
 - Graceful handling of missing files
 
-## Debugging
-
-Enable debug mode:
-
-```bash
-DEBUG=true multi-gitter run --config config.yaml ./multi-gitter-run-script.sh
-```
-
 ## Safety Features
 
 - **Dry run mode** - Test changes without applying them
@@ -139,8 +128,10 @@ DEBUG=true multi-gitter run --config config.yaml ./multi-gitter-run-script.sh
 
 To add support for new repository types:
 
-1. Add a new handler function (e.g., `handle_newtype_repos()`)
-2. Add the pattern to the main case statement in `process_repository()`
+1. Add the repository pattern to the `case` statement in
+   `multi-gitter-run-script.sh`
+2. Add a private repository to `repo:` in `config.yaml` - `user:` lists only
+   public repositories
 3. Update this documentation
 
 ## Security Considerations

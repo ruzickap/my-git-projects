@@ -97,52 +97,14 @@ resource "cloudflare_account_token" "opentofu_cloudflare_github" {
 }
 
 ################################################################################
-# cloudflare-account-token-pages-xvx-cz (ruzickap/xvx.cz)
-# https://github.com/ruzickap/xvx.cz/blob/main/.github/workflows/gh-pages-build.yml
+# cloudflare-account-token-pages-<project> (ruzickap/<repository>) - one per Cloudflare Pages project
+# https://github.com/ruzickap/<repository>/blob/main/.github/workflows/gh-pages-build.yml
 ################################################################################
-resource "cloudflare_account_token" "pages_xvx_cz" {
+resource "cloudflare_account_token" "pages" {
+  for_each   = local.cloudflare_pages_projects
   account_id = local.cloudflare_account_id
-  name       = "cloudflare-account-token-pages-xvx-cz (ruzickap/xvx.cz)"
-  policies = [
-    {
-      effect = "allow"
-      resources = jsonencode({
-        "com.cloudflare.api.account.${local.cloudflare_account_id}" = "*"
-      })
-      permission_groups = [
-        { id = local.account_permission_name_to_obj["Pages Write"].id },
-      ]
-    }
-  ]
-}
-
-################################################################################
-# cloudflare-account-token-pages-petr-ruzicka-dev (ruzickap/petr.ruzicka.dev)
-# https://github.com/ruzickap/petr.ruzicka.dev/blob/main/.github/workflows/gh-pages-build.yml
-################################################################################
-resource "cloudflare_account_token" "pages_petr_ruzicka_dev" {
-  account_id = local.cloudflare_account_id
-  name       = "cloudflare-account-token-pages-petr-ruzicka-dev (ruzickap/petr.ruzicka.dev)"
-  policies = [
-    {
-      effect = "allow"
-      resources = jsonencode({
-        "com.cloudflare.api.account.${local.cloudflare_account_id}" = "*"
-      })
-      permission_groups = [
-        { id = local.account_permission_name_to_obj["Pages Write"].id },
-      ]
-    }
-  ]
-}
-
-################################################################################
-# cloudflare-account-token-pages-ruzickap-github-io (ruzickap/ruzickap.github.io)
-# https://github.com/ruzickap/ruzickap.github.io/blob/main/.github/workflows/gh-pages-build.yml
-################################################################################
-resource "cloudflare_account_token" "pages_ruzickap_github_io" {
-  account_id = local.cloudflare_account_id
-  name       = "cloudflare-account-token-pages-ruzickap-github-io (ruzickap/ruzickap.github.io)"
+  # shortcut: repository = project with "-" -> ".", wrong label for a repository name containing "-"
+  name = "cloudflare-account-token-pages-${each.value} (ruzickap/${replace(each.value, "-", ".")})"
   policies = [
     {
       effect = "allow"

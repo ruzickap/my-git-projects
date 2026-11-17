@@ -31,10 +31,6 @@ terraform {
       source  = "integrations/github"
       version = "6.13.0"
     }
-    http = {
-      source  = "hashicorp/http"
-      version = "3.6.3"
-    }
     random = {
       source  = "hashicorp/random"
       version = "3.9.1"

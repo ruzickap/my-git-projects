@@ -97,6 +97,12 @@ resource "aws_iam_user" "this" {
 
 resource "aws_iam_access_key" "this" {
   user = aws_iam_user.this.name
+
+  # New key first: OpenTofu authenticates with this key (AWS_PROFILE=my-aws).
+  # Not on local_sensitive_file - deleting the old file would remove the new one (same path).
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_user_policy_attachment" "this" {
@@ -121,10 +127,6 @@ resource "local_sensitive_file" "aws_credentials" {
     aws_access_key_id = ${aws_iam_access_key.this.id}
     aws_secret_access_key = ${aws_iam_access_key.this.secret}
   EOT
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "local_sensitive_file" "aws_config" {
@@ -283,10 +285,14 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
       identifiers = [aws_iam_openid_connect_provider.github_actions.arn]
     }
 
+    # Only the subjects used by tofu-cloudflare-github.yml (push/schedule/dispatch on main and pull requests)
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${local.github_oidc_repo}:*"]
+      values = [
+        "repo:${local.github_oidc_repo}:pull_request",
+        "repo:${local.github_oidc_repo}:ref:refs/heads/main",
+      ]
     }
   }
 

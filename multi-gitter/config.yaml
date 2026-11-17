@@ -71,10 +71,11 @@ skip-repo:
   # Legacy/archived repositories
   - ruzickap/old_stuff
 
-# Private repositories (need to be specified explicitly)
+# Private repositories (need to be specified explicitly - "user" lists only public ones)
 repo:
   - ruzickap/brewwatch
   - ruzickap/cv
+  - ruzickap/my-stocks
   - ruzickap/wiz-certification-notes
 
 # Skip repositories which are forks.

@@ -103,6 +103,15 @@
       automerge: false,
     },
     {
+      // On push to main tf-via-pr applies the plan saved on the PR: branch automerge has no PR, and
+      // GitHub auto-merge merges at once (Renovate bypasses the ruleset), before the plan exists
+      description: "Merge OpenTofu cloudflare-github provider updates via PR after the tofu plan check passes",
+      matchManagers: ["terraform"],
+      matchFileNames: ["opentofu/cloudflare-github/**"],
+      automergeType: "pr",
+      platformAutomerge: false,
+    },
+    {
       // No release timestamps here; skip to silence the warning. ghcr.io/quay.io
       // still warn: matching "docker" would drop the Docker Hub cooldown too.
       description: "Skip minimumReleaseAge for git-based datasources without timestamps",

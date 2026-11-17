@@ -63,33 +63,11 @@ AWS SSM Parameter Store and read at plan/apply time via
 is needed for these; the AWS provider reads them directly from SSM using
 the `my-aws` profile (local) or OIDC role (CI).
 
-| Name                                                                        | Description                                                |
-|-----------------------------------------------------------------------------|------------------------------------------------------------|
-| `/xvx.cz/app1/BASIC_AUTH_USERNAME`, `/xvx.cz/app1/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app1.xvx.cz` Worker       |
-| `/xvx.cz/app2/BASIC_AUTH_USERNAME`, `/xvx.cz/app2/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app2.xvx.cz` Worker       |
-| `/xvx.cz/app3/BASIC_AUTH_USERNAME`, `/xvx.cz/app3/BASIC_AUTH_PASSWORD`      | HTTP Basic Auth credentials for `app3.xvx.cz` Worker       |
-| `cloudflare_zero_trust_access_identity_provider_google_oauth_client_id`     | Google OAuth client ID for Cloudflare Zero Trust           |
-| `cloudflare_zero_trust_access_identity_provider_google_oauth_client_secret` | Google OAuth client secret for Cloudflare Zero Trust       |
-| `dockerhub_container_registry_password`                                     | DockerHub container registry password                      |
-| `dockerhub_container_registry_user`                                         | DockerHub container registry username                      |
-| `gh_token_opentofu_cloudflare_github`                                       | GitHub PAT for managing Cloudflare and GitHub resources    |
-| `google_client_id`                                                          | Google client ID                                           |
-| `google_client_secret`                                                      | Google client secret                                       |
-| `my_atlassian_personal_token`                                               | Atlassian personal access token                            |
-| `my_aws_aws_role_to_assume`                                                 | AWS role ARN for OIDC in GitHub Actions CI                 |
-| `my_renovate_github_private_key`                                            | Renovate GitHub App private key                            |
-| `my_slack_bot_token`                                                        | Slack bot token                                            |
-| `my_slack_channel_id`                                                       | Slack channel ID                                           |
-| `opentofu_cloudflare_github_api_token`                                      | Cloudflare API token for OpenTofu cloudflare-github module |
-| `quay_container_registry_password`                                          | Quay container registry password                           |
-| `quay_container_registry_user`                                              | Quay container registry username                           |
-| `ruzicka_sbx01_aws_role_to_assume`                                          | AWS role ARN to assume for ruzicka-sbx01 account           |
-| `supabase_access_token`                                                     | Supabase access token                                      |
-| `uptimerobot_api_key`                                                       | UptimeRobot API key                                        |
-| `wifi_password`                                                             | WiFi password for Raspberry Pi configuration               |
-| `wifi_ssid`                                                                 | WiFi SSID for Raspberry Pi configuration                   |
-| `wiz_client_id`                                                             | Wiz client ID                                              |
-| `wiz_client_secret`                                                         | Wiz client secret                                          |
+The parameter names are the `name` / `arn` arguments in `aws.tf`:
+`/github/<repo>/actions-secrets/<SECRET>` (per repository),
+`/github/shared/actions-secrets/<SECRET>` (shared) and
+`/xvx.cz/<app>/BASIC_AUTH_*` (Basic Auth Workers). Most of them are created
+from KeePassXC by the [`opentofu/aws`](../aws/) module.
 
 ### Outputs
 
@@ -106,7 +84,8 @@ the `my-aws` profile (local) or OIDC role (CI).
 ### Cloudflare DNS Zones
 
 Each zone has DNSSEC enabled, minimum TLS 1.3 enforced, Zstandard compression
-(with Brotli and Gzip fallbacks), and cache rules for static file extensions.
+(with Brotli and Gzip fallbacks), and cache rules for static file extensions
+(shared by all zones in `cloudflare_zones.tf`).
 
 | Zone          | Email Provider           | Features                                                                             |
 |---------------|--------------------------|--------------------------------------------------------------------------------------|
@@ -116,29 +95,20 @@ Each zone has DNSSEC enabled, minimum TLS 1.3 enforced, Zstandard compression
 
 ### Cloudflare Zero Trust
 
-Two tunnels (`gate`, `raspi`) hosting 14 applications on the `xvx.cz` domain:
-
-| Tunnel  | Application       | Service                  | Tags                      |
-|---------|-------------------|--------------------------|---------------------------|
-| `gate`  | `gate`            | `https://127.0.0.1`      | lan, router, wan          |
-| `gate`  | `gate-ssh`        | `ssh://127.0.0.1:22`     | lan, router, ssh, wan     |
-| `gate`  | `msr-2`           | `http://192.168.1.4`     | iot, wifi                 |
-| `gate`  | `transmission`    | `http://127.0.0.1:9091`  | router                    |
-| `gate`  | `uzg-01`          | `http://192.168.1.3`     | iot, lan                  |
-| `raspi` | `alloy-rpi`       | `http://localhost:12345` | rpi, wifi                 |
-| `raspi` | `esphome-rpi`     | `http://localhost:6052`  | container, iot, rpi, wifi |
-| `raspi` | `grafana-rpi`     | `http://localhost:3001`  | rpi, wifi                 |
-| `raspi` | `hass-rpi`        | `http://localhost:8123`  | container, iot, rpi, wifi |
-| `raspi` | `kodi-rpi`        | `http://localhost:8080`  | rpi, wifi                 |
-| `raspi` | `prometheus-rpi`  | `http://localhost:9090`  | rpi, wifi                 |
-| `raspi` | `rpi`             | `http://127.0.0.1:3000`  | container, rpi, wifi      |
-| `raspi` | `rpi-ssh`         | `ssh://127.0.0.1:22`     | rpi, ssh, wifi            |
-| `raspi` | `zigbee2mqtt-rpi` | `http://localhost:8082`  | container, iot, rpi, wifi |
+Tunnels (`gate`, `gate-bracha`, `raspi`) publish the home applications on the
+`xvx.cz` domain. The tunnels, applications, services and tags are listed in
+`local.cloudflare_zero_trust_tunnels_applications` in `cloudflare_zero_trust.tf`.
+Every application - SSH hostnames included - has a Cloudflare Access
+application, so SSH needs a login too (`cloudflared access ssh` opens the
+browser).
 
 Access policies:
 
 - **Google SSO Access** -- email-based allow policy
-- **UptimeRobot Direct Access** -- bypass policy using UptimeRobot IP list
+- **UptimeRobot Direct Access** -- service auth (`non_identity`) policy for the
+  `UptimeRobot` service token, which the UptimeRobot monitors send as
+  `cf-access-client-id` / `cf-access-client-secret` headers (an IP list bypass
+  would let in every UptimeRobot customer)
 - **Allow All** -- bypass policy (used by `hass-rpi`)
 
 ### Cloudflare API Tokens
@@ -160,14 +130,14 @@ Response Compression, Workers Routes, Zone Settings, Zone.
 
 ### Cloudflare Notification Policies
 
-| Alert                               | Type                           |
-|-------------------------------------|--------------------------------|
-| Cloudflare Abuse Report Alert       | `abuse_report_alert`           |
-| Expiring Access Service Token Alert | `expiring_service_token_alert` |
-| Passive Origin Monitoring           | `real_origin_monitoring`       |
-| Web Analytics Metrics Update        | `web_analytics_metrics_update` |
-| Incident Alert                      | `incident_alert` (critical)    |
-| Tunnel Health Alert                 | `tunnel_health_event`          |
+Email alerts (`cloudflare_notification_policy.tf`):
+
+| Alert                               | Type                                |
+|-------------------------------------|-------------------------------------|
+| Expiring Access Service Token Alert | `expiring_service_token_alert`      |
+| Passive Origin Monitoring           | `real_origin_monitoring`            |
+| Web Analytics Metrics Update        | `web_analytics_metrics_update`      |
+| Tunnel Health Alert                 | `tunnel_health_event` (all tunnels) |
 
 ### Cloudflare Pages Projects
 
@@ -202,25 +172,28 @@ ready-to-use URLs with embedded credentials.
 
 ### GitHub Repositories
 
-26 repositories managed with consistent settings:
+All repositories in `local.github_repositories` and
+`local.github_repositories_existing` (`github-repositories.tf`) are managed
+with consistent settings:
 
-- Squash/rebase merge only (merge commits disabled)
+- Squash merge only (merge commits and rebase merging disabled)
 - Auto-delete head branches on merge
 - Apache 2.0 license (default)
 - Vulnerability alerts enabled
 - Secret scanning with push protection (public repos)
-- Branch protection rulesets on default branch (public repos): 2 required
-  reviews, code owner review, linear history, status checks
+- Branch protection rulesets on default branch (public repos): 1 required
+  approving review, code owner review, linear history, status checks
 - Renovate bot bypass for direct update branches
-- Default Actions secrets applied to all repositories (Renovate app credentials,
-  Slack bot token and channel ID)
+- Default Actions secrets applied to all repositories (Slack bot token and
+  channel ID)
 
 ### UptimeRobot
 
 HTTP monitors (300s interval) for:
 
 - All public CNAME records across `xvx.cz`, `ruzicka.dev`, and `mylabs.dev`
-- All non-SSH Zero Trust tunnel applications
+- All non-SSH Zero Trust tunnel applications (they pass Cloudflare Access with
+  the `UptimeRobot` service token)
 - Proxied A records on `xvx.cz`
 
 Public status page: `stats.xvx.cz`
