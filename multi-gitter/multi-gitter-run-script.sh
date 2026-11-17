@@ -152,7 +152,8 @@ case "${REPOSITORY}" in
     ;;
   ruzickap/my-stocks)
     checkout_files ".mega-linter.yml"
-    megalinter_flavor all
+    # Full "all" image does not fit on the private repo runner disk
+    megalinter_flavor cupcake
     ;;
   ruzickap/petr.ruzicka.dev | ruzickap/xvx.cz)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/hugo"
