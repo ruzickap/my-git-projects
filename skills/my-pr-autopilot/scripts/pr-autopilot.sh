@@ -12,7 +12,8 @@
 #   wait-checks:  0 all passed, 1 failed/cancelled, 2 timeout, 3 no checks
 #   wait-copilot: 0 reviewed, 2 timeout or request failed, 3 Copilot review
 #                 is unavailable
-#   any command:  4 gh is not authenticated (run: gh auth login)
+#   any command:  2 the pull request could not be read, 4 gh is not
+#                 authenticated (run: gh auth login)
 #
 # Tunables (env, seconds): CHECKS_TIMEOUT=1800 CHECKS_APPEAR_TIMEOUT=300
 # CHECKS_MIN_WAIT=60 COPILOT_REQUEST_TIMEOUT=60 COPILOT_REVIEW_TIMEOUT=600
@@ -29,7 +30,7 @@ set -euo pipefail
 : "${LOG_LINES:=150}"
 
 usage() {
-  sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'
   exit 1
 }
 
@@ -235,7 +236,10 @@ if ! gh auth status --active --hostname github.com > /dev/null 2>&1; then
   exit 4
 fi
 # shellcheck disable=SC2086
-PR_URL=$(gh pr view ${2:-} --json url --jq .url)
+if ! PR_URL=$(gh pr view ${2:-} --json url --jq .url); then
+  echo "RESULT: error - could not read the pull request ${2:-of the current branch}"
+  exit 2
+fi
 IFS=/ read -r _ _ _ OWNER REPO _ NUMBER <<< "${PR_URL}"
 
 case "${COMMAND}" in
