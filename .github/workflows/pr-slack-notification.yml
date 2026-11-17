@@ -12,7 +12,7 @@ on:
       - ready_for_review
       - review_requested
       - closed
-  issue_comment: # zizmor: ignore[dangerous-triggers] - only posts PR status to Slack, no checkout, permissions: {}
+  issue_comment: # zizmor: ignore[dangerous-triggers] - only posts PR status to Slack, no checkout, only actions: read
     types:
       - created
   pull_request_review:
@@ -62,18 +62,13 @@ jobs:
     timeout-minutes: 5
     permissions:
       actions: read # needed to list caches
-      contents: read # needed to checkout the repository
     name: Adds emoji reaction to slack message when a PR is closed or reviewed
     if: ${{ startsWith(github.event.pull_request.html_url, 'https') || startsWith(github.event.issue.pull_request.html_url, 'https') }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
       - name: Retrieve Slack message timestamp from cache
         id: slack-timestamp
         env:
+          GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_PULL_REQUEST_HTML_URL: ${{ github.event.pull_request.html_url || github.event.issue.pull_request.html_url }}
         run: |

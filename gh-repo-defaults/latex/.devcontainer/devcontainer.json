@@ -64,8 +64,6 @@
 
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 
-  "name": "texlive",
-
-  "postCreateCommand": "docker pull ghcr.io/xu-cheng/texlive-full"
+  "name": "texlive"
   // keep-sorted end
 }

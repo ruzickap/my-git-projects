@@ -41,7 +41,6 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          submodules: true
 
       - name: Run script to build document
         id: build
@@ -57,4 +56,6 @@ jobs:
           FILE_NAME: ${{ steps.build.outputs.file_name }}
         run: |
           set -euxo pipefail
-          gh release upload "${TAG_NAME}" "${FILE_NAME}".*
+          # Only the built formats - not the .tex source or the .dvi kept by "make mostlyclean"
+          shopt -s extglob
+          gh release upload "${TAG_NAME}" "${FILE_NAME}".@(pdf|jpg|png|svg)

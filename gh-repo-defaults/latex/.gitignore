@@ -385,3 +385,8 @@ cache
 
 # pre-commit config file
 .pre-commit-config.yaml
+
+# Images built by run.sh (top folder only, so figures in subfolders stay tracked)
+/*.jpg
+/*.png
+/*.svg
