@@ -162,7 +162,15 @@ wait_copilot() {
   log "Waiting for a Copilot review on ${PR_URL}"
   while true; do
     NOW=$(date +%s)
-    DATA=$(gh pr view "${PR_URL}" --json headRefOid,reviewRequests,reviews)
+    if ! DATA=$(gh pr view "${PR_URL}" --json headRefOid,reviewRequests,reviews); then
+      if ((NOW - START > COPILOT_REVIEW_TIMEOUT)); then
+        echo "RESULT: error - could not read ${PR_URL}"
+        return 2
+      fi
+      log "Failed to read the PR, retrying"
+      sleep "${POLL_INTERVAL}"
+      continue
+    fi
 
     # A Copilot review counts only if it covers the current head commit.
     REVIEW=$(jq -c '

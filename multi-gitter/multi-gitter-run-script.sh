@@ -58,7 +58,9 @@ private_repository() {
   if gh repo view "${REPOSITORY}" --json isPrivate --jq '.isPrivate' 2> /dev/null | grep -q "true"; then
     log_info "Private repository detected: ${REPOSITORY}"
     remove_files ".github/workflows/codeql.yml" ".github/workflows/scorecards.yml"
-    "${SED}" -i -E '/^[[:space:]]*schedule:[[:space:]]*$/ { N; /^[[:space:]]*schedule:[[:space:]]*\n[[:space:]]*-[[:space:]]*cron:[[:space:]]*.*$/d; }' .github/workflows/*.yml
+    # Only the copied default - the repository's own scheduled workflows must keep their schedule
+    # shortcut: stale.yml is the only remaining default with a schedule, list new scheduled defaults here
+    "${SED}" -i -E '/^[[:space:]]*schedule:[[:space:]]*$/ { N; /^[[:space:]]*schedule:[[:space:]]*\n[[:space:]]*-[[:space:]]*cron:[[:space:]]*.*$/d; }' .github/workflows/stale.yml
   fi
 }
 
@@ -131,7 +133,7 @@ case "${REPOSITORY}" in
     checkout_files "run.sh" # Disable SVG
     megalinter_flavor all
     ;;
-  ruzickap/gha_test)
+  ruzickap/gha-test)
     remove_files ".github/workflows/pr-slack-notification.yml"
     ;;
   ruzickap/k8s-multicluster-gitops)
@@ -157,11 +159,8 @@ case "${REPOSITORY}" in
   ruzickap/pre-commit-wizcli)
     megalinter_flavor cupcake
     ;;
-  ruzickap/renovate-summary-generator)
-    megalinter_flavor go
-    ;;
   ruzickap/ruzickap.github.io)
-    checkout_files ".rumdl.toml" ".mega-linter.yml" "AGENTS.md"
+    checkout_files ".rumdl.toml" ".mega-linter.yml"
     megalinter_flavor ruby
     ;;
   ruzickap/wiz-certification-notes)
@@ -178,11 +177,11 @@ if [[ -f ".rumdl.toml" ]]; then
   rumdl fmt . || true
 fi
 
-# Handle AGENTS.md: copy if missing, reinitialize if identical to default
+# Seed a missing AGENTS.md from the defaults and let opencode make it repo-specific
 if [[ ! -f "AGENTS.md" ]]; then
   log_info "Copying AGENTS.md from defaults and reinitializing with opencode"
   cp "${GH_REPO_DEFAULTS_BASE}/my-defaults/AGENTS.md" AGENTS.md
-  opencode run --auto --model="github-copilot/claude-opus-5" \
+  opencode run --auto \
     "Analyze this repository and rewrite AGENTS.md (currently a generic template) into a concise, repo-specific guide for AI agents. Capture only what an agent would otherwise get wrong: build/lint/test commands, architecture and non-obvious conventions, and gotchas. Do not repeat the generic lint, commit, branch, and PR conventions from the template. Only edit AGENTS.md."
 fi
 

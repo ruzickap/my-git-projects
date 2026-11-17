@@ -104,8 +104,11 @@ full access to all AWS services. This is intentional for a personal account wher
 the CI/CD pipeline manages the complete infrastructure (IAM, S3, SSM, OIDC,
 budgets, etc.).
 
-The role is assumable via OIDC federation by `repo:ruzickap/my-git-projects:*`
-and via `sts:AssumeRole` by the `aws-cli` IAM user.
+The role is assumable via OIDC federation by
+`repo:ruzickap/my-git-projects:ref:refs/heads/main` and
+`repo:ruzickap/my-git-projects:pull_request` (the subjects used by
+`tofu-cloudflare-github.yml`) and via `sts:AssumeRole` by the `aws-cli` IAM
+user. Workflows on other branches can not assume it.
 
 The role ARN is stored in the SSM parameter
 `/github/ruzickap/my-git-projects/actions-secrets/MY_AWS_AWS_ROLE_TO_ASSUME`
@@ -154,6 +157,10 @@ How it works:
   all SSM parameters)
 - an entry has an empty UserName, or empty / longer than 1024 characters Notes
 - two entries share the same UserName
+
+`keepassxc.tftest.hcl` (`tofu test`, run in CI by `tofu-aws-tests.yml`) checks
+the empty group and duplicate UserName guards with mocked providers - no
+KeePassXC database or AWS access is needed.
 
 | Change in KeePassXC                         | Result after `tofu apply`              |
 |---------------------------------------------|----------------------------------------|
@@ -213,7 +220,7 @@ same database and key file (`mise.toml`) - change the paths in both files.
 ### Tooling
 
 This module uses [mise](https://mise.jdx.dev/) for tool version management.
-`mise.toml` pins OpenTofu `1.13.1` and `yq` and sets `AWS_PROFILE=my-aws` and
+`mise.toml` pins the OpenTofu and `yq` versions and sets `AWS_PROFILE=my-aws` and
 `AWS_REGION=eu-central-1`. `keepassxc-cli` (KeePassXC) must be installed.
 
 The KeePassXC database `~/Documents/secrets/keepass2.kdbx` (password + key file

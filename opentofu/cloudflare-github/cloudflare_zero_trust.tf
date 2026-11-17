@@ -1,7 +1,5 @@
 locals {
-  uptimerobot_ips_url = "https://uptimerobot.com/inc/files/ips/IPv4andIPv6.txt"
-  uptimerobot_ips     = [for item in distinct(compact(split("\n", data.http.my_file.response_body))) : { "value" = item, "description" = "Dallas-USA" }]
-  tags                = ["container", "iot", "lan", "nas", "router", "rpi", "wan", "wifi"]
+  tags = ["container", "iot", "lan", "nas", "router", "rpi", "ssh", "wan", "wifi"]
   allowed_emails = [
     {
       email = {
@@ -121,10 +119,6 @@ locals {
   }
 }
 
-data "http" "my_file" {
-  url = local.uptimerobot_ips_url
-}
-
 # Needs: Access: Organizations, Identity Providers, and Groups
 # https://developers.cloudflare.com/api/python/resources/zero_trust/subresources/identity_providers/methods/create/
 resource "cloudflare_zero_trust_access_identity_provider" "google_oauth" {
@@ -144,13 +138,11 @@ resource "cloudflare_zero_trust_access_policy" "google_sso_access" {
   include    = local.allowed_emails
 }
 
-# Needs: Zero Trust
-resource "cloudflare_zero_trust_list" "uptimerobot_ips" {
-  account_id  = local.cloudflare_account_id
-  name        = "UptimeRobot IPs"
-  type        = "IP"
-  description = "UptimeRobot IP addresses of their checks (https://uptimerobot.com/help/locations/)"
-  items       = local.uptimerobot_ips
+# Needs: Access: Service Tokens
+# Sent by the UptimeRobot monitors (uptimerobot.tf) - an IP bypass would trust every UptimeRobot customer
+resource "cloudflare_zero_trust_access_service_token" "uptimerobot" {
+  account_id = local.cloudflare_account_id
+  name       = "UptimeRobot"
 }
 
 resource "cloudflare_zero_trust_access_tag" "tags" {
@@ -162,10 +154,10 @@ resource "cloudflare_zero_trust_access_tag" "tags" {
 resource "cloudflare_zero_trust_access_policy" "uptimerobot_direct_access" {
   account_id = local.cloudflare_account_id
   name       = "UptimeRobot Direct Access"
-  decision   = "bypass"
+  decision   = "non_identity"
   include = [{
-    ip_list = {
-      id = cloudflare_zero_trust_list.uptimerobot_ips.id
+    service_token = {
+      token_id = cloudflare_zero_trust_access_service_token.uptimerobot.id
     }
   }]
 }
@@ -232,10 +224,8 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "configs" {
 }
 
 resource "cloudflare_zero_trust_access_application" "applications" {
-  for_each = {
-    for app_name, app in merge([for tunnel in local.cloudflare_zero_trust_tunnels_applications : tunnel.applications]...) :
-    app_name => app if !startswith(app.service, "ssh://")
-  }
+  # SSH hostnames too - without an Access application anyone can connect with "cloudflared access ssh"
+  for_each = merge([for tunnel in local.cloudflare_zero_trust_tunnels_applications : tunnel.applications]...)
 
   account_id = local.cloudflare_account_id
 
@@ -245,8 +235,9 @@ resource "cloudflare_zero_trust_access_application" "applications" {
   allowed_idps              = [cloudflare_zero_trust_access_identity_provider.google_oauth.id]
   auto_redirect_to_identity = true
 
-  logo_url = each.value.logo_url
-  tags     = each.value.tags
+  logo_url = try(each.value.logo_url, null)
+  # Via the tag resources: tags are created first, and a tag missing from local.tags fails the plan
+  tags = [for tag in each.value.tags : cloudflare_zero_trust_access_tag.tags[tag].name]
 
   # Use policies from the app if defined, otherwise default to Google SSO and UptimeRobot
   policies = try(

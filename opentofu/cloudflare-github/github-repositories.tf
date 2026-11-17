@@ -192,7 +192,7 @@ locals {
       topics = ["personal", "personal-website", "public", "web", "website"]
       secrets = {
         "CLOUDFLARE_ACCOUNT_ID" = local.cloudflare_account_id
-        "CLOUDFLARE_API_TOKEN"  = cloudflare_account_token.pages_petr_ruzicka_dev.value
+        "CLOUDFLARE_API_TOKEN"  = cloudflare_account_token.pages["petr_ruzicka_dev"].value
       }
     }
     "ruzickap" = {
@@ -213,7 +213,7 @@ locals {
         # keep-sorted start
         # .github/workflows/gh-pages-build.yml (Cloudflare Pages + Analytics)
         "CLOUDFLARE_ACCOUNT_ID"               = local.cloudflare_account_id
-        "CLOUDFLARE_API_TOKEN"                = cloudflare_account_token.pages_ruzickap_github_io.value
+        "CLOUDFLARE_API_TOKEN"                = cloudflare_account_token.pages["ruzickap_github_io"].value
         "CLOUDFLARE_WEB_ANALYTICS_SITE_TOKEN" = cloudflare_web_analytics_site.ruzickap_github_io.site_token
         "GOOGLE_CLIENT_ID"                    = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_GOOGLE_CLIENT_ID.value
         "GOOGLE_CLIENT_SECRET"                = data.aws_ssm_parameter.github_ruzickap_ruzickap_github_io_actions_secrets_GOOGLE_CLIENT_SECRET.value
@@ -253,7 +253,7 @@ locals {
       topics = ["personal", "personal-website", "public", "web", "website", "xvx", "xvx-cz"]
       secrets = {
         "CLOUDFLARE_ACCOUNT_ID" = local.cloudflare_account_id
-        "CLOUDFLARE_API_TOKEN"  = cloudflare_account_token.pages_xvx_cz.value
+        "CLOUDFLARE_API_TOKEN"  = cloudflare_account_token.pages["xvx_cz"].value
       }
     }
     # keep-sorted end
@@ -377,7 +377,7 @@ resource "github_repository_topics" "this" {
 resource "github_repository_ruleset" "main" {
   for_each    = { for k, v in local.all_github_repositories : k => v if try(v.visibility != "private", true) }
   name        = "main"
-  repository  = each.value.name
+  repository  = github_repository.this[each.key].name
   target      = "branch"
   enforcement = "active"
 
