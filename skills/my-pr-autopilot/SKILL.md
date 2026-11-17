@@ -40,7 +40,8 @@ really needed (review replies, anything destructive).
 - **Allowed without asking:** commit and push normal (fast-forward) commits to
   the PR head branch to fix CI, and re-run failed jobs.
 - **Also allowed without asking:** rebase onto the base branch to resolve
-  merge conflicts, then `git push --force-with-lease` (see Preflight).
+  merge conflicts or when the branch is out of date with the base, then
+  `git push --force-with-lease` (see Preflight).
 - **Ask first:** any other force-push or history rewrite, change
   workflow files to skip/disable jobs, touch repository settings or secrets,
   close or merge the PR. Never merge the PR - that stays the user's call.
@@ -70,7 +71,10 @@ SKILL_DIR="<path to this skill>"
   enough. Non-Actions checks are reported as external.
 - `wait-copilot` requests Copilot itself if it is not requested yet, then
   exits `0` when Copilot has reviewed (prints the review body), `2` on
-  timeout (10 min), `3` if the request did not register (within 2 min).
+  timeout (10 min) or if the request itself failed, `3` if Copilot review is
+  unavailable for the repo.
+- Any command exits `4` when `gh` is not authenticated (token expired):
+  stop and ask the user to run `gh auth login`, then retry.
 
 Run waits in the **foreground** (never background) with a 31-minute tool
 timeout, so the user sees progress but can't type mid-run. Say in one line
@@ -80,44 +84,57 @@ what you wait for, and what finished.
 
 ### 1. Preflight
 
-- `gh auth status` - if not logged in, stop and ask the user to run
-  `gh auth login`.
+- `gh auth status --active --hostname github.com` - if not logged in, stop
+  and ask the user to run `gh auth login`.
 - Find the PR: use the number/URL the user gave, otherwise the current branch
-  (`gh pr view --json number,url,title,state,isDraft,headRefName,mergeable`).
+  (`gh pr view --json
+  number,url,title,state,isDraft,headRefName,mergeable,mergeStateStatus`).
   If there is none, list `gh pr list --author "@me"` and ask. If it is merged
   or closed, stop.
 - Be on the PR head branch and up to date (`gh pr checkout <n>`, `git pull`).
 - `git status --porcelain` - if there are unrelated uncommitted changes, ask
   how to proceed, because fixes will be committed on top.
-- If `mergeable` is `CONFLICTING`, CI usually does not run. Resolve the
-  conflicts without asking: fetch the PR's **target** repo and base branch
-  (`gh pr view --json baseRefName,url` - the target repo is the PR URL
-  without `/pull/<n>`; for fork PRs that is the upstream, not `origin`),
-  `git fetch <target-repo-url> <base>`, `git rebase FETCH_HEAD`, fix
-  each conflict keeping the intent of both
-  sides, verify locally (linters/tests for touched files), then
-  `git push --force-with-lease`. Note it in the summary. Ask only if a
-  conflict's correct resolution is genuinely ambiguous.
+- Rebase onto the base branch without asking when `mergeable` is
+  `CONFLICTING` (CI usually does not run then) or the branch is out of date
+  with the base (`mergeStateStatus` is `BEHIND`, or GitHub says "This branch
+  is out-of-date with the base branch"). Otherwise you fix CI against stale
+  code and the merge button stays blocked.
+  - Fetch the PR's **target** repo and base branch
+    (`gh pr view --json baseRefName,url` - the target repo is the PR URL
+    without `/pull/<n>`; for fork PRs that is the upstream, not `origin`):
+    `git fetch <target-repo-url> <base>`, then `git rebase FETCH_HEAD`.
+  - Fix each conflict keeping the intent of both sides, verify locally
+    (linters/tests for touched files), then `git push --force-with-lease`.
+  - Note it in the summary. Ask only if a conflict's correct resolution is
+    genuinely ambiguous.
+  - Re-check this once before step 5 too: if the base moved while CI ran and
+    the PR went out of date again, rebase and push the same way, then re-run
+    step 4. Do this at most once; if it is behind again, note it in the
+    summary and continue.
 
 ### 2. Start Copilot and CI in parallel
 
 - Make sure GitHub is testing what you think it is: local `HEAD` must equal
   the PR's `headRefOid` (push first if it doesn't).
-- Request Copilot right away, even while the PR is still a draft (a manual
-  request works on drafts): `gh pr edit <PR> --add-reviewer @copilot`. Skip
-  this if Copilot already reviewed or is already requested. If the request
-  fails (e.g. Copilot review not available for the repo), note it and
-  continue without Copilot.
+- Let `wait-copilot` do the request - it asks for Copilot itself (drafts
+  included) and is the only thing that can tell whether the request actually
+  registered. Do **not** call `gh pr edit --add-reviewer @copilot` yourself:
+  it exits `0` even in repos where Copilot review is not enabled, so a
+  success there means nothing.
 - Run `wait-checks` and `wait-copilot` as two foreground calls in one tool
-  batch, so they run in parallel (only `wait-checks` if Copilot is skipped).
+  batch, so they run in parallel.
 
 `wait-copilot` results:
 
 - `0` - Copilot reviewed. If the review body says Copilot could not review
   the PR (an error), tell the user and ask whether to re-request it once or
   skip.
-- `3` - the request did not register; request it once more, then wait again.
-- `2` - timed out; ask: keep waiting or skip.
+- `3` - `RESULT: unavailable`: Copilot review is not available for this
+  repo/account. Note it, continue without Copilot, and **never retry** - the
+  rest of the workflow (CI, code scanning, ready-for-review, summary) runs
+  unchanged, just without a review step.
+- `2` - timed out, or the request failed (`RESULT: error`, e.g. a network
+  error); ask: keep waiting (re-run `wait-copilot`) or skip.
 
 ### 3. Analyze and fix everything in one batch
 
@@ -127,7 +144,8 @@ saves a full CI cycle:
 
 - CI failures (`failed-logs`, see "Diagnosing CI failures" below).
 - Code scanning alerts (see below).
-- Copilot comments: load the `my-pr-review-comments` skill and follow it for
+- Copilot comments: if Copilot was unavailable or skipped, note that and move
+  on. Otherwise load the `my-pr-review-comments` skill and follow it for
   this PR **as written, including all its confirmations** - the summary
   table, the single batch "Proceed?" question, and the per-comment questions
   for human reviewers. The user wants to stay in control of what gets posted

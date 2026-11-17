@@ -8,11 +8,12 @@
 #
 # PR can be a number or URL; defaults to the PR of the current branch.
 # Set DRY_RUN=1 to print what reply/resolve would do without calling GitHub.
+# Exits 4 when gh is not authenticated (run: gh auth login).
 
 set -euo pipefail
 
 usage() {
-  sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//'
   exit 1
 }
 
@@ -102,16 +103,26 @@ mutation($threadId: ID!) {
 }' --jq '.data.resolveReviewThread.thread.isResolved'
 }
 
+require_auth() {
+  if ! gh auth status --active --hostname github.com > /dev/null 2>&1; then
+    echo "RESULT: unauthenticated - gh is not logged in (token missing or expired), run: gh auth login" >&2
+    exit 4
+  fi
+}
+
 case "${1:-}" in
   list)
+    require_auth
     list_threads "${2:-}"
     ;;
   reply)
     [[ $# -eq 3 ]] || usage
+    [[ "${DRY_RUN:-0}" == "1" ]] || require_auth
     reply_thread "$2" "$3"
     ;;
   resolve)
     [[ $# -eq 2 ]] || usage
+    [[ "${DRY_RUN:-0}" == "1" ]] || require_auth
     resolve_thread "$2"
     ;;
   *)
