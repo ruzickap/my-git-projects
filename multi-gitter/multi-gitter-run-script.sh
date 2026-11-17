@@ -132,8 +132,8 @@ case "${REPOSITORY}" in
   ruzickap/cv)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
     checkout_files "run.sh" # Disable SVG
-    # Runs the full image via `docker run` after freeing disk - it does not fit on the private repo runner
-    checkout_files ".github/workflows/mega-linter.yml"
+    # Default documentation flavor - "all" does not fit on the private repo runner disk (LATEX_CHKTEX disabled)
+    checkout_files ".mega-linter.yml"
     ;;
   ruzickap/gha-test)
     remove_files ".github/workflows/pr-slack-notification.yml"
