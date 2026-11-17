@@ -45,6 +45,7 @@
         "/\\.md$/",
         "/^Dockerfile$/",
         "/^entrypoint\\.sh$/",
+        "/(^|/)run\\.sh$/",
       ],
 
       // Format: # renovate: datasource=<source> depName=<name> [versioning=<type>] [extractVersion=<regex>] [registryUrl=<url>]
