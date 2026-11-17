@@ -239,10 +239,15 @@ resource "cloudflare_zero_trust_access_application" "applications" {
   # Via the tag resources: tags are created first, and a tag missing from local.tags fails the plan
   tags = [for tag in each.value.tags : cloudflare_zero_trust_access_tag.tags[tag].name]
 
-  # Use policies from the app if defined, otherwise default to Google SSO and UptimeRobot
+  # Use policies from the app if defined, otherwise Google SSO (+ UptimeRobot service token for non-SSH apps it monitors)
   policies = try(
     each.value.policies,
-    [
+    startswith(each.value.service, "ssh://") ? [
+      {
+        id         = cloudflare_zero_trust_access_policy.google_sso_access.id
+        precedence = 1
+      }
+      ] : [
       {
         id         = cloudflare_zero_trust_access_policy.uptimerobot_direct_access.id
         precedence = 1
