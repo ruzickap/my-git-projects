@@ -157,7 +157,7 @@ failed_logs() {
 }
 
 wait_copilot() {
-  local START NOW DATA REVIEW REQUESTED=0
+  local START NOW DATA REVIEW COPILOT_REQUESTED REQUESTED=0
   START=$(date +%s)
   log "Waiting for a Copilot review on ${PR_URL}"
   while true; do
@@ -179,12 +179,15 @@ wait_copilot() {
 
     # `gh pr view --json reviewRequests` omits Bot reviewers (Copilot), so ask GraphQL
     # shellcheck disable=SC2016
-    if gh api graphql -F owner="${OWNER}" -F repo="${REPO}" -F number="${NUMBER}" -f query='
+    # A failed lookup says nothing about availability, so just poll again
+    if ! COPILOT_REQUESTED=$(gh api graphql -F owner="${OWNER}" -F repo="${REPO}" -F number="${NUMBER}" -f query='
       query($owner: String!, $repo: String!, $number: Int!) {
         repository(owner: $owner, name: $repo) { pullRequest(number: $number) {
           reviewRequests(first: 50) { nodes { requestedReviewer {
             ... on Bot { login } ... on User { login } } } } } } }' \
-      --jq '[.data.repository.pullRequest.reviewRequests.nodes[].requestedReviewer.login // "" | ascii_downcase | select(test("copilot"))] | length > 0' | grep -q true; then
+      --jq '[.data.repository.pullRequest.reviewRequests.nodes[].requestedReviewer.login // "" | ascii_downcase | select(test("copilot"))] | length > 0'); then
+      log "Failed to read requested reviewers, retrying"
+    elif [[ "${COPILOT_REQUESTED}" == "true" ]]; then
       if [[ "${REQUESTED}" -eq 0 ]]; then
         log "Copilot review is requested, waiting for it to finish"
         REQUESTED=1
