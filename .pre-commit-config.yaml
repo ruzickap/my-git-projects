@@ -70,7 +70,7 @@ repos:
       - id: check-no-force-push
 
   - repo: https://github.com/google/keep-sorted
-    rev: v0.10.0
+    rev: v0.11.0
     hooks:
       - id: keep-sorted
 
