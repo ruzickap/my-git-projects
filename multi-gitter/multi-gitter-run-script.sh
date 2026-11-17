@@ -91,7 +91,8 @@ copy_defaults "${GH_REPO_DEFAULTS_BASE}/my-defaults"
 private_repository
 
 # Upgrade all in GH Actions
-actions-up --yes --min-age 3
+# gh-aw actions live in generated *.lock.yml files - bumping them without `gh aw compile` breaks the workflow
+actions-up --yes --min-age 3 --exclude 'github/gh-aw-actions'
 
 # Repository-specific handling
 case "${REPOSITORY}" in
