@@ -51,12 +51,15 @@ Each `list` record contains `thread_id`, `outdated`, `path`, `line`,
 `comments_total`, and the latest 100 `comments` of the conversation. If
 `comments_total` is larger than 100, open `url` to read the earlier replies.
 
+The script exits `4` when `gh` is not authenticated (token expired): stop and
+ask the user to run `gh auth login`, then retry.
+
 ## Workflow
 
 ### 1. Preflight
 
-- `gh auth status` - if not logged in, stop and ask the user to run
-  `gh auth login`.
+- `gh auth status --active --hostname github.com` - if not logged in, stop
+  and ask the user to run `gh auth login`.
 - `git status --porcelain` - if there are unrelated uncommitted changes, ask
   the user how to proceed, because review fixes will be committed on top.
 

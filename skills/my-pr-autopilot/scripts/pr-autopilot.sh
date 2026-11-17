@@ -10,10 +10,12 @@
 #
 # Exit codes:
 #   wait-checks:  0 all passed, 1 failed/cancelled, 2 timeout, 3 no checks
-#   wait-copilot: 0 reviewed, 2 timeout, 3 Copilot was never requested
+#   wait-copilot: 0 reviewed, 2 timeout or request failed, 3 Copilot review
+#                 is unavailable
+#   any command:  4 gh is not authenticated (run: gh auth login)
 #
 # Tunables (env, seconds): CHECKS_TIMEOUT=1800 CHECKS_APPEAR_TIMEOUT=300
-# CHECKS_MIN_WAIT=60 COPILOT_REQUEST_TIMEOUT=120 COPILOT_REVIEW_TIMEOUT=600
+# CHECKS_MIN_WAIT=60 COPILOT_REQUEST_TIMEOUT=60 COPILOT_REVIEW_TIMEOUT=600
 # POLL_INTERVAL=30 LOG_LINES=150 (lines per failed job)
 
 set -euo pipefail
@@ -21,13 +23,13 @@ set -euo pipefail
 : "${CHECKS_TIMEOUT:=1800}"
 : "${CHECKS_APPEAR_TIMEOUT:=300}"
 : "${CHECKS_MIN_WAIT:=60}"
-: "${COPILOT_REQUEST_TIMEOUT:=120}"
+: "${COPILOT_REQUEST_TIMEOUT:=60}"
 : "${COPILOT_REVIEW_TIMEOUT:=600}"
 : "${POLL_INTERVAL:=30}"
 : "${LOG_LINES:=150}"
 
 usage() {
-  sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//'
   exit 1
 }
 
@@ -155,7 +157,7 @@ failed_logs() {
 }
 
 wait_copilot() {
-  local START NOW DATA REVIEW REQUESTED=0
+  local START NOW DATA REVIEW COPILOT_REQUESTED REQUESTED=0
   START=$(date +%s)
   log "Waiting for a Copilot review on ${PR_URL}"
   while true; do
@@ -177,12 +179,15 @@ wait_copilot() {
 
     # `gh pr view --json reviewRequests` omits Bot reviewers (Copilot), so ask GraphQL
     # shellcheck disable=SC2016
-    if gh api graphql -F owner="${OWNER}" -F repo="${REPO}" -F number="${NUMBER}" -f query='
+    # A failed lookup says nothing about availability, so just poll again
+    if ! COPILOT_REQUESTED=$(gh api graphql -F owner="${OWNER}" -F repo="${REPO}" -F number="${NUMBER}" -f query='
       query($owner: String!, $repo: String!, $number: Int!) {
         repository(owner: $owner, name: $repo) { pullRequest(number: $number) {
           reviewRequests(first: 50) { nodes { requestedReviewer {
             ... on Bot { login } ... on User { login } } } } } } }' \
-      --jq '[.data.repository.pullRequest.reviewRequests.nodes[].requestedReviewer.login // "" | ascii_downcase | select(test("copilot"))] | length > 0' | grep -q true; then
+      --jq '[.data.repository.pullRequest.reviewRequests.nodes[].requestedReviewer.login // "" | ascii_downcase | select(test("copilot"))] | length > 0'); then
+      log "Failed to read requested reviewers, retrying"
+    elif [[ "${COPILOT_REQUESTED}" == "true" ]]; then
       if [[ "${REQUESTED}" -eq 0 ]]; then
         log "Copilot review is requested, waiting for it to finish"
         REQUESTED=1
@@ -191,9 +196,14 @@ wait_copilot() {
       # Request it here so the review can't be silently skipped by the caller
       ASKED=1
       log "Copilot is not requested yet, requesting it"
-      gh pr edit "${PR_URL}" --add-reviewer @copilot > /dev/null || log "Failed to request Copilot review"
+      if ! gh pr edit "${PR_URL}" --add-reviewer @copilot > /dev/null; then
+        echo "RESULT: error - could not request a Copilot review on ${PR_URL}"
+        return 2
+      fi
     elif [[ "${REQUESTED}" -eq 0 ]] && ((NOW - START > COPILOT_REQUEST_TIMEOUT)); then
-      echo "RESULT: not-requested - Copilot is not a requested reviewer of ${PR_URL}"
+      # `gh pr edit --add-reviewer @copilot` exits 0 even where Copilot review
+      # is not enabled, so "still not a reviewer" is the only usable signal.
+      echo "RESULT: unavailable - Copilot review is not available on ${PR_URL}"
       return 3
     fi
 
@@ -210,6 +220,12 @@ case "${COMMAND}" in
   wait-checks | failed-logs | wait-copilot) ;;
   *) usage ;;
 esac
+
+# A gh token can expire between runs; fail loudly instead of mid-poll.
+if ! gh auth status --active --hostname github.com > /dev/null 2>&1; then
+  echo "RESULT: unauthenticated - gh is not logged in (token missing or expired), run: gh auth login" >&2
+  exit 4
+fi
 # shellcheck disable=SC2086
 PR_URL=$(gh pr view ${2:-} --json url --jq .url)
 IFS=/ read -r _ _ _ OWNER REPO _ NUMBER <<< "${PR_URL}"

@@ -16,7 +16,7 @@
     {
       "id": 3,
       "prompt": "autopilot __PR_URL__ - this repo doesn't auto-request Copilot",
-      "expected_output": "Copilot is requested automatically up front via gh pr edit --add-reviewer @copilot without asking; only one Copilot round is done.",
+      "expected_output": "Copilot is requested automatically up front by wait-copilot without asking; if it reports unavailable the run continues without a review; only one Copilot round is done.",
       "files": []
     }
   ]
