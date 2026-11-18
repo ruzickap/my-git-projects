@@ -17,7 +17,6 @@ maintainability across all contributions.
     - [Shell Scripts](#shell-scripts)
     - [JSON Files](#json-files)
     - [Terraform Files](#terraform-files)
-    - [TypeScript/JavaScript Files](#typescriptjavascript-files)
     - [Link Checking](#link-checking)
   - [Security Scanning](#security-scanning)
   - [GitHub Actions](#github-actions)
@@ -73,11 +72,6 @@ maintainability across all contributions.
 - **Linting**: Must pass `tflint` checks
 - **Security**: Must pass `checkov` and `trivy` security scans
 - **Trivy severity**: Only HIGH and CRITICAL vulnerabilities fail the build
-
-### TypeScript/JavaScript Files
-
-- **Formatting**: Must be formatted with `prettier`
-- **HTML whitespace**: Uses `--html-whitespace-sensitivity=ignore`
 
 ### Link Checking
 
