@@ -390,3 +390,6 @@ cache
 /*.jpg
 /*.png
 /*.svg
+
+# lychee link checker cache (CI keeps it in the actions cache)
+.lycheecache

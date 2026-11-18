@@ -131,7 +131,6 @@ case "${REPOSITORY}" in
     ;;
   ruzickap/cv)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/latex"
-    checkout_files "run.sh" # Disable SVG
     # Default documentation flavor - "all" does not fit on the private repo runner disk (LATEX_CHKTEX disabled)
     checkout_files ".mega-linter.yml"
     ;;
