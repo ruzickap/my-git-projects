@@ -145,7 +145,9 @@ case "${REPOSITORY}" in
     megalinter_flavor cupcake
     ;;
   ruzickap/megalinter-custom-flavor-my-repos)
-    checkout_files ".github/workflows/mega-linter.yml" ".github/workflows/release-please.yml"
+    # Lint with the image this repo builds (action.yml), also on the Renovate branches that bump it
+    "${SED}" -i -e 's|uses: oxsecurity/megalinter/flavors/documentation@.*|uses: ./|' \
+      -e "s|!startsWith(github.ref_name, 'chore/renovate/') && ||" .github/workflows/mega-linter.yml
     ;;
   ruzickap/my-git-projects)
     megalinter_flavor all

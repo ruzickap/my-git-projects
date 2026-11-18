@@ -193,7 +193,8 @@
     // Use commitMessagePrefix: preset "chore" rules are appended later and override semanticCommitType
     {
       // Open a PR assigned to ruzickap (not a silent branch merge) to notice the bump;
-      // patch/minor automerge, major stays manual via the "Disable auto-merge" rule
+      // patch/minor automerge, major stays manual via the "Disable auto-merge" rule.
+      // One group: MEGALINTER_VERSION and the custom-builder action pin must move together
       description: "Assign release-triggering MegaLinter bumps to ruzickap",
       matchRepositories: ["ruzickap/megalinter-custom-flavor-my-repos"],
       matchDepNames: ["oxsecurity/megalinter"],
@@ -202,6 +203,7 @@
       automergeType: "pr",
       commitMessageAction: "update",
       commitMessageTopic: "MegaLinter",
+      groupName: "MegaLinter",
     },
     {
       description: "MegaLinter patch bump must be fix so release-please cuts a patch release",
