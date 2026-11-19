@@ -200,7 +200,9 @@ Public status page: `stats.xvx.cz`
 
 ### Supabase
 
-- **Project**: `container-image-scans` (us-east-1)
+- **Project**: `container-image-scans` (us-east-1), `prevent_destroy` blocks
+  destroying or replacing it (it holds the scan history). Removing or renaming
+  the resource block still deletes it - rename it only with a `moved` block
 - Random 16-character database password
 
 ### AWS

@@ -42,6 +42,9 @@ env:
 jobs:
   tofu-cloudflare-github:
     runs-on: ubuntu-26.04-arm
+    # Label events plan only for the tofu labels: Renovate adds 3 labels to each PR, and
+    # parallel plans hit UptimeRobot's API rate limit (HTTP 429)
+    if: github.event.action != 'labeled' || github.event.label.name == 'tofu-apply' || github.event.label.name == 'tofu-plan'
     permissions:
       actions: read # Required to identify workflow run.
       checks: write # Required to add status summary.
@@ -90,12 +93,8 @@ jobs:
           TOFU_OUTPUTS_DIFF: ${{ steps.tofu.outputs.diff }}
           TOFU_OUTPUTS_RUN: ${{ steps.tofu.outputs.run-url }}
           TOFU_OUTPUTS_RESULT: ${{ steps.tofu.outputs.result }}
-          TOFU_OUTPUTS_SUMMARY: ${{ steps.tofu.outputs.summary }}
         run: |
-          gh api "/repos/{owner}/{repo}/issues" \
-            --method POST \
-            --field title="Configuration drift detected" \
-            --field body="
+          BODY="
           ### Diff of changes
 
           [View log.](${TOFU_OUTPUTS_RUN})
@@ -108,3 +107,10 @@ jobs:
           ${TOFU_OUTPUTS_RESULT}
           \`\`\`
           "
+          # Comment on the open drift issue instead of opening a new one every week
+          ISSUE=$(gh issue list --state open --search 'in:title "Configuration drift detected"' --json number --jq '.[0].number // empty')
+          if [[ -n "${ISSUE}" ]]; then
+            gh issue comment "${ISSUE}" --body "${BODY}"
+          else
+            gh issue create --title "Configuration drift detected" --body "${BODY}"
+          fi

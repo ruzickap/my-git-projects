@@ -4,11 +4,6 @@ name: tofu-aws-tests
 
 on:
   workflow_dispatch:
-  pull_request:
-    types: [opened, reopened, synchronize]
-    paths:
-      - opentofu/aws/**
-      - "!opentofu/aws/README.md"
   push:
     branches-ignore:
       - main
