@@ -113,14 +113,6 @@
       platformAutomerge: false,
     },
     {
-      // gh-pages-build is not a required check, so GitHub auto-merge would merge a Hugo
-      // bump with a failed site build (as in xvx.cz#128); Renovate's own automerge waits
-      description: "Merge Hugo version bumps only after all checks, including the site build, pass",
-      matchPackageNames: ["gohugoio/hugo"],
-      automergeType: "pr",
-      platformAutomerge: false,
-    },
-    {
       // No release timestamps here; skip to silence the warning. ghcr.io/quay.io
       // still warn: matching "docker" would drop the Docker Hub cooldown too.
       description: "Skip minimumReleaseAge for git-based datasources without timestamps",
