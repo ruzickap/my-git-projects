@@ -105,10 +105,11 @@
     {
       // On push to main tf-via-pr applies the plan saved on the PR: branch automerge has no PR, and
       // GitHub auto-merge merges at once (Renovate bypasses the ruleset), before the plan exists
-      description: "Merge OpenTofu cloudflare-github provider updates via PR after the tofu plan check passes",
+      description: "Merge OpenTofu cloudflare-github provider updates as one PR after the tofu plan check passes",
       matchManagers: ["terraform"],
       matchFileNames: ["opentofu/cloudflare-github/**"],
       automergeType: "pr",
+      groupName: "opentofu cloudflare-github", // parallel plans of separate PRs hit UptimeRobot's API rate limit
       platformAutomerge: false,
     },
     {
