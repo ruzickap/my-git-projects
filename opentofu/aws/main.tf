@@ -328,7 +328,8 @@ resource "aws_iam_role" "github_actions_container_image_scans" {
         Effect    = "Allow"
         Action    = "sts:AssumeRoleWithWebIdentity"
         Principal = { Federated = aws_iam_openid_connect_provider.github_actions.arn }
-        # Only main (nightly-scans.yml, apply-schema.yml) and pull requests; fork PRs get no secrets or id-token
+        # Only main (nightly-scans.yml, apply-schema.yml) and pull requests; fork `pull_request` runs get no
+        # secrets or id-token, but fork `pull_request_target` runs do (as main) - never run fork code there
         Condition = {
           StringEquals = {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
