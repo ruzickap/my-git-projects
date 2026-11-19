@@ -25,9 +25,6 @@ tools:
     min-integrity: none
 safe-outputs:
   threat-detection: false
-  github-app:
-    app-id: ${{ secrets.MY_PR_APPROVER_GITHUB_APP_ID }}
-    private-key: ${{ secrets.MY_PR_APPROVER_GITHUB_APP_PRIVATE_KEY }}
   create-pull-request-review-comment:
     max: 10
     side: RIGHT
