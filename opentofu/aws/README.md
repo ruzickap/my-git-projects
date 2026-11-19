@@ -117,10 +117,11 @@ by the KeePassXC entry `aws_role_to_assume` (like all other SSM parameters).
 
 ### GitHub Actions OIDC (`GitHubOidc-ruzickap-container-image-scans`)
 
-Read-only role for the `nightly-scans` and `apply-schema` workflows of
-`ruzickap/container-image-scans`. It allows only `ssm:GetParameter(s)` on
-`/github/ruzickap/container-image-scans/*` (read by `fnox exec`), and only
-`repo:ruzickap/container-image-scans:ref:refs/heads/main` can assume it.
+Read-only role for the workflows of `ruzickap/container-image-scans`. It allows
+only `ssm:GetParameter(s)` on `/github/ruzickap/container-image-scans/*` (read
+by `fnox exec`), and only `repo:ruzickap/container-image-scans:ref:refs/heads/main`
+and `repo:ruzickap/container-image-scans:pull_request` can assume it. Pull
+requests from forks get neither secrets nor an OIDC token, so they can not.
 
 The [`cloudflare-github`](../cloudflare-github/) module reads the role ARN by
 name and stores it as the `MY_AWS_AWS_ROLE_TO_ASSUME` Actions secret of that

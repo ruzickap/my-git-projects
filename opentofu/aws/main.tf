@@ -328,11 +328,14 @@ resource "aws_iam_role" "github_actions_container_image_scans" {
         Effect    = "Allow"
         Action    = "sts:AssumeRoleWithWebIdentity"
         Principal = { Federated = aws_iam_openid_connect_provider.github_actions.arn }
-        # Only main: nightly-scans.yml (schedule/dispatch) and apply-schema.yml (push/dispatch)
+        # Only main (nightly-scans.yml, apply-schema.yml) and pull requests; fork PRs get no secrets or id-token
         Condition = {
           StringEquals = {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
-            "token.actions.githubusercontent.com:sub" = "repo:ruzickap/container-image-scans:ref:refs/heads/main"
+            "token.actions.githubusercontent.com:sub" = [
+              "repo:ruzickap/container-image-scans:pull_request",
+              "repo:ruzickap/container-image-scans:ref:refs/heads/main",
+            ]
           }
         }
       },
