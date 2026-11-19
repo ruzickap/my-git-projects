@@ -124,7 +124,9 @@ Read-only role for the `nightly-scans` and `apply-schema` workflows of
 
 The [`cloudflare-github`](../cloudflare-github/) module reads the role ARN by
 name and stores it as the `MY_AWS_AWS_ROLE_TO_ASSUME` Actions secret of that
-repository, so apply this module first.
+repository, so apply this module first. Then re-run the `tofu-cloudflare-github`
+PR plan and merge only when the plan of the latest commit succeeded:
+`tf-via-pr` otherwise applies an older plan of the PR (without the secret).
 
 ### SSM Parameters from KeePassXC (`aws_ssm_parameter.keepassxc`)
 
