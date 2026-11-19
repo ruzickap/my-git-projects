@@ -82,8 +82,6 @@ jobs:
           comment-pr: ${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && 'never' || 'always' }}
           expand-diff: true
           plan-encrypt: ${{ secrets.TF_VAR_OPENTOFU_ENCRYPTION_PASSPHRASE }}
-          # Re-plan before apply: apply the fresh plan if the changes match, fail if not (no "Saved plan is stale")
-          plan-parity: true
           retention-days: 7
           tool: tofu
           working-directory: opentofu/cloudflare-github

@@ -92,8 +92,7 @@ KeePassXC (see below); with mise active, just run `tofu init` and `tofu plan` /
 - CI applies `opentofu/cloudflare-github` automatically on push to `main` and
   on PRs labeled `tofu-apply`; the weekly schedule runs a drift check that
   opens an issue. Changing files there is a live infrastructure change.
-- On push to `main`, `tf-via-pr` applies the plan saved on the merged PR
-  (`plan-parity` plans again first and stops if the changes differ) - a
+- On push to `main`, `tf-via-pr` applies the plan saved on the merged PR - a
   direct push (no PR) has no plan and fails. Renovate therefore merges
   provider bumps there as one grouped PR (`packageRules` in
   `.github/renovate-global.json5`).
