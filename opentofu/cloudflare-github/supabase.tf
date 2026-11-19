@@ -12,7 +12,8 @@ resource "supabase_project" "container_image_scans" {
   database_password = random_password.supabase_project_container_image_scans.result
   region            = "us-east-1"
 
-  # Holds the nightly scan history - a rename without a moved block must not delete it
+  # Holds the nightly scan history - blocks destroy and replace, but not removing
+  # or renaming this block (the guard goes with it): use a moved block to rename
   lifecycle {
     prevent_destroy = true
   }
