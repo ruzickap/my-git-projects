@@ -164,7 +164,6 @@ locals {
       topics      = ["github", "projects", "templates"]
       secrets = {
         # keep-sorted start
-        "COPILOT_GITHUB_TOKEN"               = data.aws_ssm_parameter.github_shared_actions_secrets_MY_COPILOT_GITHUB_TOKEN.value
         "MY_AWS_AWS_ROLE_TO_ASSUME"          = data.aws_ssm_parameter.github_ruzickap_my_git_projects_actions_secrets_MY_AWS_AWS_ROLE_TO_ASSUME.value
         "MY_RENOVATE_GITHUB_APP_CLIENT_ID"   = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_CLIENT_ID.value
         "MY_RENOVATE_GITHUB_APP_PRIVATE_KEY" = data.aws_ssm_parameter.github_shared_actions_secrets_MY_RENOVATE_GITHUB_APP_PRIVATE_KEY.value
