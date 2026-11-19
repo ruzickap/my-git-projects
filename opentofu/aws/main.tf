@@ -321,6 +321,56 @@ resource "aws_iam_role_policy_attachment" "github_actions" {
   policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AdministratorAccess"
 }
 
+# Read-only role for ruzickap/container-image-scans: fnox reads its Supabase secrets from SSM
+data "aws_caller_identity" "current" {}
+
+data "aws_iam_policy_document" "github_actions_container_image_scans_assume_role" {
+  statement {
+    sid     = "RoleForGitHubActions"
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.github_actions.arn]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    # Only main: nightly-scans.yml (schedule/dispatch) and apply-schema.yml (push/dispatch)
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:sub"
+      values   = ["repo:ruzickap/container-image-scans:ref:refs/heads/main"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "github_actions_container_image_scans" {
+  statement {
+    sid       = "ReadContainerImageScansParameters"
+    effect    = "Allow"
+    actions   = ["ssm:GetParameter", "ssm:GetParameters"]
+    resources = ["arn:${data.aws_partition.current.partition}:ssm:${local.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/github/ruzickap/container-image-scans/*"]
+  }
+}
+
+resource "aws_iam_role" "github_actions_container_image_scans" {
+  name               = "GitHubOidc-ruzickap-container-image-scans"
+  description        = "Service Role for ruzickap/container-image-scans GitHub Actions"
+  assume_role_policy = data.aws_iam_policy_document.github_actions_container_image_scans_assume_role.json
+}
+
+resource "aws_iam_role_policy" "github_actions_container_image_scans" {
+  name   = "ReadContainerImageScansParameters"
+  role   = aws_iam_role.github_actions_container_image_scans.id
+  policy = data.aws_iam_policy_document.github_actions_container_image_scans.json
+}
+
 ################################################################################
 # SSM Parameters - synced from KeePassXC
 ################################################################################

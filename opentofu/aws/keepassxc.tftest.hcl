@@ -1,6 +1,11 @@
 # Guards in main.tf that stop a bad KeePassXC export from deleting SSM parameters.
 # The export is replaced with fixed CSV and the providers are mocked: no KeePassXC, AWS or ~/.aws writes.
 mock_provider "aws" {
+  mock_data "aws_iam_policy_document" {
+    defaults = {
+      json = "{}"
+    }
+  }
   mock_data "aws_partition" {
     defaults = {
       partition = "aws"

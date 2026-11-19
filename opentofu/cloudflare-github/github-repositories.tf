@@ -19,6 +19,9 @@ locals {
       name        = "container-image-scans"
       description = "Container image scans"
       topics      = ["container", "container-image", "container-security", "cve", "image", "public", "security", "vulnerability"]
+      secrets = {
+        "MY_AWS_AWS_ROLE_TO_ASSUME" = data.aws_iam_role.github_oidc_container_image_scans.arn
+      }
     }
     "gha_test" = {
       name         = "gha-test"

@@ -1,4 +1,9 @@
 # keep-sorted start block=yes newline_separated=yes
+# Created by the opentofu/aws module - apply that one first
+data "aws_iam_role" "github_oidc_container_image_scans" {
+  name = "GitHubOidc-ruzickap-container-image-scans"
+}
+
 data "aws_ssm_parameter" "app1_xvx_cz_basic_auth_password" {
   name            = "/xvx.cz/app1/BASIC_AUTH_PASSWORD"
   with_decryption = true
