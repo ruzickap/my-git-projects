@@ -270,7 +270,7 @@ resource "github_repository" "this" {
   #checkov:skip=CKV2_GIT_1:Ensure each Repository has branch protection associated
   for_each = local.all_github_repositories
   # Merge settings
-  allow_auto_merge       = try(each.value.visibility, "public") != "private"
+  allow_auto_merge       = false # waits only for required checks; Renovate merges after all checks pass
   allow_merge_commit     = false # disable merge commits, use squash only
   allow_rebase_merge     = false # disable rebase merging
   allow_update_branch    = true  # allow updating PR branches from base branch
