@@ -29,38 +29,8 @@ data "aws_ssm_parameter" "app3_xvx_cz_basic_auth_username" {
   with_decryption = true
 }
 
-data "aws_ssm_parameter" "github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_ANON_KEY" {
-  name            = "/github/ruzickap/container-image-scans/actions-secrets/NEXT_PUBLIC_SUPABASE_ANON_KEY"
-  with_decryption = true
-}
-
-data "aws_ssm_parameter" "github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_URL" {
-  name            = "/github/ruzickap/container-image-scans/actions-secrets/NEXT_PUBLIC_SUPABASE_URL"
-  with_decryption = true
-}
-
 data "aws_ssm_parameter" "github_ruzickap_container_image_scans_actions_secrets_SUPABASE_ACCESS_TOKEN" {
   name            = "/github/ruzickap/container-image-scans/actions-secrets/SUPABASE_ACCESS_TOKEN"
-  with_decryption = true
-}
-
-data "aws_ssm_parameter" "github_ruzickap_container_image_scans_actions_secrets_SUPABASE_DB_PASSWORD" {
-  name            = "/github/ruzickap/container-image-scans/actions-secrets/SUPABASE_DB_PASSWORD"
-  with_decryption = true
-}
-
-data "aws_ssm_parameter" "github_ruzickap_container_image_scans_actions_secrets_SUPABASE_PROJECT_REF" {
-  name            = "/github/ruzickap/container-image-scans/actions-secrets/SUPABASE_PROJECT_REF"
-  with_decryption = true
-}
-
-data "aws_ssm_parameter" "github_ruzickap_container_image_scans_actions_secrets_SUPABASE_SERVICE_ROLE_KEY" {
-  name            = "/github/ruzickap/container-image-scans/actions-secrets/SUPABASE_SERVICE_ROLE_KEY"
-  with_decryption = true
-}
-
-data "aws_ssm_parameter" "github_ruzickap_container_image_scans_actions_secrets_SUPABASE_URL" {
-  name            = "/github/ruzickap/container-image-scans/actions-secrets/SUPABASE_URL"
   with_decryption = true
 }
 

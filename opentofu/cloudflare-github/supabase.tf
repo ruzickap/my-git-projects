@@ -40,23 +40,4 @@ output "supabase_container_image_scans_endpoint" {
   description = "Supabase endpoint for container-image-scans"
   value       = local.supabase_container_image_scans_url
 }
-
-output "supabase_container_image_scans_env_yaml" {
-  description = "Supabase env.yaml snippet for container-image-scans"
-  sensitive   = true
-  value       = <<-EOT
-    # Supabase - web app (read-only, anon key)
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: "${data.supabase_apikeys.container_image_scans.anon_key}"
-    NEXT_PUBLIC_SUPABASE_URL: "${local.supabase_container_image_scans_url}"
-
-    # Supabase - scan script (write, service-role key)
-    SUPABASE_SERVICE_ROLE_KEY: "${data.supabase_apikeys.container_image_scans.service_role_key}"
-    SUPABASE_URL: "${local.supabase_container_image_scans_url}"
-
-    # Supabase - schema migrations
-    SUPABASE_ACCESS_TOKEN: "${data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_ACCESS_TOKEN.value}"
-    SUPABASE_DB_PASSWORD: "${random_password.supabase_project_container_image_scans.result}"
-    SUPABASE_PROJECT_REF: "${supabase_project.container_image_scans.id}"
-  EOT
-}
 # keep-sorted end
