@@ -1,5 +1,0 @@
-rules:
-  github-app:
-    ignore:
-      # gh-aw scopes the token with `repositories:`; older zizmor still flags `owner:`
-      - copilot-pr-review.lock.yml
