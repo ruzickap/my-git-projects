@@ -13,6 +13,7 @@ on:
         default: false
   push:
     paths:
+      - .github/workflows/gh-pages-build.yml
       - content/**
       - data/**
       - hugo.toml
@@ -42,6 +43,9 @@ jobs:
 
       - name: ⚙️ Install Hugo static site generator
         uses: peaceiris/actions-hugo@d1c81a15d4e6dca7086a17b9c2565cb70fd576bf # v3.3.0
+        with:
+          # renovate: datasource=github-releases depName=gohugoio/hugo
+          hugo-version: 0.170.1
 
       - name: 📝 Set CLOUDFLARE_PAGES_PROJECT variable
         run: |
