@@ -1,3 +1,7 @@
+locals {
+  supabase_container_image_scans_url = "https://${supabase_project.container_image_scans.id}.supabase.co"
+}
+
 resource "random_password" "supabase_project_container_image_scans" {
   length = 16
 }
@@ -7,6 +11,11 @@ resource "supabase_project" "container_image_scans" {
   name              = "container-image-scans"
   database_password = random_password.supabase_project_container_image_scans.result
   region            = "us-east-1"
+
+  # Holds the nightly scan history - a rename without a moved block must not delete it
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 data "supabase_apikeys" "container_image_scans" {
@@ -28,7 +37,7 @@ output "supabase_container_image_scans_database_password" {
 
 output "supabase_container_image_scans_endpoint" {
   description = "Supabase endpoint for container-image-scans"
-  value       = "https://${supabase_project.container_image_scans.id}.supabase.co"
+  value       = local.supabase_container_image_scans_url
 }
 
 output "supabase_container_image_scans_env_yaml" {
@@ -37,11 +46,11 @@ output "supabase_container_image_scans_env_yaml" {
   value       = <<-EOT
     # Supabase - web app (read-only, anon key)
     NEXT_PUBLIC_SUPABASE_ANON_KEY: "${data.supabase_apikeys.container_image_scans.anon_key}"
-    NEXT_PUBLIC_SUPABASE_URL: "${"https://${supabase_project.container_image_scans.id}.supabase.co"}"
+    NEXT_PUBLIC_SUPABASE_URL: "${local.supabase_container_image_scans_url}"
 
     # Supabase - scan script (write, service-role key)
     SUPABASE_SERVICE_ROLE_KEY: "${data.supabase_apikeys.container_image_scans.service_role_key}"
-    SUPABASE_URL: "${"https://${supabase_project.container_image_scans.id}.supabase.co"}"
+    SUPABASE_URL: "${local.supabase_container_image_scans_url}"
 
     # Supabase - schema migrations
     SUPABASE_ACCESS_TOKEN: "${data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_ACCESS_TOKEN.value}"

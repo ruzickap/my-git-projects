@@ -200,7 +200,8 @@ Public status page: `stats.xvx.cz`
 
 ### Supabase
 
-- **Project**: `container-image-scans` (us-east-1)
+- **Project**: `container-image-scans` (us-east-1), protected by
+  `prevent_destroy` (it holds the scan history)
 - Random 16-character database password
 
 ### AWS
