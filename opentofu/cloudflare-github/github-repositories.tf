@@ -20,15 +20,7 @@ locals {
       description = "Container image scans"
       topics      = ["container", "container-image", "container-security", "cve", "image", "public", "security", "vulnerability"]
       secrets = {
-        # keep-sorted start
-        "NEXT_PUBLIC_SUPABASE_ANON_KEY" = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_ANON_KEY.value
-        "NEXT_PUBLIC_SUPABASE_URL"      = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_NEXT_PUBLIC_SUPABASE_URL.value
-        "SUPABASE_ACCESS_TOKEN"         = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_ACCESS_TOKEN.value
-        "SUPABASE_DB_PASSWORD"          = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_DB_PASSWORD.value
-        "SUPABASE_PROJECT_REF"          = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_PROJECT_REF.value
-        "SUPABASE_SERVICE_ROLE_KEY"     = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_SERVICE_ROLE_KEY.value
-        "SUPABASE_URL"                  = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_URL.value
-        # keep-sorted end
+        "MY_AWS_AWS_ROLE_TO_ASSUME" = data.aws_iam_role.github_oidc_container_image_scans.arn
       }
     }
     "gha_test" = {

@@ -274,44 +274,36 @@ resource "aws_iam_openid_connect_provider" "github_actions" {
   thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 }
 
-data "aws_iam_policy_document" "github_actions_assume_role" {
-  statement {
-    sid     = "RoleForGitHubActions"
-    effect  = "Allow"
-    actions = ["sts:AssumeRoleWithWebIdentity"]
-
-    principals {
-      type        = "Federated"
-      identifiers = [aws_iam_openid_connect_provider.github_actions.arn]
-    }
-
-    # Only the subjects used by tofu-cloudflare-github.yml (push/schedule/dispatch on main and pull requests)
-    condition {
-      test     = "StringLike"
-      variable = "token.actions.githubusercontent.com:sub"
-      values = [
-        "repo:${local.github_oidc_repo}:pull_request",
-        "repo:${local.github_oidc_repo}:ref:refs/heads/main",
-      ]
-    }
-  }
-
-  statement {
-    sid     = "AllowUsersToAssumeRole"
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "AWS"
-      identifiers = [aws_iam_user.this.arn]
-    }
-  }
-}
-
 resource "aws_iam_role" "github_actions" {
-  name               = local.github_oidc_role_name
-  description        = "Service Role for ${local.github_oidc_repo} GitHub Actions"
-  assume_role_policy = data.aws_iam_policy_document.github_actions_assume_role.json
+  name        = local.github_oidc_role_name
+  description = "Service Role for ${local.github_oidc_repo} GitHub Actions"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "RoleForGitHubActions"
+        Effect    = "Allow"
+        Action    = "sts:AssumeRoleWithWebIdentity"
+        Principal = { Federated = aws_iam_openid_connect_provider.github_actions.arn }
+        # Only the subjects used by tofu-cloudflare-github.yml (push/schedule/dispatch on main and pull requests)
+        Condition = {
+          StringLike = {
+            "token.actions.githubusercontent.com:sub" = [
+              "repo:${local.github_oidc_repo}:pull_request",
+              "repo:${local.github_oidc_repo}:ref:refs/heads/main",
+            ]
+          }
+        }
+      },
+      {
+        Sid       = "AllowUsersToAssumeRole"
+        Effect    = "Allow"
+        Action    = "sts:AssumeRole"
+        Principal = { AWS = aws_iam_user.this.arn }
+      },
+    ]
+  })
 }
 
 # trivy:ignore:AVD-AWS-0057 Personal account - admin privileges intentional for CI/CD full infrastructure management
@@ -319,6 +311,54 @@ resource "aws_iam_role_policy_attachment" "github_actions" {
   # checkov:skip=CKV_AWS_274:Personal account - admin privileges intentional for CI/CD full infrastructure management
   role       = aws_iam_role.github_actions.name
   policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AdministratorAccess"
+}
+
+# Read-only role for ruzickap/container-image-scans: fnox reads its Supabase secrets from SSM
+data "aws_caller_identity" "current" {}
+
+resource "aws_iam_role" "github_actions_container_image_scans" {
+  name        = "GitHubOidc-ruzickap-container-image-scans"
+  description = "Service Role for ruzickap/container-image-scans GitHub Actions"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "RoleForGitHubActions"
+        Effect    = "Allow"
+        Action    = "sts:AssumeRoleWithWebIdentity"
+        Principal = { Federated = aws_iam_openid_connect_provider.github_actions.arn }
+        # Only main (nightly-scans.yml, apply-schema.yml) and pull requests; fork `pull_request` runs get no
+        # secrets or id-token, but fork `pull_request_target` runs do (as main) - never run fork code there
+        Condition = {
+          StringEquals = {
+            "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
+            "token.actions.githubusercontent.com:sub" = [
+              "repo:ruzickap/container-image-scans:pull_request",
+              "repo:ruzickap/container-image-scans:ref:refs/heads/main",
+            ]
+          }
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "github_actions_container_image_scans" {
+  name = "ReadContainerImageScansParameters"
+  role = aws_iam_role.github_actions_container_image_scans.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid      = "ReadContainerImageScansParameters"
+        Effect   = "Allow"
+        Action   = ["ssm:GetParameter", "ssm:GetParameters"]
+        Resource = "arn:${data.aws_partition.current.partition}:ssm:${local.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/github/ruzickap/container-image-scans/*"
+      },
+    ]
+  })
 }
 
 ################################################################################

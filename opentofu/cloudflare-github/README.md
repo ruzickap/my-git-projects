@@ -77,7 +77,6 @@ from KeePassXC by the [`opentofu/aws`](../aws/) module.
 | `supabase_container_image_scans_apikeys`           | yes       |
 | `supabase_container_image_scans_endpoint`          | no        |
 | `supabase_container_image_scans_database_password` | yes       |
-| `supabase_container_image_scans_env_yaml`          | yes       |
 
 ## Managed Resources
 

@@ -19,7 +19,8 @@ This project provisions and manages:
   50% actual and 100% actual spend
 - **GitHub Actions OIDC** -- OpenID Connect identity provider and
   `GitHubOidc-ruzickap-my-git-projects` IAM role for keyless CI authentication
-  with `AdministratorAccess` for full infrastructure management
+  with `AdministratorAccess` for full infrastructure management, plus the
+  read-only `GitHubOidc-ruzickap-container-image-scans` role
 - **SSM Parameters from KeePassXC** -- every entry of the KeePassXC group
   `aws-ssm-parameter-store` (`~/Documents/secrets/keepass2.kdbx`) is pushed to
   SSM Parameter Store (`eu-central-1`) as a `SecureString` parameter
@@ -113,6 +114,23 @@ user. Workflows on other branches can not assume it.
 The role ARN is stored in the SSM parameter
 `/github/ruzickap/my-git-projects/actions-secrets/MY_AWS_AWS_ROLE_TO_ASSUME`
 by the KeePassXC entry `aws_role_to_assume` (like all other SSM parameters).
+
+### GitHub Actions OIDC (`GitHubOidc-ruzickap-container-image-scans`)
+
+Read-only role for the workflows of `ruzickap/container-image-scans`. It allows
+only `ssm:GetParameter(s)` on `/github/ruzickap/container-image-scans/*` (read
+by `fnox exec`), and only `repo:ruzickap/container-image-scans:ref:refs/heads/main`
+and `repo:ruzickap/container-image-scans:pull_request` can assume it.
+`pull_request` runs from forks get neither secrets nor an OIDC token, so they
+can not. `pull_request_target` runs from forks get both (with the
+`ref:refs/heads/main` subject): never run fork code in such a job with
+`id-token: write`.
+
+The [`cloudflare-github`](../cloudflare-github/) module reads the role ARN by
+name and stores it as the `MY_AWS_AWS_ROLE_TO_ASSUME` Actions secret of that
+repository, so apply this module first. Then re-run the `tofu-cloudflare-github`
+PR plan and merge only when the plan of the latest commit succeeded:
+`tf-via-pr` otherwise applies an older plan of the PR (without the secret).
 
 ### SSM Parameters from KeePassXC (`aws_ssm_parameter.keepassxc`)
 
