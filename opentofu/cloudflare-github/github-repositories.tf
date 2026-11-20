@@ -19,6 +19,14 @@ locals {
       name        = "container-image-scans"
       description = "Container image scans"
       topics      = ["container", "container-image", "container-security", "cve", "image", "public", "security", "vulnerability"]
+      # deploy-web.yml publishes the dashboard to the gh-pages branch
+      pages = {
+        branch = "gh-pages"
+      }
+      secrets = {
+        # nightly-scans.yml: OIDC role writing to the DynamoDB table (GitHubOidc-ruzickap-container-image-scans, opentofu/aws)
+        "CONTAINER_IMAGE_SCANS_AWS_ROLE_TO_ASSUME" = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_CONTAINER_IMAGE_SCANS_AWS_ROLE_TO_ASSUME.value
+      }
     }
     "gha_test" = {
       name         = "gha-test"

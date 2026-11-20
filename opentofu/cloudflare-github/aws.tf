@@ -29,6 +29,11 @@ data "aws_ssm_parameter" "app3_xvx_cz_basic_auth_username" {
   with_decryption = true
 }
 
+data "aws_ssm_parameter" "github_ruzickap_container_image_scans_actions_secrets_CONTAINER_IMAGE_SCANS_AWS_ROLE_TO_ASSUME" {
+  name            = "/github/ruzickap/container-image-scans/actions-secrets/CONTAINER_IMAGE_SCANS_AWS_ROLE_TO_ASSUME"
+  with_decryption = true
+}
+
 data "aws_ssm_parameter" "github_ruzickap_malware_cryptominer_container_actions_secrets_DOCKERHUB_CONTAINER_REGISTRY_PASSWORD" {
   name            = "/github/ruzickap/malware-cryptominer-container/actions-secrets/DOCKERHUB_CONTAINER_REGISTRY_PASSWORD"
   with_decryption = true
