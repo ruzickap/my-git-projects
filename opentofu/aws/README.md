@@ -1,26 +1,30 @@
 # OpenTofu - AWS
 
-OpenTofu Infrastructure as Code project managing AWS IAM, S3 and SSM Parameter
-Store resources for personal infrastructure.
+OpenTofu Infrastructure as Code project managing AWS IAM, S3, SSM Parameter
+Store, DynamoDB and Cognito resources for personal infrastructure.
 
 ## Overview
 
 This project provisions and manages:
 
-- **IAM User** -- `aws-cli` with programmatic access and `AdministratorAccess`;
+- **IAM User** - `aws-cli` with programmatic access and `AdministratorAccess`;
   access key credentials written to the `[my-aws]` profile in
   `~/.aws/credentials`
-- **AWS CLI Files** -- `~/.aws/credentials` and `~/.aws/config` are fully
+- **AWS CLI Files** - `~/.aws/credentials` and `~/.aws/config` are fully
   managed by `local_sensitive_file` resources; any external drift is detected and
   corrected on the next `tofu apply`
-- **S3 Bucket** -- `ruzickap-my-git-projects-opentofu-state-files` for
+- **S3 Bucket** - `ruzickap-my-git-projects-opentofu-state-files` for
   OpenTofu remote state storage (used by `cloudflare-github` module)
-- **Budget Alert** -- monthly $5 USD cost budget with email notifications at
+- **Budget Alert** - monthly $2 USD cost budget with email notifications at
   50% actual and 100% actual spend
-- **GitHub Actions OIDC** -- OpenID Connect identity provider and
+- **GitHub Actions OIDC** - OpenID Connect identity provider and
   `GitHubOidc-ruzickap-my-git-projects` IAM role for keyless CI authentication
   with `AdministratorAccess` for full infrastructure management
-- **SSM Parameters from KeePassXC** -- every entry of the KeePassXC group
+- **Container Image Scans** - DynamoDB table `container-image-scans` written
+  by the `ruzickap/container-image-scans` GitHub Actions and read by its
+  GitHub Pages site through Cognito guest access, kept in the AWS Always Free
+  tier with e-mail alerts
+- **SSM Parameters from KeePassXC** - every entry of the KeePassXC group
   `aws-ssm-parameter-store` (`~/Documents/secrets/keepass2.kdbx`) is pushed to
   SSM Parameter Store (`eu-central-1`) as a `SecureString` parameter
 
@@ -47,10 +51,10 @@ comparison and corrected on the next `tofu apply`.
 
 Each file contains two profiles:
 
-- **`[default]`** -- credentials and role ARN for a separate AWS account,
+- **`[default]`** - credentials and role ARN for a separate AWS account,
   read from the KeePassXC group `aws-ssm-parameter-store` (see
   [`[default]` profile values](#default-profile-values))
-- **`[my-aws]`** / **`[profile my-aws]`** -- credentials from the `aws-cli`
+- **`[my-aws]`** / **`[profile my-aws]`** - credentials from the `aws-cli`
   IAM user managed by this module, plus the region
 
 The `~/.aws/` directory is created automatically with `0700` permissions if it
@@ -76,22 +80,22 @@ and written to the `[my-aws]` profile in `~/.aws/credentials`.
 Stores OpenTofu state files for the `cloudflare-github` module. Configured
 with:
 
-- **Versioning** -- enabled (allows state recovery)
-- **Encryption** -- SSE-S3 (AES-256), AWS default since January 2023
-- **Public access** -- all public access blocked
-- **Ownership** -- `BucketOwnerEnforced` (ACLs disabled)
-- **Lifecycle rules** -- abort incomplete multipart uploads after 7 days;
+- **Versioning** - enabled (allows state recovery)
+- **Encryption** - SSE-S3 (AES-256), AWS default since January 2023
+- **Public access** - all public access blocked
+- **Ownership** - `BucketOwnerEnforced` (ACLs disabled)
+- **Lifecycle rules** - abort incomplete multipart uploads after 7 days;
   expire noncurrent object versions after 90 days
-- **Bucket policy** -- deny all non-HTTPS requests
-- **Deletion protection** -- `prevent_destroy = true`
+- **Bucket policy** - deny all non-HTTPS requests
+- **Deletion protection** - `prevent_destroy = true`
 
 ### Budget Alert (`monthly-account-budget`)
 
-Monthly cost budget set to $5 USD. Email notifications are sent to
+Monthly cost budget set to $2 USD. Email notifications are sent to
 `petr.ruzicka@gmail.com` when:
 
-- **Actual** spend exceeds **50%** ($2.50)
-- **Actual** spend exceeds **100%** ($5.00)
+- **Actual** spend exceeds **50%** ($1.00)
+- **Actual** spend exceeds **100%** ($2.00)
 
 ### GitHub Actions OIDC (`GitHubOidc-ruzickap-my-git-projects`)
 
@@ -113,6 +117,92 @@ user. Workflows on other branches can not assume it.
 The role ARN is stored in the SSM parameter
 `/github/ruzickap/my-git-projects/actions-secrets/MY_AWS_AWS_ROLE_TO_ASSUME`
 by the KeePassXC entry `aws_role_to_assume` (like all other SSM parameters).
+
+### Container Image Scans (DynamoDB + Cognito)
+
+Storage for the [`ruzickap/container-image-scans`](https://github.com/ruzickap/container-image-scans)
+scan results. GitHub Actions write them, the GitHub Pages site reads them
+directly from the browser - there is no backend code:
+
+```mermaid
+flowchart LR
+  GHA["GitHub Actions (OIDC)"]
+  WEB["GitHub Pages (browser)"]
+  COGNITO["Cognito identity pool (guest)"]
+  DB[("DynamoDB container-image-scans")]
+
+  GHA -- "PutItem / BatchWriteItem" --> DB
+  WEB -- "guest credentials" --> COGNITO
+  WEB -- "GetItem / Query" --> DB
+```
+
+- **DynamoDB table** `container-image-scans` - partition key `pk`, sort key
+  `sk` (both strings), TTL attribute `expires_at` (epoch seconds), deletion
+  protection enabled
+- **Cognito identity pool** `container-image-scans` - guest
+  (unauthenticated) access, enhanced flow only. The guest IAM role
+  `Cognito-container-image-scans-guest` can only `GetItem`, `BatchGetItem` and
+  `Query` the table (no `Scan`). **Everything in the table is public** - the
+  identity pool ID is not a secret and anyone can use it, not only the
+  GitHub Pages site
+- **Writer role** `GitHubOidc-ruzickap-container-image-scans` - read/write
+  access to the table for any workflow of `ruzickap/container-image-scans` on
+  `main` and in pull requests. `pull_request` runs from forks get neither
+  secrets nor an OIDC token, so they can not assume it. `pull_request_target`
+  runs from forks get both (with the `ref:refs/heads/main` subject): never run
+  fork code in such a job with `id-token: write`
+
+#### Never paying - AWS Always Free tier
+
+| Service                | Always Free                                | How it is kept there                                 |
+|------------------------|--------------------------------------------|------------------------------------------------------|
+| DynamoDB capacity      | 25 RCU + 25 WCU (all tables in the region) | `PROVISIONED` 2 RCU / 25 WCU - over is throttled     |
+| DynamoDB storage       | 25 GB                                      | TTL (`expires_at`) deletes old items for free        |
+| Data transfer out      | 100 GB/month (all services)                | successful public reads max. ~42 GB/month (2 RCU)    |
+| Cognito identity pools | no charge                                  | -                                                    |
+| CloudWatch alarms      | 10 alarm metrics                           | 2 alarms                                             |
+| SNS                    | 1,000 e-mails/month                        | alarm e-mails only                                   |
+| Budgets                | free without budget actions                | no budget actions                                    |
+
+> [!WARNING]
+> The read capacity limits only the **successful** reads (2 RCU x 8 KB/s =
+> ~42 GB/month). Throttled requests still get a small error response, and
+> their number is not limited - e.g. 1,000 requests/s of abuse is ~1.3 TB/month
+> of data transfer out (~$100). The read throttling alarm reports it within
+> 5 minutes - then switch off the guest access (see below).
+
+Paid features are intentionally **not** used: on-demand capacity, auto
+scaling, global secondary indexes (they use the shared capacity),
+point-in-time recovery, KMS customer managed keys (DynamoDB and SNS), streams
+and warm throughput. The skipped Checkov / Trivy checks in `main.tf` say why.
+`main.tftest.hcl` (`tofu test`) fails when the table leaves the free tier
+(billing mode, table class, capacity, point-in-time recovery, indexes).
+
+The free 25 RCU / 25 WCU are shared by **all** tables in `eu-central-1` -
+lower `container_image_scans_write_capacity` before adding another table.
+A DynamoDB item can have max. 400 KB.
+
+#### Alerts
+
+- **CloudWatch alarm** `container-image-scans-ReadThrottleEvents` - reads
+  throttled within 5 minutes, the public demand is above the free capacity
+  (e.g. abuse of the guest access). Writes come only from own CI (throttled
+  writes are free and retried), so they have no alarm. E-mails via the SNS
+  topic `free-tier-alerts` - **confirm the subscription e-mail** from AWS after
+  the first apply, otherwise nothing is delivered
+- **CloudWatch alarm** `container-image-scans-UserErrors` - DynamoDB requests
+  rejected with HTTP 400 in the last hour, e.g. a `ValidationException` when the
+  CI writer stores an item over 400 KB. The metric covers all DynamoDB tables
+  in `eu-central-1`. E-mails via the same SNS topic
+- **Budget** `free-tier-services` - e-mail when the DynamoDB, Cognito, SNS,
+  CloudWatch or data transfer costs exceed $0.01 in a month (billing data is
+  updated a few times a day)
+
+To stop the public reads immediately, use the kill switch in `main.tf`: swap
+the comment of the two `allow_unauthenticated_identities` lines of
+`aws_cognito_identity_pool.container_image_scans` (`true` -> `false`) and
+apply. Guest credentials issued before stay valid until they expire (max.
+1 hour).
 
 ### SSM Parameters from KeePassXC (`aws_ssm_parameter.keepassxc`)
 
@@ -158,7 +248,7 @@ How it works:
 - an entry has an empty UserName, or empty / longer than 1024 characters Notes
 - two entries share the same UserName
 
-`keepassxc.tftest.hcl` (`tofu test`, run in CI by `tofu-aws-tests.yml`) checks
+`main.tftest.hcl` (`tofu test`, run in CI by `tofu-aws-tests.yml`) checks
 the empty group and duplicate UserName guards with mocked providers - no
 KeePassXC database or AWS access is needed.
 
@@ -210,10 +300,13 @@ same database and key file (`mise.toml`) - change the paths in both files.
 
 ### Outputs
 
-| Name                            | Sensitive | Description                                       |
-|---------------------------------|-----------|---------------------------------------------------|
-| `github_oidc_role_arn`          | no        | ARN of the GitHub Actions OIDC IAM role           |
-| `keepassxc_ssm_parameter_names` | no        | Names of the SSM parameters synced from KeePassXC |
+| Name                                             | Sensitive | Description                                                  |
+|--------------------------------------------------|-----------|--------------------------------------------------------------|
+| `container_image_scans_cognito_identity_pool_id` | no        | Cognito identity pool ID for the GitHub Pages guest access   |
+| `container_image_scans_dynamodb_table_name`      | no        | Name of the container-image-scans DynamoDB table             |
+| `container_image_scans_github_oidc_role_arn`     | no        | ARN of the GitHub Actions OIDC IAM role writing to the table |
+| `github_oidc_role_arn`                           | no        | ARN of the GitHub Actions OIDC IAM role                      |
+| `keepassxc_ssm_parameter_names`                  | no        | Names of the SSM parameters synced from KeePassXC            |
 
 ## Prerequisites
 
