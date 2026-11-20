@@ -517,23 +517,6 @@ resource "aws_cloudwatch_metric_alarm" "container_image_scans_read_throttling" {
   ok_actions          = [aws_sns_topic.cloudwatch_alarms.arn]
 }
 
-# HTTP 400 errors (e.g. ValidationException for an item over 400 KB) = the CI writer silently fails.
-# The metric has no table dimension - it covers all DynamoDB tables in the region
-resource "aws_cloudwatch_metric_alarm" "dynamodb_user_errors" {
-  alarm_name          = "${aws_dynamodb_table.container_image_scans.name}-UserErrors"
-  alarm_description   = "DynamoDB (${local.aws_region}): requests rejected with HTTP 400 (validation, missing table, access, ...) in the last hour"
-  namespace           = "AWS/DynamoDB"
-  metric_name         = "UserErrors"
-  statistic           = "Sum"
-  period              = 3600
-  evaluation_periods  = 1
-  threshold           = 0
-  comparison_operator = "GreaterThanThreshold"
-  treat_missing_data  = "notBreaching"
-  alarm_actions       = [aws_sns_topic.cloudwatch_alarms.arn]
-  ok_actions          = [aws_sns_topic.cloudwatch_alarms.arn]
-}
-
 # Any cost of the services behind the free tier resources (the monthly account budget alerts at $1 only)
 resource "aws_budgets_budget" "container_image_scans" {
   name         = local.container_image_scans_name
