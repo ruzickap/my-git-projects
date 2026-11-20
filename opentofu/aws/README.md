@@ -150,7 +150,9 @@ flowchart LR
   `main` and in pull requests. `pull_request` runs from forks get neither
   secrets nor an OIDC token, so they can not assume it. `pull_request_target`
   runs from forks get both (with the `ref:refs/heads/main` subject): never run
-  fork code in such a job with `id-token: write`
+  fork code in such a job with `id-token: write`. Max. session 3 hours
+  (`max_session_duration`) - the nightly scans run longer than the default
+  1 hour
 
 #### Never paying - AWS Always Free tier
 
