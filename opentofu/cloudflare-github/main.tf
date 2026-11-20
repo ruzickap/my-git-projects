@@ -39,10 +39,6 @@ terraform {
       source  = "Mastercard/restapi"
       version = "3.0.0"
     }
-    supabase = {
-      source  = "supabase/supabase"
-      version = "1.11.1"
-    }
     uptimerobot = {
       source  = "uptimerobot/uptimerobot"
       version = "1.12.2"
@@ -110,10 +106,6 @@ provider "restapi" {
     Content-Type  = "application/json"
   }
   write_returns_object = true
-}
-
-provider "supabase" {
-  access_token = data.aws_ssm_parameter.github_ruzickap_container_image_scans_actions_secrets_SUPABASE_ACCESS_TOKEN.value
 }
 
 provider "uptimerobot" {

@@ -11,7 +11,7 @@ provider configuration.
 | Directory                                 | Description                                                                       |
 |-------------------------------------------|-----------------------------------------------------------------------------------|
 | [`aws`](aws/)                             | AWS IAM: `aws-cli` user, S3 state bucket, GitHub Actions OIDC, SSM from KeePassXC |
-| [`cloudflare-github`](cloudflare-github/) | Cloudflare, GitHub, Supabase, UptimeRobot (secrets read from AWS SSM)             |
+| [`cloudflare-github`](cloudflare-github/) | Cloudflare, GitHub, UptimeRobot (secrets read from AWS SSM)                       |
 
 The `cloudflare-github` module stores state **encrypted** (AES-GCM with PBKDF2
 key) in an AWS S3 bucket (`ruzickap-my-git-projects-opentofu-state-files`). The

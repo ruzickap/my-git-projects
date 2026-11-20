@@ -15,7 +15,7 @@ This is **not** an application. It is the owner's personal control plane:
 - `multi-gitter/` - the engine that distributes `gh-repo-defaults/`
   (`config.yaml` + `multi-gitter-run-script.sh`).
 - `opentofu/` - two independent OpenTofu root modules managing the owner's
-  real AWS / Cloudflare / GitHub / Supabase / UptimeRobot infrastructure.
+  real AWS / Cloudflare / GitHub / UptimeRobot infrastructure.
 - `cloudformation/gh-action-iam-role-oidc.yaml` - OIDC provider and
   `GitHubOidcFederatedRole` for the separate RUZICKA_SBX01 AWS account,
   deployed manually by `aws-cloudformation-gh-action.yml`. Not the same
