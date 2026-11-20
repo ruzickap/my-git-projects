@@ -487,14 +487,14 @@ resource "aws_iam_role_policy" "github_actions_container_image_scans" {
 ################################################################################
 
 # trivy:ignore:AVD-AWS-0095 CloudWatch can not publish to the AWS managed SNS key, a KMS customer managed key costs $1/month
-resource "aws_sns_topic" "free_tier_alerts" {
+resource "aws_sns_topic" "cloudwatch_alarms" {
   # checkov:skip=CKV_AWS_26:CloudWatch can not publish to the AWS managed SNS key, a KMS customer managed key costs $1/month
-  name = "free-tier-alerts"
+  name = "cloudwatch-alarms"
 }
 
 # AWS sends a confirmation e-mail after the first apply - no alerts are delivered until it is confirmed
-resource "aws_sns_topic_subscription" "free_tier_alerts_email" {
-  topic_arn = aws_sns_topic.free_tier_alerts.arn
+resource "aws_sns_topic_subscription" "cloudwatch_alarms_email" {
+  topic_arn = aws_sns_topic.cloudwatch_alarms.arn
   protocol  = "email"
   endpoint  = local.my_email
 }
@@ -513,8 +513,8 @@ resource "aws_cloudwatch_metric_alarm" "container_image_scans_read_throttling" {
   threshold           = 0
   comparison_operator = "GreaterThanThreshold"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [aws_sns_topic.free_tier_alerts.arn]
-  ok_actions          = [aws_sns_topic.free_tier_alerts.arn]
+  alarm_actions       = [aws_sns_topic.cloudwatch_alarms.arn]
+  ok_actions          = [aws_sns_topic.cloudwatch_alarms.arn]
 }
 
 # HTTP 400 errors (e.g. ValidationException for an item over 400 KB) = the CI writer silently fails.
@@ -530,13 +530,13 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_user_errors" {
   threshold           = 0
   comparison_operator = "GreaterThanThreshold"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [aws_sns_topic.free_tier_alerts.arn]
-  ok_actions          = [aws_sns_topic.free_tier_alerts.arn]
+  alarm_actions       = [aws_sns_topic.cloudwatch_alarms.arn]
+  ok_actions          = [aws_sns_topic.cloudwatch_alarms.arn]
 }
 
 # Any cost of the services behind the free tier resources (the monthly account budget alerts at $1 only)
-resource "aws_budgets_budget" "free_tier_services" {
-  name         = "free-tier-services"
+resource "aws_budgets_budget" "container_image_scans" {
+  name         = local.container_image_scans_name
   budget_type  = "COST"
   limit_amount = "0.01"
   limit_unit   = "USD"

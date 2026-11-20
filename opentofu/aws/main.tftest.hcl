@@ -11,7 +11,7 @@ mock_provider "aws" {
   # The alarm and the e-mail subscription validate the ARN
   mock_resource "aws_sns_topic" {
     defaults = {
-      arn = "arn:aws:sns:eu-central-1:123456789012:free-tier-alerts"
+      arn = "arn:aws:sns:eu-central-1:123456789012:cloudwatch-alarms"
     }
   }
 }

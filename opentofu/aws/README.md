@@ -188,13 +188,13 @@ A DynamoDB item can have max. 400 KB.
   throttled within 5 minutes, the public demand is above the free capacity
   (e.g. abuse of the guest access). Writes come only from own CI (throttled
   writes are free and retried), so they have no alarm. E-mails via the SNS
-  topic `free-tier-alerts` - **confirm the subscription e-mail** from AWS after
+  topic `cloudwatch-alarms` - **confirm the subscription e-mail** from AWS after
   the first apply, otherwise nothing is delivered
 - **CloudWatch alarm** `container-image-scans-UserErrors` - DynamoDB requests
   rejected with HTTP 400 in the last hour, e.g. a `ValidationException` when the
   CI writer stores an item over 400 KB. The metric covers all DynamoDB tables
   in `eu-central-1`. E-mails via the same SNS topic
-- **Budget** `free-tier-services` - e-mail when the DynamoDB, Cognito, SNS,
+- **Budget** `container-image-scans` - e-mail when the DynamoDB, Cognito, SNS,
   CloudWatch or data transfer costs exceed $0.01 in a month (billing data is
   updated a few times a day)
 
