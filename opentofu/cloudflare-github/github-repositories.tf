@@ -16,9 +16,10 @@ locals {
       topics      = ["architect", "claude", "courses", "foundations", "notes"]
     }
     "container_image_scans" = {
-      name        = "container-image-scans"
-      description = "Container image scans"
-      topics      = ["container", "container-image", "container-security", "cve", "image", "public", "security", "vulnerability"]
+      name         = "container-image-scans"
+      description  = "Container image scans"
+      homepage_url = "https://ruzickap.github.io/container-image-scans/"
+      topics       = ["container", "container-image", "container-security", "cve", "image", "public", "security", "vulnerability"]
       # deploy-web.yml publishes the dashboard to the gh-pages branch
       pages = {
         branch = "gh-pages"
@@ -54,9 +55,10 @@ locals {
       }
     }
     "pre_commit_wizcli" = {
-      name        = "pre-commit-wizcli"
-      description = "pre-commit hook for WizCLI that checks your code"
-      topics      = ["pre-commit", "wiz", "wizcli"]
+      name         = "pre-commit-wizcli"
+      description  = "pre-commit hook for WizCLI that checks your code"
+      homepage_url = "https://ruzickap.github.io/pre-commit-wizcli/"
+      topics       = ["pre-commit", "wiz", "wizcli"]
       pages = {
         branch = "gh-pages"
       }
@@ -224,7 +226,7 @@ locals {
     "ruzickovabozena_xvx_cz" = {
       name         = "ruzickovabozena.xvx.cz"
       description  = "ruzickovabozena.xvx.cz"
-      homepage_url = "https://ruzickovabozena.xvx.cz"
+      homepage_url = "https://ruzickovabozena.xvx.cz/"
       pages = {
         cname  = "ruzickovabozena.xvx.cz"
         branch = "gh-pages"
