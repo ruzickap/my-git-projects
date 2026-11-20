@@ -1,7 +1,7 @@
 # OpenTofu - Cloudflare - GitHub
 
 OpenTofu Infrastructure as Code project managing personal infrastructure across
-Cloudflare, GitHub, Supabase, and UptimeRobot.
+Cloudflare, GitHub, and UptimeRobot.
 
 ## Overview
 
@@ -13,8 +13,6 @@ This project provisions and manages:
   Web Analytics, and Pages projects
 - **GitHub** -- repositories with settings, branch protection rulesets, Actions
   secrets, topics, workflow permissions, and GitHub Pages configuration
-- **Supabase** -- Database project (`container-image-scans`) for container image
-  scanning
 - **UptimeRobot** -- HTTP monitors for all public domains and Zero Trust tunnel
   applications, plus a public status page (`stats.xvx.cz`)
 - **AWS** -- SSM Parameter Store data sources for GitHub Actions secrets
@@ -71,12 +69,9 @@ from KeePassXC by the [`opentofu/aws`](../aws/) module.
 
 ### Outputs
 
-| Name                                               | Sensitive |
-|----------------------------------------------------|-----------|
-| `basic_auth_apps_urls`                             | yes       |
-| `supabase_container_image_scans_apikeys`           | yes       |
-| `supabase_container_image_scans_endpoint`          | no        |
-| `supabase_container_image_scans_database_password` | yes       |
+| Name                   | Sensitive |
+|------------------------|-----------|
+| `basic_auth_apps_urls` | yes       |
 
 ## Managed Resources
 
@@ -197,13 +192,6 @@ HTTP monitors (300s interval) for:
 
 Public status page: `stats.xvx.cz`
 
-### Supabase
-
-- **Project**: `container-image-scans` (us-east-1), `prevent_destroy` blocks
-  destroying or replacing it (it holds the scan history). Removing or renaming
-  the resource block still deletes it - rename it only with a `moved` block
-- Random 16-character database password
-
 ### AWS
 
 GitHub Actions secrets are read from AWS SSM Parameter Store at
@@ -252,7 +240,7 @@ See the [`opentofu/aws` README](../aws/README.md) for bootstrap instructions.
 ## Run OpenTofu
 
 Provision all managed resources (Cloudflare zones, DNS, Zero Trust, API
-tokens, GitHub repositories with Actions secrets, Supabase, UptimeRobot).
+tokens, GitHub repositories with Actions secrets, UptimeRobot).
 All provider credentials are read from AWS SSM Parameter Store at
 plan/apply time -- only the encryption passphrase must be provided.
 
@@ -292,12 +280,6 @@ e.g. `mise run tofu output`):
 ```bash
 # List all outputs
 tofu output
-
-# Get Supabase endpoint
-tofu output supabase_container_image_scans_endpoint
-
-# Get sensitive outputs (e.g., Supabase API keys)
-tofu output -json supabase_container_image_scans_apikeys | jq -r 'to_entries[] | "\(.key): \(.value)"'
 
 # Get Basic Auth-protected app URLs (appN.xvx.cz) with embedded credentials
 tofu output -json basic_auth_apps_urls | jq -r 'to_entries[] | "\(.key): \(.value)"'
