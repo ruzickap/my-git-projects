@@ -154,15 +154,15 @@ flowchart LR
 
 #### Never paying - AWS Always Free tier
 
-| Service                | Always Free                                | How it is kept there                                 |
-|------------------------|--------------------------------------------|------------------------------------------------------|
-| DynamoDB capacity      | 25 RCU + 25 WCU (all tables in the region) | `PROVISIONED` 2 RCU / 25 WCU - over is throttled     |
-| DynamoDB storage       | 25 GB                                      | TTL (`expires_at`) deletes old items for free        |
-| Data transfer out      | 100 GB/month (all services)                | successful public reads max. ~42 GB/month (2 RCU)    |
-| Cognito identity pools | no charge                                  | -                                                    |
-| CloudWatch alarms      | 10 alarm metrics                           | 2 alarms                                             |
-| SNS                    | 1,000 e-mails/month                        | alarm e-mails only                                   |
-| Budgets                | free without budget actions                | no budget actions                                    |
+| Service                | Always Free                                | How it is kept there                              |
+|------------------------|--------------------------------------------|---------------------------------------------------|
+| DynamoDB capacity      | 25 RCU + 25 WCU (all tables in the region) | `PROVISIONED` 2 RCU / 25 WCU - over is throttled  |
+| DynamoDB storage       | 25 GB                                      | TTL (`expires_at`) deletes old items for free     |
+| Data transfer out      | 100 GB/month (all services)                | successful public reads max. ~42 GB/month (2 RCU) |
+| Cognito identity pools | no charge                                  | -                                                 |
+| CloudWatch alarms      | 10 alarm metrics                           | 2 alarms                                          |
+| SNS                    | 1,000 e-mails/month                        | alarm e-mails only                                |
+| Budgets                | free without budget actions                | no budget actions                                 |
 
 > [!WARNING]
 > The read capacity limits only the **successful** reads (2 RCU x 8 KB/s =

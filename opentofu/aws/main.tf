@@ -335,6 +335,7 @@ resource "aws_iam_role_policy_attachment" "github_actions" {
 resource "aws_dynamodb_table" "container_image_scans" {
   # checkov:skip=CKV_AWS_28:Point-in-time recovery is billed per GB-month - not in the free tier
   # checkov:skip=CKV_AWS_119:KMS customer managed key costs $1/month - the free AWS owned key is used
+  # checkov:skip=CKV2_AWS_16:Auto scaling would raise the capacity above the free tier
   name                        = local.container_image_scans_name
   billing_mode                = "PROVISIONED"
   read_capacity               = local.container_image_scans_read_capacity
