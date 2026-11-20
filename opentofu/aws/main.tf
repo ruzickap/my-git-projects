@@ -39,9 +39,18 @@ locals {
   aws_profile          = "my-aws"
   aws_region           = "eu-central-1"
   # Dollars - set a low budget limit for personal account to get notified of any unexpected costs immediately
-  budget_limit_amount   = "5"
-  github_oidc_repo      = "ruzickap/my-git-projects"
-  github_oidc_role_name = "GitHubOidc-${replace(local.github_oidc_repo, "/", "-")}"
+  budget_limit_amount = "2"
+  # Repository whose GitHub Actions (main + pull requests) write to the DynamoDB table
+  container_image_scans_github_repo = "ruzickap/container-image-scans"
+  # DynamoDB table and Cognito identity pool name
+  container_image_scans_name = "container-image-scans"
+  # Limits the successful public reads to 2 RCU x 8 KB/s = ~42 GB/month (100 GB/month data transfer out is free).
+  # Throttled requests still return small errors without limit - the read throttling alarm reports such abuse
+  container_image_scans_read_capacity = 2
+  # Free tier: 25 RCU + 25 WCU for all tables in the region together - lower it before adding another table
+  container_image_scans_write_capacity = 25
+  github_oidc_repo                     = "ruzickap/my-git-projects"
+  github_oidc_role_name                = "GitHubOidc-${replace(local.github_oidc_repo, "/", "-")}"
   # Policies to attach to the IAM user for AWS CLI access
   iam_managed_policy_arns = ["arn:${data.aws_partition.current.partition}:iam::aws:policy/AdministratorAccess"]
   # User name for the IAM user
@@ -314,6 +323,239 @@ resource "aws_iam_role_policy_attachment" "github_actions" {
 }
 
 ################################################################################
+# Container Image Scans - DynamoDB + Cognito guest read access (AWS Always Free)
+################################################################################
+
+# Never pays - everything stays in the AWS Always Free tier:
+# - PROVISIONED capacity: requests above it are throttled, not billed (no on-demand, auto scaling, GSIs)
+# - no point-in-time recovery, KMS customer managed key, streams or warm throughput (all paid)
+# - Cognito identity pools, IAM and STS are free; guests read the table directly (public data)
+# trivy:ignore:AVD-AWS-0024 Point-in-time recovery is billed per GB-month - not in the free tier
+# trivy:ignore:AVD-AWS-0025 KMS customer managed key costs $1/month - the free AWS owned key is used
+resource "aws_dynamodb_table" "container_image_scans" {
+  # checkov:skip=CKV_AWS_28:Point-in-time recovery is billed per GB-month - not in the free tier
+  # checkov:skip=CKV_AWS_119:KMS customer managed key costs $1/month - the free AWS owned key is used
+  # checkov:skip=CKV2_AWS_16:Auto scaling would raise the capacity above the free tier
+  name                        = local.container_image_scans_name
+  billing_mode                = "PROVISIONED"
+  read_capacity               = local.container_image_scans_read_capacity
+  write_capacity              = local.container_image_scans_write_capacity
+  table_class                 = "STANDARD"
+  deletion_protection_enabled = true
+  hash_key                    = "pk"
+  range_key                   = "sk"
+
+  attribute {
+    name = "pk"
+    type = "S"
+  }
+
+  attribute {
+    name = "sk"
+    type = "S"
+  }
+
+  point_in_time_recovery {
+    enabled = false
+  }
+
+  # Deleting expired items is free - the writer sets "expires_at" (epoch seconds) to keep the storage below 25 GB
+  ttl {
+    attribute_name = "expires_at"
+    enabled        = true
+  }
+}
+
+resource "aws_cognito_identity_pool" "container_image_scans" {
+  # checkov:skip=CKV_AWS_366:Guest access is intended - the GitHub Pages site reads the public scan results
+  identity_pool_name = local.container_image_scans_name
+
+  # Kill switch - stop the public reads immediately (budget / throttling alert): swap the comment of these two lines and apply
+  allow_unauthenticated_identities = true
+  # allow_unauthenticated_identities = false
+  # Enhanced flow only - Cognito adds a scope-down session policy to the guest credentials
+  allow_classic_flow = false
+}
+
+resource "aws_iam_role" "container_image_scans_guest" {
+  name        = "Cognito-${local.container_image_scans_name}-guest"
+  description = "Read-only access to the ${local.container_image_scans_name} DynamoDB table for Cognito guests (GitHub Pages)"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "CognitoGuests"
+        Effect    = "Allow"
+        Action    = "sts:AssumeRoleWithWebIdentity"
+        Principal = { Federated = "cognito-identity.amazonaws.com" }
+        Condition = {
+          StringEquals = {
+            "cognito-identity.amazonaws.com:aud" = aws_cognito_identity_pool.container_image_scans.id
+          }
+          "ForAnyValue:StringLike" = {
+            "cognito-identity.amazonaws.com:amr" = "unauthenticated"
+          }
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "container_image_scans_guest" {
+  name = "ReadContainerImageScansTable"
+  role = aws_iam_role.container_image_scans_guest.id
+
+  # No dynamodb:Scan - a full table read would use up the read capacity
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid      = "ReadContainerImageScansTable"
+        Effect   = "Allow"
+        Action   = ["dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query"]
+        Resource = aws_dynamodb_table.container_image_scans.arn
+      },
+    ]
+  })
+}
+
+resource "aws_cognito_identity_pool_roles_attachment" "container_image_scans" {
+  identity_pool_id = aws_cognito_identity_pool.container_image_scans.id
+
+  roles = {
+    unauthenticated = aws_iam_role.container_image_scans_guest.arn
+  }
+}
+
+resource "aws_iam_role" "github_actions_container_image_scans" {
+  name        = "GitHubOidc-${replace(local.container_image_scans_github_repo, "/", "-")}"
+  description = "Service Role for ${local.container_image_scans_github_repo} GitHub Actions"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "RoleForGitHubActions"
+        Effect    = "Allow"
+        Action    = "sts:AssumeRoleWithWebIdentity"
+        Principal = { Federated = aws_iam_openid_connect_provider.github_actions.arn }
+        # Any workflow on main and pull requests; fork `pull_request` runs get no secrets or id-token,
+        # but fork `pull_request_target` runs do (as main) - never run fork code there
+        Condition = {
+          StringEquals = {
+            "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
+            "token.actions.githubusercontent.com:sub" = [
+              "repo:${local.container_image_scans_github_repo}:pull_request",
+              "repo:${local.container_image_scans_github_repo}:ref:refs/heads/main",
+            ]
+          }
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "github_actions_container_image_scans" {
+  name = "WriteContainerImageScansTable"
+  role = aws_iam_role.github_actions_container_image_scans.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "WriteContainerImageScansTable"
+        Effect = "Allow"
+        Action = [
+          "dynamodb:BatchGetItem",
+          "dynamodb:BatchWriteItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:DescribeTable",
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:Query",
+          "dynamodb:UpdateItem",
+        ]
+        Resource = aws_dynamodb_table.container_image_scans.arn
+      },
+    ]
+  })
+}
+
+################################################################################
+# Free tier alerts - CloudWatch alarms (10 free) + SNS e-mails (1,000/month free)
+################################################################################
+
+# trivy:ignore:AVD-AWS-0095 CloudWatch can not publish to the AWS managed SNS key, a KMS customer managed key costs $1/month
+resource "aws_sns_topic" "cloudwatch_alarms" {
+  # checkov:skip=CKV_AWS_26:CloudWatch can not publish to the AWS managed SNS key, a KMS customer managed key costs $1/month
+  name = "cloudwatch-alarms"
+}
+
+# AWS sends a confirmation e-mail after the first apply - no alerts are delivered until it is confirmed
+resource "aws_sns_topic_subscription" "cloudwatch_alarms_email" {
+  topic_arn = aws_sns_topic.cloudwatch_alarms.arn
+  protocol  = "email"
+  endpoint  = local.my_email
+}
+
+# Read throttling = public demand above the free tier capacity (e.g. abuse of the guest access) - reported within 5 minutes.
+# Writes come only from own CI (throttled writes are free and retried), so they have no alarm
+resource "aws_cloudwatch_metric_alarm" "container_image_scans_read_throttling" {
+  alarm_name          = "${aws_dynamodb_table.container_image_scans.name}-ReadThrottleEvents"
+  alarm_description   = "DynamoDB table ${aws_dynamodb_table.container_image_scans.name}: reads throttled - public demand above the free tier capacity"
+  namespace           = "AWS/DynamoDB"
+  metric_name         = "ReadThrottleEvents"
+  dimensions          = { TableName = aws_dynamodb_table.container_image_scans.name }
+  statistic           = "Sum"
+  period              = 300
+  evaluation_periods  = 1
+  threshold           = 0
+  comparison_operator = "GreaterThanThreshold"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.cloudwatch_alarms.arn]
+  ok_actions          = [aws_sns_topic.cloudwatch_alarms.arn]
+}
+
+# HTTP 400 errors (e.g. ValidationException for an item over 400 KB) = the CI writer silently fails.
+# The metric has no table dimension - it covers all DynamoDB tables in the region
+resource "aws_cloudwatch_metric_alarm" "dynamodb_user_errors" {
+  alarm_name          = "${aws_dynamodb_table.container_image_scans.name}-UserErrors"
+  alarm_description   = "DynamoDB (${local.aws_region}): requests rejected with HTTP 400 (validation, missing table, access, ...) in the last hour"
+  namespace           = "AWS/DynamoDB"
+  metric_name         = "UserErrors"
+  statistic           = "Sum"
+  period              = 3600
+  evaluation_periods  = 1
+  threshold           = 0
+  comparison_operator = "GreaterThanThreshold"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.cloudwatch_alarms.arn]
+  ok_actions          = [aws_sns_topic.cloudwatch_alarms.arn]
+}
+
+# Any cost of the services behind the free tier resources (the monthly account budget alerts at $1 only)
+resource "aws_budgets_budget" "container_image_scans" {
+  name         = local.container_image_scans_name
+  budget_type  = "COST"
+  limit_amount = "0.01"
+  limit_unit   = "USD"
+  time_unit    = "MONTHLY"
+
+  cost_filter {
+    name   = "Service"
+    values = ["AWS Data Transfer", "Amazon Cognito", "Amazon DynamoDB", "Amazon Simple Notification Service", "AmazonCloudWatch"]
+  }
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    notification_type          = "ACTUAL"
+    threshold                  = 100
+    threshold_type             = "PERCENTAGE"
+    subscriber_email_addresses = [local.my_email]
+  }
+}
+################################################################################
 # SSM Parameters - synced from KeePassXC
 ################################################################################
 
@@ -360,6 +602,21 @@ resource "aws_ssm_parameter" "keepassxc" {
       error_message = "UserName (SSM parameter name) \"${each.value.username}\" is used by more than one KeePassXC entry"
     }
   }
+}
+
+output "container_image_scans_cognito_identity_pool_id" {
+  description = "ID of the Cognito identity pool for the guest (GitHub Pages) read access to the container-image-scans DynamoDB table"
+  value       = aws_cognito_identity_pool.container_image_scans.id
+}
+
+output "container_image_scans_dynamodb_table_name" {
+  description = "Name of the container-image-scans DynamoDB table"
+  value       = aws_dynamodb_table.container_image_scans.name
+}
+
+output "container_image_scans_github_oidc_role_arn" {
+  description = "ARN of the GitHub Actions OIDC IAM role allowed to write to the container-image-scans DynamoDB table"
+  value       = aws_iam_role.github_actions_container_image_scans.arn
 }
 
 output "github_oidc_role_arn" {

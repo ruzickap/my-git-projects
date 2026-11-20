@@ -75,9 +75,9 @@ KeePassXC (see below); with mise active, just run `tofu init` and `tofu plan` /
 - Provider versions are **pinned exactly** in `main.tf` (e.g. `aws = 6.48.0`);
   Renovate bumps them. Keep `required_providers` blocks sorted (`keep-sorted`).
 - `opentofu/aws/` runs `tofu test` in CI (`tofu-aws-tests.yml`):
-  `keepassxc.tftest.hcl` checks the KeePassXC -> SSM guards with mocked
-  providers. `cloudflare-github` has no automated tests (it touches live
-  infra).
+  `main.tftest.hcl` checks the KeePassXC -> SSM guards and that the DynamoDB
+  table stays in the AWS free tier, with mocked providers. `cloudflare-github`
+  has no automated tests (it touches live infra).
 
 ## Gotchas worth knowing
 
