@@ -431,8 +431,6 @@ resource "aws_cognito_identity_pool_roles_attachment" "container_image_scans" {
 resource "aws_iam_role" "github_actions_container_image_scans" {
   name        = "GitHubOidc-${replace(local.container_image_scans_github_repo, "/", "-")}"
   description = "Service Role for ${local.container_image_scans_github_repo} GitHub Actions"
-  # The nightly scans run longer than the default 1 hour session (nightly-scans.yml role-duration-seconds)
-  max_session_duration = 10800
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
