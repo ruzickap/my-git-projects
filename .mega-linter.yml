@@ -22,6 +22,7 @@ BASH_SHFMT_ARGUMENTS: --case-indent --indent 2 --space-redirects
 # Disable linters
 DISABLE_LINTERS:
   - SPELL_CSPELL # Spell checking disabled - prone to false positives
+  - TYPESCRIPT_STANDARD # Prettier is used instead (TYPESCRIPT_DEFAULT_STYLE does not disable it)
 
 # Fail the build if a required linter is missing from the Docker flavor
 FAIL_IF_MISSING_LINTER_IN_FLAVOR: true
@@ -31,6 +32,9 @@ FILTER_REGEX_EXCLUDE: (CHANGELOG\.md|\.lock\.yml$|\.github/aw/actions-lock\.json
 
 # Allow formatters to report errors
 FORMATTERS_DISABLE_ERRORS: false
+
+# Use Prettier for JavaScript formatting instead of standard (also disables JAVASCRIPT_STANDARD)
+JAVASCRIPT_DEFAULT_STYLE: prettier
 
 # Allow comments in JSON files
 JSON_JSONLINT_ARGUMENTS: --comments
@@ -75,4 +79,7 @@ SPELL_LYCHEE_UNSECURED_ENV_VARIABLES:
 # Allow tflint (Terraform linter) to access GitHub token for plugin downloads
 TERRAFORM_TFLINT_UNSECURED_ENV_VARIABLES:
   - GITHUB_TOKEN
+
+# Use Prettier for TypeScript formatting instead of standard
+TYPESCRIPT_DEFAULT_STYLE: prettier
 # keep-sorted end
