@@ -103,6 +103,11 @@ case "${REPOSITORY}" in
   ruzickap/action-*)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/action"
     ;;
+  ruzickap/alba-znamek)
+    # Own .mega-linter.yml: excludes the photos and the generated stamp data from linting
+    checkout_files ".mega-linter.yml"
+    megalinter_flavor all
+    ;;
   ruzickap/ansible-raspberry-pi-os)
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/ansible"
     megalinter_flavor all

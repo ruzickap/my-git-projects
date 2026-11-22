@@ -9,6 +9,15 @@ locals {
     # keep-sorted end
   }
   github_repositories = {
+    "alba_znamek" = {
+      name         = "alba-znamek"
+      description  = "Web viewer of a family collection of postage stamp albums"
+      homepage_url = "https://ruzickap.github.io/alba-znamek/"
+      topics       = ["bun", "philately", "photos", "stamps", "svelte"]
+      pages = {
+        build_type = "workflow"
+      }
+    }
     "claude_courses" = {
       name        = "claude-courses"
       description = "Claude Courses Notes"
@@ -316,11 +325,15 @@ resource "github_repository_vulnerability_alerts" "this" {
 resource "github_repository_pages" "this" {
   for_each   = { for k, v in local.all_github_repositories : k => v if try(v.pages, null) != null }
   repository = github_repository.this[each.key].name
-  build_type = "legacy"
+  # "workflow" = deployed by actions/deploy-pages, no source branch
+  build_type = try(each.value.pages.build_type, "legacy")
   cname      = try(each.value.pages.cname, null)
 
-  source {
-    branch = each.value.pages.branch
+  dynamic "source" {
+    for_each = try(each.value.pages.branch, null) != null ? [each.value.pages.branch] : []
+    content {
+      branch = source.value
+    }
   }
 }
 
