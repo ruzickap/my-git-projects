@@ -127,7 +127,7 @@ case "${REPOSITORY}" in
     megalinter_flavor python
     ;;
   ruzickap/container-image-scans)
-    # Own .mega-linter.yml: Prettier instead of standard for the Vite + Svelte dashboard (web/)
+    # Own .mega-linter.yml: Python linters read their settings from pyproject.toml
     checkout_files ".mega-linter.yml"
     megalinter_flavor all
     ;;
