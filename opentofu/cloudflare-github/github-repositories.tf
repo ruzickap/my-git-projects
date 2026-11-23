@@ -64,13 +64,9 @@ locals {
       }
     }
     "pre_commit_wizcli" = {
-      name         = "pre-commit-wizcli"
-      description  = "pre-commit hook for WizCLI that checks your code"
-      homepage_url = "https://ruzickap.github.io/pre-commit-wizcli/"
-      topics       = ["pre-commit", "wiz", "wizcli"]
-      pages = {
-        branch = "gh-pages"
-      }
+      name        = "pre-commit-wizcli"
+      description = "pre-commit hook for WizCLI that checks your code"
+      topics      = ["pre-commit", "wiz", "wizcli"]
       secrets = {
         "WIZ_CLIENT_ID"     = data.aws_ssm_parameter.github_ruzickap_pre_commit_wizcli_actions_secrets_WIZ_CLIENT_ID.value
         "WIZ_CLIENT_SECRET" = data.aws_ssm_parameter.github_ruzickap_pre_commit_wizcli_actions_secrets_WIZ_CLIENT_SECRET.value
