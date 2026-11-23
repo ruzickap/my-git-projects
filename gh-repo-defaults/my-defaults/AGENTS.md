@@ -99,8 +99,8 @@ Multiple security scanners run during CI:
 
 - **Validation**: Each time you modify a GitHub Action workflow file or
   composite action, validate with `actionlint`
-- **Permissions**: Use minimal permissions (prefer `read-all` or
-  `permissions: read-all`)
+- **Permissions**: Use minimal permissions: `permissions: {}` at the top
+  level, and grant scopes only on the job that needs them
 - **Pin actions**: Always pin actions to full SHA commits, not tags
 
 ## Version Control
@@ -166,7 +166,7 @@ Resolves: #123
 
 - **Always create draft PR** - Create pull requests as drafts initially
 - **Title format** - Must follow conventional commit format (validated by
-  `semantic-pull-request` action)
+  `commit-check` with `pr-title: true`)
 - **Description** - Include clear explanation of changes and motivation
 - **Link issues** - Reference related issues using keywords (Fixes, Closes,
   Resolves)
