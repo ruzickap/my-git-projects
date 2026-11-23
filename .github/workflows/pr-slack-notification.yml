@@ -50,7 +50,7 @@ jobs:
         run: |
           echo "${TS}" > slack-message-timestamp.txt
 
-      # Artifacts are kept 90 days - a cache entry that is never restored is deleted after 7
+      # Artifacts are kept for the repo retention period (90 days by default) - a cache entry that is never restored is deleted after 7
       - name: Save slack message timestamp
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
