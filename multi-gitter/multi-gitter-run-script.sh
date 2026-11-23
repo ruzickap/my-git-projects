@@ -168,6 +168,8 @@ case "${REPOSITORY}" in
     copy_defaults "${GH_REPO_DEFAULTS_BASE}/hugo"
     ;;
   ruzickap/pre-commit-wizcli)
+    # Own release-please.yml: reads release-please-config.json (bumps README.md versions)
+    checkout_files ".github/workflows/release-please.yml"
     megalinter_flavor cupcake
     ;;
   ruzickap/ruzickap.github.io)
