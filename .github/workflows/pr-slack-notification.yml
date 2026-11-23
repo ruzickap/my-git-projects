@@ -73,7 +73,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Skip artifacts from fork runs - a fork pull request can upload one with any name and content
-          RUN_ID=$(gh api "repos/${GH_REPO}/actions/artifacts?name=${ARTIFACT_NAME}" --jq '[.artifacts[] | select((.expired | not) and .workflow_run.head_repository_id == .workflow_run.repository_id)][0].workflow_run.id // empty')
+          RUN_IDS=$(gh api --paginate "repos/${GH_REPO}/actions/artifacts?name=${ARTIFACT_NAME}" --jq '.artifacts[] | select((.expired | not) and .workflow_run.head_repository_id == .workflow_run.repository_id) | .workflow_run.id')
+          RUN_ID=${RUN_IDS%%$'\n'*} # the API lists the newest artifact first
           if [[ -n "${RUN_ID}" ]]; then
             gh run download "${RUN_ID}" --name "${ARTIFACT_NAME}" --dir "${RUNNER_TEMP}/${ARTIFACT_NAME}"
             SLACK_TIMESTAMP=$(< "${RUNNER_TEMP}/${ARTIFACT_NAME}/slack-message-timestamp.txt")
