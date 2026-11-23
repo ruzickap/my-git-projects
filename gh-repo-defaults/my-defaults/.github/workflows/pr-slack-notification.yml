@@ -50,31 +50,38 @@ jobs:
         run: |
           echo "${TS}" > slack-message-timestamp.txt
 
-      - name: Cache slack message timestamp
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      # Artifacts are kept 90 days - a cache entry that is never restored is deleted after 7
+      - name: Save slack message timestamp
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
+          name: slack-message-timestamp-${{ github.event.pull_request.number }}
           path: slack-message-timestamp.txt
-          key: slack-message-timestamp-${{ github.event.pull_request.html_url }}-${{ steps.message.outputs.ts }}
 
   slack-emoji-react:
     runs-on: ubuntu-26.04-arm
     timeout-minutes: 5
     permissions:
-      actions: read # needed to list caches
+      actions: read # needed to download the timestamp artifact
     name: Adds emoji reaction to slack message when a PR is closed or reviewed
     if: ${{ startsWith(github.event.pull_request.html_url, 'https') || startsWith(github.event.issue.pull_request.html_url, 'https') }}
     steps:
-      - name: Retrieve Slack message timestamp from cache
+      - name: Retrieve Slack message timestamp
         id: slack-timestamp
         env:
+          ARTIFACT_NAME: slack-message-timestamp-${{ github.event.pull_request.number || github.event.issue.number }}
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_PULL_REQUEST_HTML_URL: ${{ github.event.pull_request.html_url || github.event.issue.pull_request.html_url }}
         run: |
-          SLACK_TIMESTAMP=$(gh cache list --key "slack-message-timestamp-${GITHUB_PULL_REQUEST_HTML_URL}-" --json key --jq "[.[].key|capture(\"${GITHUB_PULL_REQUEST_HTML_URL}-(?<x>.+)\").x][0]")
-          echo "SLACK_TIMESTAMP=${SLACK_TIMESTAMP}" | tee -a "${GITHUB_ENV}"
-          if [[ "${SLACK_TIMESTAMP}" != '' ]]; then
-            echo "github_event_pull_request_html_url=true" >> "${GITHUB_OUTPUT}"
+          # Skip artifacts from fork runs - a fork pull request can upload one with any name and content
+          RUN_ID=$(gh api "repos/${GH_REPO}/actions/artifacts?name=${ARTIFACT_NAME}" --jq '[.artifacts[] | select((.expired | not) and .workflow_run.head_repository_id == .workflow_run.repository_id)][0].workflow_run.id // empty')
+          if [[ -n "${RUN_ID}" ]]; then
+            gh run download "${RUN_ID}" --name "${ARTIFACT_NAME}" --dir "${RUNNER_TEMP}/${ARTIFACT_NAME}"
+            SLACK_TIMESTAMP=$(< "${RUNNER_TEMP}/${ARTIFACT_NAME}/slack-message-timestamp.txt")
+            # The value goes into GITHUB_ENV and the Slack payloads - accept only a message timestamp
+            if [[ "${SLACK_TIMESTAMP}" =~ ^[0-9]+\.[0-9]+$ ]]; then
+              echo "SLACK_TIMESTAMP=${SLACK_TIMESTAMP}" | tee -a "${GITHUB_ENV}"
+              echo "github_event_pull_request_html_url=true" >> "${GITHUB_OUTPUT}"
+            fi
           fi
 
       - name: Decide which emoji to add
