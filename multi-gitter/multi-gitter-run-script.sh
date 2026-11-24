@@ -176,6 +176,10 @@ case "${REPOSITORY}" in
     checkout_files ".rumdl.toml" ".mega-linter.yml"
     megalinter_flavor ruby
     ;;
+  ruzickap/test_usb_stick_for_tv)
+    # Own .mega-linter.yml: lychee also checks the download URLs in download_content.sh
+    checkout_files ".mega-linter.yml"
+    ;;
   ruzickap/wiz-certification-notes)
     checkout_files ".rumdl.toml"
     ;;
