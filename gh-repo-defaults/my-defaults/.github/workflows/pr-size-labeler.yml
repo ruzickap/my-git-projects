@@ -5,7 +5,6 @@
 name: pr-size-labeler
 
 on:
-  workflow_dispatch:
   pull_request:
 
 permissions: {}
