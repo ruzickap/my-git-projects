@@ -21,11 +21,11 @@ terraform {
     # keep-sorted start block=yes
     aws = {
       source  = "hashicorp/aws"
-      version = "6.72.0"
+      version = "6.73.0"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "5.28.1"
+      version = "5.29.0"
     }
     github = {
       source  = "integrations/github"
@@ -41,7 +41,7 @@ terraform {
     }
     uptimerobot = {
       source  = "uptimerobot/uptimerobot"
-      version = "1.12.2"
+      version = "1.13.3"
     }
     # keep-sorted end
   }
