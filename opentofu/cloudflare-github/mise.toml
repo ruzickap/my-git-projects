@@ -1,5 +1,5 @@
 [tools]
-opentofu = "1.13.9"
+opentofu = "1.13.10"
 fnox = "1.50.0"
 
 [env]
